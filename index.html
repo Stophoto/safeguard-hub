@@ -358,7 +358,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
     }
 
     async function submit(){
-      if(!validate()){ setStatus("error"); setStatusMsg("Please complete all required fields."); return; }
+      if(!validate()){ setStatus("error"); setStatusMsg("Please complete all required fields."); window.scrollTo({top:0,behavior:"smooth"}); return; }
       setBusy(true); setStatus(null);
       var rid = genId("PEO");
       var row = [rid, get("fullName").trim(), get("email").trim(), get("phone").trim(), get("dob"), "Adult", getList("ages").join(", "), getList("times").join(", "), todayISO(), "","","","","","","","","","In Process"];
@@ -478,7 +478,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
     }
 
     async function submit(){
-      if(!validate()){setStatus("error");setMsg("Complete all required fields.");return;}
+      if(!validate()){setStatus("error");setMsg("Complete all required fields.");window.scrollTo({top:0,behavior:"smooth"});return;}
       setBusy(true);setStatus(null);
       var rid=genId("INC");
       var row=[rid,get("date"),get("time"),get("location").trim(),get("program").trim(),get("type"),get("persons").trim(),get("childAge").trim(),get("parent").trim(),get("desc").trim(),f.firstAid?"Yes":"No",f.parentNotified?"Yes":"No",f.emergency?"Yes":"No",get("actions").trim(),get("w1"),get("w2"),get("reporter").trim(),get("role").trim(),"","","Open","",""];
@@ -569,7 +569,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
     }
 
     async function submit(){
-      if(!validate())return;
+      if(!validate()){setStatus("error");setMsg("Complete all required fields.");window.scrollTo({top:0,behavior:"smooth"});return;}
       setStatus("submitting");
       var rows=entries.filter(function(e){return e.code;}).map(function(e){return[genId("TRN"),trainee.name.trim(),trainee.email.trim(),e.code,e.title,trainee.track,e.date,e.method,verif.by.trim(),verif.date,verif.notes.trim()];});
       var S=window.SheetsService;
