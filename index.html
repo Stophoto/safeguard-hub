@@ -7,7 +7,6 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/11.1.0/jsrsasign-all-min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -81,103 +80,86 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
 <div id="root"></div>
 
 <script>
-/* ═══ SHEETS CONFIG — localStorage-based ═══ */
-/* Credentials are never stored in this file. They live in the browser's localStorage.
-   On first load, a setup screen prompts the admin to paste their credentials.
-   To reset: open browser console and run: localStorage.removeItem('sg_hub_config') */
+/* ═══ HUB BACKEND CLIENT ═══ */
+/* Connects to Google Apps Script web app. No credentials in the browser.
+   Users authenticate with a shared password, saved to localStorage.
+   To reset: click "Reset Connection" in the Hub footer. */
 (function(){
-  var STORAGE_KEY = "sg_hub_config";
-  function loadConfig() {
+  var STORAGE_KEY = "sg_hub_auth";
+
+  function load() {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        var parsed = JSON.parse(raw);
-        if (parsed.workbookId && parsed.credentials && parsed.credentials.client_email && parsed.credentials.private_key) {
-          window.SAFEGUARD_SHEETS_CONFIG = parsed;
-          return true;
-        }
-      }
-    } catch(e) { console.warn("Config load failed:", e); }
-    window.SAFEGUARD_SHEETS_CONFIG = null;
-    return false;
+      if (raw) return JSON.parse(raw); // { url, password }
+    } catch(e) {}
+    return null;
   }
-  function saveConfig(cfg) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
-    window.SAFEGUARD_SHEETS_CONFIG = cfg;
+
+  function save(url, password) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ url: url, password: password }));
   }
-  function clearConfig() {
+
+  function clear() {
     localStorage.removeItem(STORAGE_KEY);
-    window.SAFEGUARD_SHEETS_CONFIG = null;
-  }
-  loadConfig();
-  window.SG_ConfigManager = { loadConfig: loadConfig, saveConfig: saveConfig, clearConfig: clearConfig, isLoaded: function(){ return !!window.SAFEGUARD_SHEETS_CONFIG; } };
-})();
-</script>
-
-<script>
-/* ═══ SHEETS SERVICE ═══ */
-(function(){
-  var SCOPES = "https://www.googleapis.com/auth/spreadsheets";
-  var TOKEN_URL = "https://oauth2.googleapis.com/token";
-  var SHEETS_BASE = "https://sheets.googleapis.com/v4/spreadsheets";
-  var TOKEN_LIFETIME = 3500;
-  var cachedToken = null;
-  var tokenExpiry = 0;
-
-  function cfg() {
-    return (typeof window !== "undefined" && window.SAFEGUARD_SHEETS_CONFIG) || { workbookId: "", credentials: { client_email: "", private_key: "" } };
   }
 
-  function isConfigured(o) {
-    var c = o || cfg();
-    return !!(c.workbookId && c.credentials && c.credentials.client_email && c.credentials.private_key);
+  function isConfigured() {
+    var auth = load();
+    return !!(auth && auth.url && auth.password);
   }
 
-  function createJWT(email, pk) {
-    if (typeof KJUR === "undefined") throw { type: "JSRSASIGN_MISSING" };
-    var now = Math.floor(Date.now() / 1000);
-    return KJUR.jws.JWS.sign("RS256", JSON.stringify({ alg: "RS256", typ: "JWT" }), JSON.stringify({ iss: email, scope: SCOPES, aud: TOKEN_URL, iat: now, exp: now + 3600 }), pk);
+  async function call(action, data) {
+    var auth = load();
+    if (!auth) throw { type: "NOT_CONFIGURED", message: "Not connected. Please log in." };
+    var payload = Object.assign({ action: action, password: auth.password }, data || {});
+    var res;
+    try {
+      res = await fetch(auth.url, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload),
+        redirect: "follow"
+      });
+    } catch(err) {
+      throw { type: "NETWORK_ERROR", message: "Network error — check your connection." };
+    }
+    var result;
+    try { result = await res.json(); } catch(err) {
+      throw { type: "API_ERROR", message: "Invalid response from server." };
+    }
+    if (!result.success) {
+      throw { type: result.error || "API_ERROR", message: result.message || "Server error." };
+    }
+    return result;
   }
 
-  async function getToken(o) {
-    var c = o || cfg();
-    if (cachedToken && Date.now() / 1000 < tokenExpiry) return cachedToken;
-    var jwt = createJWT(c.credentials.client_email, c.credentials.private_key);
-    var res = await fetch(TOKEN_URL, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=" + jwt });
-    if (!res.ok) { var b = await res.text().catch(function(){ return ""; }); throw { type: "AUTH_FAILED", detail: "HTTP " + res.status + ": " + b }; }
-    var data = await res.json();
-    cachedToken = data.access_token;
-    tokenExpiry = Date.now() / 1000 + TOKEN_LIFETIME;
-    return cachedToken;
+  async function ping(url, password) {
+    var res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ action: "ping", password: password }),
+      redirect: "follow"
+    });
+    var result = await res.json();
+    if (!result.success) throw new Error(result.message || "Connection failed.");
+    return true;
   }
 
-  var ERRORS = { NOT_CONFIGURED: "Sheets not configured.", AUTH_FAILED: "Auth failed — check credentials.", NETWORK_ERROR: "Network error — check connection.", API_ERROR: "Sheets API error.", RATE_LIMITED: "Rate limited — wait and retry.", JSRSASIGN_MISSING: "Security library missing — refresh page." };
-
-  async function appendRow(tab, row, o) {
-    var c = o || cfg();
-    if (!isConfigured(c)) throw { type: "NOT_CONFIGURED" };
-    var token = await getToken(c);
-    var url = SHEETS_BASE + "/" + c.workbookId + "/values/" + encodeURIComponent(tab) + "!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS";
-    var res = await fetch(url, { method: "POST", headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" }, body: JSON.stringify({ values: [row] }) });
-    if (res.status === 429) throw { type: "RATE_LIMITED" };
-    if (!res.ok) { if (res.status === 401 || res.status === 403) { cachedToken = null; tokenExpiry = 0; throw { type: "AUTH_FAILED" }; } throw { type: "API_ERROR" }; }
-    return res.json();
+  async function appendRow(tab, row) {
+    return call("appendRow", { tab: tab, row: row });
   }
 
-  async function appendRows(tab, rows, o) {
-    var c = o || cfg();
-    if (!isConfigured(c)) throw { type: "NOT_CONFIGURED" };
-    var token = await getToken(c);
-    var url = SHEETS_BASE + "/" + c.workbookId + "/values/" + encodeURIComponent(tab) + "!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS";
-    var res = await fetch(url, { method: "POST", headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" }, body: JSON.stringify({ values: rows }) });
-    if (res.status === 429) throw { type: "RATE_LIMITED" };
-    if (!res.ok) { if (res.status === 401 || res.status === 403) { cachedToken = null; tokenExpiry = 0; throw { type: "AUTH_FAILED" }; } throw { type: "API_ERROR" }; }
-    return res.json();
+  async function appendRows(tab, rows) {
+    return call("appendRows", { tab: tab, rows: rows });
   }
 
-  function getErrorMessage(err) { return (err && err.type && ERRORS[err.type]) || (err && err.message) || "Unexpected error."; }
+  function getErrorMessage(err) {
+    if (err && err.message) return err.message;
+    return "An unexpected error occurred.";
+  }
 
   window.SheetsService = { appendRow: appendRow, appendRows: appendRows, isConfigured: isConfigured, getErrorMessage: getErrorMessage };
+  window.SG_Hub = { load: load, save: save, clear: clear, isConfigured: isConfigured, ping: ping };
 })();
 </script>
 
@@ -634,47 +616,62 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
   //  SETUP SCREEN — shown when no credentials found
   // ════════════════════════════════════════════════
   function SetupScreen(props) {
-    var s1=useState(""); var workbookId=s1[0]; var setWorkbookId=s1[1];
-    var s2=useState(""); var jsonRaw=s2[0]; var setJsonRaw=s2[1];
+    var s1=useState(""); var url=s1[0]; var setUrl=s1[1];
+    var s2=useState(""); var password=s2[0]; var setPassword=s2[1];
     var s3=useState(""); var errMsg=s3[0]; var setErr=s3[1];
-    var s4=useState(false); var saving=s4[0]; var setSaving=s4[1];
+    var s4=useState(false); var busy=s4[0]; var setBusy=s4[1];
+    var s5=useState(false); var showAdmin=s5[0]; var setShowAdmin=s5[1];
 
-    function handleSave() {
+    // Check if URL is already saved (returning user just needs password)
+    var saved = window.SG_Hub.load();
+    var hasUrl = saved && saved.url;
+
+    async function handleConnect() {
       setErr("");
-      if (!workbookId.trim()) { setErr("Workbook ID is required."); return; }
-      if (!jsonRaw.trim()) { setErr("Paste your JSON key file."); return; }
-      var parsed;
-      try { parsed = JSON.parse(jsonRaw); } catch(e) { setErr("Invalid JSON: " + e.message); return; }
-      if (!parsed.client_email || !parsed.private_key) { setErr("JSON is missing client_email or private_key."); return; }
-      setSaving(true);
-      var cfg = { workbookId: workbookId.trim(), credentials: { client_email: parsed.client_email, private_key: parsed.private_key } };
-      window.SG_ConfigManager.saveConfig(cfg);
-      setTimeout(function(){ props.onComplete(); }, 300);
+      var finalUrl = hasUrl ? saved.url : url.trim();
+      if (!finalUrl) { setErr("Server URL is required. Ask your Safeguard Coordinator."); return; }
+      if (!password.trim()) { setErr("Password is required."); return; }
+      setBusy(true);
+      try {
+        await window.SG_Hub.ping(finalUrl, password.trim());
+        window.SG_Hub.save(finalUrl, password.trim());
+        props.onComplete();
+      } catch(err) {
+        setErr(err.message || "Connection failed. Check the URL and password.");
+      }
+      setBusy(false);
     }
 
     return h("div",{style:{minHeight:"100vh",background:"var(--cream)",display:"flex",alignItems:"center",justifyContent:"center",padding:"32px 20px"}},
-      h("div",{className:"card animate-up",style:{maxWidth:560,width:"100%",padding:"48px 44px",borderRadius:16}},
-        h("div",{style:{textAlign:"center",marginBottom:32}},
+      h("div",{className:"card animate-up",style:{maxWidth:480,width:"100%",padding:"48px 44px",borderRadius:16}},
+        h("div",{style:{textAlign:"center",marginBottom:36}},
           h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.2em",color:"var(--gold)",textTransform:"uppercase",marginBottom:8}},"Safeguard Framework"),
-          h("h1",{style:{fontFamily:"var(--serif)",fontSize:32,color:"var(--navy)",fontWeight:400,margin:0}},"Hub Setup"),
-          h("p",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--muted)",marginTop:12,lineHeight:1.5}},"One-time configuration. Your credentials are stored in this browser only \u2014 they never leave your device.")),
+          h("h1",{style:{fontFamily:"var(--serif)",fontSize:32,color:"var(--navy)",fontWeight:400,margin:0}},"Welcome"),
+          h("p",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--muted)",marginTop:12,lineHeight:1.6}},"Enter the password provided by your Safeguard Coordinator to access the Hub.")),
         errMsg ? h("div",{style:{padding:"12px 16px",borderRadius:8,background:"var(--error-bg)",border:"1.5px solid rgba(192,57,43,0.15)",color:"var(--error)",fontFamily:"var(--sans)",fontSize:14,fontWeight:500,marginBottom:20}},errMsg) : null,
-        h("div",{style:{marginBottom:20}},
-          h("label",{style:{display:"block",fontFamily:"var(--sans)",fontSize:13,fontWeight:700,color:"var(--navy)",marginBottom:6}},"Workbook ID"),
-          h("input",{className:"fi",value:workbookId,onChange:function(e){setWorkbookId(e.target.value);},placeholder:"The long string from your Google Sheets URL"}),
-          h("div",{style:{fontFamily:"var(--sans)",fontSize:12,color:"var(--muted)",marginTop:4}},"Found between /d/ and /edit in the spreadsheet URL")),
-        h("div",{style:{marginBottom:28}},
-          h("label",{style:{display:"block",fontFamily:"var(--sans)",fontSize:13,fontWeight:700,color:"var(--navy)",marginBottom:6}},"Service Account JSON Key"),
-          h("textarea",{className:"fi",value:jsonRaw,onChange:function(e){setJsonRaw(e.target.value);},placeholder:"Paste the entire contents of your downloaded .json key file here\u2026",style:{minHeight:140,resize:"vertical",overflow:"auto",fontFamily:"monospace",fontSize:12}}),
-          h("div",{style:{fontFamily:"var(--sans)",fontSize:12,color:"var(--muted)",marginTop:4}},"We extract client_email and private_key \u2014 nothing else is stored")),
-        h("button",{className:"btn btn-primary",onClick:handleSave,disabled:saving,style:{width:"100%",padding:"16px"}},saving?"Saving\u2026":"Connect to Google Sheets")));
+
+        // Password field (always shown)
+        h("div",{style:{marginBottom:24}},
+          h("label",{style:{display:"block",fontFamily:"var(--sans)",fontSize:13,fontWeight:700,color:"var(--navy)",marginBottom:6}},"Password"),
+          h("input",{className:"fi",type:"password",value:password,onChange:function(e){setPassword(e.target.value);},placeholder:"Enter access password",onKeyDown:function(e){if(e.key==="Enter")handleConnect();},style:{fontSize:16,padding:"14px 16px"}})),
+
+        // Admin section (hidden by default — shows URL field for first-time setup)
+        !hasUrl ? h("div",{style:{marginBottom:24}},
+          !showAdmin ? h("button",{onClick:function(){setShowAdmin(true);},style:{background:"none",border:"none",fontFamily:"var(--sans)",fontSize:13,color:"var(--teal)",cursor:"pointer",textDecoration:"underline",padding:0}},"First-time setup? Enter server URL") : null,
+          showAdmin ? h("div",{style:{marginTop:8}},
+            h("label",{style:{display:"block",fontFamily:"var(--sans)",fontSize:13,fontWeight:700,color:"var(--navy)",marginBottom:6}},"Server URL"),
+            h("input",{className:"fi",value:url,onChange:function(e){setUrl(e.target.value);},placeholder:"https://script.google.com/macros/s/.../exec",style:{fontFamily:"monospace",fontSize:13}}),
+            h("div",{style:{fontFamily:"var(--sans)",fontSize:12,color:"var(--muted)",marginTop:4}},"The Apps Script Web App URL from your Safeguard Coordinator")) : null
+        ) : null,
+
+        h("button",{className:"btn btn-primary",onClick:handleConnect,disabled:busy,style:{width:"100%",padding:"16px",fontSize:16}},busy?"Connecting\u2026":"Sign In")));
   }
 
   // ════════════════════════════════════════════════
   //  MAIN HUB
   // ════════════════════════════════════════════════
   function SafeguardHub() {
-    var s0=useState(window.SG_ConfigManager.isLoaded()); var configured=s0[0]; var setConfigured=s0[1];
+    var s0=useState(window.SG_Hub.isConfigured()); var configured=s0[0]; var setConfigured=s0[1];
     var s1=useState("dashboard"); var view=s1[0]; var setView=s1[1];
     var s2=useState(new Set(["governance"])); var expanded=s2[0]; var setExpanded=s2[1];
     var s3=useState("documents"); var tab=s3[0]; var setTab=s3[1];
@@ -816,7 +813,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
         h("div",{style:{marginTop:48,paddingTop:16,borderTop:"1px solid rgba(176,144,85,0.15)",display:"flex",justifyContent:"space-between",alignItems:"center"}},
           h("div",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",letterSpacing:"0.02em"}},"Safeguard Framework \u2014 Bethany Chapel"),
           h("div",{style:{display:"flex",alignItems:"center",gap:16}},
-            h("button",{onClick:function(){if(confirm("This will clear your saved credentials. You\u2019ll need to re-enter them next time.")){window.SG_ConfigManager.clearConfig();setConfigured(false);}},style:{background:"none",border:"none",fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",cursor:"pointer",textDecoration:"underline",padding:0}},"Reset Credentials"),
+            h("button",{onClick:function(){if(confirm("This will log you out. You\u2019ll need to re-enter the password next time.")){window.SG_Hub.clear();setConfigured(false);}},style:{background:"none",border:"none",fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",cursor:"pointer",textDecoration:"underline",padding:0}},"Sign Out"),
             h("span",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",letterSpacing:"0.02em"}},"SG-HUB-001"))))
     );
   }
