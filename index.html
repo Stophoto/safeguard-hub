@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safeguard Hub — Bethany Chapel</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/11.1.0/jsrsasign-all-min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B3A4B;
+  --navy-deep: #0F2530;
+  --teal: #2E6B7F;
+  --teal-light: #3A8DA5;
+  --gold: #B09055;
+  --gold-warm: #C4A46A;
+  --cream: #FAF8F3;
+  --sand: #F2EFE8;
+  --body: #3D3835;
+  --muted: #9A958F;
+  --border: #E4E0DA;
+  --white: #FFFFFF;
+  --error: #C0392B;
+  --error-bg: #FFF0EE;
+  --success: #27AE60;
+  --success-bg: #EEFBF3;
+  --radius: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); color: var(--body); background: var(--cream); -webkit-font-smoothing: antialiased; font-size: 15px; line-height: 1.55; }
+
+/* Focus & Input */
+.fi { width: 100%; padding: 13px 15px; border: 1.5px solid var(--border); border-radius: 8px; font-family: var(--sans); font-size: 15px; color: var(--body); background: var(--white); transition: border-color var(--transition), box-shadow var(--transition); }
+.fi:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(46,107,127,0.1); outline: none; }
+.fi::placeholder { color: var(--muted); }
+select.fi { appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%239A958F' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+textarea.fi { resize: none; overflow: hidden; min-height: 80px; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 30px; border: none; border-radius: 8px; font-family: var(--sans); font-size: 15px; font-weight: 700; cursor: pointer; transition: all var(--transition); letter-spacing: 0.01em; }
+.btn-primary { background: var(--navy); color: var(--white); box-shadow: 0 2px 8px rgba(27,58,75,0.25); }
+.btn-primary:hover { background: var(--teal); box-shadow: 0 4px 16px rgba(46,107,127,0.3); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { background: var(--muted); box-shadow: none; cursor: not-allowed; transform: none; }
+.btn-secondary { background: var(--white); color: var(--body); border: 1.5px solid var(--border); }
+.btn-secondary:hover { background: var(--sand); border-color: var(--gold); }
+.btn-danger { background: var(--error); color: var(--white); box-shadow: 0 2px 8px rgba(192,57,43,0.25); }
+.btn-danger:hover { background: #A93226; transform: translateY(-1px); }
+.btn-ghost { background: none; color: var(--teal); padding: 8px 16px; }
+.btn-ghost:hover { background: rgba(46,107,127,0.06); }
+.btn-sm { padding: 10px 20px; font-size: 14px; border-radius: 6px; font-weight: 700; }
+
+/* Cards */
+.card { background: var(--white); border-radius: var(--radius); border: 1.5px solid var(--border); transition: all var(--transition); }
+.card:hover { border-color: var(--gold-warm); box-shadow: var(--shadow-md); }
+.card-active { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(46,107,127,0.08); }
+
+/* Animations */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.animate-up { animation: fadeUp 0.4s ease-out both; }
+.animate-in { animation: fadeIn 0.3s ease-out both; }
+
+/* Print */
+@media print { .no-print { display: none !important; } body { background: #fff; } }
+
+/* Checkbox custom */
+input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 18px; height: 18px; cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+/* ═══ SHEETS CONFIG — localStorage-based ═══ */
+/* Credentials are never stored in this file. They live in the browser's localStorage.
+   On first load, a setup screen prompts the admin to paste their credentials.
+   To reset: open browser console and run: localStorage.removeItem('sg_hub_config') */
+(function(){
+  var STORAGE_KEY = "sg_hub_config";
+  function loadConfig() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed.workbookId && parsed.credentials && parsed.credentials.client_email && parsed.credentials.private_key) {
+          window.SAFEGUARD_SHEETS_CONFIG = parsed;
+          return true;
+        }
+      }
+    } catch(e) { console.warn("Config load failed:", e); }
+    window.SAFEGUARD_SHEETS_CONFIG = null;
+    return false;
+  }
+  function saveConfig(cfg) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+    window.SAFEGUARD_SHEETS_CONFIG = cfg;
+  }
+  function clearConfig() {
+    localStorage.removeItem(STORAGE_KEY);
+    window.SAFEGUARD_SHEETS_CONFIG = null;
+  }
+  loadConfig();
+  window.SG_ConfigManager = { loadConfig: loadConfig, saveConfig: saveConfig, clearConfig: clearConfig, isLoaded: function(){ return !!window.SAFEGUARD_SHEETS_CONFIG; } };
+})();
+</script>
+
+<script>
+/* ═══ SHEETS SERVICE ═══ */
+(function(){
+  var SCOPES = "https://www.googleapis.com/auth/spreadsheets";
+  var TOKEN_URL = "https://oauth2.googleapis.com/token";
+  var SHEETS_BASE = "https://sheets.googleapis.com/v4/spreadsheets";
+  var TOKEN_LIFETIME = 3500;
+  var cachedToken = null;
+  var tokenExpiry = 0;
+
+  function cfg() {
+    return (typeof window !== "undefined" && window.SAFEGUARD_SHEETS_CONFIG) || { workbookId: "", credentials: { client_email: "", private_key: "" } };
+  }
+
+  function isConfigured(o) {
+    var c = o || cfg();
+    return !!(c.workbookId && c.credentials && c.credentials.client_email && c.credentials.private_key);
+  }
+
+  function createJWT(email, pk) {
+    if (typeof KJUR === "undefined") throw { type: "JSRSASIGN_MISSING" };
+    var now = Math.floor(Date.now() / 1000);
+    return KJUR.jws.JWS.sign("RS256", JSON.stringify({ alg: "RS256", typ: "JWT" }), JSON.stringify({ iss: email, scope: SCOPES, aud: TOKEN_URL, iat: now, exp: now + 3600 }), pk);
+  }
+
+  async function getToken(o) {
+    var c = o || cfg();
+    if (cachedToken && Date.now() / 1000 < tokenExpiry) return cachedToken;
+    var jwt = createJWT(c.credentials.client_email, c.credentials.private_key);
+    var res = await fetch(TOKEN_URL, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=" + jwt });
+    if (!res.ok) { var b = await res.text().catch(function(){ return ""; }); throw { type: "AUTH_FAILED", detail: "HTTP " + res.status + ": " + b }; }
+    var data = await res.json();
+    cachedToken = data.access_token;
+    tokenExpiry = Date.now() / 1000 + TOKEN_LIFETIME;
+    return cachedToken;
+  }
+
+  var ERRORS = { NOT_CONFIGURED: "Sheets not configured.", AUTH_FAILED: "Auth failed — check credentials.", NETWORK_ERROR: "Network error — check connection.", API_ERROR: "Sheets API error.", RATE_LIMITED: "Rate limited — wait and retry.", JSRSASIGN_MISSING: "Security library missing — refresh page." };
+
+  async function appendRow(tab, row, o) {
+    var c = o || cfg();
+    if (!isConfigured(c)) throw { type: "NOT_CONFIGURED" };
+    var token = await getToken(c);
+    var url = SHEETS_BASE + "/" + c.workbookId + "/values/" + encodeURIComponent(tab) + "!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS";
+    var res = await fetch(url, { method: "POST", headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" }, body: JSON.stringify({ values: [row] }) });
+    if (res.status === 429) throw { type: "RATE_LIMITED" };
+    if (!res.ok) { if (res.status === 401 || res.status === 403) { cachedToken = null; tokenExpiry = 0; throw { type: "AUTH_FAILED" }; } throw { type: "API_ERROR" }; }
+    return res.json();
+  }
+
+  async function appendRows(tab, rows, o) {
+    var c = o || cfg();
+    if (!isConfigured(c)) throw { type: "NOT_CONFIGURED" };
+    var token = await getToken(c);
+    var url = SHEETS_BASE + "/" + c.workbookId + "/values/" + encodeURIComponent(tab) + "!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS";
+    var res = await fetch(url, { method: "POST", headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" }, body: JSON.stringify({ values: rows }) });
+    if (res.status === 429) throw { type: "RATE_LIMITED" };
+    if (!res.ok) { if (res.status === 401 || res.status === 403) { cachedToken = null; tokenExpiry = 0; throw { type: "AUTH_FAILED" }; } throw { type: "API_ERROR" }; }
+    return res.json();
+  }
+
+  function getErrorMessage(err) { return (err && err.type && ERRORS[err.type]) || (err && err.message) || "Unexpected error."; }
+
+  window.SheetsService = { appendRow: appendRow, appendRows: appendRows, isConfigured: isConfigured, getErrorMessage: getErrorMessage };
+})();
+</script>
+
+<script>
+/* ═══ SAFEGUARD HUB APPLICATION ═══ */
+(function(){
+  var h = React.createElement;
+  var useState = React.useState;
+  var useCallback = React.useCallback;
+  var useRef = React.useRef;
+  var useEffect = React.useEffect;
+
+  // ── Helpers ──
+  var pad = function(n){ return String(n).padStart(2,"0"); };
+  var todayISO = function(){ return new Date().toISOString().slice(0,10); };
+  var nowTime = function(){ var d=new Date(); return pad(d.getHours())+":"+pad(d.getMinutes()); };
+  var genId = function(pfx){ var d=new Date(); return pfx+"-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds()); };
+  var sheetsOk = function(){ var s=window.SheetsService; return s && s.isConfigured(); };
+
+  // ── Document Registry (SG-DOCMAP-001 v2.0) ──
+  var layers = [
+    { id:"governance", label:"Governance", count:1, color:"var(--navy)", docs:[
+      { code:"SG-G-001", title:"Safeguard Governance Policy", note:"Includes Training & Renewal" }
+    ]},
+    { id:"policies", label:"Core Policies", count:4, color:"var(--teal)", docs:[
+      { code:"SG-POL-001", title:"Volunteer Screening & Approval" },
+      { code:"SG-POL-002", title:"Supervision Standards" },
+      { code:"SG-POL-003", title:"Bathroom & Diapering Protocols" },
+      { code:"SG-POL-004", title:"Reporting & Response" }
+    ]},
+    { id:"forms", label:"Forms", count:12, color:"#7C6B99", docs:[
+      { code:"SG-FRM-001", title:"Ministry Application", fill:"frm001" },
+      { code:"SG-FRM-002", title:"Reference Check" },
+      { code:"SG-FRM-003", title:"Police Check Letter & Consent" },
+      { code:"SG-FRM-004", title:"Worker\u2019s Covenant & Annual Acknowledgement" },
+      { code:"SG-FRM-005", title:"Child Registration & Medical Release" },
+      { code:"SG-FRM-006", title:"Incident / Accident Report", fill:"frm006" },
+      { code:"SG-FRM-007", title:"Suspected Abuse Report" },
+      { code:"SG-FRM-008", title:"Sign-In / Sign-Out & Attendance" },
+      { code:"SG-FRM-009", title:"Event / Activity Permission & Waiver" },
+      { code:"SG-FRM-010", title:"Driver Application & Authorization" },
+      { code:"SG-FRM-011", title:"Transportation Log & Trip Plan" },
+      { code:"SG-FRM-012", title:"Training Completion Record", fill:"frm012" }
+    ]},
+    { id:"sops", label:"SOPs & Checklists", count:7, color:"var(--gold)", docs:[
+      { code:"SG-SOP-001", title:"Screening & Onboarding Checklist" },
+      { code:"SG-SOP-002", title:"Washroom Escort Protocol" },
+      { code:"SG-SOP-003", title:"Ratio / Room Capacity Card" },
+      { code:"SG-SOP-004", title:"Reporting Flowchart" },
+      { code:"SG-SOP-005", title:"Receiving & Releasing Children" },
+      { code:"SG-SOP-006", title:"Emergency & Injury Protocols" },
+      { code:"SG-SOP-007", title:"Transportation & Off-Site Safety" }
+    ]},
+    { id:"training", label:"Training", count:8, color:"var(--success)", subs:[
+      { title:"Volunteer Track", docs:[
+        { code:"SG-T-001", title:"Why We Protect & How It Works" },
+        { code:"SG-T-002", title:"Supervision: Two-Adult Rule, Ratios & High-Risk Settings" },
+        { code:"SG-T-003", title:"Recognizing Abuse & Reporting It" },
+        { code:"SG-T-004", title:"Operations, Safety & Your Commitment" }
+      ]},
+      { title:"Leader Track", docs:[
+        { code:"SG-T-101", title:"Leading & Sustaining the Safeguard System" },
+        { code:"SG-T-102", title:"Screening & Managing Volunteers" },
+        { code:"SG-T-103", title:"Incidents, Compliance & Oversight" }
+      ]},
+      { title:"Reference", docs:[
+        { code:"SG-T-REF-001", title:"Leader Quick-Reference Guide" }
+      ]}
+    ]}
+  ];
+
+  var tasks = {
+    weekly: [
+      { t:"Review sign-in/sign-out sheets for completeness", r:"SG-FRM-008" },
+      { t:"Confirm two-adult rule maintained across all programs", r:"SG-POL-002" },
+      { t:"Check ratio compliance for each room/class", r:"SG-SOP-003" },
+      { t:"Follow up on any incomplete screening files", r:"SG-SOP-001" }
+    ],
+    monthly: [
+      { t:"Conduct unannounced walkthrough of all ministry spaces", r:"SG-T-103" },
+      { t:"Review incident log \u2014 verify follow-ups complete", r:"SG-FRM-006" },
+      { t:"Check screening renewal dates \u2014 flag expiring within 60 days", r:"SG-POL-001" },
+      { t:"Verify all volunteers have current training status", r:"SG-G-001" }
+    ],
+    quarterly: [
+      { t:"Audit training completion rates across active volunteers", r:"SG-G-001" },
+      { t:"Review and update room capacity cards if needed", r:"SG-SOP-003" },
+      { t:"Review emergency contact info for all registered children", r:"SG-FRM-005" }
+    ],
+    annually: [
+      { t:"Conduct full compliance audit", r:"SG-SOP-007" },
+      { t:"Collect annual policy acknowledgements from all workers", r:"SG-FRM-004" },
+      { t:"Coordinate police check renewals", r:"SG-FRM-003" },
+      { t:"Run training renewal cycle", r:"SG-G-001" },
+      { t:"Review and update all policies for currency", r:"SG-G-001" },
+      { t:"Present safeguarding report to Board of Elders", r:"SG-G-001" }
+    ]
+  };
+
+  var MODULES = {
+    Volunteer: [
+      { code:"SG-T-001", title:"Why We Protect & How It Works" },
+      { code:"SG-T-002", title:"Supervision: Two-Adult Rule, Ratios & High-Risk Settings" },
+      { code:"SG-T-003", title:"Recognizing Abuse & Reporting It" },
+      { code:"SG-T-004", title:"Operations, Safety & Your Commitment" }
+    ],
+    Leader: [
+      { code:"SG-T-001", title:"Why We Protect & How It Works" },
+      { code:"SG-T-002", title:"Supervision: Two-Adult Rule, Ratios & High-Risk Settings" },
+      { code:"SG-T-003", title:"Recognizing Abuse & Reporting It" },
+      { code:"SG-T-004", title:"Operations, Safety & Your Commitment" },
+      { code:"SG-T-101", title:"Leading & Sustaining the Safeguard System" },
+      { code:"SG-T-102", title:"Screening & Managing Volunteers" },
+      { code:"SG-T-103", title:"Incidents, Compliance & Oversight" }
+    ]
+  };
+
+  // ── Shared UI ──
+  function StatusBanner(props) {
+    if (!props.status || !props.msg) return null;
+    var err = props.status === "error";
+    return h("div", { className: "animate-in", style: { padding:"14px 18px", borderRadius:8, marginBottom:24, background: err?"var(--error-bg)":"var(--success-bg)", border:"1.5px solid "+(err?"rgba(192,57,43,0.15)":"rgba(39,174,96,0.15)"), fontFamily:"var(--sans)", fontSize:14, color: err?"var(--error)":"var(--success)", lineHeight:1.5, fontWeight:500 } },
+      h("strong",null, err?"Error: ":"Success: "), props.msg);
+  }
+
+  function Inp(props) {
+    return h("input", { className:"fi", type:props.type||"text", value:props.value, onChange:props.onChange, placeholder:props.placeholder, autoComplete:props.ac||"off", style: Object.assign({}, props.error?{borderColor:"var(--error)"}:{}, props.style) });
+  }
+
+  function AutoTxt(props) {
+    var ref = useRef(null);
+    useEffect(function(){ if(ref.current){ ref.current.style.height="auto"; ref.current.style.height=ref.current.scrollHeight+"px"; } }, [props.value]);
+    return h("textarea", { ref:ref, className:"fi", value:props.value, onChange:props.onChange, placeholder:props.placeholder, style: Object.assign({ minHeight: props.minH||80 }, props.style), onInput:function(e){ e.target.style.height="auto"; e.target.style.height=e.target.scrollHeight+"px"; } });
+  }
+
+  function Field(props) {
+    return h("div", { style:{ marginBottom:18 } },
+      h("label", { style:{ display:"block", fontFamily:"var(--sans)", fontSize:13, fontWeight:700, color:"var(--navy)", letterSpacing:"0.02em", marginBottom:6 } }, props.label, props.req ? h("span",{style:{color:"var(--error)",marginLeft:3}},"*") : null),
+      props.children,
+      props.error ? h("div",{style:{fontFamily:"var(--sans)",fontSize:12,color:"var(--error)",marginTop:4,fontWeight:500}},props.error) : null);
+  }
+
+  function SectionHead(props) {
+    return h("div",{style:{marginTop:36,marginBottom:18}},
+      h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.12em",color:"var(--gold)",textTransform:"uppercase",marginBottom:4}}, "Section "+props.num),
+      h("div",{style:{fontFamily:"var(--serif)",fontSize:22,color:"var(--navy)",lineHeight:1.2}}, props.title),
+      h("div",{style:{height:2,background:"linear-gradient(to right, var(--gold-warm), transparent)",marginTop:10,borderRadius:1}}));
+  }
+
+  // ════════════════════════════════════════════════
+  //  FORM: FRM-001 — Ministry Application
+  // ════════════════════════════════════════════════
+  function FormFRM001(props) {
+    var s = useState({}); var f=s[0]; var setF=s[1];
+    var s2 = useState({}); var errors=s2[0]; var setErrors=s2[1];
+    var s3 = useState(null); var status=s3[0]; var setStatus=s3[1];
+    var s4 = useState(""); var statusMsg=s4[0]; var setStatusMsg=s4[1];
+    var s5 = useState(false); var busy=s5[0]; var setBusy=s5[1];
+
+    function set(k,v){ setF(function(p){ var n=Object.assign({},p); n[k]=v; return n; }); setErrors(function(p){ var n=Object.assign({},p); delete n[k]; return n; }); }
+    function get(k){ return f[k]||""; }
+    function getList(k){ return f[k]||[]; }
+    function toggleList(k,item){ setF(function(p){ var list=p[k]||[]; return Object.assign({},p,{[k]: list.indexOf(item)>=0 ? list.filter(function(x){return x!==item;}) : list.concat(item) }); }); }
+
+    function validate(){
+      var e={};
+      if(!get("fullName").trim()) e.fullName="Required";
+      if(!get("dob")) e.dob="Required";
+      if(!get("email").trim()) e.email="Required";
+      if(!get("phone").trim()) e.phone="Required";
+      if(getList("ages").length===0) e.ages="Select at least one";
+      if(getList("times").length===0) e.times="Select at least one";
+      if(!f.d1||!f.d2||!f.d3||!f.d4) e.decl="All four required";
+      if(!get("ref1").trim()) e.ref1="Required";
+      if(!get("ref2").trim()) e.ref2="Required";
+      setErrors(e);
+      return Object.keys(e).length===0;
+    }
+
+    async function submit(){
+      if(!validate()){ setStatus("error"); setStatusMsg("Please complete all required fields."); return; }
+      setBusy(true); setStatus(null);
+      var rid = genId("PEO");
+      var row = [rid, get("fullName").trim(), get("email").trim(), get("phone").trim(), get("dob"), "Adult", getList("ages").join(", "), getList("times").join(", "), todayISO(), "","","","","","","","","","In Process"];
+      var S = window.SheetsService;
+      if(!sheetsOk()){ console.log("FRM-001 stub:",rid,row); await new Promise(function(r){setTimeout(r,600);}); setStatus("success"); setStatusMsg("Submitted (offline). Record: "+rid); setBusy(false); return; }
+      try{ await S.appendRow("People",row); setStatus("success"); setStatusMsg("Application submitted. Record: "+rid); } catch(err){ setStatus("error"); setStatusMsg(S.getErrorMessage(err)); }
+      setBusy(false);
+    }
+
+    var AGES=["Nursery (0\u20132)","Preschool (3\u20134)","Elementary (5\u20138)","Preteen (9\u201312)","Youth (13\u201317)"];
+    var TIMES=["9:00 AM Service","11:00 AM Service","Wednesday Evening","Special Events"];
+    var SCREENS=[{k:"q1",q:"Have you ever been convicted of a criminal offense?"},{k:"q2",q:"Have you been the subject of a child welfare investigation?"},{k:"q3",q:"Have you been terminated from a position involving children?"},{k:"q4",q:"Any health condition affecting ability to care for children?"}];
+
+    return h("div",{className:"animate-up",style:{maxWidth:760,margin:"0 auto"}},
+      h("button",{className:"btn btn-ghost btn-sm no-print",onClick:props.onBack,style:{marginBottom:20}},"← Back to Hub"),
+      h("div",{className:"card",style:{padding:"40px 44px",borderRadius:16}},
+        // Header
+        h("div",{style:{marginBottom:8}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.16em",color:"var(--gold)",textTransform:"uppercase"}},"Safeguard Framework"),
+          h("h2",{style:{fontFamily:"var(--serif)",fontSize:28,color:"var(--navy)",margin:"6px 0 0",fontWeight:400}},"Ministry Application"),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:4}},"SG-FRM-001")),
+        h("div",{style:{height:2,background:"linear-gradient(to right, var(--gold-warm), transparent)",margin:"16px 0 28px",borderRadius:1}}),
+        h(StatusBanner,{status:status,msg:statusMsg}),
+
+        // S1 — Personal Info
+        h(SectionHead,{num:"1",title:"Personal Information"}),
+        h(Field,{label:"Full Legal Name",req:true,error:errors.fullName}, h(Inp,{value:get("fullName"),onChange:function(e){set("fullName",e.target.value);},placeholder:"First and Last Name",ac:"name",error:errors.fullName})),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Date of Birth",req:true,error:errors.dob}, h(Inp,{type:"date",value:get("dob"),onChange:function(e){set("dob",e.target.value);},ac:"bday",error:errors.dob})),
+          h(Field,{label:"Email",req:true,error:errors.email}, h(Inp,{type:"email",value:get("email"),onChange:function(e){set("email",e.target.value);},placeholder:"email@example.com",ac:"email",error:errors.email}))),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Phone (Cell)",req:true,error:errors.phone}, h(Inp,{value:get("phone"),onChange:function(e){set("phone",e.target.value);},placeholder:"250-555-0100",ac:"tel",error:errors.phone})),
+          h(Field,{label:"Address"}, h(Inp,{value:get("address"),onChange:function(e){set("address",e.target.value);},ac:"street-address"}))),
+
+        // S2 — Ministry Preferences
+        h(SectionHead,{num:"2",title:"Ministry Preferences"}),
+        h(Field,{label:"Age Groups",req:true,error:errors.ages},
+          h("div",{style:{display:"flex",flexDirection:"column",gap:8}}, AGES.map(function(opt){
+            return h("label",{key:opt,style:{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}},
+              h("input",{type:"checkbox",checked:getList("ages").indexOf(opt)>=0,onChange:function(){toggleList("ages",opt);}}),
+              h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},opt));
+          }))),
+        h(Field,{label:"Service Times",req:true,error:errors.times},
+          h("div",{style:{display:"flex",flexDirection:"column",gap:8}}, TIMES.map(function(opt){
+            return h("label",{key:opt,style:{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}},
+              h("input",{type:"checkbox",checked:getList("times").indexOf(opt)>=0,onChange:function(){toggleList("times",opt);}}),
+              h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},opt));
+          }))),
+
+        // S3 — Safety Screening
+        h(SectionHead,{num:"3",title:"Safety Screening"}),
+        SCREENS.map(function(s){ return h("div",{key:s.k,style:{marginBottom:16}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--body)",marginBottom:8}},s.q),
+          h("div",{style:{display:"flex",gap:20}},
+            ["No","Yes"].map(function(v){ return h("label",{key:v,style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},
+              h("input",{type:"radio",name:s.k,checked:get(s.k)===v,onChange:function(){set(s.k,v);}}),
+              h("span",{style:{fontFamily:"var(--sans)",fontSize:13}},v)); }))); }),
+        (get("q1")==="Yes"||get("q2")==="Yes"||get("q3")==="Yes"||get("q4")==="Yes") ?
+          h(Field,{label:"Please explain"}, h(AutoTxt,{value:get("explain"),onChange:function(e){set("explain",e.target.value);}})) : null,
+
+        // S4 — References
+        h(SectionHead,{num:"4",title:"Personal References"}),
+        h("p",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginBottom:18,lineHeight:1.5}},"Two non-family references who have known you at least two years."),
+        [1,2].map(function(n){ return h("div",{key:n,style:{padding:18,background:"var(--sand)",borderRadius:10,marginBottom:14}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,color:"var(--teal)",marginBottom:10}},"Reference "+n),
+          h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
+            h(Field,{label:"Name",req:true,error:errors["ref"+n]}, h(Inp,{value:get("ref"+n),onChange:function(e){set("ref"+n,e.target.value);},error:errors["ref"+n]})),
+            h(Field,{label:"Phone"}, h(Inp,{value:get("ref"+n+"ph"),onChange:function(e){set("ref"+n+"ph",e.target.value);},ac:"tel"})),
+            h(Field,{label:"Email"}, h(Inp,{value:get("ref"+n+"em"),onChange:function(e){set("ref"+n+"em",e.target.value);},ac:"email"})),
+            h(Field,{label:"Relationship"}, h(Inp,{value:get("ref"+n+"rel"),onChange:function(e){set("ref"+n+"rel",e.target.value);}}))));
+        }),
+
+        // S5 — Declarations
+        h(SectionHead,{num:"5",title:"Declaration & Agreement"}),
+        errors.decl ? h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--error)",marginBottom:12,fontWeight:500}},errors.decl) : null,
+        ["I confirm that all information in this application is true and complete.",
+         "I understand a police information check will be required and I consent.",
+         "I have read and agree to follow the Safeguard Framework policies.",
+         "I understand my position is contingent on satisfactory screening completion."
+        ].map(function(txt,i){ return h("label",{key:i,style:{display:"flex",alignItems:"flex-start",gap:12,cursor:"pointer",marginBottom:12}},
+          h("input",{type:"checkbox",checked:!!f["d"+(i+1)],onChange:function(){set("d"+(i+1),!f["d"+(i+1)]);},style:{marginTop:3}}),
+          h("span",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--body)",lineHeight:1.5}},txt)); }),
+
+        // Actions
+        h("div",{className:"no-print",style:{marginTop:36,display:"flex",gap:12}},
+          h("button",{className:"btn btn-primary",onClick:submit,disabled:busy}, busy?"Submitting\u2026":"Submit Application"),
+          h("button",{className:"btn btn-secondary",onClick:function(){window.print();}},"Save as PDF"))));
+  }
+
+  // ════════════════════════════════════════════════
+  //  FORM: FRM-006 — Incident / Accident Report
+  // ════════════════════════════════════════════════
+  function FormFRM006(props) {
+    var s=useState({}); var f=s[0]; var setF=s[1];
+    var s2=useState({}); var errors=s2[0]; var setErrors=s2[1];
+    var s3=useState(null); var status=s3[0]; var setStatus=s3[1];
+    var s4=useState(""); var msg=s4[0]; var setMsg=s4[1];
+    var s5=useState(false); var busy=s5[0]; var setBusy=s5[1];
+
+    useEffect(function(){ if(!f.date) setF(function(p){return Object.assign({},p,{date:todayISO(),time:nowTime()});}); },[]);
+
+    function set(k,v){ setF(function(p){ var n=Object.assign({},p); n[k]=v; return n; }); setErrors(function(p){ var n=Object.assign({},p); delete n[k]; return n; }); }
+    function get(k){ return f[k]||""; }
+
+    var TYPES=["Injury","Behavioral","Policy Violation","Property","Near Miss","Other"];
+
+    function validate(){
+      var e={};
+      if(!get("date")) e.date="Required";
+      if(!get("time")) e.time="Required";
+      if(!get("location").trim()) e.location="Required";
+      if(!get("type")) e.type="Required";
+      if(!get("persons").trim()) e.persons="Required";
+      if(!get("desc").trim()) e.desc="Required";
+      if(!get("reporter").trim()) e.reporter="Required";
+      setErrors(e); return Object.keys(e).length===0;
+    }
+
+    async function submit(){
+      if(!validate()){setStatus("error");setMsg("Complete all required fields.");return;}
+      setBusy(true);setStatus(null);
+      var rid=genId("INC");
+      var row=[rid,get("date"),get("time"),get("location").trim(),get("program").trim(),get("type"),get("persons").trim(),get("childAge").trim(),get("parent").trim(),get("desc").trim(),f.firstAid?"Yes":"No",f.parentNotified?"Yes":"No",f.emergency?"Yes":"No",get("actions").trim(),get("w1"),get("w2"),get("reporter").trim(),get("role").trim(),"","","Open","",""];
+      var S=window.SheetsService;
+      if(!sheetsOk()){console.log("FRM-006 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
+      try{await S.appendRow("Incidents",row);setStatus("success");setMsg("Incident reported. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
+      setBusy(false);
+    }
+
+    return h("div",{className:"animate-up",style:{maxWidth:760,margin:"0 auto"}},
+      h("button",{className:"btn btn-ghost btn-sm no-print",onClick:props.onBack,style:{marginBottom:20}},"← Back to Hub"),
+      h("div",{className:"card",style:{padding:"40px 44px",borderRadius:16}},
+        h("div",{style:{marginBottom:8}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.16em",color:"var(--error)",textTransform:"uppercase"}},"Safeguard Framework"),
+          h("h2",{style:{fontFamily:"var(--serif)",fontSize:28,color:"var(--navy)",margin:"6px 0 0",fontWeight:400}},"Incident / Accident Report"),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:4}},"SG-FRM-006")),
+        h("div",{style:{height:2,background:"linear-gradient(to right, var(--error), transparent)",margin:"16px 0 28px",borderRadius:1}}),
+        h(StatusBanner,{status:status,msg:msg}),
+
+        h(SectionHead,{num:"1",title:"When & Where"}),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}},
+          h(Field,{label:"Date",req:true,error:errors.date},h(Inp,{type:"date",value:get("date"),onChange:function(e){set("date",e.target.value);},error:errors.date})),
+          h(Field,{label:"Time",req:true,error:errors.time},h(Inp,{type:"time",value:get("time"),onChange:function(e){set("time",e.target.value);},error:errors.time})),
+          h(Field,{label:"Location",req:true,error:errors.location},h(Inp,{value:get("location"),onChange:function(e){set("location",e.target.value);},placeholder:"e.g. Room 101",error:errors.location}))),
+        h(Field,{label:"Program / Ministry"},h(Inp,{value:get("program"),onChange:function(e){set("program",e.target.value);},placeholder:"e.g. Kids Church"})),
+
+        h(SectionHead,{num:"2",title:"What Happened"}),
+        h(Field,{label:"Incident Type",req:true,error:errors.type},
+          h("select",{className:"fi",value:get("type"),onChange:function(e){set("type",e.target.value);},style:errors.type?{borderColor:"var(--error)"}:{}},
+            h("option",{value:""},"\u2014 Select type \u2014"),
+            TYPES.map(function(t){return h("option",{key:t,value:t},t);}))),
+        h(Field,{label:"Persons Involved",req:true,error:errors.persons},h(Inp,{value:get("persons"),onChange:function(e){set("persons",e.target.value);},error:errors.persons})),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Child's Age"},h(Inp,{value:get("childAge"),onChange:function(e){set("childAge",e.target.value);}})),
+          h(Field,{label:"Parent / Guardian"},h(Inp,{value:get("parent"),onChange:function(e){set("parent",e.target.value);}})) ),
+        h(Field,{label:"Description",req:true,error:errors.desc},h(AutoTxt,{value:get("desc"),onChange:function(e){set("desc",e.target.value);},placeholder:"Describe what happened\u2026",minH:100})),
+
+        h(SectionHead,{num:"3",title:"Immediate Actions"}),
+        [{k:"firstAid",l:"First aid administered"},{k:"parentNotified",l:"Parent/guardian notified"},{k:"emergency",l:"Emergency services called"}].map(function(item){
+          return h("label",{key:item.k,style:{display:"flex",alignItems:"center",gap:10,cursor:"pointer",marginBottom:10}},
+            h("input",{type:"checkbox",checked:!!f[item.k],onChange:function(){set(item.k,!f[item.k]);}}),
+            h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},item.l));
+        }),
+        h(Field,{label:"Actions taken"},h(AutoTxt,{value:get("actions"),onChange:function(e){set("actions",e.target.value);},minH:60})),
+
+        h(SectionHead,{num:"4",title:"Witnesses & Reporter"}),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Witness 1"},h(Inp,{value:get("w1"),onChange:function(e){set("w1",e.target.value);}})),
+          h(Field,{label:"Witness 2"},h(Inp,{value:get("w2"),onChange:function(e){set("w2",e.target.value);}})) ),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Your Name",req:true,error:errors.reporter},h(Inp,{value:get("reporter"),onChange:function(e){set("reporter",e.target.value);},error:errors.reporter})),
+          h(Field,{label:"Your Role"},h(Inp,{value:get("role"),onChange:function(e){set("role",e.target.value);},placeholder:"e.g. Lead Volunteer"}))),
+
+        h("div",{className:"no-print",style:{marginTop:36,display:"flex",gap:12}},
+          h("button",{className:"btn btn-danger",onClick:submit,disabled:busy},busy?"Submitting\u2026":"Submit Incident Report"),
+          h("button",{className:"btn btn-secondary",onClick:function(){window.print();}},"Save as PDF"))));
+  }
+
+  // ════════════════════════════════════════════════
+  //  FORM: FRM-012 — Training Completion Record
+  // ════════════════════════════════════════════════
+  function FormFRM012(props) {
+    var s=useState({name:"",email:"",track:"Volunteer"}); var trainee=s[0]; var setTrainee=s[1];
+    var entryId=0;
+    function mkEntry(){return{id:++entryId+"_"+Math.random().toString(36).slice(2,8),code:"",title:"",date:todayISO(),method:"In-Person"};}
+    var s2=useState([mkEntry()]); var entries=s2[0]; var setEntries=s2[1];
+    var s3=useState({by:"",date:todayISO(),notes:""}); var verif=s3[0]; var setVerif=s3[1];
+    var s4=useState({}); var errors=s4[0]; var setErrors=s4[1];
+    var s5=useState("idle"); var status=s5[0]; var setStatus=s5[1];
+    var s6=useState(""); var msg=s6[0]; var setMsg=s6[1];
+
+    function updateEntry(id,field,val){
+      setEntries(function(prev){return prev.map(function(e){
+        if(e.id!==id)return e;
+        if(field==="code"){var all=MODULES.Volunteer.concat(MODULES.Leader); var m=all.find(function(x){return x.code===val;}); return Object.assign({},e,{code:val,title:m?m.title:""});}
+        return Object.assign({},e,{[field]:val});
+      });});
+    }
+    function addEntry(){setEntries(function(p){return p.concat(mkEntry());});}
+    function removeEntry(id){setEntries(function(p){return p.length>1?p.filter(function(e){return e.id!==id;}):p;});}
+
+    function validate(){
+      var errs={};
+      if(!trainee.name.trim())errs.name="Required";
+      if(!verif.by.trim())errs.by="Required";
+      entries.forEach(function(e,i){if(!e.code)errs["e"+i]="Select a module";});
+      setErrors(errs); return !Object.keys(errs).length;
+    }
+
+    async function submit(){
+      if(!validate())return;
+      setStatus("submitting");
+      var rows=entries.filter(function(e){return e.code;}).map(function(e){return[genId("TRN"),trainee.name.trim(),trainee.email.trim(),e.code,e.title,trainee.track,e.date,e.method,verif.by.trim(),verif.date,verif.notes.trim()];});
+      var S=window.SheetsService;
+      if(!sheetsOk()){console.log("FRM-012 stub:",rows);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Logged "+rows.length+" module(s) for "+trainee.name+" (offline)");return;}
+      try{await S.appendRows("Training Log",rows);setStatus("success");setMsg(rows.length===1?"Logged: "+rows[0][3]+" for "+trainee.name:"Logged "+rows.length+" modules for "+trainee.name);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
+    }
+
+    var avail=MODULES[trainee.track]||MODULES.Volunteer;
+    var used=entries.map(function(e){return e.code;}).filter(Boolean);
+    var METHODS=["In-Person","Self-Study","Online","Refresher"];
+
+    return h("div",{className:"animate-up",style:{maxWidth:760,margin:"0 auto"}},
+      h("button",{className:"btn btn-ghost btn-sm no-print",onClick:props.onBack,style:{marginBottom:20}},"← Back to Hub"),
+      h("div",{className:"card",style:{padding:"40px 44px",borderRadius:16}},
+        h("div",{style:{marginBottom:8}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.16em",color:"var(--success)",textTransform:"uppercase"}},"Safeguard Framework"),
+          h("h2",{style:{fontFamily:"var(--serif)",fontSize:28,color:"var(--navy)",margin:"6px 0 0",fontWeight:400}},"Training Completion Record"),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:4}},"SG-FRM-012")),
+        h("div",{style:{height:2,background:"linear-gradient(to right, var(--success), transparent)",margin:"16px 0 28px",borderRadius:1}}),
+        status==="success"?h(StatusBanner,{status:"success",msg:msg}):null,
+        status==="error"?h(StatusBanner,{status:"error",msg:msg}):null,
+
+        h(SectionHead,{num:"1",title:"Trainee Information"}),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Full Name",req:true,error:errors.name},h(Inp,{value:trainee.name,onChange:function(e){setTrainee(function(p){return Object.assign({},p,{name:e.target.value});});},ac:"name",error:errors.name})),
+          h(Field,{label:"Email"},h(Inp,{value:trainee.email,onChange:function(e){setTrainee(function(p){return Object.assign({},p,{email:e.target.value});});},ac:"email"}))),
+        h(Field,{label:"Training Track"},
+          h("div",{style:{display:"flex",gap:8}},
+            ["Volunteer","Leader"].map(function(t){return h("button",{key:t,className:"btn btn-sm "+(trainee.track===t?"btn-primary":"btn-secondary"),onClick:function(){setTrainee(function(p){return Object.assign({},p,{track:t});});setEntries([mkEntry()]);}},t);}))),
+
+        h(SectionHead,{num:"2",title:"Module Completions"}),
+        entries.map(function(entry,i){
+          return h("div",{key:entry.id,style:{padding:18,background:"var(--sand)",borderRadius:10,marginBottom:14}},
+            h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}},
+              h("span",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,color:"var(--teal)"}},"Module "+(i+1)),
+              entries.length>1?h("button",{className:"btn btn-ghost btn-sm",style:{color:"var(--error)",padding:"4px 10px",fontSize:12},onClick:function(){removeEntry(entry.id);}},"Remove"):null),
+            h(Field,{label:"Module",error:errors["e"+i]},
+              h("select",{className:"fi",value:entry.code,onChange:function(e){updateEntry(entry.id,"code",e.target.value);},style:errors["e"+i]?{borderColor:"var(--error)"}:{}},
+                h("option",{value:""},"\u2014 Select module \u2014"),
+                avail.map(function(m){return h("option",{key:m.code,value:m.code,disabled:used.indexOf(m.code)>=0&&entry.code!==m.code},m.code+" \u2014 "+m.title);}))),
+            h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
+              h(Field,{label:"Completion Date"},h(Inp,{type:"date",value:entry.date,onChange:function(e){updateEntry(entry.id,"date",e.target.value);}})),
+              h(Field,{label:"Method"},h("select",{className:"fi",value:entry.method,onChange:function(e){updateEntry(entry.id,"method",e.target.value);}},METHODS.map(function(m){return h("option",{key:m,value:m},m);})))));
+        }),
+        h("button",{className:"btn btn-secondary btn-sm no-print",onClick:addEntry,style:{marginBottom:24}},"\u002B Add Another Module"),
+
+        h(SectionHead,{num:"3",title:"Verification"}),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Verified By",req:true,error:errors.by},h(Inp,{value:verif.by,onChange:function(e){setVerif(function(p){return Object.assign({},p,{by:e.target.value});});},error:errors.by})),
+          h(Field,{label:"Date"},h(Inp,{type:"date",value:verif.date,onChange:function(e){setVerif(function(p){return Object.assign({},p,{date:e.target.value});});}}))),
+        h(Field,{label:"Notes"},h(AutoTxt,{value:verif.notes,onChange:function(e){setVerif(function(p){return Object.assign({},p,{notes:e.target.value});});},minH:60})),
+
+        h("div",{className:"no-print",style:{marginTop:36,display:"flex",gap:12}},
+          h("button",{className:"btn btn-primary",onClick:submit,disabled:status==="submitting"},status==="submitting"?"Submitting\u2026":"Log Training"),
+          h("button",{className:"btn btn-secondary",onClick:function(){window.print();}},"Save as PDF"))));
+  }
+
+  // ════════════════════════════════════════════════
+  //  MAIN HUB
+  // ════════════════════════════════════════════════
+  // ════════════════════════════════════════════════
+  //  SETUP SCREEN — shown when no credentials found
+  // ════════════════════════════════════════════════
+  function SetupScreen(props) {
+    var s1=useState(""); var workbookId=s1[0]; var setWorkbookId=s1[1];
+    var s2=useState(""); var jsonRaw=s2[0]; var setJsonRaw=s2[1];
+    var s3=useState(""); var errMsg=s3[0]; var setErr=s3[1];
+    var s4=useState(false); var saving=s4[0]; var setSaving=s4[1];
+
+    function handleSave() {
+      setErr("");
+      if (!workbookId.trim()) { setErr("Workbook ID is required."); return; }
+      if (!jsonRaw.trim()) { setErr("Paste your JSON key file."); return; }
+      var parsed;
+      try { parsed = JSON.parse(jsonRaw); } catch(e) { setErr("Invalid JSON: " + e.message); return; }
+      if (!parsed.client_email || !parsed.private_key) { setErr("JSON is missing client_email or private_key."); return; }
+      setSaving(true);
+      var cfg = { workbookId: workbookId.trim(), credentials: { client_email: parsed.client_email, private_key: parsed.private_key } };
+      window.SG_ConfigManager.saveConfig(cfg);
+      setTimeout(function(){ props.onComplete(); }, 300);
+    }
+
+    return h("div",{style:{minHeight:"100vh",background:"var(--cream)",display:"flex",alignItems:"center",justifyContent:"center",padding:"32px 20px"}},
+      h("div",{className:"card animate-up",style:{maxWidth:560,width:"100%",padding:"48px 44px",borderRadius:16}},
+        h("div",{style:{textAlign:"center",marginBottom:32}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.2em",color:"var(--gold)",textTransform:"uppercase",marginBottom:8}},"Safeguard Framework"),
+          h("h1",{style:{fontFamily:"var(--serif)",fontSize:32,color:"var(--navy)",fontWeight:400,margin:0}},"Hub Setup"),
+          h("p",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--muted)",marginTop:12,lineHeight:1.5}},"One-time configuration. Your credentials are stored in this browser only \u2014 they never leave your device.")),
+        errMsg ? h("div",{style:{padding:"12px 16px",borderRadius:8,background:"var(--error-bg)",border:"1.5px solid rgba(192,57,43,0.15)",color:"var(--error)",fontFamily:"var(--sans)",fontSize:14,fontWeight:500,marginBottom:20}},errMsg) : null,
+        h("div",{style:{marginBottom:20}},
+          h("label",{style:{display:"block",fontFamily:"var(--sans)",fontSize:13,fontWeight:700,color:"var(--navy)",marginBottom:6}},"Workbook ID"),
+          h("input",{className:"fi",value:workbookId,onChange:function(e){setWorkbookId(e.target.value);},placeholder:"The long string from your Google Sheets URL"}),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:12,color:"var(--muted)",marginTop:4}},"Found between /d/ and /edit in the spreadsheet URL")),
+        h("div",{style:{marginBottom:28}},
+          h("label",{style:{display:"block",fontFamily:"var(--sans)",fontSize:13,fontWeight:700,color:"var(--navy)",marginBottom:6}},"Service Account JSON Key"),
+          h("textarea",{className:"fi",value:jsonRaw,onChange:function(e){setJsonRaw(e.target.value);},placeholder:"Paste the entire contents of your downloaded .json key file here\u2026",style:{minHeight:140,resize:"vertical",overflow:"auto",fontFamily:"monospace",fontSize:12}}),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:12,color:"var(--muted)",marginTop:4}},"We extract client_email and private_key \u2014 nothing else is stored")),
+        h("button",{className:"btn btn-primary",onClick:handleSave,disabled:saving,style:{width:"100%",padding:"16px"}},saving?"Saving\u2026":"Connect to Google Sheets")));
+  }
+
+  // ════════════════════════════════════════════════
+  //  MAIN HUB
+  // ════════════════════════════════════════════════
+  function SafeguardHub() {
+    var s0=useState(window.SG_ConfigManager.isLoaded()); var configured=s0[0]; var setConfigured=s0[1];
+    var s1=useState("dashboard"); var view=s1[0]; var setView=s1[1];
+    var s2=useState(new Set(["governance"])); var expanded=s2[0]; var setExpanded=s2[1];
+    var s3=useState("documents"); var tab=s3[0]; var setTab=s3[1];
+    var s4=useState("weekly"); var cadence=s4[0]; var setCadence=s4[1];
+
+    // Show setup screen if no credentials
+    if (!configured) return h(SetupScreen, { onComplete: function(){ setConfigured(true); } });
+
+    function toggle(id){setExpanded(function(prev){var n=new Set(prev);if(n.has(id))n.delete(id);else n.add(id);return n;});}
+    function goForm(v){setView(v);window.scrollTo({top:0});}
+    function goHome(){setView("dashboard");window.scrollTo({top:0});}
+
+    var totalDocs=32;
+    var connected=sheetsOk();
+
+    // Route to forms
+    if(view==="frm001") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM001,{onBack:goHome}));
+    if(view==="frm006") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM006,{onBack:goHome}));
+    if(view==="frm012") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM012,{onBack:goHome}));
+
+    // ── Dashboard ──
+    return h("div",{style:{minHeight:"100vh",background:"var(--cream)"}},
+
+      // Header
+      h("div",{style:{background:"var(--navy-deep)",position:"relative",overflow:"hidden"}},
+        h("div",{style:{position:"absolute",top:0,right:0,width:"40%",height:"100%",background:"linear-gradient(135deg, transparent 0%, rgba(176,144,85,0.06) 100%)"}}),
+        h("div",{style:{maxWidth:920,margin:"0 auto",padding:"44px 36px 38px",position:"relative"}},
+          h("div",{style:{display:"flex",alignItems:"flex-end",justifyContent:"space-between"}},
+            h("div",null,
+              h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.25em",color:"var(--gold-warm)",textTransform:"uppercase",marginBottom:10}},"Bethany Chapel"),
+              h("h1",{style:{fontFamily:"var(--serif)",fontSize:38,fontWeight:400,color:"var(--white)",lineHeight:1.1,margin:0}},"Safeguard Framework")),
+            h("div",{style:{display:"flex",gap:32,alignItems:"flex-end"}},
+              [{ n:totalDocs, l:"Documents" },{ n:5, l:"Layers" }].map(function(stat,i){
+                return h("div",{key:i,style:{textAlign:"center"}},
+                  h("div",{style:{fontFamily:"var(--serif)",fontSize:28,color:"var(--gold-warm)",lineHeight:1}},stat.n),
+                  h("div",{style:{fontFamily:"var(--sans)",fontSize:10,color:"var(--muted)",marginTop:5,letterSpacing:"0.08em",textTransform:"uppercase"}},stat.l));
+              }),
+              connected ? h("div",{style:{display:"flex",alignItems:"center",gap:6}},
+                h("div",{style:{width:8,height:8,borderRadius:"50%",background:"var(--success)",boxShadow:"0 0 8px rgba(39,174,96,0.4)"}}),
+                h("span",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--success)",fontWeight:600}},"Connected")) : null
+            ))),
+        h("div",{style:{height:3,background:"linear-gradient(to right, var(--gold-warm), var(--gold), transparent)"}})),
+
+      // Nav
+      h("div",{style:{background:"var(--white)",borderBottom:"1px solid var(--border)",position:"sticky",top:0,zIndex:10}},
+        h("div",{style:{maxWidth:920,margin:"0 auto",padding:"14px 36px",display:"flex",gap:8}},
+          [{k:"documents",l:"Document Map"},{k:"tasks",l:"Admin Tasks"},{k:"forms",l:"Fillable Forms"}].map(function(item){
+            var active=tab===item.k;
+            return h("button",{key:item.k,className:"btn btn-sm",onClick:function(){setTab(item.k);},style:{
+              background:active?"var(--navy)":"transparent", color:active?"var(--white)":"var(--body)",
+              fontWeight:active?700:600, padding:"12px 28px", fontSize:15,
+              border:active?"none":"1.5px solid transparent",
+              boxShadow:active?"0 2px 8px rgba(27,58,75,0.2)":"none"
+            }},item.l);
+          }))),
+
+      // Content
+      h("div",{style:{maxWidth:920,margin:"0 auto",padding:"32px 36px 80px"}},
+
+        // Document Map
+        tab==="documents" ? h("div",{className:"animate-in"},
+          h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24}},
+            h("p",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--muted)"}},"Every document in the framework, organized by layer."),
+            h("div",{style:{display:"flex",gap:6}},
+              h("button",{className:"btn btn-ghost btn-sm",onClick:function(){setExpanded(new Set(layers.map(function(l){return l.id;})));}},"Expand All"),
+              h("button",{className:"btn btn-ghost btn-sm",onClick:function(){setExpanded(new Set());}},"Collapse"))),
+          layers.map(function(layer){
+            var open=expanded.has(layer.id);
+            var allDocs=layer.subs?layer.subs.reduce(function(a,s){return a.concat(s.docs);},[]):layer.docs;
+            return h("div",{key:layer.id,className:"card",style:{marginBottom:10,overflow:"hidden",borderColor:open?layer.color+"40":"var(--border)"}},
+              h("button",{onClick:function(){toggle(layer.id);},style:{width:"100%",display:"flex",alignItems:"center",gap:16,padding:"22px 28px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}},
+                h("div",{style:{width:4,height:36,borderRadius:2,background:layer.color,flexShrink:0,opacity:open?1:0.3,transition:"opacity 0.2s"}}),
+                h("div",{style:{flex:1}},
+                  h("div",{style:{display:"flex",alignItems:"baseline",gap:12}},
+                    h("span",{style:{fontFamily:"var(--serif)",fontSize:20,color:"var(--navy)"}},layer.label),
+                    h("span",{style:{fontFamily:"var(--sans)",fontSize:12,color:"var(--muted)",fontWeight:500}},allDocs.length+" doc"+(allDocs.length===1?"":"s")))),
+                h("div",{style:{fontFamily:"var(--sans)",fontSize:18,color:"var(--muted)",transform:open?"rotate(180deg)":"rotate(0)",transition:"transform 0.25s",flexShrink:0}},"\u25BE")),
+              open?h("div",{className:"animate-in",style:{padding:"0 28px 22px 52px"}},
+                layer.subs ? layer.subs.map(function(sub,si){
+                  return h("div",{key:si,style:{marginBottom:si<layer.subs.length-1?22:0}},
+                    h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:"var(--gold)",textTransform:"uppercase",marginBottom:10,paddingBottom:6,borderBottom:"1px solid var(--border)"}},sub.title,h("span",{style:{fontWeight:400,marginLeft:8,color:"var(--muted)"}},"\u2014 "+sub.docs.length)),
+                    sub.docs.map(function(doc,di){return h("div",{key:di,onClick:doc.fill?function(){goForm(doc.fill);}:undefined,style:{display:"flex",alignItems:"center",gap:16,padding:"12px 16px",borderRadius:8,cursor:doc.fill?"pointer":"default",transition:"all 0.15s",marginBottom:4,background:"var(--white)",border:"1px solid var(--border)"},onMouseEnter:function(e){e.currentTarget.style.borderColor=layer.color;e.currentTarget.style.background="var(--sand)";},onMouseLeave:function(e){e.currentTarget.style.borderColor="var(--border)";e.currentTarget.style.background="var(--white)";}},
+                      h("span",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,color:layer.color,minWidth:110,letterSpacing:"0.02em"}},doc.code),
+                      h("span",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--body)",flex:1,fontWeight:400}},doc.title),
+                      doc.fill?h("span",{style:{fontFamily:"var(--sans)",fontSize:10,fontWeight:700,color:"var(--teal)",background:"rgba(46,107,127,0.08)",padding:"3px 10px",borderRadius:4,textTransform:"uppercase",letterSpacing:"0.05em"}},"Open"):null);}));
+                }) : allDocs.map(function(doc,di){return h("div",{key:di,onClick:doc.fill?function(){goForm(doc.fill);}:undefined,style:{display:"flex",alignItems:"center",gap:16,padding:"12px 16px",borderRadius:8,cursor:doc.fill?"pointer":"default",transition:"all 0.15s",marginBottom:4,background:"var(--white)",border:"1px solid var(--border)"},onMouseEnter:function(e){e.currentTarget.style.borderColor=layer.color;e.currentTarget.style.background="var(--sand)";},onMouseLeave:function(e){e.currentTarget.style.borderColor="var(--border)";e.currentTarget.style.background="var(--white)";}},
+                  h("span",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,color:layer.color,minWidth:110,letterSpacing:"0.02em"}},doc.code),
+                  h("span",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--body)",flex:1,fontWeight:400}},doc.title),
+                  doc.fill?h("span",{style:{fontFamily:"var(--sans)",fontSize:10,fontWeight:700,color:"var(--teal)",background:"rgba(46,107,127,0.08)",padding:"3px 10px",borderRadius:4,textTransform:"uppercase",letterSpacing:"0.05em"}},"Open"):null);})
+              ):null);
+          })
+        ) : null,
+
+        // Admin Tasks
+        tab==="tasks" ? h("div",{className:"animate-in"},
+          h("p",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--muted)",marginBottom:24,lineHeight:1.5}},"The Safeguard Coordinator\u2019s operational rhythm."),
+          h("div",{style:{display:"flex",gap:8,marginBottom:28}},
+            [{k:"weekly",l:"Weekly"},{k:"monthly",l:"Monthly"},{k:"quarterly",l:"Quarterly"},{k:"annually",l:"Annual"}].map(function(c){
+              var active=cadence===c.k;
+              return h("button",{key:c.k,className:"btn",onClick:function(){setCadence(c.k);},style:{
+                padding:"13px 26px",fontSize:15,fontWeight:active?700:600,borderRadius:8,
+                background:active?"var(--teal)":"var(--white)",color:active?"var(--white)":"var(--body)",
+                border:active?"none":"1.5px solid var(--border)",
+                boxShadow:active?"0 4px 12px rgba(46,107,127,0.25)":"var(--shadow-sm)",
+                transform:active?"translateY(-1px)":"none",transition:"all 0.2s"
+              }},c.l,h("span",{style:{marginLeft:8,fontSize:11,opacity:0.7}},tasks[c.k].length));
+            })),
+          h("div",{className:"card",style:{padding:"28px 32px"}},
+            h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:"var(--gold)",textTransform:"uppercase",marginBottom:18}},cadence+" tasks"),
+            tasks[cadence].map(function(t,i){return h("div",{key:i,style:{display:"flex",alignItems:"flex-start",gap:16,padding:"14px 0",borderBottom:i<tasks[cadence].length-1?"1px solid var(--border)":"none"}},
+              h("div",{style:{fontFamily:"var(--serif)",fontSize:18,color:"var(--gold-warm)",minWidth:28,flexShrink:0,lineHeight:1.4}},(i+1)+"."),
+              h("div",{style:{flex:1}},
+                h("div",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--body)",lineHeight:1.55,fontWeight:400}},t.t),
+                h("div",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",marginTop:5,fontWeight:600,letterSpacing:"0.03em"}},t.r)));
+            }))
+        ) : null,
+
+        // Fillable Forms
+        tab==="forms" ? h("div",{className:"animate-in"},
+          h("p",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--muted)",marginBottom:28,lineHeight:1.5}},"Digital forms that submit directly to Google Sheets."),
+          [
+            {code:"SG-FRM-001",title:"Ministry Application",desc:"Start the screening pipeline for a new volunteer",view:"frm001",color:"var(--teal)",accent:"rgba(46,107,127,0.06)"},
+            {code:"SG-FRM-006",title:"Incident / Accident Report",desc:"Document and log any incident immediately",view:"frm006",color:"var(--error)",accent:"rgba(192,57,43,0.04)"},
+            {code:"SG-FRM-012",title:"Training Completion Record",desc:"Log module completions for volunteers and leaders",view:"frm012",color:"var(--success)",accent:"rgba(39,174,96,0.04)"}
+          ].map(function(form){
+            return h("button",{key:form.code,onClick:function(){goForm(form.view);},style:{width:"100%",display:"flex",alignItems:"center",gap:24,padding:"28px 32px",background:"var(--white)",border:"1.5px solid var(--border)",borderRadius:14,cursor:"pointer",textAlign:"left",transition:"all 0.2s",marginBottom:12},
+              onMouseEnter:function(e){e.currentTarget.style.borderColor=form.color;e.currentTarget.style.boxShadow="0 6px 24px rgba(0,0,0,0.06)";e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.background=form.accent;},
+              onMouseLeave:function(e){e.currentTarget.style.borderColor="var(--border)";e.currentTarget.style.boxShadow="none";e.currentTarget.style.transform="none";e.currentTarget.style.background="var(--white)";}},
+              h("div",{style:{width:5,height:48,borderRadius:3,background:form.color,flexShrink:0}}),
+              h("div",{style:{flex:1}},
+                h("div",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,color:form.color,letterSpacing:"0.04em",marginBottom:3}},form.code),
+                h("div",{style:{fontFamily:"var(--serif)",fontSize:22,color:"var(--navy)",lineHeight:1.2}},form.title),
+                h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:6,fontWeight:400}},form.desc)),
+              h("div",{style:{fontFamily:"var(--sans)",fontSize:22,color:"var(--muted)",opacity:0.3,flexShrink:0}},"\u2192"));
+          })
+        ) : null,
+
+        // Footer
+        h("div",{style:{marginTop:48,paddingTop:16,borderTop:"1px solid rgba(176,144,85,0.15)",display:"flex",justifyContent:"space-between",alignItems:"center"}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",letterSpacing:"0.02em"}},"Safeguard Framework \u2014 Bethany Chapel"),
+          h("div",{style:{display:"flex",alignItems:"center",gap:16}},
+            h("button",{onClick:function(){if(confirm("This will clear your saved credentials. You\u2019ll need to re-enter them next time.")){window.SG_ConfigManager.clearConfig();setConfigured(false);}},style:{background:"none",border:"none",fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",cursor:"pointer",textDecoration:"underline",padding:0}},"Reset Credentials"),
+            h("span",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",letterSpacing:"0.02em"}},"SG-HUB-001"))))
+    );
+  }
+
+  // Mount
+  ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(SafeguardHub));
+})();
+</script>
+</body>
+</html>
