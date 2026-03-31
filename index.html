@@ -179,6 +179,9 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
   var nowTime = function(){ var d=new Date(); return pad(d.getHours())+":"+pad(d.getMinutes()); };
   var genId = function(pfx){ var d=new Date(); return pfx+"-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds()); };
   var sheetsOk = function(){ var s=window.SheetsService; return s && s.isConfigured(); };
+  var MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var timestamp = function(){ var d=new Date(); var h=d.getHours(); var ampm=h>=12?"PM":"AM"; var h12=h%12||12; return MONTHS[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear()+" at "+h12+":"+pad(d.getMinutes())+" "+ampm; };
+  var renewalDate = function(months){ var d=new Date(); d.setMonth(d.getMonth()+(months||12)); return d.toISOString().slice(0,10); };
 
   // ── Document Registry (SG-DOCMAP-001 v2.0) ──
   var layers = [
@@ -193,12 +196,12 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
     ]},
     { id:"forms", label:"Forms", count:12, color:"#7C6B99", docs:[
       { code:"SG-FRM-001", title:"Ministry Application", fill:"frm001" },
-      { code:"SG-FRM-002", title:"Reference Check" },
+      { code:"SG-FRM-002", title:"Reference Check", fill:"frm002" },
       { code:"SG-FRM-003", title:"Police Check Letter & Consent" },
-      { code:"SG-FRM-004", title:"Worker\u2019s Covenant & Annual Acknowledgement" },
-      { code:"SG-FRM-005", title:"Child Registration & Medical Release" },
+      { code:"SG-FRM-004", title:"Worker\u2019s Covenant & Annual Acknowledgement", fill:"frm004" },
+      { code:"SG-FRM-005", title:"Child Registration & Medical Release", fill:"frm005" },
       { code:"SG-FRM-006", title:"Incident / Accident Report", fill:"frm006" },
-      { code:"SG-FRM-007", title:"Suspected Abuse Report" },
+      { code:"SG-FRM-007", title:"Suspected Abuse Report", fill:"frm007" },
       { code:"SG-FRM-008", title:"Sign-In / Sign-Out & Attendance" },
       { code:"SG-FRM-009", title:"Event / Activity Permission & Waiver" },
       { code:"SG-FRM-010", title:"Driver Application & Authorization" },
@@ -344,7 +347,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
       if(!validate()){ setStatus("error"); setStatusMsg("Please complete all required fields."); window.scrollTo({top:0,behavior:"smooth"}); return; }
       setBusy(true); setStatus(null);
       var rid = genId("PEO");
-      var row = [rid, get("fullName").trim(), get("email").trim(), get("phone").trim(), get("dob"), "Adult", getList("ages").join(", "), getList("times").join(", "), todayISO(), "","","","","","","","","","In Process"];
+      var row = [rid, get("fullName").trim(), get("email").trim(), get("phone").trim(), get("dob"), "Adult", getList("ages").join(", "), getList("times").join(", "), todayISO(), "","","","","","","","","",renewalDate(12),"In Process",timestamp()];
       var S = window.SheetsService;
       if(!sheetsOk()){ console.log("FRM-001 stub:",rid,row); await new Promise(function(r){setTimeout(r,600);}); setStatus("success"); setStatusMsg("Submitted (offline). Record: "+rid); setBusy(false); return; }
       try{ await S.appendRow("People",row); setStatus("success"); setStatusMsg("Application submitted. Record: "+rid); } catch(err){ setStatus("error"); setStatusMsg(S.getErrorMessage(err)); }
@@ -464,7 +467,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
       if(!validate()){setStatus("error");setMsg("Complete all required fields.");window.scrollTo({top:0,behavior:"smooth"});return;}
       setBusy(true);setStatus(null);
       var rid=genId("INC");
-      var row=[rid,get("date"),get("time"),get("location").trim(),get("program").trim(),get("type"),get("persons").trim(),get("childAge").trim(),get("parent").trim(),get("desc").trim(),f.firstAid?"Yes":"No",f.parentNotified?"Yes":"No",f.emergency?"Yes":"No",get("actions").trim(),get("w1"),get("w2"),get("reporter").trim(),get("role").trim(),"","","Open","",""];
+      var row=[rid,get("date"),get("time"),get("location").trim(),get("program").trim(),get("type"),get("persons").trim(),get("childAge").trim(),get("parent").trim(),get("desc").trim(),f.firstAid?"Yes":"No",f.parentNotified?"Yes":"No",f.emergency?"Yes":"No",get("actions").trim(),get("w1"),get("w2"),get("reporter").trim(),get("role").trim(),"","","Open","","",timestamp()];
       var S=window.SheetsService;
       if(!sheetsOk()){console.log("FRM-006 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
       try{await S.appendRow("Incidents",row);setStatus("success");setMsg("Incident reported. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
@@ -554,7 +557,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
     async function submit(){
       if(!validate()){setStatus("error");setMsg("Complete all required fields.");window.scrollTo({top:0,behavior:"smooth"});return;}
       setStatus("submitting");
-      var rows=entries.filter(function(e){return e.code;}).map(function(e){return[genId("TRN"),trainee.name.trim(),trainee.email.trim(),e.code,e.title,trainee.track,e.date,e.method,verif.by.trim(),verif.date,verif.notes.trim()];});
+      var rows=entries.filter(function(e){return e.code;}).map(function(e){return[genId("TRN"),trainee.name.trim(),trainee.email.trim(),e.code,e.title,trainee.track,e.date,e.method,verif.by.trim(),verif.date,verif.notes.trim(),renewalDate(12),timestamp()];});
       var S=window.SheetsService;
       if(!sheetsOk()){console.log("FRM-012 stub:",rows);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Logged "+rows.length+" module(s) for "+trainee.name+" (offline)");return;}
       try{await S.appendRows("Training Log",rows);setStatus("success");setMsg(rows.length===1?"Logged: "+rows[0][3]+" for "+trainee.name:"Logged "+rows.length+" modules for "+trainee.name);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
@@ -611,8 +614,314 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
   }
 
   // ════════════════════════════════════════════════
-  //  MAIN HUB
+  //  FORM: FRM-007 — Suspected Abuse Report
   // ════════════════════════════════════════════════
+  function FormFRM007(props) {
+    var s=useState({}); var f=s[0]; var setF=s[1];
+    var s2=useState({}); var errors=s2[0]; var setErrors=s2[1];
+    var s3=useState(null); var status=s3[0]; var setStatus=s3[1];
+    var s4=useState(""); var msg=s4[0]; var setMsg=s4[1];
+    var s5=useState(false); var busy=s5[0]; var setBusy=s5[1];
+    useEffect(function(){ if(!f.reportDate) setF(function(p){return Object.assign({},p,{reportDate:todayISO(),reportTime:nowTime()});}); },[]);
+    function set(k,v){ setF(function(p){var n=Object.assign({},p);n[k]=v;return n;}); setErrors(function(p){var n=Object.assign({},p);delete n[k];return n;}); }
+    function get(k){ return f[k]||""; }
+    function validate(){
+      var e={};
+      if(!get("reportDate")) e.reportDate="Required";
+      if(!get("reporter").trim()) e.reporter="Required";
+      if(!get("childName").trim()) e.childName="Required";
+      if(!get("concern")) e.concern="Required";
+      if(!get("details").trim()) e.details="Required";
+      setErrors(e); return Object.keys(e).length===0;
+    }
+    async function submit(){
+      if(!validate()){setStatus("error");setMsg("Complete all required fields.");window.scrollTo({top:0,behavior:"smooth"});return;}
+      setBusy(true);setStatus(null);
+      var rid=genId("ABR");
+      var row=[rid,get("reportDate"),get("reportTime"),get("reporter").trim(),get("reporterRole").trim(),get("reporterPhone").trim(),get("reporterEmail").trim(),get("childName").trim(),get("childAge").trim(),get("childDob"),get("parentNames").trim(),get("parentPhone").trim(),get("concern"),get("details").trim(),f.removedFromDanger?"Yes":"No",f.parentNotified?"Yes":"No",f.authoritiesContacted?"Yes":"No",get("actionsDetail").trim(),get("agencyName").trim(),get("agencyPhone").trim(),get("agencyDate"),get("officialName").trim(),"Open","",timestamp()];
+      var S=window.SheetsService;
+      if(!sheetsOk()){console.log("FRM-007 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
+      try{await S.appendRow("Abuse Reports",row);setStatus("success");setMsg("Abuse report filed. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
+      setBusy(false);
+    }
+    var CONCERNS=["Disclosure by child","Witnessed incident","Suspicion / observation","Other"];
+    return h("div",{className:"animate-up",style:{maxWidth:760,margin:"0 auto"}},
+      h("button",{className:"btn btn-ghost btn-sm no-print",onClick:props.onBack,style:{marginBottom:20}},"\u2190 Back to Hub"),
+      h("div",{className:"card",style:{padding:"40px 44px",borderRadius:16}},
+        h("div",{style:{marginBottom:8}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.16em",color:"var(--error)",textTransform:"uppercase"}},"Safeguard Framework \u2014 Confidential"),
+          h("h2",{style:{fontFamily:"var(--serif)",fontSize:28,color:"var(--navy)",margin:"6px 0 0",fontWeight:400}},"Suspected Abuse Report"),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:4}},"SG-FRM-007")),
+        h("div",{style:{height:2,background:"linear-gradient(to right, var(--error), transparent)",margin:"16px 0 20px",borderRadius:1}}),
+        h("div",{style:{padding:"14px 18px",borderRadius:8,background:"rgba(192,57,43,0.06)",border:"1.5px solid rgba(192,57,43,0.12)",marginBottom:24,fontFamily:"var(--sans)",fontSize:14,color:"var(--error)",lineHeight:1.6,fontWeight:500}},"This form documents suspected abuse, neglect, or exploitation. Do not investigate. Report directly to child welfare authorities. Use the child\u2019s own words where possible."),
+        h(StatusBanner,{status:status,msg:msg}),
+        h(SectionHead,{num:"1",title:"Reporter Information"}),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}},
+          h(Field,{label:"Date",req:true,error:errors.reportDate},h(Inp,{type:"date",value:get("reportDate"),onChange:function(e){set("reportDate",e.target.value);},error:errors.reportDate})),
+          h(Field,{label:"Time"},h(Inp,{type:"time",value:get("reportTime"),onChange:function(e){set("reportTime",e.target.value);}})),
+          h(Field,{label:"Your Name",req:true,error:errors.reporter},h(Inp,{value:get("reporter"),onChange:function(e){set("reporter",e.target.value);},ac:"name",error:errors.reporter}))),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}},
+          h(Field,{label:"Role / Position"},h(Inp,{value:get("reporterRole"),onChange:function(e){set("reporterRole",e.target.value);}})),
+          h(Field,{label:"Phone"},h(Inp,{value:get("reporterPhone"),onChange:function(e){set("reporterPhone",e.target.value);},ac:"tel"})),
+          h(Field,{label:"Email"},h(Inp,{value:get("reporterEmail"),onChange:function(e){set("reporterEmail",e.target.value);},ac:"email"}))),
+        h(SectionHead,{num:"2",title:"Child Information"}),
+        h(Field,{label:"Child\u2019s Full Name",req:true,error:errors.childName},h(Inp,{value:get("childName"),onChange:function(e){set("childName",e.target.value);},error:errors.childName})),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Age"},h(Inp,{value:get("childAge"),onChange:function(e){set("childAge",e.target.value);}})),
+          h(Field,{label:"Date of Birth"},h(Inp,{type:"date",value:get("childDob"),onChange:function(e){set("childDob",e.target.value);}}))),
+        h(Field,{label:"Parent / Guardian Name(s)"},h(Inp,{value:get("parentNames"),onChange:function(e){set("parentNames",e.target.value);}})),
+        h(Field,{label:"Parent Phone"},h(Inp,{value:get("parentPhone"),onChange:function(e){set("parentPhone",e.target.value);}})),
+        h(SectionHead,{num:"3",title:"Nature of Concern"}),
+        h(Field,{label:"How did the concern arise?",req:true,error:errors.concern},
+          h("div",{style:{display:"flex",flexDirection:"column",gap:8}},CONCERNS.map(function(c){return h("label",{key:c,style:{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}},
+            h("input",{type:"radio",name:"concern",checked:get("concern")===c,onChange:function(){set("concern",c);}}),
+            h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},c));}))),
+        h(SectionHead,{num:"4",title:"Report Details"}),
+        h("p",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginBottom:12,lineHeight:1.5}},"Provide a factual account. Use the child\u2019s own words if possible. Do not add personal opinion."),
+        h(Field,{label:"Details",req:true,error:errors.details},h(AutoTxt,{value:get("details"),onChange:function(e){set("details",e.target.value);},minH:120})),
+        h(SectionHead,{num:"5",title:"Immediate Actions Taken"}),
+        [{k:"removedFromDanger",l:"Child removed from danger"},{k:"parentNotified",l:"Parent/Guardian notified *"},{k:"authoritiesContacted",l:"Civil authorities contacted"}].map(function(item){
+          return h("label",{key:item.k,style:{display:"flex",alignItems:"center",gap:10,cursor:"pointer",marginBottom:10}},
+            h("input",{type:"checkbox",checked:!!f[item.k],onChange:function(){set(item.k,!f[item.k]);}}),
+            h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},item.l));}),
+        h("p",{style:{fontFamily:"var(--sans)",fontSize:12,color:"var(--muted)",fontStyle:"italic",marginBottom:12}},"* Do not notify parent/guardian if they are the suspected abuser."),
+        h(Field,{label:"Details of actions"},h(AutoTxt,{value:get("actionsDetail"),onChange:function(e){set("actionsDetail",e.target.value);},minH:60})),
+        h(SectionHead,{num:"6",title:"External Reporting"}),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Agency Contacted"},h(Inp,{value:get("agencyName"),onChange:function(e){set("agencyName",e.target.value);}})),
+          h(Field,{label:"Agency Phone"},h(Inp,{value:get("agencyPhone"),onChange:function(e){set("agencyPhone",e.target.value);}})),
+          h(Field,{label:"Date/Time Reported"},h(Inp,{type:"date",value:get("agencyDate"),onChange:function(e){set("agencyDate",e.target.value);}})),
+          h(Field,{label:"Name of Official"},h(Inp,{value:get("officialName"),onChange:function(e){set("officialName",e.target.value);}}))),
+        h("div",{className:"no-print",style:{marginTop:36,display:"flex",gap:12}},
+          h("button",{className:"btn btn-danger",onClick:submit,disabled:busy},busy?"Submitting\u2026":"Submit Abuse Report"),
+          h("button",{className:"btn btn-secondary",onClick:function(){window.print();}},"Save as PDF"))));
+  }
+
+  // ════════════════════════════════════════════════
+  //  FORM: FRM-002 — Reference Check
+  // ════════════════════════════════════════════════
+  function FormFRM002(props) {
+    var s=useState({}); var f=s[0]; var setF=s[1];
+    var s2=useState({}); var errors=s2[0]; var setErrors=s2[1];
+    var s3=useState(null); var status=s3[0]; var setStatus=s3[1];
+    var s4=useState(""); var msg=s4[0]; var setMsg=s4[1];
+    var s5=useState(false); var busy=s5[0]; var setBusy=s5[1];
+    function set(k,v){ setF(function(p){var n=Object.assign({},p);n[k]=v;return n;}); setErrors(function(p){var n=Object.assign({},p);delete n[k];return n;}); }
+    function get(k){ return f[k]||""; }
+    function validate(){
+      var e={};
+      if(!get("applicantName").trim()) e.applicantName="Required";
+      if(!get("refName").trim()) e.refName="Required";
+      if(!get("contactDate")) e.contactDate="Required";
+      setErrors(e); return Object.keys(e).length===0;
+    }
+    async function submit(){
+      if(!validate()){setStatus("error");setMsg("Complete all required fields.");window.scrollTo({top:0,behavior:"smooth"});return;}
+      setBusy(true);setStatus(null);
+      var rid=genId("REF");
+      var row=[rid,get("applicantName").trim(),get("position").trim(),get("refName").trim(),get("refRelationship").trim(),get("refContact").trim(),get("contactDate"),get("contactMethod"),get("yearsKnown"),get("capacity"),get("reliable"),get("concerns"),get("character").trim(),get("trustChildren"),get("hesitation"),get("explain").trim(),get("completedBy").trim(),todayISO(),timestamp()];
+      var S=window.SheetsService;
+      if(!sheetsOk()){console.log("FRM-002 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
+      try{await S.appendRow("References",row);setStatus("success");setMsg("Reference check logged. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
+      setBusy(false);
+    }
+    var YN3=function(k,label){return h("div",{style:{marginBottom:16}},
+      h("div",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--body)",marginBottom:8}},label),
+      h("div",{style:{display:"flex",gap:16}},["Yes","No","Unsure"].map(function(v){return h("label",{key:v,style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},
+        h("input",{type:"radio",name:k,checked:get(k)===v,onChange:function(){set(k,v);}}),h("span",{style:{fontFamily:"var(--sans)",fontSize:13}},v));})));};
+    return h("div",{className:"animate-up",style:{maxWidth:760,margin:"0 auto"}},
+      h("button",{className:"btn btn-ghost btn-sm no-print",onClick:props.onBack,style:{marginBottom:20}},"\u2190 Back to Hub"),
+      h("div",{className:"card",style:{padding:"40px 44px",borderRadius:16}},
+        h("div",{style:{marginBottom:8}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.16em",color:"var(--teal)",textTransform:"uppercase"}},"Safeguard Framework"),
+          h("h2",{style:{fontFamily:"var(--serif)",fontSize:28,color:"var(--navy)",margin:"6px 0 0",fontWeight:400}},"Reference Check"),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:4}},"SG-FRM-002")),
+        h("div",{style:{height:2,background:"linear-gradient(to right, var(--teal), transparent)",margin:"16px 0 28px",borderRadius:1}}),
+        h(StatusBanner,{status:status,msg:msg}),
+        h(SectionHead,{num:"1",title:"Applicant Information"}),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Applicant Name",req:true,error:errors.applicantName},h(Inp,{value:get("applicantName"),onChange:function(e){set("applicantName",e.target.value);},error:errors.applicantName})),
+          h(Field,{label:"Position Applied For"},h(Inp,{value:get("position"),onChange:function(e){set("position",e.target.value);}}))),
+        h(SectionHead,{num:"2",title:"Reference Information"}),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Reference Name",req:true,error:errors.refName},h(Inp,{value:get("refName"),onChange:function(e){set("refName",e.target.value);},error:errors.refName})),
+          h(Field,{label:"Relationship to Applicant"},h(Inp,{value:get("refRelationship"),onChange:function(e){set("refRelationship",e.target.value);}})),
+          h(Field,{label:"Phone / Email"},h(Inp,{value:get("refContact"),onChange:function(e){set("refContact",e.target.value);}})),
+          h(Field,{label:"Date of Contact",req:true,error:errors.contactDate},h(Inp,{type:"date",value:get("contactDate"),onChange:function(e){set("contactDate",e.target.value);},error:errors.contactDate}))),
+        h(Field,{label:"Contact Method"},h("div",{style:{display:"flex",gap:16}},["Phone","Email","In Person","Other"].map(function(v){return h("label",{key:v,style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},
+          h("input",{type:"radio",name:"contactMethod",checked:get("contactMethod")===v,onChange:function(){set("contactMethod",v);}}),h("span",{style:{fontFamily:"var(--sans)",fontSize:13}},v));}))),
+        h(SectionHead,{num:"3",title:"Standard Questions"}),
+        h(Field,{label:"How long have you known the applicant?"},h("div",{style:{display:"flex",gap:12,flexWrap:"wrap"}},["Less than 1 year","1\u20133 years","3\u20135 years","5+ years"].map(function(v){return h("label",{key:v,style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},
+          h("input",{type:"radio",name:"yearsKnown",checked:get("yearsKnown")===v,onChange:function(){set("yearsKnown",v);}}),h("span",{style:{fontFamily:"var(--sans)",fontSize:13}},v));}))),
+        h(Field,{label:"In what capacity?"},h("div",{style:{display:"flex",gap:12,flexWrap:"wrap"}},["Work","Church","Volunteer","Personal"].map(function(v){return h("label",{key:v,style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},
+          h("input",{type:"radio",name:"capacity",checked:get("capacity")===v,onChange:function(){set("capacity",v);}}),h("span",{style:{fontFamily:"var(--sans)",fontSize:13}},v));}))),
+        YN3("reliable","Would you consider the applicant reliable and trustworthy?"),
+        YN3("concerns","Has the applicant ever displayed inappropriate behavior or concerns with children/youth?"),
+        h(Field,{label:"How would you describe the applicant\u2019s character?"},h(AutoTxt,{value:get("character"),onChange:function(e){set("character",e.target.value);},minH:80})),
+        YN3("trustChildren","Would you entrust your own child(ren) to this person\u2019s care?"),
+        YN3("hesitation","Any hesitation in recommending this applicant?"),
+        h(Field,{label:"If Yes or Unsure to any question, please explain"},h(AutoTxt,{value:get("explain"),onChange:function(e){set("explain",e.target.value);},minH:60})),
+        h(SectionHead,{num:"4",title:"Completed By"}),
+        h(Field,{label:"Reference check completed by"},h(Inp,{value:get("completedBy"),onChange:function(e){set("completedBy",e.target.value);}})),
+        h("div",{className:"no-print",style:{marginTop:36,display:"flex",gap:12}},
+          h("button",{className:"btn btn-primary",onClick:submit,disabled:busy},busy?"Submitting\u2026":"Log Reference Check"),
+          h("button",{className:"btn btn-secondary",onClick:function(){window.print();}},"Save as PDF"))));
+  }
+
+  // ════════════════════════════════════════════════
+  //  FORM: FRM-004 — Worker's Covenant & Acknowledgement
+  // ════════════════════════════════════════════════
+  function FormFRM004(props) {
+    var s=useState({}); var f=s[0]; var setF=s[1];
+    var s2=useState({}); var errors=s2[0]; var setErrors=s2[1];
+    var s3=useState(null); var status=s3[0]; var setStatus=s3[1];
+    var s4=useState(""); var msg=s4[0]; var setMsg=s4[1];
+    var s5=useState(false); var busy=s5[0]; var setBusy=s5[1];
+    function set(k,v){ setF(function(p){var n=Object.assign({},p);n[k]=v;return n;}); setErrors(function(p){var n=Object.assign({},p);delete n[k];return n;}); }
+    function get(k){ return f[k]||""; }
+    function validate(){
+      var e={};
+      if(!get("fullName").trim()) e.fullName="Required";
+      if(!get("role").trim()) e.role="Required";
+      if(!f.c1||!f.c2||!f.c3||!f.c4) e.commitments="All four commitments must be checked";
+      setErrors(e); return Object.keys(e).length===0;
+    }
+    async function submit(){
+      if(!validate()){setStatus("error");setMsg("Complete all required fields.");window.scrollTo({top:0,behavior:"smooth"});return;}
+      setBusy(true);setStatus(null);
+      var rid=genId("ACK");
+      var row=[rid,get("fullName").trim(),get("role").trim(),todayISO(),get("witnessName").trim(),f.isRenewal?"Renewal":"Initial",new Date().getFullYear().toString(),renewalDate(12),timestamp()];
+      var S=window.SheetsService;
+      if(!sheetsOk()){console.log("FRM-004 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
+      try{await S.appendRow("Acknowledgements",row);setStatus("success");setMsg("Covenant recorded. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
+      setBusy(false);
+    }
+    return h("div",{className:"animate-up",style:{maxWidth:760,margin:"0 auto"}},
+      h("button",{className:"btn btn-ghost btn-sm no-print",onClick:props.onBack,style:{marginBottom:20}},"\u2190 Back to Hub"),
+      h("div",{className:"card",style:{padding:"40px 44px",borderRadius:16}},
+        h("div",{style:{marginBottom:8}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.16em",color:"var(--gold)",textTransform:"uppercase"}},"Safeguard Framework"),
+          h("h2",{style:{fontFamily:"var(--serif)",fontSize:28,color:"var(--navy)",margin:"6px 0 0",fontWeight:400}},"Worker\u2019s Covenant & Acknowledgement"),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:4}},"SG-FRM-004")),
+        h("div",{style:{height:2,background:"linear-gradient(to right, var(--gold-warm), transparent)",margin:"16px 0 28px",borderRadius:1}}),
+        h(StatusBanner,{status:status,msg:msg}),
+        h(SectionHead,{num:"1",title:"Worker Information"}),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Full Name",req:true,error:errors.fullName},h(Inp,{value:get("fullName"),onChange:function(e){set("fullName",e.target.value);},ac:"name",error:errors.fullName})),
+          h(Field,{label:"Ministry Role / Area",req:true,error:errors.role},h(Inp,{value:get("role"),onChange:function(e){set("role",e.target.value);},error:errors.role}))),
+        h(Field,{label:"Type"},h("div",{style:{display:"flex",gap:16}},
+          h("label",{style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},h("input",{type:"radio",name:"renewType",checked:!f.isRenewal,onChange:function(){set("isRenewal",false);}}),h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},"Initial Covenant")),
+          h("label",{style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},h("input",{type:"radio",name:"renewType",checked:!!f.isRenewal,onChange:function(){set("isRenewal",true);}}),h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},"Annual Renewal")))),
+        h(SectionHead,{num:"2",title:"Commitments"}),
+        errors.commitments?h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--error)",marginBottom:12,fontWeight:500}},errors.commitments):null,
+        ["I have read and understood the Safeguard Framework\u2019s core protection policies (SG-POL-001 through SG-POL-004) and the governance policy (SG-G-001).",
+         "I will abide by these policies at all times in my ministry role and understand that failure to follow them may result in removal from ministry.",
+         "I agree to live with integrity, report any suspected abuse immediately per SG-POL-004, and participate in all required training and renewals.",
+         "I commit to keeping all personal information about children, families, and workers confidential, except where reporting obligations require disclosure."
+        ].map(function(txt,i){return h("label",{key:i,style:{display:"flex",alignItems:"flex-start",gap:12,cursor:"pointer",marginBottom:14}},
+          h("input",{type:"checkbox",checked:!!f["c"+(i+1)],onChange:function(){set("c"+(i+1),!f["c"+(i+1)]);},style:{marginTop:3}}),
+          h("span",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--body)",lineHeight:1.55}},txt));}),
+        h(SectionHead,{num:"3",title:"Witness"}),
+        h(Field,{label:"Witness / Leader Name"},h(Inp,{value:get("witnessName"),onChange:function(e){set("witnessName",e.target.value);}})),
+        h("div",{className:"no-print",style:{marginTop:36,display:"flex",gap:12}},
+          h("button",{className:"btn btn-primary",onClick:submit,disabled:busy},busy?"Submitting\u2026":"Submit Covenant"),
+          h("button",{className:"btn btn-secondary",onClick:function(){window.print();}},"Save as PDF"))));
+  }
+
+  // ════════════════════════════════════════════════
+  //  FORM: FRM-005 — Child Registration & Medical Release
+  // ════════════════════════════════════════════════
+  function FormFRM005(props) {
+    var s=useState({}); var f=s[0]; var setF=s[1];
+    var s2=useState({}); var errors=s2[0]; var setErrors=s2[1];
+    var s3=useState(null); var status=s3[0]; var setStatus=s3[1];
+    var s4=useState(""); var msg=s4[0]; var setMsg=s4[1];
+    var s5=useState(false); var busy=s5[0]; var setBusy=s5[1];
+    function set(k,v){ setF(function(p){var n=Object.assign({},p);n[k]=v;return n;}); setErrors(function(p){var n=Object.assign({},p);delete n[k];return n;}); }
+    function get(k){ return f[k]||""; }
+    function validate(){
+      var e={};
+      if(!get("childName").trim()) e.childName="Required";
+      if(!get("dob")) e.dob="Required";
+      if(!get("parentName").trim()) e.parentName="Required";
+      if(!get("phone").trim()) e.phone="Required";
+      if(!f.consentParticipation) e.consent="Consent is required";
+      if(!f.consentMedical) e.consentMed="Medical authorization required";
+      setErrors(e); return Object.keys(e).length===0;
+    }
+    async function submit(){
+      if(!validate()){setStatus("error");setMsg("Complete all required fields.");window.scrollTo({top:0,behavior:"smooth"});return;}
+      setBusy(true);setStatus(null);
+      var rid=genId("REG");
+      var row=[rid,get("childName").trim(),get("dob"),get("address").trim(),get("city").trim(),get("postal").trim(),get("school").trim(),get("parentName").trim(),get("phoneHome").trim(),get("phone").trim(),get("email").trim(),get("emergName").trim(),get("emergPhone").trim(),get("emergRelation").trim(),get("doctor").trim(),get("doctorPhone").trim(),get("healthNum").trim(),get("allergies").trim(),get("conditions").trim(),get("medications").trim(),get("otherHealth").trim(),get("diaperPref")||"Standard",get("pickupPersons").trim(),todayISO(),timestamp()];
+      var S=window.SheetsService;
+      if(!sheetsOk()){console.log("FRM-005 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
+      try{await S.appendRow("Registrations",row);setStatus("success");setMsg("Child registered. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
+      setBusy(false);
+    }
+    return h("div",{className:"animate-up",style:{maxWidth:760,margin:"0 auto"}},
+      h("button",{className:"btn btn-ghost btn-sm no-print",onClick:props.onBack,style:{marginBottom:20}},"\u2190 Back to Hub"),
+      h("div",{className:"card",style:{padding:"40px 44px",borderRadius:16}},
+        h("div",{style:{marginBottom:8}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.16em",color:"var(--teal)",textTransform:"uppercase"}},"Safeguard Framework"),
+          h("h2",{style:{fontFamily:"var(--serif)",fontSize:28,color:"var(--navy)",margin:"6px 0 0",fontWeight:400}},"Child Registration & Medical Release"),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:4}},"SG-FRM-005")),
+        h("div",{style:{height:2,background:"linear-gradient(to right, var(--teal), transparent)",margin:"16px 0 28px",borderRadius:1}}),
+        h(StatusBanner,{status:status,msg:msg}),
+        h(SectionHead,{num:"1",title:"Child Information"}),
+        h(Field,{label:"Child\u2019s Full Name",req:true,error:errors.childName},h(Inp,{value:get("childName"),onChange:function(e){set("childName",e.target.value);},error:errors.childName})),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Date of Birth",req:true,error:errors.dob},h(Inp,{type:"date",value:get("dob"),onChange:function(e){set("dob",e.target.value);},error:errors.dob})),
+          h(Field,{label:"School / Grade"},h(Inp,{value:get("school"),onChange:function(e){set("school",e.target.value);}})) ),
+        h(Field,{label:"Address"},h(Inp,{value:get("address"),onChange:function(e){set("address",e.target.value);},ac:"street-address"})),
+        h("div",{style:{display:"grid",gridTemplateColumns:"2fr 1fr",gap:16}},
+          h(Field,{label:"City"},h(Inp,{value:get("city"),onChange:function(e){set("city",e.target.value);},ac:"address-level2"})),
+          h(Field,{label:"Postal Code"},h(Inp,{value:get("postal"),onChange:function(e){set("postal",e.target.value);},ac:"postal-code"}))),
+        h(SectionHead,{num:"2",title:"Parent / Guardian"}),
+        h(Field,{label:"Parent/Guardian Name(s)",req:true,error:errors.parentName},h(Inp,{value:get("parentName"),onChange:function(e){set("parentName",e.target.value);},ac:"name",error:errors.parentName})),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Phone (Home)"},h(Inp,{value:get("phoneHome"),onChange:function(e){set("phoneHome",e.target.value);},ac:"tel"})),
+          h(Field,{label:"Phone (Cell)",req:true,error:errors.phone},h(Inp,{value:get("phone"),onChange:function(e){set("phone",e.target.value);},ac:"tel",error:errors.phone}))),
+        h(Field,{label:"Email"},h(Inp,{value:get("email"),onChange:function(e){set("email",e.target.value);},ac:"email"})),
+        h("div",{style:{padding:18,background:"var(--sand)",borderRadius:10,marginTop:16}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,color:"var(--teal)",marginBottom:10}},"Alternate Emergency Contact"),
+          h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}},
+            h(Field,{label:"Name"},h(Inp,{value:get("emergName"),onChange:function(e){set("emergName",e.target.value);}})),
+            h(Field,{label:"Phone"},h(Inp,{value:get("emergPhone"),onChange:function(e){set("emergPhone",e.target.value);}})),
+            h(Field,{label:"Relationship"},h(Inp,{value:get("emergRelation"),onChange:function(e){set("emergRelation",e.target.value);}})))),
+        h(SectionHead,{num:"3",title:"Medical Information"}),
+        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
+          h(Field,{label:"Family Doctor"},h(Inp,{value:get("doctor"),onChange:function(e){set("doctor",e.target.value);}})),
+          h(Field,{label:"Doctor Phone"},h(Inp,{value:get("doctorPhone"),onChange:function(e){set("doctorPhone",e.target.value);}})) ),
+        h(Field,{label:"Alberta Health Care Number"},h(Inp,{value:get("healthNum"),onChange:function(e){set("healthNum",e.target.value);}})),
+        h(Field,{label:"Allergies (food, medication, environmental)"},h(AutoTxt,{value:get("allergies"),onChange:function(e){set("allergies",e.target.value);},minH:60})),
+        h(Field,{label:"Medical conditions or special needs"},h(AutoTxt,{value:get("conditions"),onChange:function(e){set("conditions",e.target.value);},minH:60})),
+        h(Field,{label:"Medications currently being taken"},h(AutoTxt,{value:get("medications"),onChange:function(e){set("medications",e.target.value);},minH:60})),
+        h(SectionHead,{num:"4",title:"Permissions & Release"}),
+        errors.consent?h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--error)",marginBottom:12,fontWeight:500}},errors.consent):null,
+        h("label",{style:{display:"flex",alignItems:"flex-start",gap:12,cursor:"pointer",marginBottom:14}},
+          h("input",{type:"checkbox",checked:!!f.consentParticipation,onChange:function(){set("consentParticipation",!f.consentParticipation);},style:{marginTop:3}}),
+          h("span",{style:{fontFamily:"var(--sans)",fontSize:14,lineHeight:1.55}},"I give permission for my child to participate in church programs. I release the church from liability for accidental injury except in cases of proven negligence.")),
+        errors.consentMed?h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--error)",marginBottom:12,fontWeight:500}},errors.consentMed):null,
+        h("label",{style:{display:"flex",alignItems:"flex-start",gap:12,cursor:"pointer",marginBottom:14}},
+          h("input",{type:"checkbox",checked:!!f.consentMedical,onChange:function(){set("consentMedical",!f.consentMedical);},style:{marginTop:3}}),
+          h("span",{style:{fontFamily:"var(--sans)",fontSize:14,lineHeight:1.55}},"I authorize staff/volunteers to seek medical attention for my child in an emergency, including hospital admission and necessary treatment.")),
+        h("div",{style:{padding:18,background:"var(--sand)",borderRadius:10,marginTop:12}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,color:"var(--teal)",marginBottom:10}},"Diapering / Toileting Preference (Nursery & Preschool)"),
+          h("label",{style:{display:"flex",alignItems:"center",gap:10,cursor:"pointer",marginBottom:8}},
+            h("input",{type:"radio",name:"diaper",checked:get("diaperPref")!=="ParentOnly",onChange:function(){set("diaperPref","Standard");}}),
+            h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},"Standard Care \u2014 authorized volunteers may change/assist")),
+          h("label",{style:{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}},
+            h("input",{type:"radio",name:"diaper",checked:get("diaperPref")==="ParentOnly",onChange:function(){set("diaperPref","ParentOnly");}}),
+            h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},"Parent Only \u2014 contact me immediately if changing is needed"))),
+        h(SectionHead,{num:"5",title:"Authorized Pickup Persons"}),
+        h("p",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginBottom:12}},"List all persons authorized to pick up your child (besides parents/guardians)."),
+        h(Field,{label:"Authorized persons (names)"},h(AutoTxt,{value:get("pickupPersons"),onChange:function(e){set("pickupPersons",e.target.value);},minH:60})),
+        h("div",{className:"no-print",style:{marginTop:36,display:"flex",gap:12}},
+          h("button",{className:"btn btn-primary",onClick:submit,disabled:busy},busy?"Submitting\u2026":"Register Child"),
+          h("button",{className:"btn btn-secondary",onClick:function(){window.print();}},"Save as PDF"))));
+  }
+
   // ════════════════════════════════════════════════
   //  SETUP SCREEN — shown when no credentials found
   // ════════════════════════════════════════════════
@@ -669,7 +978,11 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
 
     // Route to forms
     if(view==="frm001") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM001,{onBack:goHome}));
+    if(view==="frm002") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM002,{onBack:goHome}));
+    if(view==="frm004") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM004,{onBack:goHome}));
+    if(view==="frm005") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM005,{onBack:goHome}));
     if(view==="frm006") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM006,{onBack:goHome}));
+    if(view==="frm007") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM007,{onBack:goHome}));
     if(view==="frm012") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM012,{onBack:goHome}));
 
     // ── Dashboard ──
@@ -774,7 +1087,11 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
           h("p",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--muted)",marginBottom:28,lineHeight:1.5}},"Digital forms that submit directly to Google Sheets."),
           [
             {code:"SG-FRM-001",title:"Ministry Application",desc:"Start the screening pipeline for a new volunteer",view:"frm001",color:"var(--teal)",accent:"rgba(46,107,127,0.06)"},
+            {code:"SG-FRM-002",title:"Reference Check",desc:"Complete a reference check for an applicant",view:"frm002",color:"var(--teal)",accent:"rgba(46,107,127,0.04)"},
+            {code:"SG-FRM-004",title:"Worker\u2019s Covenant & Acknowledgement",desc:"Initial covenant or annual policy renewal",view:"frm004",color:"var(--gold)",accent:"rgba(176,144,85,0.04)"},
+            {code:"SG-FRM-005",title:"Child Registration & Medical Release",desc:"Register a child for ministry programs",view:"frm005",color:"var(--teal)",accent:"rgba(46,107,127,0.04)"},
             {code:"SG-FRM-006",title:"Incident / Accident Report",desc:"Document and log any incident immediately",view:"frm006",color:"var(--error)",accent:"rgba(192,57,43,0.04)"},
+            {code:"SG-FRM-007",title:"Suspected Abuse Report",desc:"Confidential \u2014 report suspected abuse to authorities",view:"frm007",color:"var(--error)",accent:"rgba(192,57,43,0.04)"},
             {code:"SG-FRM-012",title:"Training Completion Record",desc:"Log module completions for volunteers and leaders",view:"frm012",color:"var(--success)",accent:"rgba(39,174,96,0.04)"}
           ].map(function(form){
             return h("button",{key:form.code,onClick:function(){goForm(form.view);},style:{width:"100%",display:"flex",alignItems:"center",gap:24,padding:"28px 32px",background:"var(--white)",border:"1.5px solid var(--border)",borderRadius:14,cursor:"pointer",textAlign:"left",transition:"all 0.2s",marginBottom:12},
