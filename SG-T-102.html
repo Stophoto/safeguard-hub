@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-T-102 — Screening & Managing Volunteers</title>
+<style>
+  :root {
+    --navy: #1B3A4B;
+    --teal: #2E6B7F;
+    --gold: #B09055;
+    --gold-light: #C8AD78;
+    --charcoal: #2C2825;
+    --body-color: #3D3835;
+    --secondary: #5C5550;
+    --muted: #8A8480;
+    --cream: #FAF8F3;
+    --sand: #F5F2ED;
+    --white: #FFFFFF;
+    --alert-red: #C0392B;
+    --safe-green: #27AE60;
+    --safe-green-bg: #E8F8EF;
+    --alert-red-bg: #FDEDEC;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: var(--body-color); background: var(--cream); line-height: 1.65; }
+  .page-wrapper { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  @media (min-width: 800px) { .page-wrapper { padding: 3rem 2rem 5rem; } }
+  .cover { border-bottom: 3px solid var(--gold); padding-bottom: 1.75rem; margin-bottom: 2.5rem; }
+  .cover-framework { font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .cover-title { font-size: 1.85rem; font-weight: 400; color: var(--navy); line-height: 1.2; margin-bottom: 0.4rem; }
+  .cover-subtitle { font-size: 1.05rem; color: var(--teal); font-style: italic; margin-bottom: 1rem; }
+  .cover-meta { font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+  .cover-meta span { white-space: nowrap; }
+  .reading-time { display: inline-block; font-family: Arial, Helvetica, sans-serif; font-size: 0.72rem; color: var(--teal); background: var(--sand); padding: 0.2rem 0.65rem; border-radius: 3px; margin-top: 0.75rem; }
+  .purpose { font-size: 0.95rem; color: var(--secondary); border-left: 3px solid var(--gold-light); padding: 0.75rem 1rem; margin-bottom: 2.5rem; background: var(--white); }
+  .section { margin-bottom: 2.5rem; }
+  .section-label { font-family: Arial, Helvetica, sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
+  .section-title { font-size: 1.4rem; font-weight: 400; color: var(--navy); line-height: 1.25; margin-bottom: 1rem; }
+  .subsection-title { font-size: 1.1rem; color: var(--teal); margin-top: 1.5rem; margin-bottom: 0.6rem; }
+  p { margin-bottom: 1rem; }
+  strong { color: var(--charcoal); font-weight: 700; }
+  .callout { border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin: 1.25rem 0; background: var(--white); }
+  .callout-scenario { border-left: 4px solid var(--teal); background: #F4F9FB; }
+  .callout-principle { border-left: 4px solid var(--gold); }
+  .callout-critical { background: var(--navy); color: var(--white); border: none; border-radius: 4px; }
+  .callout-critical strong { color: var(--white); }
+  .callout-label { font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .callout-scenario .callout-label { color: var(--teal); }
+  .callout-principle .callout-label { color: var(--gold); }
+  .callout-critical .callout-label { color: var(--gold-light); }
+  .callout p:last-child { margin-bottom: 0; }
+  .pipeline-step { background: var(--white); border: 1px solid #E5E2DD; border-radius: 4px; padding: 0.85rem 1rem; margin-bottom: 0.6rem; }
+  .pipeline-step-num { font-family: Arial, Helvetica, sans-serif; font-size: 0.65rem; font-weight: 700; color: var(--teal); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.15rem; }
+  .pipeline-step-title { font-size: 0.95rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.25rem; }
+  .pipeline-step-desc { font-size: 0.88rem; color: var(--secondary); line-height: 1.5; }
+  .pipeline-step-ref { font-family: Arial, Helvetica, sans-serif; font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem; }
+  .system-box { background: var(--white); border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin: 1.25rem 0; }
+  .system-box p { margin-bottom: 0.6rem; }
+  .system-box p:last-child { margin-bottom: 0; }
+  .section-divider { border: none; border-top: 1px solid #E5E2DD; margin: 2.5rem 0; }
+  .quiz-section { background: var(--sand); border-radius: 6px; padding: 1.5rem; margin-top: 2.5rem; }
+  .quiz-section .section-label { margin-bottom: 0.15rem; }
+  .quiz-section .section-title { margin-bottom: 0.5rem; }
+  .quiz-instructions { font-size: 0.85rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .quiz-question { background: var(--white); border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin-bottom: 1rem; }
+  .quiz-question-text { font-size: 0.92rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.75rem; line-height: 1.45; }
+  .quiz-question-text .q-num { color: var(--teal); font-family: Arial, Helvetica, sans-serif; font-size: 0.8rem; margin-right: 0.3rem; }
+  .quiz-options { list-style: none; padding: 0; }
+  .quiz-options li { margin-bottom: 0.4rem; }
+  .quiz-options label { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.88rem; color: var(--body-color); cursor: pointer; padding: 0.4rem 0.5rem; border-radius: 3px; transition: background 0.15s; }
+  .quiz-options label:hover { background: var(--sand); }
+  .quiz-options input[type="radio"] { margin-top: 0.25rem; accent-color: var(--teal); flex-shrink: 0; }
+  .quiz-feedback { display: none; font-size: 0.82rem; padding: 0.5rem 0.75rem; border-radius: 3px; margin-top: 0.5rem; }
+  .quiz-feedback.correct { display: block; background: var(--safe-green-bg); color: #1E7D46; border-left: 3px solid var(--safe-green); }
+  .quiz-feedback.incorrect { display: block; background: var(--alert-red-bg); color: #922B21; border-left: 3px solid var(--alert-red); }
+  .quiz-question.answered .quiz-options label { cursor: default; pointer-events: none; }
+  .quiz-question.answered .quiz-options label.selected-correct { background: var(--safe-green-bg); }
+  .quiz-question.answered .quiz-options label.selected-incorrect { background: var(--alert-red-bg); }
+  .quiz-results { display: none; margin-top: 1.5rem; padding: 1.25rem; border-radius: 4px; text-align: center; }
+  .quiz-results.pass { display: block; background: var(--safe-green-bg); border: 1px solid var(--safe-green); }
+  .quiz-results.fail { display: block; background: var(--alert-red-bg); border: 1px solid var(--alert-red); }
+  .quiz-results-score { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .quiz-results.pass .quiz-results-score { color: #1E7D46; }
+  .quiz-results.fail .quiz-results-score { color: #922B21; }
+  .quiz-results-message { font-size: 0.88rem; color: var(--secondary); }
+  .quiz-submit-btn { display: inline-block; margin-top: 1.25rem; padding: 0.65rem 1.75rem; font-family: Arial, Helvetica, sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--white); background: var(--teal); border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+  .quiz-submit-btn:hover { background: var(--navy); }
+  .quiz-submit-btn:disabled { background: #B0ADA8; cursor: not-allowed; }
+  .complete-section { text-align: center; margin-top: 2rem; padding: 1.5rem; }
+  .complete-btn { display: inline-block; padding: 0.75rem 2rem; font-family: Arial, Helvetica, sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--white); background: var(--navy); border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+  .complete-btn:hover { background: #14303D; }
+  .complete-btn:disabled { background: #B0ADA8; cursor: not-allowed; }
+  .complete-confirmation { display: none; margin-top: 1rem; font-family: Arial, Helvetica, sans-serif; font-size: 0.85rem; color: #1E7D46; font-weight: 700; }
+  .complete-confirmation.visible { display: block; }
+  .doc-reference { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #E5E2DD; }
+  .doc-reference table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .doc-reference td { padding: 0.3rem 0; vertical-align: top; }
+  .doc-reference td:first-child { font-family: Arial, Helvetica, sans-serif; font-weight: 700; color: var(--secondary); width: 9rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .doc-reference td:last-child { color: var(--body-color); }
+  .page-footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #E5E2DD; text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <header class="cover">
+    <div class="cover-framework">Safeguard Framework &bull; Leader Training</div>
+    <h1 class="cover-title">Screening &amp; Managing Volunteers</h1>
+    <div class="cover-subtitle">Leader Track &mdash; Module 2 of 3</div>
+    <div class="cover-meta">
+      <span>SG-T-102</span>
+      <span>Version 1.0</span>
+      <span>March 2026</span>
+      <span>Bethany Chapel</span>
+    </div>
+    <div class="reading-time">&#9201; Estimated reading time: 10 minutes</div>
+  </header>
+
+  <div class="purpose">
+    Your volunteers learned the screening process from the applicant&rsquo;s side. This module teaches you the other side&mdash;running the pipeline, conducting the interview, making the hard calls, handling early-service exceptions, and tracking renewals.
+  </div>
+
+  <!-- ══ SECTION 1 — THE GATE YOU GUARD ══ -->
+  <section class="section">
+    <div class="section-label">Section 1</div>
+    <h2 class="section-title">The Gate You Guard</h2>
+
+    <div class="callout callout-scenario">
+      <div class="callout-label">Scenario</div>
+      <p>A well-liked church member approaches you after the service. &ldquo;I want to help in children&rsquo;s ministry. My kids are in the program, I&rsquo;m here every Sunday, and honestly&mdash;you look like you need the help.&rdquo; He&rsquo;s right. You do need the help. He seems like a great guy. Everyone likes him.</p>
+      <p><strong><em>But &ldquo;seems like a great guy&rdquo; is not a screening process.</em></strong> Your job is to welcome his interest and walk him through every step&mdash;no shortcuts, no fast-tracking, no matter how urgent the staffing need.</p>
+    </div>
+
+    <p>Screening is the first and most important protection in the entire framework. Every other safeguard&mdash;ratios, the two-adult rule, reporting&mdash;assumes that the adults in the room have been vetted. If the gate fails, everything downstream is compromised.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 2 — THE ONBOARDING PIPELINE ══ -->
+  <section class="section">
+    <div class="section-label">Section 2</div>
+    <h2 class="section-title">The Onboarding Pipeline</h2>
+
+    <p>The Screening &amp; Onboarding Checklist (SG-SOP-001) defines seven steps. Every step must be completed before a person serves. You are responsible for ensuring nothing is skipped, rushed, or left open.</p>
+
+    <div class="pipeline-step">
+      <div class="pipeline-step-num">Step 1</div>
+      <div class="pipeline-step-title">Application</div>
+      <div class="pipeline-step-desc">Applicant completes the Ministry Application. Confirm at least six months of regular attendance at Bethany Chapel. No exceptions to the attendance requirement without Elder approval.</div>
+      <div class="pipeline-step-ref">SG-FRM-001</div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-step-num">Step 2</div>
+      <div class="pipeline-step-title">Interview</div>
+      <div class="pipeline-step-desc">A 10&ndash;15 minute in-person conversation using the Interview Guide built into SG-SOP-001. This is your most important step and gets its own section below.</div>
+      <div class="pipeline-step-ref">SG-SOP-001 (Interview Guide)</div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-step-num">Step 3</div>
+      <div class="pipeline-step-title">References</div>
+      <div class="pipeline-step-desc">Collect and contact two references using the Reference Check Form. Do not accept references from family members. Read the completed forms yourself&mdash;do not delegate this to someone outside the screening process.</div>
+      <div class="pipeline-step-ref">SG-FRM-002</div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-step-num">Step 4</div>
+      <div class="pipeline-step-title">Police Information Check</div>
+      <div class="pipeline-step-desc">Applicant signs the consent form and submits for a Vulnerable Sector Check. Bethany covers the cost. Do not allow anyone to serve before results are received and filed&mdash;not even in a &ldquo;shadowing&rdquo; capacity, unless they hold an approved early-service exception.</div>
+      <div class="pipeline-step-ref">SG-FRM-003</div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-step-num">Step 5</div>
+      <div class="pipeline-step-title">Worker&rsquo;s Covenant</div>
+      <div class="pipeline-step-desc">The applicant reads and signs the Worker&rsquo;s Covenant, committing to uphold the Safeguard Framework standards. This is not a formality. If someone hesitates to sign, that is information worth paying attention to.</div>
+      <div class="pipeline-step-ref">SG-FRM-004</div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-step-num">Step 6</div>
+      <div class="pipeline-step-title">Training</div>
+      <div class="pipeline-step-desc">The applicant completes the full Volunteer Track (SG-T-001 through SG-T-004) and passes all comprehension checks at 80% or higher.</div>
+      <div class="pipeline-step-ref">SG-T-001 &ndash; SG-T-004</div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-step-num">Step 7</div>
+      <div class="pipeline-step-title">Final Approval</div>
+      <div class="pipeline-step-desc">You confirm the file is complete and recommend the applicant. The Safeguard Team reviews and signs off. Only then is the person approved for service.</div>
+      <div class="pipeline-step-ref">SG-SOP-001 (Approval section)</div>
+    </div>
+
+    <div class="callout callout-critical">
+      <div class="callout-label">The Rule</div>
+      <p><strong>No one serves until every step is complete and the Safeguard Team confirms approval.</strong> Staffing pressure is never a reason to skip or accelerate any step.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 3 — THE INTERVIEW ══ -->
+  <section class="section">
+    <div class="section-label">Section 3</div>
+    <h2 class="section-title">Conducting the Screening Interview</h2>
+
+    <p>The Interview Guide in SG-SOP-001 gives you the questions. This section teaches you how to use them.</p>
+
+    <p>The interview is a 10&ndash;15 minute conversation, not an interrogation. Your goal is to get a sense of the person&mdash;their faith, their motivation, their self-awareness, and their honesty. You are not looking for perfect answers. You are looking for authenticity and readiness.</p>
+
+    <h3 class="subsection-title">Set the Tone</h3>
+
+    <p>Start warm. Thank them for their interest. Explain that everyone who serves goes through this process because the children and families we serve deserve that level of care. Frame the interview as part of how we steward trust&mdash;not as a barrier to entry.</p>
+
+    <h3 class="subsection-title">Listen for Motivation</h3>
+
+    <p>Why do they want to serve with children? Most answers are fine: &ldquo;I love kids,&rdquo; &ldquo;My own children are in the program,&rdquo; &ldquo;I want to give back.&rdquo; What you are listening for are answers that centre on <em>access</em> rather than <em>service</em>&mdash;an unusual insistence on a specific age group, a desire to work alone, or an inability to articulate why they want to serve.</p>
+
+    <h3 class="subsection-title">Listen for Self-Awareness</h3>
+
+    <p>The character questions ask about frustration, feedback, and teamwork. Strong candidates acknowledge their weaknesses. Be cautious of someone who presents themselves as having no struggles, no frustrations, and no need for growth.</p>
+
+    <h3 class="subsection-title">Listen for Honesty on the Integrity Questions</h3>
+
+    <p>SG-SOP-001 asks whether there are past experiences or personal challenges that could affect their ability to serve. This question exists for a reason. A person with a relevant history who discloses it honestly may still be appropriate for service in a different capacity. A person who conceals it is a risk.</p>
+
+    <div class="callout callout-principle">
+      <div class="callout-label">Why This Matters</div>
+      <p>The interview is where you encounter the grooming pattern at its earliest point. Abusers seek positions of trust with children. They are often charming, eager, and available. The screening process&mdash;especially the interview&mdash;is designed to slow that pattern down and make it visible. You are not being suspicious. You are being faithful to the children in your care.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 4 — SAYING NO ══ -->
+  <section class="section">
+    <div class="section-label">Section 4</div>
+    <h2 class="section-title">Making a &ldquo;Not Yet&rdquo; or &ldquo;No&rdquo; Decision</h2>
+
+    <p>Not every applicant will be approved. This is one of the hardest parts of your role, especially in a church where relationships matter and rejection feels unkind.</p>
+
+    <div class="callout callout-scenario">
+      <div class="callout-label">Scenario</div>
+      <p>A long-time church member completes the application, but one of her references raises a concern about her temper with children. You notice the same pattern during the interview&mdash;she dismisses the idea that children can be frustrating. You like her. She has been at Bethany for years. But the screening process exists for moments exactly like this.</p>
+    </div>
+
+    <p><strong>&ldquo;Not yet&rdquo;</strong> is appropriate when the person needs more time, more maturity, or more understanding of the role before serving. Be specific: &ldquo;We&rsquo;d love to revisit this in six months after you&rsquo;ve had a chance to attend our parenting workshop.&rdquo;</p>
+
+    <p><strong>&ldquo;No&rdquo;</strong> is appropriate when references, the VSC, or the interview reveal a concern that would place children at risk. You do not need to justify this decision in detail. A simple, compassionate response is enough: &ldquo;We appreciate your heart for serving. Based on the screening process, we&rsquo;re going to direct you toward other ministry opportunities that would be a better fit.&rdquo;</p>
+
+    <h3 class="subsection-title">When a Referral Comes from a Pastor or Elder</h3>
+
+    <p>Social pressure does not override the screening process. If an elder refers someone and the interview raises a concern, you flag it to the Safeguard Team. The process is the same for everyone. That consistency is the entire point.</p>
+
+    <p><strong>Document your reasoning.</strong> A brief note in the applicant&rsquo;s file&mdash;&ldquo;Interview conducted [date]. Concerns noted regarding [specific area]. Recommended: not approved at this time / approved with conditions / declined&rdquo;&mdash;protects you, protects the church, and creates a record if the person reapplies later.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 5 — EARLY-SERVICE EXCEPTIONS ══ -->
+  <section class="section">
+    <div class="section-label">Section 5</div>
+    <h2 class="section-title">Early-Service Exceptions</h2>
+
+    <p>In limited cases, the Safeguard Team may grant an early-service exception&mdash;typically for a mature believer transferring from another church of the same denomination. As a leader, you need to know the constraints:</p>
+
+    <div class="system-box">
+      <p><strong>Requires three satisfactory references</strong>, at least one from a previous pastor or ministry director.</p>
+      <p><strong>Requires written Safeguard Team approval</strong> and clear marking on all schedules as &ldquo;early-service (in process).&rdquo;</p>
+      <p><strong>Serves under direct supervision only.</strong> Does not count toward the Two-Adult Rule or ratios. Must never be alone with children or lead independently.</p>
+      <p><strong>The exception ends</strong> when the full screening process is complete&mdash;including the six-month attendance requirement.</p>
+    </div>
+
+    <p>Do not request early-service exceptions to solve staffing problems. The exception exists for genuinely exceptional circumstances&mdash;not for convenience.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 6 — TRACKING RENEWALS ══ -->
+  <section class="section">
+    <div class="section-label">Section 6</div>
+    <h2 class="section-title">Tracking Renewals</h2>
+
+    <p>Screening is not a one-time event. Your responsibility does not end when a volunteer is approved&mdash;it continues every year.</p>
+
+    <div class="callout callout-principle">
+      <div class="callout-label">Annual Renewal Requirements</div>
+      <p><strong>Refresher training</strong> &mdash; completed each ministry year (in person or online).</p>
+      <p><strong>Policy review and acknowledgement</strong> &mdash; SG-FRM-004 re-signed annually.</p>
+      <p><strong>Police check renewal</strong> &mdash; every three years. The Safeguard Team tracks this and notifies you when a volunteer&rsquo;s check is coming due.</p>
+    </div>
+
+    <p><strong>Check compliance status before adding anyone to a schedule.</strong> If a volunteer&rsquo;s training has lapsed or their VSC is expired, they do not serve&mdash;regardless of how much you need them. The Safeguard Team maintains the master compliance record. When in doubt, confirm with them.</p>
+
+    <p>A lapsed volunteer is not in trouble. They simply pause until their renewal is complete. Your job is to make sure no one who has lapsed ends up on a schedule, and to help them get current quickly when they are ready to return.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ COMPREHENSION CHECK ══ -->
+  <section class="quiz-section" id="quiz">
+    <div class="section-label">Comprehension Check</div>
+    <h2 class="section-title">Test Your Understanding</h2>
+    <p class="quiz-instructions">Answer all five questions, then submit. You need 80% (4 out of 5) to pass this module.</p>
+
+    <div class="quiz-question" id="q1">
+      <div class="quiz-question-text"><span class="q-num">1.</span> During a screening interview, an applicant says he specifically wants to work with 10&ndash;12 year old boys and is not interested in any other age group. He cannot clearly explain why. What should you do?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q1" value="a"> Assign him to that age group since he has a clear preference.</label></li>
+        <li><label><input type="radio" name="q1" value="b"> Note the concern, complete the interview, and flag it to the Safeguard Team for review before proceeding.</label></li>
+        <li><label><input type="radio" name="q1" value="c"> Reject him immediately and tell him why.</label></li>
+        <li><label><input type="radio" name="q1" value="d"> Assign him to a different age group to be safe.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q1-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q2">
+      <div class="quiz-question-text"><span class="q-num">2.</span> A volunteer&rsquo;s police check results have not come back yet, but your nursery is critically short-staffed this Sunday. The volunteer has completed all other screening steps. What do you do?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q2" value="a"> Allow them to serve this once since the police check is just a formality.</label></li>
+        <li><label><input type="radio" name="q2" value="b"> Allow them to serve under direct supervision as an early-service exception.</label></li>
+        <li><label><input type="radio" name="q2" value="c"> Do not allow them to serve. No one serves until all screening steps are complete. Adjust ratios or merge groups instead.</label></li>
+        <li><label><input type="radio" name="q2" value="d"> Call the police station to check on the status and make a judgment call.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q2-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q3">
+      <div class="quiz-question-text"><span class="q-num">3.</span> An Elder recommends a new attendee for children&rsquo;s ministry. The attendee has been at Bethany for three months. What is the correct response?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q3" value="a"> Fast-track the screening since an Elder vouched for them.</label></li>
+        <li><label><input type="radio" name="q3" value="b"> Waive the six-month attendance requirement because of the Elder&rsquo;s recommendation.</label></li>
+        <li><label><input type="radio" name="q3" value="c"> Thank the Elder, welcome the person&rsquo;s interest, and explain that everyone completes the same screening process&mdash;including the six-month attendance requirement.</label></li>
+        <li><label><input type="radio" name="q3" value="d"> Start the screening process but let them shadow in the classroom while it&rsquo;s underway.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q3-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q4">
+      <div class="quiz-question-text"><span class="q-num">4.</span> You complete a screening interview and feel uneasy, but you cannot point to a single specific red flag. The applicant&rsquo;s references were positive. What should you do?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q4" value="a"> Approve them&mdash;your feelings are not evidence.</label></li>
+        <li><label><input type="radio" name="q4" value="b"> Reject them based on your gut feeling alone.</label></li>
+        <li><label><input type="radio" name="q4" value="c"> Document your concerns, discuss them with the Safeguard Team, and do not approve until the concern is resolved.</label></li>
+        <li><label><input type="radio" name="q4" value="d"> Approve them but assign them to a low-risk role.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q4-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q5">
+      <div class="quiz-question-text"><span class="q-num">5.</span> An early-service exception volunteer has been serving for two months. Their six-month attendance mark is still three months away. Another leader asks to schedule them as one of the two required adults in a toddler room. What do you say?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q5" value="a"> That&rsquo;s fine&mdash;they&rsquo;ve been serving well and have Safeguard Team approval.</label></li>
+        <li><label><input type="radio" name="q5" value="b"> No. Early-service volunteers do not count toward the Two-Adult Rule or ratios. Two fully approved adults must be in that room.</label></li>
+        <li><label><input type="radio" name="q5" value="c"> Only if the toddler room has fewer than five children.</label></li>
+        <li><label><input type="radio" name="q5" value="d"> Yes, but only if you do a walkthrough during the service.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q5-feedback"></div>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="quiz-submit-btn" id="quiz-submit" onclick="scoreQuiz()">Submit Answers</button>
+    </div>
+
+    <div class="quiz-results" id="quiz-results">
+      <div class="quiz-results-score" id="quiz-score"></div>
+      <div class="quiz-results-message" id="quiz-message"></div>
+    </div>
+  </section>
+
+  <div class="complete-section" id="complete-section" style="display: none;">
+    <button class="complete-btn" id="complete-btn" onclick="markComplete()">Mark Module as Complete</button>
+    <div class="complete-confirmation" id="complete-confirm">&#10003; Module completed. Your training record has been updated.</div>
+  </div>
+
+  <div class="doc-reference">
+    <table>
+      <tr><td>Module Code</td><td>SG-T-102</td></tr>
+      <tr><td>Series</td><td>Leader Training &mdash; Module 2 of 3</td></tr>
+      <tr><td>Version</td><td>1.0 &mdash; March 2026</td></tr>
+      <tr><td>Parent Policy</td><td>SG-POL-001 &mdash; Volunteer Screening &amp; Approval</td></tr>
+      <tr><td>Related Tools</td><td>SG-SOP-001 &mdash; Screening &amp; Onboarding Checklist (includes Interview Guide)</td></tr>
+      <tr><td>Prerequisite</td><td>SG-T-101 &mdash; Leading &amp; Sustaining the Safeguard System</td></tr>
+      <tr><td>Next Module</td><td>SG-T-103 &mdash; Incidents, Compliance &amp; Oversight</td></tr>
+      <tr><td>Pass Threshold</td><td>80% (4 of 5 correct)</td></tr>
+      <tr><td>Required For</td><td>Ministry Leaders, Safeguard Team, and Elders</td></tr>
+    </table>
+  </div>
+
+  <div class="page-footer">
+    Safeguard Framework &bull; Bethany Chapel &bull; Confidential &mdash; Internal Use Only
+  </div>
+
+</div>
+
+<script>
+  const answerKey = {
+    q1: { correct: 'b', explanation: 'An unusual insistence on a specific age group with no clear rationale is a flag. Note it, flag it, and let the Safeguard Team help you evaluate.' },
+    q2: { correct: 'c', explanation: 'Incomplete screening means no service. Merge groups or adjust\u2014never skip a step. Early-service exceptions require Safeguard Team pre-approval, not a same-day workaround.' },
+    q3: { correct: 'c', explanation: 'The process is the same for everyone. Elder referrals do not bypass screening or attendance requirements.' },
+    q4: { correct: 'c', explanation: 'Unease is worth documenting and discussing. You are not required to approve. \u201CNot yet\u201D is always available.' },
+    q5: { correct: 'b', explanation: 'Early-service volunteers serve under supervision only. They do not count toward the Two-Adult Rule or ratios until fully approved.' }
+  };
+
+  function scoreQuiz() {
+    const questions = document.querySelectorAll('.quiz-question');
+    let score = 0;
+    let allAnswered = true;
+    questions.forEach(q => {
+      const qId = q.id;
+      const selected = q.querySelector('input[type="radio"]:checked');
+      const feedback = document.getElementById(qId + '-feedback');
+      if (!selected) { allAnswered = false; return; }
+      q.classList.add('answered');
+      const isCorrect = selected.value === answerKey[qId].correct;
+      if (isCorrect) {
+        score++;
+        feedback.className = 'quiz-feedback correct';
+        feedback.textContent = '\u2713 Correct.';
+        selected.closest('label').classList.add('selected-correct');
+      } else {
+        feedback.className = 'quiz-feedback incorrect';
+        feedback.textContent = '\u2717 Incorrect. ' + answerKey[qId].explanation;
+        selected.closest('label').classList.add('selected-incorrect');
+      }
+    });
+    if (!allAnswered) { alert('Please answer all five questions before submitting.'); return; }
+    document.getElementById('quiz-submit').disabled = true;
+    const results = document.getElementById('quiz-results');
+    const scoreEl = document.getElementById('quiz-score');
+    const messageEl = document.getElementById('quiz-message');
+    const pct = Math.round((score / 5) * 100);
+    scoreEl.textContent = score + ' / 5 (' + pct + '%)';
+    if (score >= 4) {
+      results.className = 'quiz-results pass';
+      messageEl.textContent = 'You passed. You may proceed to the next module.';
+      document.getElementById('complete-section').style.display = 'block';
+    } else {
+      results.className = 'quiz-results fail';
+      messageEl.textContent = 'You need at least 4 correct (80%) to pass. Review the material above and try again.';
+      setTimeout(function() {
+        document.getElementById('quiz-submit').disabled = false;
+        document.getElementById('quiz-submit').textContent = 'Retry';
+        questions.forEach(q => {
+          q.classList.remove('answered');
+          q.querySelectorAll('label').forEach(l => { l.classList.remove('selected-correct', 'selected-incorrect'); });
+          q.querySelectorAll('input[type="radio"]').forEach(r => { r.checked = false; });
+          const fb = q.querySelector('.quiz-feedback');
+          fb.className = 'quiz-feedback'; fb.textContent = '';
+        });
+        results.className = 'quiz-results';
+      }, 3000);
+    }
+  }
+  function markComplete() {
+    document.getElementById('complete-btn').disabled = true;
+    document.getElementById('complete-btn').textContent = 'Completed';
+    document.getElementById('complete-confirm').classList.add('visible');
+  }
+</script>
+
+</body>
+</html>

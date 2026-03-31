@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-T-103 — Incidents, Compliance & Oversight</title>
+<style>
+  :root {
+    --navy: #1B3A4B;
+    --teal: #2E6B7F;
+    --gold: #B09055;
+    --gold-light: #C8AD78;
+    --charcoal: #2C2825;
+    --body-color: #3D3835;
+    --secondary: #5C5550;
+    --muted: #8A8480;
+    --cream: #FAF8F3;
+    --sand: #F5F2ED;
+    --white: #FFFFFF;
+    --alert-red: #C0392B;
+    --safe-green: #27AE60;
+    --safe-green-bg: #E8F8EF;
+    --alert-red-bg: #FDEDEC;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: var(--body-color); background: var(--cream); line-height: 1.65; }
+  .page-wrapper { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  @media (min-width: 800px) { .page-wrapper { padding: 3rem 2rem 5rem; } }
+  .cover { border-bottom: 3px solid var(--gold); padding-bottom: 1.75rem; margin-bottom: 2.5rem; }
+  .cover-framework { font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .cover-title { font-size: 1.85rem; font-weight: 400; color: var(--navy); line-height: 1.2; margin-bottom: 0.4rem; }
+  .cover-subtitle { font-size: 1.05rem; color: var(--teal); font-style: italic; margin-bottom: 1rem; }
+  .cover-meta { font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+  .cover-meta span { white-space: nowrap; }
+  .reading-time { display: inline-block; font-family: Arial, Helvetica, sans-serif; font-size: 0.72rem; color: var(--teal); background: var(--sand); padding: 0.2rem 0.65rem; border-radius: 3px; margin-top: 0.75rem; }
+  .purpose { font-size: 0.95rem; color: var(--secondary); border-left: 3px solid var(--gold-light); padding: 0.75rem 1rem; margin-bottom: 2.5rem; background: var(--white); }
+  .section { margin-bottom: 2.5rem; }
+  .section-label { font-family: Arial, Helvetica, sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
+  .section-title { font-size: 1.4rem; font-weight: 400; color: var(--navy); line-height: 1.25; margin-bottom: 1rem; }
+  .subsection-title { font-size: 1.1rem; color: var(--teal); margin-top: 1.5rem; margin-bottom: 0.6rem; }
+  p { margin-bottom: 1rem; }
+  strong { color: var(--charcoal); font-weight: 700; }
+  .callout { border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin: 1.25rem 0; background: var(--white); }
+  .callout-scenario { border-left: 4px solid var(--teal); background: #F4F9FB; }
+  .callout-principle { border-left: 4px solid var(--gold); }
+  .callout-critical { background: var(--navy); color: var(--white); border: none; border-radius: 4px; }
+  .callout-critical strong { color: var(--white); }
+  .callout-label { font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .callout-scenario .callout-label { color: var(--teal); }
+  .callout-principle .callout-label { color: var(--gold); }
+  .callout-critical .callout-label { color: var(--gold-light); }
+  .callout p:last-child { margin-bottom: 0; }
+  .role-list { list-style: none; counter-reset: role-counter; padding: 0; margin: 1rem 0; }
+  .role-list li { counter-increment: role-counter; padding: 0.5rem 0 0.5rem 2.25rem; position: relative; margin-bottom: 0.35rem; }
+  .role-list li::before { content: counter(role-counter); position: absolute; left: 0; top: 0.5rem; width: 1.5rem; height: 1.5rem; background: var(--teal); color: var(--white); font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .system-box { background: var(--white); border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin: 1.25rem 0; }
+  .system-box p { margin-bottom: 0.6rem; }
+  .system-box p:last-child { margin-bottom: 0; }
+  .section-divider { border: none; border-top: 1px solid #E5E2DD; margin: 2.5rem 0; }
+  .quiz-section { background: var(--sand); border-radius: 6px; padding: 1.5rem; margin-top: 2.5rem; }
+  .quiz-section .section-label { margin-bottom: 0.15rem; }
+  .quiz-section .section-title { margin-bottom: 0.5rem; }
+  .quiz-instructions { font-size: 0.85rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .quiz-question { background: var(--white); border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin-bottom: 1rem; }
+  .quiz-question-text { font-size: 0.92rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.75rem; line-height: 1.45; }
+  .quiz-question-text .q-num { color: var(--teal); font-family: Arial, Helvetica, sans-serif; font-size: 0.8rem; margin-right: 0.3rem; }
+  .quiz-options { list-style: none; padding: 0; }
+  .quiz-options li { margin-bottom: 0.4rem; }
+  .quiz-options label { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.88rem; color: var(--body-color); cursor: pointer; padding: 0.4rem 0.5rem; border-radius: 3px; transition: background 0.15s; }
+  .quiz-options label:hover { background: var(--sand); }
+  .quiz-options input[type="radio"] { margin-top: 0.25rem; accent-color: var(--teal); flex-shrink: 0; }
+  .quiz-feedback { display: none; font-size: 0.82rem; padding: 0.5rem 0.75rem; border-radius: 3px; margin-top: 0.5rem; }
+  .quiz-feedback.correct { display: block; background: var(--safe-green-bg); color: #1E7D46; border-left: 3px solid var(--safe-green); }
+  .quiz-feedback.incorrect { display: block; background: var(--alert-red-bg); color: #922B21; border-left: 3px solid var(--alert-red); }
+  .quiz-question.answered .quiz-options label { cursor: default; pointer-events: none; }
+  .quiz-question.answered .quiz-options label.selected-correct { background: var(--safe-green-bg); }
+  .quiz-question.answered .quiz-options label.selected-incorrect { background: var(--alert-red-bg); }
+  .quiz-results { display: none; margin-top: 1.5rem; padding: 1.25rem; border-radius: 4px; text-align: center; }
+  .quiz-results.pass { display: block; background: var(--safe-green-bg); border: 1px solid var(--safe-green); }
+  .quiz-results.fail { display: block; background: var(--alert-red-bg); border: 1px solid var(--alert-red); }
+  .quiz-results-score { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .quiz-results.pass .quiz-results-score { color: #1E7D46; }
+  .quiz-results.fail .quiz-results-score { color: #922B21; }
+  .quiz-results-message { font-size: 0.88rem; color: var(--secondary); }
+  .quiz-submit-btn { display: inline-block; margin-top: 1.25rem; padding: 0.65rem 1.75rem; font-family: Arial, Helvetica, sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--white); background: var(--teal); border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+  .quiz-submit-btn:hover { background: var(--navy); }
+  .quiz-submit-btn:disabled { background: #B0ADA8; cursor: not-allowed; }
+  .complete-section { text-align: center; margin-top: 2rem; padding: 1.5rem; }
+  .complete-btn { display: inline-block; padding: 0.75rem 2rem; font-family: Arial, Helvetica, sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--white); background: var(--navy); border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+  .complete-btn:hover { background: #14303D; }
+  .complete-btn:disabled { background: #B0ADA8; cursor: not-allowed; }
+  .complete-confirmation { display: none; margin-top: 1rem; font-family: Arial, Helvetica, sans-serif; font-size: 0.85rem; color: #1E7D46; font-weight: 700; }
+  .complete-confirmation.visible { display: block; }
+  .doc-reference { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #E5E2DD; }
+  .doc-reference table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .doc-reference td { padding: 0.3rem 0; vertical-align: top; }
+  .doc-reference td:first-child { font-family: Arial, Helvetica, sans-serif; font-weight: 700; color: var(--secondary); width: 9rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .doc-reference td:last-child { color: var(--body-color); }
+  .page-footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #E5E2DD; text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <header class="cover">
+    <div class="cover-framework">Safeguard Framework &bull; Leader Training</div>
+    <h1 class="cover-title">Incidents, Compliance &amp; Oversight</h1>
+    <div class="cover-subtitle">Leader Track &mdash; Module 3 of 3</div>
+    <div class="cover-meta">
+      <span>SG-T-103</span>
+      <span>Version 1.0</span>
+      <span>March 2026</span>
+      <span>Bethany Chapel</span>
+    </div>
+    <div class="reading-time">&#9201; Estimated reading time: 14 minutes</div>
+  </header>
+
+  <div class="purpose">
+    This module covers two sides of the same coin: what to do when things go wrong (incidents and abuse allegations), and how to make sure they don&rsquo;t (walkthroughs, variance logs, and compliance audits). Your volunteers handle the first response. You own the follow-through and the prevention.
+  </div>
+
+  <!-- ══ SECTION 1 — INCIDENTS AND ACCIDENTS ══ -->
+  <section class="section">
+    <div class="section-label">Section 1</div>
+    <h2 class="section-title">Incidents and Accidents</h2>
+
+    <div class="callout callout-scenario">
+      <div class="callout-label">Scenario</div>
+      <p>A toddler falls off a low chair and bumps her head during the service. Your volunteer applies ice, comforts the child, and tells you at pickup. The child seems fine. The parent thanks you and leaves.</p>
+      <p><strong><em>It&rsquo;s handled, right? Not yet. Without documentation, this never happened&mdash;until someone claims it did, and you have no record.</em></strong></p>
+    </div>
+
+    <p>A child falls. A toddler bites another child. A preschooler has an allergic reaction. These are not crises, but they all require documentation and communication. Your job when a volunteer reports an incident:</p>
+
+    <ol class="role-list">
+      <li><strong>Confirm the child is safe</strong> and has received appropriate first aid (SG-SOP-006).</li>
+      <li><strong>Ensure the volunteer completes SG-FRM-006</strong> (Incident/Accident Report) the same day. Review it for completeness&mdash;facts only, no opinions, no diagnoses.</li>
+      <li><strong>Notify the parents at pickup.</strong> Be factual, be calm, be specific about what happened and what you did.</li>
+      <li><strong>For serious injuries</strong> (anything requiring medical attention beyond basic first aid), notify the Safeguard Team.</li>
+    </ol>
+
+    <p><strong>Follow-up matters.</strong> Use the follow-up section of SG-FRM-006 to track what happens next: parent communication, leadership review, any changes to procedures. An incident report without follow-up is a liability, not a record.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 2 — ABUSE ALLEGATIONS ══ -->
+  <section class="section">
+    <div class="section-label">Section 2</div>
+    <h2 class="section-title">Abuse Allegations and Disclosures</h2>
+
+    <div class="callout callout-scenario">
+      <div class="callout-label">Scenario</div>
+      <p>A volunteer approaches you after the children&rsquo;s program looking shaken. &ldquo;A little girl told me something. I think it&rsquo;s abuse. I already called Child &amp; Family Services like the training said. I need help.&rdquo;</p>
+      <p><strong><em>Your volunteer did their job. Now you need to do yours.</em></strong></p>
+    </div>
+
+    <p>Your volunteers are trained to follow the reporting steps: ensure safety, report to authorities, notify you, and document. By the time an allegation reaches you, the initial response may already be underway. Your role is not to start the process&mdash;it is to support it, secure it, and follow through.</p>
+
+    <div class="callout callout-critical">
+      <div class="callout-label">Your Mandatory Reporting Obligation</div>
+      <p><strong>Under Alberta law, if you personally have reasonable grounds to suspect abuse, you must report to Child &amp; Family Services or Police&mdash;regardless of whether someone else has already reported.</strong> If a volunteer reports to you and you now share those reasonable grounds, you have an independent legal duty to report. Do not assume someone else&rsquo;s report covers yours.</p>
+    </div>
+
+    <h3 class="subsection-title">The First 60 Minutes</h3>
+
+    <ol class="role-list">
+      <li><strong>Support the reporter.</strong> The volunteer who received the disclosure is likely shaken. Affirm them: &ldquo;You did the right thing. Thank you for acting.&rdquo; Ask if they have already contacted authorities. If yes, confirm it was done. If not, help them make the call now. Do not take over the report&mdash;it belongs to the person who witnessed or received the disclosure.</li>
+      <li><strong>Ensure your own report.</strong> If the information gives you reasonable grounds, make your own report to Child &amp; Family Services or Police. You do not need proof. You do not need certainty. Reasonable grounds are enough.</li>
+      <li><strong>Secure the environment.</strong> If the accused person is present, remove them from all contact with children immediately. This is not a judgment of guilt. It is a protective measure. Do it calmly, privately, and without explanation to other volunteers or parents. Say only: &ldquo;We need to speak with you separately. Please come with me.&rdquo;</li>
+      <li><strong>Notify the Safeguard Team and Executive Pastor.</strong> This notification happens <em>after</em> the external report, not before. Provide facts: who reported, what was said, what actions have been taken so far.</li>
+      <li><strong>Preserve confidentiality.</strong> Limit information strictly to the Safeguard Team, the Elders (as required), and civil authorities. Do not discuss the situation with other volunteers, parents, or staff unless specifically authorized by police.</li>
+      <li><strong>Ensure documentation.</strong> The volunteer completes SG-FRM-007 (Suspected Abuse Report) the same day. Review it for completeness. The form must include the child&rsquo;s exact words&mdash;verbatim, not summarized. Use the follow-up section to track every subsequent action.</li>
+    </ol>
+
+    <h3 class="subsection-title">What You Must Not Do</h3>
+
+    <div class="system-box">
+      <p><strong>Do not investigate.</strong> You are not police. You are not a social worker. Gathering evidence, questioning the child further, or confronting the accused can compromise the investigation and harm the child.</p>
+      <p><strong>Do not notify the parents if a parent is the suspected abuser.</strong> Let authorities handle that contact.</p>
+      <p><strong>Do not delay.</strong> Do not wait for the service to end, for the Safeguard Team to meet, or for &ldquo;more information.&rdquo; Reports go to authorities immediately.</p>
+      <p><strong>Do not discuss the situation publicly.</strong> No announcements, no group emails, no corridor conversations. Confidentiality protects the child, the reporter, and the integrity of the investigation.</p>
+      <p><strong>Do not speak to media.</strong> If contacted by a journalist, say nothing and direct them to the Executive Pastor or Elders. One sentence: &ldquo;I&rsquo;m not authorized to comment. Please contact our church office.&rdquo;</p>
+    </div>
+
+    <h3 class="subsection-title">After the First 60 Minutes</h3>
+
+    <p>The immediate crisis will pass. The follow-through will not. Track every action taken: when authorities were contacted, when the accused was removed, when parents were notified (if appropriate), what the Safeguard Team decided, and what changes were made to prevent recurrence.</p>
+
+    <p>Care for your people. The reporter needs pastoral support&mdash;receiving a disclosure is traumatic. The accused, if a member of the community, will need to be managed with both firmness and compassion&mdash;removal from ministry does not require cruelty. And you will need support yourself. Talk to the Executive Pastor or a trusted elder. Do not carry this alone.</p>
+
+    <div class="callout callout-principle">
+      <div class="callout-label">The Principle</div>
+      <p>You are never in trouble for reporting in good faith. You are always in trouble for not reporting. This applies to leaders exactly as it applies to volunteers.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 3 — WALKTHROUGHS ══ -->
+  <section class="section">
+    <div class="section-label">Section 3</div>
+    <h2 class="section-title">Walkthroughs</h2>
+
+    <div class="callout callout-scenario">
+      <div class="callout-label">Scenario</div>
+      <p>You walk past the elementary room and notice the door is closed. Through the window, you see one adult on her phone while the other manages the group. The room is at capacity.</p>
+      <p><strong><em>Two issues: the door should be open, and one adult is not supervising. Both are correctable in 30 seconds with a calm, direct word. That is what a walkthrough is for.</em></strong></p>
+    </div>
+
+    <p>A walkthrough is a brief, routine check of your ministry area during a program. It takes five minutes. It is the single most effective tool you have for catching small problems before they become big ones.</p>
+
+    <p><strong>Walk through at least once per service.</strong> Check: are both adults present and engaged? Is the door open or the window unobstructed? Is the sign-in sheet being used? Does the headcount match the capacity card? Are children supervised&mdash;not just present, but actually being watched?</p>
+
+    <p>Frame walkthroughs as normal leadership presence. If volunteers feel surveilled, you will get compliance theater instead of genuine safety. Pop in, say hello, scan the room, and move on. If you see something, address it warmly and directly. Save formal documentation for patterns, not first-time observations.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 4 — VARIANCE LOGS ══ -->
+  <section class="section">
+    <div class="section-label">Section 4</div>
+    <h2 class="section-title">Reading Variance Logs</h2>
+
+    <p>Your volunteers were trained to Pause &rarr; Merge &rarr; Log when coverage drops. Those logs come to you for review within 24 hours. Here is how to read them:</p>
+
+    <div class="system-box">
+      <p><strong>A single variance is information.</strong> A volunteer&rsquo;s co-leader was late. They paused check-in, called for help, and logged it. That is the system working. Acknowledge it. Thank them for documenting it. Move on.</p>
+      <p><strong>A pattern is a problem.</strong> The same volunteer logging coverage drops three Sundays in a row points to a scheduling gap, not a volunteer failure. The same room consistently hitting capacity suggests you need a third adult or a lower enrollment cap. Patterns require your action&mdash;adjusting the schedule, retraining, or escalating to the Safeguard Team.</p>
+      <p><strong>A serious or repeated individual variance requires a coaching conversation.</strong> If one volunteer keeps arriving late, leaving early, or breaking the two-adult rule, that is a performance issue. Address it directly, document the conversation, and if the behavior continues, escalate to the Safeguard Team for possible removal.</p>
+    </div>
+
+    <div class="callout callout-critical">
+      <div class="callout-label">The Rule</div>
+      <p><strong>Variance logs are transparency tools, not discipline tools.</strong> Never punish a volunteer for logging a variance. If volunteers fear logging, they will stop logging&mdash;and your visibility disappears.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 5 — COMPLIANCE AUDIT ══ -->
+  <section class="section">
+    <div class="section-label">Section 5</div>
+    <h2 class="section-title">The Annual Compliance Audit</h2>
+
+    <p>Once a year, the Safeguard Team coordinates a compliance review of every ministry area. As a leader, you walk through a checklist covering screening files, training records, ratio compliance, documentation practices, and records storage.</p>
+
+    <p>The audit is not a test you pass or fail. It is a diagnostic. Gaps found during the audit are expected&mdash;what matters is that they are found, documented, and resolved. Flag anything incomplete and build a plan to close it. Submit the completed checklist to the Safeguard Team.</p>
+
+    <div class="callout callout-principle">
+      <div class="callout-label">Why This Matters</div>
+      <p>The annual audit is the single moment each year where the entire system gets a checkup. It catches the things that drift quietly&mdash;a volunteer whose VSC expired without anyone noticing, a room capacity card that was never updated after renovations, a variance log that stopped being reviewed. The audit does not create extra work. It reveals the work you were already supposed to be doing.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 6 — LEADER TRACK COMPLETE ══ -->
+  <section class="section">
+    <div class="section-label">Section 6</div>
+    <h2 class="section-title">Leader Track Complete</h2>
+
+    <p>You have now completed the full Leader Track. You understand your five functions, where you sit in the governance chain, how to screen and manage volunteers, how to respond when something goes wrong, and how to keep the system honest through walkthroughs, variance review, and compliance audits.</p>
+
+    <p>The Safeguard Framework does not run on good intentions. It runs on leaders who enforce the standards, coach their teams, and follow through on every incident, every variance, and every audit finding. That leader is you.</p>
+
+    <div class="callout callout-critical">
+      <p><strong>This is not bureaucracy. This is stewardship.</strong></p>
+      <p>Your quick-reference guide (SG-T-REF-001) is your daily companion&mdash;the &ldquo;what form do I use when?&rdquo; lookup table and records retention guidance. Keep it accessible.</p>
+      <p>Thank you for leading this system. The children, families, and volunteers in your care are safer because you took this seriously.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ COMPREHENSION CHECK ══ -->
+  <section class="quiz-section" id="quiz">
+    <div class="section-label">Comprehension Check</div>
+    <h2 class="section-title">Test Your Understanding</h2>
+    <p class="quiz-instructions">Answer all five questions, then submit. You need 80% (4 out of 5) to pass this module and complete the Leader Track.</p>
+
+    <div class="quiz-question" id="q1">
+      <div class="quiz-question-text"><span class="q-num">1.</span> A volunteer tells you she received a disclosure from a child and has already called Child &amp; Family Services. What is your next step?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q1" value="a"> Thank her and let CFS handle it from here.</label></li>
+        <li><label><input type="radio" name="q1" value="b"> Affirm her, confirm the report was made, assess whether you also have reasonable grounds to report, secure the environment if the accused is present, and notify the Safeguard Team.</label></li>
+        <li><label><input type="radio" name="q1" value="c"> Ask her to describe exactly what the child said so you can assess whether it&rsquo;s serious.</label></li>
+        <li><label><input type="radio" name="q1" value="d"> Notify the child&rsquo;s parents immediately.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q1-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q2">
+      <div class="quiz-question-text"><span class="q-num">2.</span> The accused person is a well-respected volunteer who has served for ten years. Do you still remove them from contact with children immediately?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q2" value="a"> No&mdash;wait for the investigation to determine if the allegation is credible.</label></li>
+        <li><label><input type="radio" name="q2" value="b"> Yes&mdash;removal is a protective measure, not a judgment of guilt. It happens immediately regardless of the person&rsquo;s reputation.</label></li>
+        <li><label><input type="radio" name="q2" value="c"> Only if the police instruct you to.</label></li>
+        <li><label><input type="radio" name="q2" value="d"> Only if the Safeguard Team authorizes it.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q2-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q3">
+      <div class="quiz-question-text"><span class="q-num">3.</span> During a walkthrough, you notice a volunteer has covered the classroom door window with a poster for a craft activity. What do you do?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q3" value="a"> Make a note to mention it next week.</label></li>
+        <li><label><input type="radio" name="q3" value="b"> Remove the poster immediately and explain that windows must remain unobstructed for visibility.</label></li>
+        <li><label><input type="radio" name="q3" value="c"> Check whether there are two adults in the room&mdash;if so, the window does not matter.</label></li>
+        <li><label><input type="radio" name="q3" value="d"> File a formal variance log entry.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q3-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q4">
+      <div class="quiz-question-text"><span class="q-num">4.</span> You review the variance log and see three entries from the same room over two months, all reporting the same issue: the second adult arriving 10&ndash;15 minutes late. What should you do?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q4" value="a"> Nothing&mdash;the volunteers are logging correctly, so the system is working.</label></li>
+        <li><label><input type="radio" name="q4" value="b"> Identify whether this is a scheduling issue or a volunteer issue, address the root cause, and adjust the schedule or have a coaching conversation.</label></li>
+        <li><label><input type="radio" name="q4" value="c"> Remove the late volunteer from the schedule.</label></li>
+        <li><label><input type="radio" name="q4" value="d"> Stop checking the variance log&mdash;it&rsquo;s creating unnecessary paperwork.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q4-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q5">
+      <div class="quiz-question-text"><span class="q-num">5.</span> A journalist calls you on Monday asking about &ldquo;an incident at the church.&rdquo; What do you say?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q5" value="a"> Confirm the incident happened but decline to provide details.</label></li>
+        <li><label><input type="radio" name="q5" value="b"> Deny that anything happened.</label></li>
+        <li><label><input type="radio" name="q5" value="c"> &ldquo;I&rsquo;m not authorized to comment. Please contact our church office.&rdquo;</label></li>
+        <li><label><input type="radio" name="q5" value="d"> Provide a brief statement to ensure the church&rsquo;s side of the story is heard.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q5-feedback"></div>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="quiz-submit-btn" id="quiz-submit" onclick="scoreQuiz()">Submit Answers</button>
+    </div>
+
+    <div class="quiz-results" id="quiz-results">
+      <div class="quiz-results-score" id="quiz-score"></div>
+      <div class="quiz-results-message" id="quiz-message"></div>
+    </div>
+  </section>
+
+  <div class="complete-section" id="complete-section" style="display: none;">
+    <button class="complete-btn" id="complete-btn" onclick="markComplete()">Mark Module as Complete</button>
+    <div class="complete-confirmation" id="complete-confirm">&#10003; Leader Track completed. Your training record has been updated.</div>
+  </div>
+
+  <div class="doc-reference">
+    <table>
+      <tr><td>Module Code</td><td>SG-T-103</td></tr>
+      <tr><td>Series</td><td>Leader Training &mdash; Module 3 of 3 (Final)</td></tr>
+      <tr><td>Version</td><td>1.0 &mdash; March 2026</td></tr>
+      <tr><td>Parent Policy</td><td>SG-POL-004 &mdash; Reporting &amp; Response</td></tr>
+      <tr><td>Related Tools</td><td>SG-FRM-006 &mdash; Incident / Accident Report &bull; SG-FRM-007 &mdash; Suspected Abuse Report &bull; SG-SOP-004 &mdash; Reporting Flowchart &bull; SG-SOP-006 &mdash; Emergency &amp; Injury Protocols</td></tr>
+      <tr><td>Prerequisite</td><td>SG-T-102 &mdash; Screening &amp; Managing Volunteers</td></tr>
+      <tr><td>Reference Card</td><td>SG-T-REF-001 &mdash; Leader Quick-Reference Guide</td></tr>
+      <tr><td>Pass Threshold</td><td>80% (4 of 5 correct)</td></tr>
+      <tr><td>Required For</td><td>Ministry Leaders, Safeguard Team, and Elders</td></tr>
+    </table>
+  </div>
+
+  <div class="page-footer">
+    Safeguard Framework &bull; Bethany Chapel &bull; Confidential &mdash; Internal Use Only
+  </div>
+
+</div>
+
+<script>
+  const answerKey = {
+    q1: { correct: 'b', explanation: 'Support the reporter, assess your own reporting duty, secure the environment, notify leadership. Thanking her is not enough\u2014you have independent obligations.' },
+    q2: { correct: 'b', explanation: 'Immediate removal. Always. Reputation does not override protection. This is protective, not punitive.' },
+    q3: { correct: 'b', explanation: 'Visibility is non-negotiable. Address it immediately, warmly, and directly. The two-adult rule does not eliminate the visibility requirement.' },
+    q4: { correct: 'b', explanation: 'A pattern requires root-cause analysis and action, not just acknowledgment. Logging is working\u2014but the underlying problem needs to be fixed.' },
+    q5: { correct: 'c', explanation: 'Say nothing. Direct to church office. One sentence, nothing more. Never confirm, deny, or editorialize.' }
+  };
+
+  function scoreQuiz() {
+    const questions = document.querySelectorAll('.quiz-question');
+    let score = 0;
+    let allAnswered = true;
+    questions.forEach(q => {
+      const qId = q.id;
+      const selected = q.querySelector('input[type="radio"]:checked');
+      const feedback = document.getElementById(qId + '-feedback');
+      if (!selected) { allAnswered = false; return; }
+      q.classList.add('answered');
+      const isCorrect = selected.value === answerKey[qId].correct;
+      if (isCorrect) {
+        score++;
+        feedback.className = 'quiz-feedback correct';
+        feedback.textContent = '\u2713 Correct.';
+        selected.closest('label').classList.add('selected-correct');
+      } else {
+        feedback.className = 'quiz-feedback incorrect';
+        feedback.textContent = '\u2717 Incorrect. ' + answerKey[qId].explanation;
+        selected.closest('label').classList.add('selected-incorrect');
+      }
+    });
+    if (!allAnswered) { alert('Please answer all five questions before submitting.'); return; }
+    document.getElementById('quiz-submit').disabled = true;
+    const results = document.getElementById('quiz-results');
+    const scoreEl = document.getElementById('quiz-score');
+    const messageEl = document.getElementById('quiz-message');
+    const pct = Math.round((score / 5) * 100);
+    scoreEl.textContent = score + ' / 5 (' + pct + '%)';
+    if (score >= 4) {
+      results.className = 'quiz-results pass';
+      messageEl.textContent = 'You passed. Leader Track complete. You may proceed to SG-T-REF-001.';
+      document.getElementById('complete-section').style.display = 'block';
+    } else {
+      results.className = 'quiz-results fail';
+      messageEl.textContent = 'You need at least 4 correct (80%) to pass. Review the material above and try again.';
+      setTimeout(function() {
+        document.getElementById('quiz-submit').disabled = false;
+        document.getElementById('quiz-submit').textContent = 'Retry';
+        questions.forEach(q => {
+          q.classList.remove('answered');
+          q.querySelectorAll('label').forEach(l => { l.classList.remove('selected-correct', 'selected-incorrect'); });
+          q.querySelectorAll('input[type="radio"]').forEach(r => { r.checked = false; });
+          const fb = q.querySelector('.quiz-feedback');
+          fb.className = 'quiz-feedback'; fb.textContent = '';
+        });
+        results.className = 'quiz-results';
+      }, 3000);
+    }
+  }
+  function markComplete() {
+    document.getElementById('complete-btn').disabled = true;
+    document.getElementById('complete-btn').textContent = 'Completed';
+    document.getElementById('complete-confirm').classList.add('visible');
+  }
+</script>
+
+</body>
+</html>

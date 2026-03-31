@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-T-REF-001 — Leader Quick-Reference Guide</title>
+<style>
+  :root {
+    --navy: #1B3A4B;
+    --teal: #2E6B7F;
+    --gold: #B09055;
+    --gold-light: #C8AD78;
+    --charcoal: #2C2825;
+    --body-color: #3D3835;
+    --secondary: #5C5550;
+    --muted: #8A8480;
+    --cream: #FAF8F3;
+    --sand: #F5F2ED;
+    --white: #FFFFFF;
+    --alert-red: #C0392B;
+    --alert-red-bg: #FDEDEC;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: var(--body-color); background: var(--cream); line-height: 1.65; }
+  .page-wrapper { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  @media (min-width: 800px) { .page-wrapper { padding: 3rem 2rem 5rem; } }
+  .cover { border-bottom: 3px solid var(--gold); padding-bottom: 1.75rem; margin-bottom: 2.5rem; }
+  .cover-framework { font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .cover-title { font-size: 1.85rem; font-weight: 400; color: var(--navy); line-height: 1.2; margin-bottom: 0.4rem; }
+  .cover-subtitle { font-size: 1.05rem; color: var(--teal); font-style: italic; margin-bottom: 1rem; }
+  .cover-meta { font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+  .cover-meta span { white-space: nowrap; }
+  .purpose { font-size: 0.95rem; color: var(--secondary); border-left: 3px solid var(--gold-light); padding: 0.75rem 1rem; margin-bottom: 2.5rem; background: var(--white); }
+  .section { margin-bottom: 2.5rem; }
+  .section-label { font-family: Arial, Helvetica, sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
+  .section-title { font-size: 1.4rem; font-weight: 400; color: var(--navy); line-height: 1.25; margin-bottom: 1rem; }
+  .subsection-title { font-size: 1.1rem; color: var(--teal); margin-top: 1.5rem; margin-bottom: 0.6rem; }
+  p { margin-bottom: 1rem; }
+  strong { color: var(--charcoal); font-weight: 700; }
+  .section-divider { border: none; border-top: 1px solid #E5E2DD; margin: 2.5rem 0; }
+
+  /* Situation lookup table */
+  .sit-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.85rem; }
+  .sit-table th { background: var(--sand); color: var(--charcoal); font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.6rem 0.7rem; text-align: left; border-bottom: 2px solid #E5E2DD; }
+  .sit-table td { padding: 0.6rem 0.7rem; border-bottom: 1px solid #E5E2DD; vertical-align: top; line-height: 1.45; }
+  .sit-table tr:last-child td { border-bottom: none; }
+  .sit-table .sit-urgent td { background: var(--alert-red-bg); }
+  .sit-table .sit-urgent td:first-child { font-weight: 700; color: var(--alert-red); }
+  .sit-table td:first-child { font-weight: 700; color: var(--charcoal); width: 24%; }
+  .sit-table td:nth-child(2) { font-family: Arial, Helvetica, sans-serif; font-size: 0.8rem; color: var(--teal); width: 26%; }
+  .sit-table td:nth-child(3) { color: var(--secondary); width: 50%; }
+  .urgent-note { font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; color: var(--alert-red); font-weight: 700; margin-bottom: 0.75rem; }
+
+  /* Retention table */
+  .ret-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.85rem; }
+  .ret-table th { background: var(--sand); color: var(--charcoal); font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.55rem 0.7rem; text-align: left; border-bottom: 2px solid #E5E2DD; }
+  .ret-table td { padding: 0.55rem 0.7rem; border-bottom: 1px solid #E5E2DD; vertical-align: top; line-height: 1.4; }
+  .ret-table tr:last-child td { border-bottom: none; }
+  .ret-table td:first-child { font-family: Arial, Helvetica, sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--teal); width: 20%; }
+  .ret-table td:nth-child(2) { color: var(--body-color); width: 28%; }
+  .ret-table td:nth-child(3) { font-family: Arial, Helvetica, sans-serif; font-size: 0.82rem; color: var(--charcoal); font-weight: 700; width: 20%; }
+  .ret-table td:nth-child(4) { color: var(--secondary); width: 32%; }
+
+  .callout { border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin: 1.25rem 0; background: var(--white); }
+  .callout-principle { border-left: 4px solid var(--gold); }
+  .callout-label { font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; color: var(--gold); }
+  .callout p:last-child { margin-bottom: 0; }
+  .system-box { background: var(--white); border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin: 1.25rem 0; }
+  .system-box p { margin-bottom: 0.6rem; }
+  .system-box p:last-child { margin-bottom: 0; }
+
+  .doc-reference { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #E5E2DD; }
+  .doc-reference table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .doc-reference td { padding: 0.3rem 0; vertical-align: top; }
+  .doc-reference td:first-child { font-family: Arial, Helvetica, sans-serif; font-weight: 700; color: var(--secondary); width: 9rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .doc-reference td:last-child { color: var(--body-color); }
+  .page-footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #E5E2DD; text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; color: var(--muted); }
+
+  @media print {
+    body { background: white; font-size: 10pt; }
+    .page-wrapper { max-width: none; padding: 0.5in; }
+    .sit-table, .ret-table { font-size: 8.5pt; }
+    .section-divider { margin: 1.5rem 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <header class="cover">
+    <div class="cover-framework">Safeguard Framework &bull; Leader Reference</div>
+    <h1 class="cover-title">Leader Quick-Reference Guide</h1>
+    <div class="cover-subtitle">Forms &amp; SOPs by Situation &bull; Records Retention &bull; Confidentiality</div>
+    <div class="cover-meta">
+      <span>SG-T-REF-001</span>
+      <span>Version 1.0</span>
+      <span>March 2026</span>
+      <span>Bethany Chapel</span>
+    </div>
+  </header>
+
+  <div class="purpose">
+    This is your daily companion&mdash;the &ldquo;what form do I use when?&rdquo; lookup table, plus records retention and confidentiality rules. Print it. Pin it at your station. Keep it where you can reach it on a Sunday morning.
+  </div>
+
+  <!-- ══ PART 1 — SITUATION LOOKUP ══ -->
+  <section class="section">
+    <div class="section-label">Part 1</div>
+    <h2 class="section-title">What Form Do I Grab?</h2>
+
+    <div class="urgent-note">&#9888; Red rows = urgent / time-critical. Act immediately. Do not wait for the service to end.</div>
+
+    <table class="sit-table">
+      <thead>
+        <tr>
+          <th>Situation</th>
+          <th>Grab This</th>
+          <th>Then Do This</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="sit-urgent">
+          <td>Child discloses abuse or you suspect abuse/neglect</td>
+          <td>SG-FRM-007 (Suspected Abuse Report)<br>SG-SOP-004 (Reporting Flowchart)</td>
+          <td>Ensure safety &rarr; Report to CFS/Police &rarr; Notify Safeguard Team &rarr; Document same day. Use FRM-006 follow-up section to track actions.</td>
+        </tr>
+        <tr class="sit-urgent">
+          <td>Medical emergency (seizure, allergic reaction, unconsciousness)</td>
+          <td>SG-SOP-006 (Emergency Protocols)<br>SG-FRM-006 (Incident Report)</td>
+          <td>Call 911 &rarr; Do not move child unless in danger &rarr; Notify Executive Pastor immediately &rarr; Complete FRM-006.</td>
+        </tr>
+        <tr>
+          <td>Child is injured (fall, cut, bump, bite)</td>
+          <td>SG-FRM-006 (Incident / Accident Report)<br>SG-SOP-006 (Emergency Protocols)</td>
+          <td>First aid &rarr; Complete FRM-006 same day &rarr; Notify parents at pickup. Serious injuries: notify Safeguard Team.</td>
+        </tr>
+        <tr>
+          <td>Volunteer no-show or coverage drops below two adults</td>
+          <td>Variance log</td>
+          <td>Pause &rarr; Merge &rarr; Log. Call backup or floater. If no coverage possible, close room and redirect families.</td>
+        </tr>
+        <tr>
+          <td>Room reaches maximum capacity</td>
+          <td>SG-SOP-003 (Room Capacity Card)</td>
+          <td>Post &ldquo;Room Full&rdquo; &rarr; Stop receiving &rarr; Redirect to check-in desk &rarr; Notify leader for overflow options.</td>
+        </tr>
+        <tr>
+          <td>New volunteer wants to serve</td>
+          <td>SG-SOP-001 (Screening Checklist)<br>SG-FRM-001 (Ministry Application)</td>
+          <td>Application &rarr; Interview (SG-SOP-001 guide) &rarr; References (FRM-002) &rarr; Police check (FRM-003) &rarr; Covenant (FRM-004) &rarr; Training &rarr; Final approval.</td>
+        </tr>
+        <tr>
+          <td>Child needs bathroom escort (preschool or younger)</td>
+          <td>SG-SOP-002 (Washroom Escort Protocol)</td>
+          <td>Two-adult escort or hall monitor protocol. Never enter a stall with an elementary-age+ child. Log any deviation.</td>
+        </tr>
+        <tr>
+          <td>Unauthorized person tries to pick up a child</td>
+          <td>SG-SOP-005 (Receiving / Releasing)<br>SG-FRM-008 (Sign-In / Sign-Out)</td>
+          <td>Check sign-out sheet for authorized names. Do not release. Contact parent to verify. Custody dispute: hold child safely and call leader.</td>
+        </tr>
+        <tr>
+          <td>Off-site event or transportation needed</td>
+          <td>SG-SOP-007 (Transportation Procedures)<br>SG-FRM-009 (Permission &amp; Waiver)<br>SG-FRM-010 (Driver Application)<br>SG-FRM-011 (Trip Log)</td>
+          <td>Approved drivers only &rarr; Two-adult rule in vehicles &rarr; Permission forms collected &rarr; Trip log completed.</td>
+        </tr>
+        <tr>
+          <td>Fire alarm or evacuation</td>
+          <td>SG-SOP-006 (Emergency Protocols)<br>Attendance clipboard</td>
+          <td>Line up at door &rarr; Take attendance list &rarr; Exit to muster point &rarr; Headcount &rarr; Report missing to emergency personnel. Do not re-enter.</td>
+        </tr>
+        <tr>
+          <td>Annual renewal / compliance cycle</td>
+          <td>SG-FRM-004 (Covenant &amp; Acknowledgement)<br>SG-FRM-012 (Training Completion Record)</td>
+          <td>Verify all volunteers current on training and police checks &rarr; Collect signed FRM-004 &rarr; Complete annual audit &rarr; Submit to Safeguard Team.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ PART 2 — RECORDS RETENTION ══ -->
+  <section class="section">
+    <div class="section-label">Part 2</div>
+    <h2 class="section-title">Records Retention</h2>
+
+    <table class="ret-table">
+      <thead>
+        <tr>
+          <th>Document</th>
+          <th>Purpose</th>
+          <th>Retention</th>
+          <th>Access</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SG-FRM-001</td>
+          <td>Ministry Application&mdash;applicant identity, background, attendance eligibility</td>
+          <td>Service + 7 years</td>
+          <td>Safeguard Team, Ministry Leader</td>
+        </tr>
+        <tr>
+          <td>SG-FRM-002</td>
+          <td>Reference Check&mdash;third-party character assessment</td>
+          <td>Service + 7 years</td>
+          <td>Safeguard Team only</td>
+        </tr>
+        <tr>
+          <td>SG-FRM-003</td>
+          <td>Police Check Consent &amp; Results&mdash;vulnerable sector criminal record check</td>
+          <td>Until renewed (3-year cycle)</td>
+          <td>Safeguard Team only</td>
+        </tr>
+        <tr>
+          <td>SG-FRM-004</td>
+          <td>Worker&rsquo;s Covenant &amp; Acknowledgement&mdash;signed commitment to standards, renewed annually</td>
+          <td>Service + 7 years</td>
+          <td>Safeguard Team, Ministry Leader</td>
+        </tr>
+        <tr>
+          <td>SG-FRM-006</td>
+          <td>Incident / Accident Report&mdash;injuries, behavioural incidents, follow-up actions</td>
+          <td>7 years from incident</td>
+          <td>Safeguard Team, Ministry Leader, Parents (own child)</td>
+        </tr>
+        <tr>
+          <td>SG-FRM-007</td>
+          <td>Suspected Abuse Report&mdash;disclosure or suspicion documentation</td>
+          <td>Permanently</td>
+          <td>Safeguard Team, Elders, Authorities ONLY</td>
+        </tr>
+        <tr>
+          <td>SG-FRM-008</td>
+          <td>Sign-In / Sign-Out &amp; Attendance&mdash;daily attendance and custody verification</td>
+          <td>Current year + 1 year</td>
+          <td>Ministry Leader, Check-in Team</td>
+        </tr>
+        <tr>
+          <td>SG-FRM-012</td>
+          <td>Training Completion Record&mdash;master record of training completions and renewals</td>
+          <td>Service + 7 years</td>
+          <td>Safeguard Team</td>
+        </tr>
+        <tr>
+          <td>Variance Log</td>
+          <td>Documents policy exceptions and leader review</td>
+          <td>Current year + 2 years</td>
+          <td>Safeguard Team, Ministry Leader</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ PART 3 — CONFIDENTIALITY & STORAGE ══ -->
+  <section class="section">
+    <div class="section-label">Part 3</div>
+    <h2 class="section-title">Confidentiality &amp; Storage</h2>
+
+    <div class="system-box">
+      <p><strong>Abuse reports (SG-FRM-007):</strong> Safeguard Team, Elders, and civil authorities only. Never share with other volunteers, parents of other children, or staff outside the reporting chain.</p>
+      <p><strong>Incident reports (SG-FRM-006):</strong> Share with the parents of the child involved. Do not share details with other families.</p>
+      <p><strong>Screening files:</strong> Contain personal information including criminal record checks. Stored securely by the Safeguard Team. Ministry Leaders may view covenant and application status but not police check results or reference details.</p>
+      <p><strong>Variance logs:</strong> Operational transparency tool. Not to be used as a disciplinary record unless a pattern leads to a formal conversation documented separately.</p>
+    </div>
+
+    <div class="callout callout-principle">
+      <div class="callout-label">Storage Requirements</div>
+      <p><strong>Physical records:</strong> locked filing cabinet accessible only to the Safeguard Team.</p>
+      <p><strong>Digital records:</strong> password-protected folder with access restricted by role.</p>
+      <p><strong>When a volunteer leaves:</strong> retain their screening file and any incident records for the specified retention period. Do not destroy records early.</p>
+    </div>
+  </section>
+
+  <div class="doc-reference">
+    <table>
+      <tr><td>Document Code</td><td>SG-T-REF-001</td></tr>
+      <tr><td>Type</td><td>Leader Quick-Reference Card (not a training module&mdash;no quiz required)</td></tr>
+      <tr><td>Version</td><td>1.0 &mdash; March 2026</td></tr>
+      <tr><td>Companion To</td><td>SG-T-101, SG-T-102, SG-T-103 (Leader Training Track)</td></tr>
+      <tr><td>Required For</td><td>Ministry Leaders, Safeguard Team, and Elders</td></tr>
+    </table>
+  </div>
+
+  <div class="page-footer">
+    Safeguard Framework &bull; Bethany Chapel &bull; Confidential &mdash; Internal Use Only
+  </div>
+
+</div>
+
+</body>
+</html>

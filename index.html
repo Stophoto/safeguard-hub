@@ -216,18 +216,18 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
     ]},
     { id:"training", label:"Training", count:8, color:"var(--success)", subs:[
       { title:"Volunteer Track", docs:[
-        { code:"SG-T-001", title:"Why We Protect & How It Works" },
-        { code:"SG-T-002", title:"Supervision: Two-Adult Rule, Ratios & High-Risk Settings" },
-        { code:"SG-T-003", title:"Recognizing Abuse & Reporting It" },
-        { code:"SG-T-004", title:"Operations, Safety & Your Commitment" }
+        { code:"SG-T-001", title:"Why We Protect & How It Works", href:"SG-T-001.html" },
+        { code:"SG-T-002", title:"Supervision: Two-Adult Rule, Ratios & High-Risk Settings", href:"SG-T-002.html" },
+        { code:"SG-T-003", title:"Recognizing Abuse & Reporting It", href:"SG-T-003.html" },
+        { code:"SG-T-004", title:"Operations, Safety & Your Commitment", href:"SG-T-004.html" }
       ]},
       { title:"Leader Track", docs:[
-        { code:"SG-T-101", title:"Leading & Sustaining the Safeguard System" },
-        { code:"SG-T-102", title:"Screening & Managing Volunteers" },
-        { code:"SG-T-103", title:"Incidents, Compliance & Oversight" }
+        { code:"SG-T-101", title:"Leading & Sustaining the Safeguard System", href:"SG-T-101.html" },
+        { code:"SG-T-102", title:"Screening & Managing Volunteers", href:"SG-T-102.html" },
+        { code:"SG-T-103", title:"Incidents, Compliance & Oversight", href:"SG-T-103.html" }
       ]},
       { title:"Reference", docs:[
-        { code:"SG-T-REF-001", title:"Leader Quick-Reference Guide" }
+        { code:"SG-T-REF-001", title:"Leader Quick-Reference Guide", href:"SG-T-REF-001.html" }
       ]}
     ]}
   ];
@@ -733,14 +733,14 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
                 layer.subs ? layer.subs.map(function(sub,si){
                   return h("div",{key:si,style:{marginBottom:si<layer.subs.length-1?22:0}},
                     h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:"var(--gold)",textTransform:"uppercase",marginBottom:10,paddingBottom:6,borderBottom:"1px solid var(--border)"}},sub.title,h("span",{style:{fontWeight:400,marginLeft:8,color:"var(--muted)"}},"\u2014 "+sub.docs.length)),
-                    sub.docs.map(function(doc,di){return h("div",{key:di,onClick:doc.fill?function(){goForm(doc.fill);}:undefined,style:{display:"flex",alignItems:"center",gap:16,padding:"12px 16px",borderRadius:8,cursor:doc.fill?"pointer":"default",transition:"all 0.15s",marginBottom:4,background:"var(--white)",border:"1px solid var(--border)"},onMouseEnter:function(e){e.currentTarget.style.borderColor=layer.color;e.currentTarget.style.background="var(--sand)";},onMouseLeave:function(e){e.currentTarget.style.borderColor="var(--border)";e.currentTarget.style.background="var(--white)";}},
+                    sub.docs.map(function(doc,di){var clickable=doc.fill||doc.href;return h("div",{key:di,onClick:clickable?function(){if(doc.fill)goForm(doc.fill);else if(doc.href)window.open(doc.href,"_blank");}:undefined,style:{display:"flex",alignItems:"center",gap:16,padding:"12px 16px",borderRadius:8,cursor:clickable?"pointer":"default",transition:"all 0.15s",marginBottom:4,background:"var(--white)",border:"1px solid var(--border)"},onMouseEnter:function(e){e.currentTarget.style.borderColor=layer.color;e.currentTarget.style.background="var(--sand)";},onMouseLeave:function(e){e.currentTarget.style.borderColor="var(--border)";e.currentTarget.style.background="var(--white)";}},
                       h("span",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,color:layer.color,minWidth:110,letterSpacing:"0.02em"}},doc.code),
                       h("span",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--body)",flex:1,fontWeight:400}},doc.title),
-                      doc.fill?h("span",{style:{fontFamily:"var(--sans)",fontSize:10,fontWeight:700,color:"var(--teal)",background:"rgba(46,107,127,0.08)",padding:"3px 10px",borderRadius:4,textTransform:"uppercase",letterSpacing:"0.05em"}},"Open"):null);}));
-                }) : allDocs.map(function(doc,di){return h("div",{key:di,onClick:doc.fill?function(){goForm(doc.fill);}:undefined,style:{display:"flex",alignItems:"center",gap:16,padding:"12px 16px",borderRadius:8,cursor:doc.fill?"pointer":"default",transition:"all 0.15s",marginBottom:4,background:"var(--white)",border:"1px solid var(--border)"},onMouseEnter:function(e){e.currentTarget.style.borderColor=layer.color;e.currentTarget.style.background="var(--sand)";},onMouseLeave:function(e){e.currentTarget.style.borderColor="var(--border)";e.currentTarget.style.background="var(--white)";}},
+                      (doc.fill||doc.href)?h("span",{style:{fontFamily:"var(--sans)",fontSize:10,fontWeight:700,color:"var(--teal)",background:"rgba(46,107,127,0.08)",padding:"3px 10px",borderRadius:4,textTransform:"uppercase",letterSpacing:"0.05em"}},doc.fill?"Open":"View"):null);}));
+                }) : allDocs.map(function(doc,di){var clickable=doc.fill||doc.href;return h("div",{key:di,onClick:clickable?function(){if(doc.fill)goForm(doc.fill);else if(doc.href)window.open(doc.href,"_blank");}:undefined,style:{display:"flex",alignItems:"center",gap:16,padding:"12px 16px",borderRadius:8,cursor:clickable?"pointer":"default",transition:"all 0.15s",marginBottom:4,background:"var(--white)",border:"1px solid var(--border)"},onMouseEnter:function(e){e.currentTarget.style.borderColor=layer.color;e.currentTarget.style.background="var(--sand)";},onMouseLeave:function(e){e.currentTarget.style.borderColor="var(--border)";e.currentTarget.style.background="var(--white)";}},
                   h("span",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,color:layer.color,minWidth:110,letterSpacing:"0.02em"}},doc.code),
                   h("span",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--body)",flex:1,fontWeight:400}},doc.title),
-                  doc.fill?h("span",{style:{fontFamily:"var(--sans)",fontSize:10,fontWeight:700,color:"var(--teal)",background:"rgba(46,107,127,0.08)",padding:"3px 10px",borderRadius:4,textTransform:"uppercase",letterSpacing:"0.05em"}},"Open"):null);})
+                  (doc.fill||doc.href)?h("span",{style:{fontFamily:"var(--sans)",fontSize:10,fontWeight:700,color:"var(--teal)",background:"rgba(46,107,127,0.08)",padding:"3px 10px",borderRadius:4,textTransform:"uppercase",letterSpacing:"0.05em"}},doc.fill?"Open":"View"):null);})
               ):null);
           })
         ) : null,

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-T-002 — Supervision: Two-Adult Rule, Ratios & High-Risk Settings</title>
+<style>
+  :root {
+    --navy: #1B3A4B;
+    --teal: #2E6B7F;
+    --gold: #B09055;
+    --gold-light: #C8AD78;
+    --charcoal: #2C2825;
+    --body-color: #3D3835;
+    --secondary: #5C5550;
+    --muted: #8A8480;
+    --cream: #FAF8F3;
+    --sand: #F5F2ED;
+    --white: #FFFFFF;
+    --alert-red: #C0392B;
+    --safe-green: #27AE60;
+    --safe-green-bg: #E8F8EF;
+    --alert-red-bg: #FDEDEC;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: var(--body-color); background: var(--cream); line-height: 1.65; }
+  .page-wrapper { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  @media (min-width: 800px) { .page-wrapper { padding: 3rem 2rem 5rem; } }
+
+  .cover { border-bottom: 3px solid var(--gold); padding-bottom: 1.75rem; margin-bottom: 2.5rem; }
+  .cover-framework { font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .cover-title { font-size: 1.85rem; font-weight: 400; color: var(--navy); line-height: 1.2; margin-bottom: 0.4rem; }
+  .cover-subtitle { font-size: 1.05rem; color: var(--teal); font-style: italic; margin-bottom: 1rem; }
+  .cover-meta { font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+  .cover-meta span { white-space: nowrap; }
+  .reading-time { display: inline-block; font-family: Arial, Helvetica, sans-serif; font-size: 0.72rem; color: var(--teal); background: var(--sand); padding: 0.2rem 0.65rem; border-radius: 3px; margin-top: 0.75rem; }
+
+  .purpose { font-size: 0.95rem; color: var(--secondary); border-left: 3px solid var(--gold-light); padding: 0.75rem 1rem; margin-bottom: 2.5rem; background: var(--white); }
+
+  .section { margin-bottom: 2.5rem; }
+  .section-label { font-family: Arial, Helvetica, sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
+  .section-title { font-size: 1.4rem; font-weight: 400; color: var(--navy); line-height: 1.25; margin-bottom: 1rem; }
+  .subsection-title { font-size: 1.1rem; color: var(--teal); margin-top: 1.5rem; margin-bottom: 0.6rem; }
+  p { margin-bottom: 1rem; }
+  strong { color: var(--charcoal); font-weight: 700; }
+
+  .callout { border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin: 1.25rem 0; background: var(--white); }
+  .callout-scenario { border-left: 4px solid var(--teal); background: #F4F9FB; }
+  .callout-principle { border-left: 4px solid var(--gold); }
+  .callout-critical { background: var(--navy); color: var(--white); border: none; border-radius: 4px; }
+  .callout-critical strong { color: var(--white); }
+  .callout-label { font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .callout-scenario .callout-label { color: var(--teal); }
+  .callout-principle .callout-label { color: var(--gold); }
+  .callout-critical .callout-label { color: var(--gold-light); }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* ── Ratio Table ── */
+  .ratio-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.88rem; }
+  .ratio-table th {
+    background: var(--sand); color: var(--charcoal); font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    text-align: left; padding: 0.6rem 0.75rem; border-bottom: 2px solid #E5E2DD;
+  }
+  .ratio-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid #EDEAE6; }
+  .ratio-table tr:last-child td { border-bottom: none; }
+  .ratio-table td:first-child { font-weight: 700; color: var(--charcoal); }
+
+  /* ── Pause-Merge-Log steps ── */
+  .pml-steps { display: flex; gap: 0.75rem; margin: 1.25rem 0; flex-wrap: wrap; }
+  .pml-step {
+    flex: 1; min-width: 180px;
+    background: var(--white); border: 1px solid #E5E2DD; border-radius: 4px;
+    padding: 0.85rem 1rem; text-align: center;
+  }
+  .pml-step-num {
+    display: inline-block; width: 1.75rem; height: 1.75rem; line-height: 1.75rem;
+    background: var(--navy); color: var(--white); font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem; font-weight: 700; border-radius: 50%; margin-bottom: 0.4rem;
+  }
+  .pml-step-title { font-weight: 700; color: var(--charcoal); display: block; margin-bottom: 0.2rem; font-size: 0.95rem; }
+  .pml-step-desc { font-size: 0.82rem; color: var(--secondary); line-height: 1.4; }
+
+  .section-divider { border: none; border-top: 1px solid #E5E2DD; margin: 2.5rem 0; }
+
+  /* ── Quiz ── */
+  .quiz-section { background: var(--sand); border-radius: 6px; padding: 1.5rem; margin-top: 2.5rem; }
+  .quiz-section .section-label { margin-bottom: 0.15rem; }
+  .quiz-section .section-title { margin-bottom: 0.5rem; }
+  .quiz-instructions { font-size: 0.85rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .quiz-question { background: var(--white); border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin-bottom: 1rem; }
+  .quiz-question-text { font-size: 0.92rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.75rem; line-height: 1.45; }
+  .quiz-question-text .q-num { color: var(--teal); font-family: Arial, Helvetica, sans-serif; font-size: 0.8rem; margin-right: 0.3rem; }
+  .quiz-options { list-style: none; padding: 0; }
+  .quiz-options li { margin-bottom: 0.4rem; }
+  .quiz-options label { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.88rem; color: var(--body-color); cursor: pointer; padding: 0.4rem 0.5rem; border-radius: 3px; transition: background 0.15s; }
+  .quiz-options label:hover { background: var(--sand); }
+  .quiz-options input[type="radio"] { margin-top: 0.25rem; accent-color: var(--teal); flex-shrink: 0; }
+  .quiz-feedback { display: none; font-size: 0.82rem; padding: 0.5rem 0.75rem; border-radius: 3px; margin-top: 0.5rem; }
+  .quiz-feedback.correct { display: block; background: var(--safe-green-bg); color: #1E7D46; border-left: 3px solid var(--safe-green); }
+  .quiz-feedback.incorrect { display: block; background: var(--alert-red-bg); color: #922B21; border-left: 3px solid var(--alert-red); }
+  .quiz-question.answered .quiz-options label { cursor: default; pointer-events: none; }
+  .quiz-question.answered .quiz-options label.selected-correct { background: var(--safe-green-bg); }
+  .quiz-question.answered .quiz-options label.selected-incorrect { background: var(--alert-red-bg); }
+  .quiz-results { display: none; margin-top: 1.5rem; padding: 1.25rem; border-radius: 4px; text-align: center; }
+  .quiz-results.pass { display: block; background: var(--safe-green-bg); border: 1px solid var(--safe-green); }
+  .quiz-results.fail { display: block; background: var(--alert-red-bg); border: 1px solid var(--alert-red); }
+  .quiz-results-score { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .quiz-results.pass .quiz-results-score { color: #1E7D46; }
+  .quiz-results.fail .quiz-results-score { color: #922B21; }
+  .quiz-results-message { font-size: 0.88rem; color: var(--secondary); }
+  .quiz-submit-btn { display: inline-block; margin-top: 1.25rem; padding: 0.65rem 1.75rem; font-family: Arial, Helvetica, sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--white); background: var(--teal); border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+  .quiz-submit-btn:hover { background: var(--navy); }
+  .quiz-submit-btn:disabled { background: #B0ADA8; cursor: not-allowed; }
+
+  .complete-section { text-align: center; margin-top: 2rem; padding: 1.5rem; }
+  .complete-btn { display: inline-block; padding: 0.75rem 2rem; font-family: Arial, Helvetica, sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--white); background: var(--navy); border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+  .complete-btn:hover { background: #14303D; }
+  .complete-btn:disabled { background: #B0ADA8; cursor: not-allowed; }
+  .complete-confirmation { display: none; margin-top: 1rem; font-family: Arial, Helvetica, sans-serif; font-size: 0.85rem; color: #1E7D46; font-weight: 700; }
+  .complete-confirmation.visible { display: block; }
+
+  .doc-reference { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #E5E2DD; }
+  .doc-reference table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .doc-reference td { padding: 0.3rem 0; vertical-align: top; }
+  .doc-reference td:first-child { font-family: Arial, Helvetica, sans-serif; font-weight: 700; color: var(--secondary); width: 9rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .doc-reference td:last-child { color: var(--body-color); }
+  .page-footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #E5E2DD; text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <header class="cover">
+    <div class="cover-framework">Safeguard Framework &bull; Volunteer Training</div>
+    <h1 class="cover-title">Supervision: Two-Adult Rule, Ratios &amp; High-Risk Settings</h1>
+    <div class="cover-subtitle">Module 2 &mdash; Required for All Volunteers, Staff, and Leaders</div>
+    <div class="cover-meta">
+      <span>SG-T-002</span>
+      <span>Version 3.0</span>
+      <span>March 2026</span>
+      <span>Bethany Chapel</span>
+    </div>
+    <div class="reading-time">&#9201; Estimated reading time: 10 minutes</div>
+  </header>
+
+  <div class="purpose">
+    This module covers three of the six core protections: the Two-Adult Rule, supervision ratios, and bathroom and diapering protocols. These are the rules you will use every single time you serve. Know them cold.
+  </div>
+
+  <!-- ══ SECTION 1 — TWO-ADULT RULE ══ -->
+  <section class="section">
+    <div class="section-label">Section 1</div>
+    <h2 class="section-title">The Two-Adult Rule</h2>
+
+    <div class="callout callout-scenario">
+      <div class="callout-label">Scenario</div>
+      <p>A seven-year-old asks you to help her find her jacket in the hallway closet. Your co-leader is still inside with the group. For ninety seconds, you would be alone with a child in an empty hallway.</p>
+      <p><strong><em>Ninety seconds. That is all it takes to create a situation the Safeguard Framework is designed to prevent.</em></strong></p>
+    </div>
+
+    <div class="callout callout-critical">
+      <p><strong>Two approved adults must always be present when supervising children, youth, or vulnerable adults. In every room, on every trip, at every event, without exception.</strong></p>
+    </div>
+
+    <p>An <strong>approved adult</strong> is someone 18 or older who has completed the full screening and training process. Youth helpers (under 18) are valued, but they do not count toward the two-adult minimum. You must always have two approved adults present, even if youth helpers are also in the room.</p>
+
+    <p>This rule protects children&mdash;a child is never isolated with a single adult. It also protects you&mdash;when two adults are always present, there is always a witness.</p>
+
+    <h3 class="subsection-title">Observable and Interruptible</h3>
+
+    <p>The Two-Adult Rule is not just about headcount. Every ministry activity must be <strong>observable</strong> (anyone walking by can see what is happening) and <strong>interruptible</strong> (anyone can step in at any time).</p>
+
+    <div class="callout callout-principle">
+      <div class="callout-label">Keep It Visible</div>
+      <p><strong>Doors</strong> stay open. If a room has a clear, unobstructed window, the door may be closed. Otherwise, it stays open.</p>
+      <p><strong>Windows</strong> stay uncovered. Never cover, block, or obstruct windows in doors or walls.</p>
+      <p><strong>No blind spots.</strong> Position yourself and your co-leader in different areas of the room so every child is in line of sight.</p>
+      <p><strong>Designated spaces only.</strong> Do not move children to unscheduled rooms, storage areas, or private offices.</p>
+    </div>
+
+    <div class="callout callout-principle">
+      <div class="callout-label">The Test</div>
+      <p><strong>Could a parent or leader walk by right now and see exactly what is happening?</strong> If not, something needs to change immediately.</p>
+    </div>
+
+    <h3 class="subsection-title">What Isolation Looks Like</h3>
+
+    <p>Isolation is any situation where an adult and a child are together without visibility or a second approved adult. All of the following are violations: taking a child to a hallway or closet alone, meeting one-on-one in a closed office, driving alone with an unrelated minor, walking a child to the parking lot alone, or continuing to supervise after your co-leader has left the room.</p>
+
+    <p>If you find yourself about to be alone with a child, stop. Bring the child back to the group or call for another adult. It is always better to pause than to create an isolated situation, even for a moment.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 2 — WHEN COVERAGE DROPS ══ -->
+  <section class="section">
+    <div class="section-label">Section 2</div>
+    <h2 class="section-title">When Coverage Drops</h2>
+
+    <div class="callout callout-scenario">
+      <div class="callout-label">Scenario</div>
+      <p>You arrive at 8:45 to set up. Your co-leader was due at 8:30. It&rsquo;s now 8:50 and parents are arriving. Your co-leader hasn&rsquo;t texted.</p>
+      <p><strong><em>You are one adult in a room. What do you do?</em></strong></p>
+    </div>
+
+    <p>Coverage will drop at some point. A co-leader is late, or needs a bathroom break, or gets called away. What matters is what you do when it happens. Follow one procedure:</p>
+
+    <div class="pml-steps">
+      <div class="pml-step">
+        <div class="pml-step-num">1</div>
+        <span class="pml-step-title">Pause</span>
+        <span class="pml-step-desc">Stop receiving new children. If your co-leader just stepped out briefly and the room has a window or open door, stay put&mdash;you are still visible. If not, move the group to a visible, public space.</span>
+      </div>
+      <div class="pml-step">
+        <div class="pml-step-num">2</div>
+        <span class="pml-step-title">Merge</span>
+        <span class="pml-step-desc">Call for help. Contact a floater, merge your group with an adjacent room, or notify your ministry leader to reassign coverage.</span>
+      </div>
+      <div class="pml-step">
+        <div class="pml-step-num">3</div>
+        <span class="pml-step-title">Log</span>
+        <span class="pml-step-desc">Once resolved, record the event on the Exception/Variance Log. This is not punishment&mdash;it is a transparency tool so leadership can fix scheduling problems.</span>
+      </div>
+    </div>
+
+    <div class="callout callout-principle">
+      <div class="callout-label">Important</div>
+      <p>Logging a variance is <strong>never</strong> discipline. You are never in trouble for documenting what happened. If coverage drops keep happening, that is a scheduling problem&mdash;not a volunteer problem.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 3 — SUPERVISION RATIOS ══ -->
+  <section class="section">
+    <div class="section-label">Section 3</div>
+    <h2 class="section-title">Supervision Ratios</h2>
+
+    <p>The Two-Adult Rule sets the floor: always at least two approved adults. Supervision ratios go further&mdash;they define how many children each adult can safely supervise based on age. A room with two adults and thirty toddlers meets the Two-Adult Rule but is not safe. Ratios fill that gap.</p>
+
+    <p>You do not need to memorize the entire table. <strong>Know the ratio for the age group you serve.</strong></p>
+
+    <table class="ratio-table">
+      <thead>
+        <tr>
+          <th>Age Group</th>
+          <th>Target Ratio</th>
+          <th>Capacity (2 Leaders)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Infants (0&ndash;12 months)</td><td>1 : 3</td><td>6 infants</td></tr>
+        <tr><td>Toddlers (13&ndash;35 months)</td><td>1 : 4&ndash;5</td><td>8&ndash;10 toddlers</td></tr>
+        <tr><td>Preschool (3 yrs &ndash; K)</td><td>1 : 6&ndash;8</td><td>12&ndash;16 children</td></tr>
+        <tr><td>Elementary (Gr. 1&ndash;6)</td><td>1 : 7&ndash;12</td><td>14&ndash;24 children</td></tr>
+        <tr><td>Youth (Gr. 7&ndash;12)</td><td>1 : 10&ndash;12</td><td>20&ndash;24 youth</td></tr>
+        <tr><td>Vulnerable Adults</td><td>1 : 6&ndash;8</td><td>12&ndash;16 adults</td></tr>
+      </tbody>
+    </table>
+
+    <p>Youth helpers (under 18) count toward ratio calculations <em>once the Two-Adult Rule is already met</em>. So if you have two approved adults and one youth helper in a preschool room at 1:8, your capacity is 24 children (3 supervisors &times; 8).</p>
+
+    <h3 class="subsection-title">Room Capacity Cards</h3>
+
+    <p>Every room has a Room Capacity Card (SG-SOP-003) posted near the door. It shows the maximum number of children your room can hold based on how many leaders are present. Check it at the start of every shift.</p>
+
+    <h3 class="subsection-title">When the Room Is Full</h3>
+
+    <p>Post the &ldquo;Room Full&rdquo; sign on or near the door. Stop receiving additional children and redirect parents to the check-in desk. Notify your ministry leader&mdash;they may reassign another leader or open an overflow room.</p>
+
+    <div class="callout callout-critical">
+      <p><strong>Never exceed your capacity.</strong> Accepting &ldquo;just one more&rdquo; when you are at your limit is a ratio violation. The capacity number is there for a reason.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ SECTION 4 — BATHROOMS & DIAPERING ══ -->
+  <section class="section">
+    <div class="section-label">Section 4</div>
+    <h2 class="section-title">Bathrooms &amp; Diapering</h2>
+
+    <div class="callout callout-scenario">
+      <div class="callout-label">Scenario</div>
+      <p>A four-year-old says, &ldquo;I have to go potty.&rdquo; The in-room bathroom is occupied. The nearest hallway bathroom is around the corner. Your co-leader is reading a story to twelve other children.</p>
+      <p><strong><em>What do you do? The answer depends on knowing the protocol&mdash;not making it up in the moment.</em></strong></p>
+    </div>
+
+    <p>Bathrooms involve privacy, physical vulnerability, and the potential for isolation. Every bathroom interaction must follow a clear protocol. The Washroom Escort Protocol (SG-SOP-002) is posted near every bathroom as your quick reference.</p>
+
+    <div class="callout callout-principle">
+      <div class="callout-label">Core Principles &mdash; All Ages</div>
+      <p><strong>Visibility at all times.</strong> Doors open, windows clear.</p>
+      <p><strong>No isolation.</strong> An adult must never be alone with a child behind a closed bathroom door.</p>
+      <p><strong>Never enter a stall</strong> with a child.</p>
+      <p><strong>Wash hands</strong> before and after any diapering or toileting support.</p>
+      <p><strong>When in doubt, call the parent.</strong></p>
+    </div>
+
+    <h3 class="subsection-title">Nursery: Diapering (Ages 0&ndash;2)</h3>
+
+    <div class="callout callout-critical">
+      <p><strong>Only designated, screened female adults may change diapers.</strong> Male volunteers are not permitted unless caring for their own child. Youth helpers are not permitted to change diapers or assist with toileting.</p>
+    </div>
+
+    <p>Diapering must occur at approved changing stations only. The nursery door must remain open. A second approved adult must be present or within direct line of sight. Parents may opt out of diapering and request to be contacted instead.</p>
+
+    <h3 class="subsection-title">Preschool: Bathroom Use (Ages 2&ndash;5)</h3>
+
+    <p><strong>In-room bathrooms</strong> (standard): Prop the door slightly open so the child is audible. Stand near the doorway, not inside. Provide verbal guidance first; only enter if absolutely necessary, with the door open.</p>
+
+    <p><strong>Hallway bathrooms</strong> (contingency): Use a single-stall family washroom if available&mdash;the child enters, you wait outside. In a multi-stall restroom, wait in the common sink area, visible to anyone entering. Never enter a closed stall with a child. If physical assistance is needed, two approved adults must be present in the bathroom area.</p>
+
+    <h3 class="subsection-title">Elementary: Independent Use (Grades 1&ndash;6)</h3>
+
+    <p>Elementary children use the bathroom independently. The child tells a leader before leaving. Track the time. If a child does not return within five to seven minutes, call from outside the bathroom door&mdash;do not enter.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ══ COMPREHENSION CHECK ══ -->
+  <section class="quiz-section" id="quiz">
+    <div class="section-label">Comprehension Check</div>
+    <h2 class="section-title">Test Your Understanding</h2>
+    <p class="quiz-instructions">Answer all five questions, then submit. You need 80% (4 out of 5) to pass this module.</p>
+
+    <div class="quiz-question" id="q1">
+      <div class="quiz-question-text"><span class="q-num">1.</span> You are serving with one other approved adult and two youth helpers (age 16). Your co-leader steps into the hallway for a phone call. Are you in compliance with the Two-Adult Rule?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q1" value="a"> Yes&mdash;the youth helpers bring the total to three.</label></li>
+        <li><label><input type="radio" name="q1" value="b"> No&mdash;youth helpers do not count toward the two-adult minimum. You need to call your co-leader back or get another approved adult.</label></li>
+        <li><label><input type="radio" name="q1" value="c"> Yes&mdash;as long as the door stays open.</label></li>
+        <li><label><input type="radio" name="q1" value="d"> No&mdash;but it&rsquo;s fine for a quick call.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q1-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q2">
+      <div class="quiz-question-text"><span class="q-num">2.</span> Your co-leader doesn&rsquo;t show up and parents are starting to arrive. What do you do first?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q2" value="a"> Start the program and hope they arrive soon.</label></li>
+        <li><label><input type="radio" name="q2" value="b"> Accept children but keep the door open.</label></li>
+        <li><label><input type="radio" name="q2" value="c"> Pause check-in, let parents know you&rsquo;re waiting, and contact your ministry leader or a floater for backup.</label></li>
+        <li><label><input type="radio" name="q2" value="d"> Ask a parent to stay and help.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q2-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q3">
+      <div class="quiz-question-text"><span class="q-num">3.</span> You have 10 toddlers in your room and a parent arrives with an 11th. Your Room Capacity Card says maximum 10. What do you do?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q3" value="a"> Accept the child&mdash;one more won&rsquo;t matter.</label></li>
+        <li><label><input type="radio" name="q3" value="b"> Accept but note it for the ministry leader later.</label></li>
+        <li><label><input type="radio" name="q3" value="c"> Post the &ldquo;Room Full&rdquo; sign, redirect the parent, and notify your ministry leader.</label></li>
+        <li><label><input type="radio" name="q3" value="d"> Accept if the parent agrees to stay and help.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q3-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q4">
+      <div class="quiz-question-text"><span class="q-num">4.</span> A male volunteer notices a toddler needs a diaper change. The designated female leader is busy with another child. What does he do?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q4" value="a"> Change the diaper since both adults are screened.</label></li>
+        <li><label><input type="radio" name="q4" value="b"> Wait for the designated female leader to be available, or contact the parent.</label></li>
+        <li><label><input type="radio" name="q4" value="c"> Ask a youth helper to change the diaper.</label></li>
+        <li><label><input type="radio" name="q4" value="d"> Change the diaper but keep the door open.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q4-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="q5">
+      <div class="quiz-question-text"><span class="q-num">5.</span> You are escorting a four-year-old to a multi-stall restroom. The child enters a stall. Where do you position yourself?</div>
+      <ul class="quiz-options">
+        <li><label><input type="radio" name="q5" value="a"> Inside the stall to help.</label></li>
+        <li><label><input type="radio" name="q5" value="b"> Outside the restroom in the hallway.</label></li>
+        <li><label><input type="radio" name="q5" value="c"> In the common sink area, visible to anyone entering, never inside the stall.</label></li>
+        <li><label><input type="radio" name="q5" value="d"> In the adjacent stall.</label></li>
+      </ul>
+      <div class="quiz-feedback" id="q5-feedback"></div>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="quiz-submit-btn" id="quiz-submit" onclick="scoreQuiz()">Submit Answers</button>
+    </div>
+
+    <div class="quiz-results" id="quiz-results">
+      <div class="quiz-results-score" id="quiz-score"></div>
+      <div class="quiz-results-message" id="quiz-message"></div>
+    </div>
+  </section>
+
+  <div class="complete-section" id="complete-section" style="display: none;">
+    <button class="complete-btn" id="complete-btn" onclick="markComplete()">Mark Module as Complete</button>
+    <div class="complete-confirmation" id="complete-confirm">&#10003; Module completed. Your training record has been updated.</div>
+  </div>
+
+  <div class="doc-reference">
+    <table>
+      <tr><td>Module Code</td><td>SG-T-002</td></tr>
+      <tr><td>Series</td><td>Volunteer Training &mdash; Supervision</td></tr>
+      <tr><td>Version</td><td>3.0 &mdash; March 2026</td></tr>
+      <tr><td>Parent Policies</td><td>SG-POL-002 &mdash; Supervision Standards &bull; SG-POL-003 &mdash; Bathroom &amp; Diapering</td></tr>
+      <tr><td>Related SOPs</td><td>SG-SOP-002 (Washroom Escort) &bull; SG-SOP-003 (Room Capacity Card)</td></tr>
+      <tr><td>Previous Module</td><td>SG-T-001 &mdash; Why We Protect &amp; How It Works</td></tr>
+      <tr><td>Next Module</td><td>SG-T-003 &mdash; Recognizing Abuse &amp; Reporting It</td></tr>
+      <tr><td>Pass Threshold</td><td>80% (4 of 5 correct)</td></tr>
+      <tr><td>Required For</td><td>All Volunteers, Staff, and Leaders</td></tr>
+    </table>
+  </div>
+
+  <div class="page-footer">
+    Safeguard Framework &bull; Bethany Chapel &bull; Confidential &mdash; Internal Use Only
+  </div>
+
+</div>
+
+<script>
+  const answerKey = {
+    q1: { correct: 'b', explanation: 'Youth helpers do not count toward the two-adult minimum. You need two approved adults (18+, fully screened) present at all times.' },
+    q2: { correct: 'c', explanation: 'Pause check-in, communicate with parents, and call for backup. Never operate a room with only one approved adult.' },
+    q3: { correct: 'c', explanation: 'Never exceed capacity. Post the sign, redirect the parent, and notify your ministry leader.' },
+    q4: { correct: 'b', explanation: 'Only designated, screened female adults may change diapers. Male volunteers must wait or contact the parent. Youth helpers may not change diapers.' },
+    q5: { correct: 'c', explanation: 'Wait in the common sink area where you are visible to anyone entering. Never enter a stall with a child.' }
+  };
+
+  function scoreQuiz() {
+    const questions = document.querySelectorAll('.quiz-question');
+    let score = 0;
+    let allAnswered = true;
+
+    questions.forEach(q => {
+      const qId = q.id;
+      const selected = q.querySelector('input[type="radio"]:checked');
+      const feedback = document.getElementById(qId + '-feedback');
+      if (!selected) { allAnswered = false; return; }
+      q.classList.add('answered');
+      const isCorrect = selected.value === answerKey[qId].correct;
+      if (isCorrect) {
+        score++;
+        feedback.className = 'quiz-feedback correct';
+        feedback.textContent = '\u2713 Correct.';
+        selected.closest('label').classList.add('selected-correct');
+      } else {
+        feedback.className = 'quiz-feedback incorrect';
+        feedback.textContent = '\u2717 Incorrect. ' + answerKey[qId].explanation;
+        selected.closest('label').classList.add('selected-incorrect');
+      }
+    });
+
+    if (!allAnswered) { alert('Please answer all five questions before submitting.'); return; }
+    document.getElementById('quiz-submit').disabled = true;
+
+    const results = document.getElementById('quiz-results');
+    const scoreEl = document.getElementById('quiz-score');
+    const messageEl = document.getElementById('quiz-message');
+    const pct = Math.round((score / 5) * 100);
+    scoreEl.textContent = score + ' / 5 (' + pct + '%)';
+
+    if (score >= 4) {
+      results.className = 'quiz-results pass';
+      messageEl.textContent = 'You passed. You may proceed to the next module.';
+      document.getElementById('complete-section').style.display = 'block';
+    } else {
+      results.className = 'quiz-results fail';
+      messageEl.textContent = 'You need at least 4 correct (80%) to pass. Review the material above and try again.';
+      setTimeout(function() {
+        document.getElementById('quiz-submit').disabled = false;
+        document.getElementById('quiz-submit').textContent = 'Retry';
+        questions.forEach(q => {
+          q.classList.remove('answered');
+          q.querySelectorAll('label').forEach(l => { l.classList.remove('selected-correct', 'selected-incorrect'); });
+          q.querySelectorAll('input[type="radio"]').forEach(r => { r.checked = false; });
+          const fb = q.querySelector('.quiz-feedback');
+          fb.className = 'quiz-feedback'; fb.textContent = '';
+        });
+        results.className = 'quiz-results';
+      }, 3000);
+    }
+  }
+
+  function markComplete() {
+    document.getElementById('complete-btn').disabled = true;
+    document.getElementById('complete-btn').textContent = 'Completed';
+    document.getElementById('complete-confirm').classList.add('visible');
+  }
+</script>
+
+</body>
+</html>
