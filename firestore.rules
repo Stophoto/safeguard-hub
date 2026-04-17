@@ -1,0 +1,61 @@
+// Firestore Security Rules — Safeguard Hub
+// ─────────────────────────────────────────────────────────────
+// Deploy these rules by pasting the whole file into the Firebase
+// console: Firestore Database → Rules tab → paste → Publish.
+//
+// Phase 2 scope: users collection only. Each signed-in user has
+// exactly one document at /users/{uid}.
+//
+// Key decisions:
+//  • Users can read and write ONLY their own profile.
+//  • Users cannot change their own `role` or `status`.
+//    Those fields are managed by Coordinators (Phase 3) or by the
+//    site owner directly in the Firebase console.
+//  • The first Coordinator is bootstrapped manually by editing the
+//    role field in the Firebase console on their user document.
+//  • No deletes — profiles are never removed from the app, for
+//    audit trail. If truly needed, an admin does it in the console.
+// ─────────────────────────────────────────────────────────────
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Users collection ────────────────────────────────────
+    match /users/{uid} {
+
+      // Read: only yourself (Phase 3 will add coordinator read-all).
+      allow read: if request.auth != null
+                  && request.auth.uid == uid;
+
+      // Create: only yourself, and only with a safe starting state.
+      // Blocks anyone trying to sign up as a coordinator or skipping
+      // the in-process status.
+      allow create: if request.auth != null
+                    && request.auth.uid == uid
+                    && request.resource.data.role == 'volunteer'
+                    && request.resource.data.status == 'in-process';
+
+      // Update: only yourself. You can change any field EXCEPT
+      // role and status — those stay pinned to whatever they
+      // already are. (Coordinators change them from the console
+      // for now; Phase 3 adds an in-app admin panel.)
+      allow update: if request.auth != null
+                    && request.auth.uid == uid
+                    && request.resource.data.role   == resource.data.role
+                    && request.resource.data.status == resource.data.status;
+
+      // Delete: never from the app. Admins can still delete in the
+      // Firebase console if genuinely needed.
+      allow delete: if false;
+    }
+
+    // ─── Everything else ─────────────────────────────────────
+    // Deny by default. Future collections (invites, incidents,
+    // submissions) will get their own match blocks as we build them.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
