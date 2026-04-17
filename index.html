@@ -136,6 +136,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
 </head>
 <body>
 <div id="root"></div>
+<script src="sg-nav.js"></script>
 
 <script>
 /* ═══ HUB BACKEND CLIENT ═══ */
@@ -280,6 +281,31 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
       { t:"Review and update all policies for currency", r:"SG-G-001" },
       { t:"Present safeguarding report to Board of Elders", r:"SG-G-001" }
     ]
+  };
+
+  // ── Code → URL map for hyperlinking references ──
+  // Fillable codes jump to the in-Hub form view; standalone pages link to their file.
+  var CODE_LINKS = {
+    "SG-G-001":    { href:"SG-G-001.html" },
+    "SG-POL-001":  { href:"SG-POL-001.html" },
+    "SG-POL-002":  { href:"SG-POL-002.html" },
+    "SG-POL-003":  { href:"SG-POL-003.html" },
+    "SG-POL-004":  { href:"SG-POL-004.html" },
+    "SG-FRM-001":  { fill:"frm001" },
+    "SG-FRM-002":  { fill:"frm002" },
+    "SG-FRM-004":  { fill:"frm004" },
+    "SG-FRM-005":  { fill:"frm005" },
+    "SG-FRM-006":  { fill:"frm006" },
+    "SG-FRM-007":  { fill:"frm007" },
+    "SG-FRM-012":  { fill:"frm012" },
+    "SG-T-001":    { href:"SG-T-001.html" },
+    "SG-T-002":    { href:"SG-T-002.html" },
+    "SG-T-003":    { href:"SG-T-003.html" },
+    "SG-T-004":    { href:"SG-T-004.html" },
+    "SG-T-101":    { href:"SG-T-101.html" },
+    "SG-T-102":    { href:"SG-T-102.html" },
+    "SG-T-103":    { href:"SG-T-103.html" },
+    "SG-T-REF-001":{ href:"SG-T-REF-001.html" }
   };
 
   var MODULES = {
@@ -1095,7 +1121,12 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
               h("div",{style:{fontFamily:"var(--serif)",fontSize:18,color:"var(--gold-warm)",minWidth:28,flexShrink:0,lineHeight:1.4}},(i+1)+"."),
               h("div",{style:{flex:1}},
                 h("div",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--body)",lineHeight:1.55,fontWeight:400}},t.t),
-                h("div",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",marginTop:5,fontWeight:600,letterSpacing:"0.03em"}},t.r)));
+                (function(){ var link=CODE_LINKS[t.r];
+                  var baseStyle={fontFamily:"var(--sans)",fontSize:11,marginTop:5,fontWeight:600,letterSpacing:"0.03em",display:"inline-block"};
+                  if(link && link.href) return h("a",{href:link.href,style:Object.assign({},baseStyle,{color:"var(--teal)",textDecoration:"none",borderBottom:"1px solid rgba(46,107,127,0.3)"})},t.r);
+                  if(link && link.fill) return h("button",{onClick:function(){goForm(link.fill);},style:Object.assign({},baseStyle,{color:"var(--teal)",background:"none",border:"none",borderBottom:"1px solid rgba(46,107,127,0.3)",cursor:"pointer",padding:0})},t.r);
+                  return h("div",{style:Object.assign({},baseStyle,{color:"var(--muted)"})},t.r);
+                })()));
             }))
         ) : null,
 
