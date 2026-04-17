@@ -1021,25 +1021,15 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
     // ── Dashboard ──
     return h("div",{style:{minHeight:"100vh",background:"var(--cream)"}},
 
-      // Header
-      h("div",{style:{background:"var(--navy-deep)",position:"relative",overflow:"hidden"}},
-        h("div",{style:{position:"absolute",top:0,right:0,width:"40%",height:"100%",background:"linear-gradient(135deg, transparent 0%, rgba(176,144,85,0.06) 100%)"}}),
-        h("div",{className:"sg-hub-header-inner",style:{maxWidth:920,margin:"0 auto",padding:"44px 36px 38px",position:"relative"}},
-          h("div",{style:{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:20}},
-            h("div",null,
-              h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.25em",color:"var(--gold-warm)",textTransform:"uppercase",marginBottom:10}},"Bethany Chapel"),
-              h("h1",{style:{fontFamily:"var(--serif)",fontSize:38,fontWeight:400,color:"var(--white)",lineHeight:1.1,margin:0}},"Safeguard Framework")),
-            h("div",{className:"sg-hub-stats",style:{display:"flex",gap:32,alignItems:"flex-end"}},
-              [{ n:totalDocs, l:"Documents" },{ n:5, l:"Layers" }].map(function(stat,i){
-                return h("div",{key:i,style:{textAlign:"center"}},
-                  h("div",{style:{fontFamily:"var(--serif)",fontSize:28,color:"var(--gold-warm)",lineHeight:1}},stat.n),
-                  h("div",{style:{fontFamily:"var(--sans)",fontSize:10,color:"var(--muted)",marginTop:5,letterSpacing:"0.08em",textTransform:"uppercase"}},stat.l));
-              }),
-              connected ? h("div",{style:{display:"flex",alignItems:"center",gap:6}},
-                h("div",{style:{width:8,height:8,borderRadius:"50%",background:"var(--success)",boxShadow:"0 0 8px rgba(39,174,96,0.4)"}}),
-                h("span",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--success)",fontWeight:600}},"Connected")) : null
-            ))),
-        h("div",{style:{height:3,background:"linear-gradient(to right, var(--gold-warm), var(--gold), transparent)"}})),
+      // Welcome Hero (simplified — nav is injected by sg-nav.js)
+      h("div",{style:{background:"var(--cream)",position:"relative"}},
+        h("div",{className:"sg-hub-header-inner",style:{maxWidth:920,margin:"0 auto",padding:"56px 36px 40px",position:"relative"}},
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.22em",color:"var(--gold)",textTransform:"uppercase",marginBottom:14}},"Welcome"),
+          h("h1",{style:{fontFamily:"var(--serif)",fontSize:44,fontWeight:400,color:"var(--navy)",lineHeight:1.1,margin:"0 0 18px",maxWidth:720,letterSpacing:"-0.01em"}},"The Safeguard Framework is how we protect the people we serve."),
+          h("p",{style:{fontFamily:"var(--sans)",fontSize:16,color:"var(--body)",lineHeight:1.6,maxWidth:640,margin:0,opacity:0.78}},"Every policy, form, and training module for caring for children, youth, and vulnerable adults at Bethany Chapel \u2014 in one place."),
+          connected ? h("div",{style:{display:"inline-flex",alignItems:"center",gap:8,marginTop:22,padding:"6px 12px",background:"rgba(39,174,96,0.08)",borderRadius:20}},
+            h("div",{style:{width:6,height:6,borderRadius:"50%",background:"var(--success)"}}),
+            h("span",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--success)",fontWeight:600,letterSpacing:"0.02em"}},"Connected to records")) : null)),
 
       // Nav tabs
       h("div",{style:{background:"var(--white)",borderBottom:"1px solid var(--border)",position:"sticky",top:0,zIndex:10}},
