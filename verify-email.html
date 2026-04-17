@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify your email — Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.55;
+       min-height:100vh;display:flex;flex-direction:column}
+
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+       border-bottom:2px solid rgba(176,144,85,0.25);padding:16px 28px}
+  .hdr-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+
+  .page{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px}
+  .card{width:100%;max-width:480px;background:var(--white);border:1.5px solid var(--border);
+        border-radius:14px;padding:40px 36px;box-shadow:0 4px 24px rgba(0,0,0,0.04);text-align:center}
+
+  .icon-wrap{width:64px;height:64px;border-radius:50%;background:var(--sand);
+             display:inline-flex;align-items:center;justify-content:center;margin-bottom:20px}
+  .icon-wrap.ok{background:var(--success-bg)}
+  .icon{width:30px;height:30px;color:var(--teal)}
+  .icon-wrap.ok .icon{color:var(--success)}
+
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:28px;color:var(--navy);font-weight:400;
+     line-height:1.2;margin-bottom:10px}
+  p{color:var(--body);margin-bottom:14px;font-size:15px}
+  p.muted{color:var(--muted);font-size:13px}
+  .email-chip{display:inline-block;background:var(--sand);padding:8px 14px;
+              border-radius:6px;font-weight:600;color:var(--navy);margin:6px 0 16px;
+              font-size:14px;word-break:break-all}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+       padding:12px 22px;border:none;border-radius:8px;font-family:var(--sans);
+       font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);
+       text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);
+               box-shadow:0 2px 8px rgba(27,58,75,0.25)}
+  .btn-primary:hover:not(:disabled){background:var(--teal)}
+  .btn-primary:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+  .btn-group{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+
+  .msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-top:16px;display:none}
+  .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+
+  .small-link{display:inline-block;margin-top:20px;font-size:13px;color:var(--teal);
+              text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .small-link:hover{color:var(--navy)}
+
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="index.html" aria-label="Safeguard Hub home">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- State A: waiting for verification -->
+  <div class="card" id="waiting">
+    <div class="icon-wrap">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+        <polyline points="22,6 12,13 2,6"/>
+      </svg>
+    </div>
+    <div class="eyebrow">Step 2 of 4</div>
+    <h1>Check your inbox</h1>
+    <p>We just emailed a verification link to</p>
+    <div class="email-chip" id="emailChip">your email</div>
+    <p class="muted">Click the link in that email to confirm it's really you.<br>This page will update automatically once you've verified.</p>
+
+    <div id="msg" class="msg"></div>
+
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary" id="resendBtn">Resend email</button>
+      <button type="button" class="btn btn-secondary" id="checkBtn">I've verified — check now</button>
+    </div>
+
+    <a href="#" class="small-link" id="signOutLink">Wrong email? Sign out and start over</a>
+  </div>
+
+  <!-- State B: verified -->
+  <div class="card" id="verified" style="display:none">
+    <div class="icon-wrap ok">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <div class="eyebrow">Verified</div>
+    <h1>You're in.</h1>
+    <p>Your email is confirmed. Next, we'll get your profile set up.</p>
+    <div class="btn-group">
+      <a href="index.html" class="btn btn-primary">Continue →</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>Safeguard Framework · Bethany Chapel</footer>
+
+<script type="module">
+  import {
+    onUserChange, reloadUser, resendVerification, signOutUser, friendlyError
+  } from "./sg-auth.js";
+
+  const waitingCard = document.getElementById("waiting");
+  const verifiedCard = document.getElementById("verified");
+  const emailChip = document.getElementById("emailChip");
+  const resendBtn = document.getElementById("resendBtn");
+  const checkBtn  = document.getElementById("checkBtn");
+  const signOutLink = document.getElementById("signOutLink");
+  const msg = document.getElementById("msg");
+
+  let pollTimer = null;
+
+  function showMsg(text, kind) {
+    msg.textContent = text;
+    msg.className = "msg " + kind;
+  }
+  function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
+
+  function switchToVerified() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    waitingCard.style.display = "none";
+    verifiedCard.style.display = "block";
+  }
+
+  // ── Boot ─────────────────────────────────────────────
+  // If no user is signed in, bounce to sign-up.
+  // If user is already verified, skip to the success state.
+  // Otherwise poll every 4s to see if they've clicked the link.
+  onUserChange(user => {
+    if (!user) { location.replace("sign-up.html"); return; }
+    emailChip.textContent = user.email || "your email";
+    if (user.emailVerified) { switchToVerified(); return; }
+
+    // Poll quietly for verification. Firebase caches emailVerified
+    // locally, so we have to call reload() to see the latest value.
+    if (!pollTimer) {
+      pollTimer = setInterval(async () => {
+        try {
+          const fresh = await reloadUser();
+          if (fresh && fresh.emailVerified) switchToVerified();
+        } catch (_) { /* ignore transient errors */ }
+      }, 4000);
+    }
+  });
+
+  // ── Manual "I've verified" button ────────────────────
+  checkBtn.addEventListener("click", async () => {
+    clearMsg();
+    checkBtn.disabled = true;
+    try {
+      const u = await reloadUser();
+      if (u && u.emailVerified) switchToVerified();
+      else showMsg("Not verified yet. Click the link in your inbox, then try again.", "err");
+    } catch (err) {
+      showMsg(friendlyError(err), "err");
+    }
+    checkBtn.disabled = false;
+  });
+
+  // ── Resend with a 30-second cooldown ─────────────────
+  let cooldownEnd = 0;
+  function updateResendLabel() {
+    const secs = Math.max(0, Math.ceil((cooldownEnd - Date.now()) / 1000));
+    if (secs > 0) {
+      resendBtn.disabled = true;
+      resendBtn.textContent = "Resend email (" + secs + "s)";
+      requestAnimationFrame(() => setTimeout(updateResendLabel, 250));
+    } else {
+      resendBtn.disabled = false;
+      resendBtn.textContent = "Resend email";
+    }
+  }
+  resendBtn.addEventListener("click", async () => {
+    clearMsg();
+    try {
+      await resendVerification();
+      showMsg("Verification email sent again. Check your inbox (and spam folder).", "ok");
+      cooldownEnd = Date.now() + 30000;
+      updateResendLabel();
+    } catch (err) {
+      showMsg(friendlyError(err), "err");
+    }
+  });
+
+  // ── Sign out escape hatch ────────────────────────────
+  signOutLink.addEventListener("click", async (e) => {
+    e.preventDefault();
+    try {
+      await signOutUser();
+      location.replace("sign-up.html");
+    } catch (_) { location.replace("sign-up.html"); }
+  });
+</script>
+
+</body>
+</html>

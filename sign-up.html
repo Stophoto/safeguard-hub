@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create account — Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.55;
+       min-height:100vh;display:flex;flex-direction:column}
+
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+       border-bottom:2px solid rgba(176,144,85,0.25);padding:16px 28px}
+  .hdr-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+
+  .page{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px}
+  .card{width:100%;max-width:460px;background:var(--white);border:1.5px solid var(--border);
+        border-radius:14px;padding:40px 36px;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:30px;color:var(--navy);font-weight:400;
+     line-height:1.15;margin-bottom:8px}
+  .lede{font-size:14px;color:var(--muted);margin-bottom:24px}
+
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);
+        letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px;margin-top:14px}
+  label:first-of-type{margin-top:0}
+  .hint{font-size:12px;color:var(--muted);margin-top:4px;margin-bottom:-4px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
+      font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);
+      transition:border-color var(--transition),box-shadow var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  .fi::placeholder{color:var(--muted)}
+  .fi[aria-invalid="true"]{border-color:var(--error)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+       padding:13px 26px;border:none;border-radius:8px;font-family:var(--sans);
+       font-size:15px;font-weight:700;cursor:pointer;transition:all var(--transition)}
+  .btn-primary{background:var(--navy);color:var(--white);width:100%;margin-top:22px;
+               box-shadow:0 2px 8px rgba(27,58,75,0.25)}
+  .btn-primary:hover:not(:disabled){background:var(--teal)}
+  .btn-primary:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
+
+  .hr{height:1px;background:var(--border);margin:24px 0}
+  .alt{text-align:center;font-size:13px;color:var(--muted)}
+  .alt a{color:var(--teal);font-weight:600;text-decoration:none;margin-left:4px}
+  .alt a:hover{color:var(--navy)}
+
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:16px;display:none}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+
+  .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;
+        border-radius:50%;animation:spin 0.7s linear infinite;display:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .btn.loading .spin{display:inline-block}
+  .btn.loading .label{opacity:0.7}
+
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="index.html" aria-label="Safeguard Hub home">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+  </div>
+</header>
+
+<main class="page">
+  <div class="card">
+    <div class="eyebrow">Step 1 of 4</div>
+    <h1>Create your account</h1>
+    <div class="lede">Your email becomes your login. We'll send a verification link to confirm.</div>
+
+    <form id="form" novalidate>
+      <label for="email">Email</label>
+      <input type="email" id="email" class="fi" autocomplete="email" required placeholder="you@example.com">
+
+      <label for="password">Create a password</label>
+      <input type="password" id="password" class="fi" autocomplete="new-password" required placeholder="At least 8 characters">
+      <div class="hint">At least 8 characters. Mix letters and numbers for extra security.</div>
+
+      <label for="confirm">Confirm password</label>
+      <input type="password" id="confirm" class="fi" autocomplete="new-password" required placeholder="Re-enter your password">
+
+      <div id="msg" class="msg"></div>
+
+      <button type="submit" class="btn btn-primary" id="submit">
+        <span class="spin"></span><span class="label">Send verification email</span>
+      </button>
+    </form>
+
+    <div class="hr"></div>
+    <div class="alt">Already have an account?<a href="sign-in.html">Sign in →</a></div>
+  </div>
+</main>
+
+<footer>Safeguard Framework · Bethany Chapel</footer>
+
+<script type="module">
+  import { signUp, onUserChange, friendlyError } from "./sg-auth.js";
+
+  const form    = document.getElementById("form");
+  const email   = document.getElementById("email");
+  const pwd     = document.getElementById("password");
+  const confirm = document.getElementById("confirm");
+  const msg     = document.getElementById("msg");
+  const submit  = document.getElementById("submit");
+
+  // If someone signed in lands here, bounce them forward.
+  // Verified users → hub. Unverified users → verify-email page.
+  onUserChange(user => {
+    if (!user) return;
+    if (user.emailVerified) location.replace("index.html");
+    else location.replace("verify-email.html");
+  });
+
+  function showError(text) {
+    msg.textContent = text;
+    msg.className = "msg err";
+  }
+  function clearError() {
+    msg.className = "msg";
+    msg.textContent = "";
+    [email, pwd, confirm].forEach(f => f.removeAttribute("aria-invalid"));
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const e1 = email.value.trim();
+    const p1 = pwd.value;
+    const p2 = confirm.value;
+
+    if (!e1) { showError("Please enter your email address."); email.setAttribute("aria-invalid","true"); return; }
+    if (p1.length < 8) { showError("Password must be at least 8 characters."); pwd.setAttribute("aria-invalid","true"); return; }
+    if (p1 !== p2) { showError("Passwords don't match. Please re-enter."); confirm.setAttribute("aria-invalid","true"); return; }
+
+    submit.classList.add("loading");
+    submit.disabled = true;
+    try {
+      await signUp(e1, p1);
+      // signUp sends the verification email automatically.
+      // Hand off to verify-email.html which polls for verification.
+      location.replace("verify-email.html");
+    } catch (err) {
+      showError(friendlyError(err));
+      submit.classList.remove("loading");
+      submit.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
