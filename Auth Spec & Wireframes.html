@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Safeguard Hub — Auth & Accounts Spec</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--navy:#1B3A4B;--navy-deep:#0F2530;--teal:#2E6B7F;--gold:#B09055;--gold-warm:#C4A46A;--cream:#FAF8F3;--sand:#F2EFE8;--body:#3D3835;--muted:#8A8480;--border:#E4E0DA;--white:#FFFFFF;--error:#C0392B;--success:#27AE60;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',system-ui,sans-serif;color:var(--body);background:var(--cream);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:56px 32px 80px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:12px}
+  h1{font-family:'DM Serif Display',serif;font-size:44px;color:var(--navy);font-weight:400;line-height:1.1;letter-spacing:-0.01em;margin-bottom:16px}
+  h2{font-family:'DM Serif Display',serif;font-size:28px;color:var(--navy);font-weight:400;margin:56px 0 8px;line-height:1.2}
+  h3{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:var(--navy);margin:28px 0 10px}
+  .lede{font-size:17px;color:var(--body);opacity:0.78;max-width:720px;margin-bottom:24px}
+  .divider{height:2px;background:linear-gradient(to right,var(--gold-warm),transparent);margin:14px 0 28px;border-radius:1px}
+  p{margin-bottom:14px}
+  ul,ol{margin:0 0 16px 20px}
+  li{margin-bottom:6px}
+  strong{color:var(--navy)}
+  table{width:100%;border-collapse:collapse;margin:16px 0 24px;background:var(--white);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;font-size:14px}
+  th{background:var(--navy);color:var(--white);padding:12px 14px;text-align:left;font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase}
+  td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+  td:first-child{font-weight:600;color:var(--navy);white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  .note{background:var(--white);border:1.5px solid var(--border);border-left:4px solid var(--gold);border-radius:8px;padding:16px 20px;margin:20px 0;font-size:14px}
+  .note strong{color:var(--gold)}
+  /* Wireframes */
+  .wf{margin:20px 0 40px;background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,0.04)}
+  .wf-title{font-family:'DM Sans';font-size:12px;font-weight:700;color:var(--teal);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px}
+  .wf-sub{font-size:13px;color:var(--muted);margin-bottom:16px}
+  .wf-frame{border:1px dashed #C8C3BD;border-radius:10px;background:var(--cream);padding:0;overflow:hidden}
+  .wf-nav{background:var(--navy-deep);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:20px;font-size:13px}
+  .wf-nav .brand{display:flex;flex-direction:column;line-height:1.1;margin-right:auto}
+  .wf-nav .brand small{font-size:8px;letter-spacing:0.2em;color:var(--gold-warm);text-transform:uppercase}
+  .wf-nav .brand span{font-family:'DM Serif Display';font-size:16px}
+  .wf-nav .link{opacity:0.6;font-size:12px}
+  .wf-nav .user{background:rgba(255,255,255,0.08);padding:5px 12px;border-radius:16px;font-size:11px}
+  .wf-body{padding:28px 32px}
+  .wf-h1{font-family:'DM Serif Display';font-size:26px;color:var(--navy);font-weight:400;margin-bottom:6px}
+  .wf-eyebrow{font-size:10px;font-weight:700;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  .wf-p{font-size:13px;color:var(--muted);margin-bottom:20px;max-width:480px}
+  .wf-input{display:block;width:100%;background:#fff;border:1.5px solid var(--border);border-radius:6px;padding:11px 13px;font-size:13px;margin-bottom:12px;color:#999;font-family:inherit}
+  .wf-input.filled{color:var(--body)}
+  .wf-label{font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.02em;margin-bottom:4px;display:block}
+  .wf-btn{background:var(--navy);color:#fff;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:700;border:none;display:inline-block;margin-right:8px}
+  .wf-btn.secondary{background:#fff;color:var(--body);border:1.5px solid var(--border)}
+  .wf-btn.gold{background:var(--gold)}
+  .wf-btn.teal{background:var(--teal)}
+  .wf-row{display:flex;gap:12px;margin-bottom:12px}
+  .wf-row > *{flex:1;margin-bottom:0}
+  .wf-hr{height:1px;background:var(--border);margin:24px 0}
+  .wf-alt{text-align:center;font-size:12px;color:var(--muted);margin-top:16px}
+  .wf-alt a{color:var(--teal);font-weight:600}
+  .wf-card{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:12px}
+  .wf-card-head{display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:8px}
+  .wf-card-title{font-family:'DM Serif Display';font-size:17px;color:var(--navy)}
+  .wf-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase}
+  .wf-badge.done{background:#EEFBF3;color:var(--success)}
+  .wf-badge.pending{background:#FFF5E6;color:#B07A1E}
+  .wf-badge.expired{background:#FFF0EE;color:var(--error)}
+  .wf-progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:6px}
+  .wf-progress > div{height:100%;background:var(--teal);border-radius:3px}
+  .wf-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px}
+  .wf-stat{background:var(--sand);padding:14px;border-radius:8px;text-align:center}
+  .wf-stat b{display:block;font-family:'DM Serif Display';font-size:24px;color:var(--navy)}
+  .wf-stat span{font-size:10px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase}
+  .wf-sectionhead{font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;margin:24px 0 10px}
+  .wf-table{width:100%;font-size:12px;border-collapse:collapse;background:#fff;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px}
+  .wf-table th{background:var(--sand);color:var(--navy);padding:9px 12px;text-align:left;font-size:10px;letter-spacing:0.04em;text-transform:uppercase;font-weight:700}
+  .wf-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+  .wf-table td:last-child,.wf-table th:last-child{text-align:right}
+  .flow{display:flex;gap:12px;margin:20px 0 32px;flex-wrap:wrap}
+  .flow-step{flex:1;min-width:160px;background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:16px;position:relative}
+  .flow-step b{display:block;font-family:'DM Serif Display';font-size:20px;color:var(--gold-warm);margin-bottom:4px}
+  .flow-step strong{display:block;font-size:13px;color:var(--navy);margin-bottom:4px}
+  .flow-step small{font-size:12px;color:var(--muted);line-height:1.4;display:block}
+  .toc{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:18px 24px;margin-bottom:32px}
+  .toc h3{margin-top:0}
+  .toc ol{margin:8px 0 0 18px}
+  .toc a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.25)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="eyebrow">Safeguard Framework · Bethany Chapel</div>
+<h1>Auth, Accounts &amp; Onboarding</h1>
+<div class="divider"></div>
+<p class="lede">A written spec and wireframes for adding proper user accounts, role-based access, and an onboarding flow to the Safeguard Hub. This document becomes the brief you paste into Claude Code for the real build.</p>
+
+<div class="toc">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#users">User types &amp; permissions</a></li>
+    <li><a href="#profile">Profile data model</a></li>
+    <li><a href="#flows">Sign-up flows (self &amp; invite)</a></li>
+    <li><a href="#wireframes">Wireframes</a></li>
+    <li><a href="#tech">Technical stack</a></li>
+    <li><a href="#brief">Claude Code handoff brief</a></li>
+  </ol>
+</div>
+
+<h2 id="users">1 · User types &amp; permissions</h2>
+<div class="divider"></div>
+<p>Three roles, each building on the previous. The <strong>Safeguard Coordinator</strong> is an Admin who promotes volunteers to Leaders as they grow into those roles.</p>
+
+<table>
+<thead><tr><th>Capability</th><th>Volunteer</th><th>Leader</th><th>Coordinator</th></tr></thead>
+<tbody>
+<tr><td>View policies &amp; training materials</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><td>Complete own application &amp; forms</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><td>Take training &amp; quizzes</td><td>✓ (Volunteer track)</td><td>✓ (Volunteer + Leader)</td><td>✓</td></tr>
+<tr><td>File incident / abuse reports</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><td>See personal dashboard (own status)</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><td>View team roster (read-only)</td><td>—</td><td>✓ (their ministry only)</td><td>✓ (all)</td></tr>
+<tr><td>Review &amp; close incident reports</td><td>—</td><td>✓</td><td>✓</td></tr>
+<tr><td>Approve volunteer applications</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr><td>Log completed training for others</td><td>—</td><td>✓</td><td>✓</td></tr>
+<tr><td>Run reports, see compliance audit</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr><td>Send invite emails, promote roles</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr><td>Edit policies / upload new documents</td><td>—</td><td>—</td><td>✓</td></tr>
+</tbody>
+</table>
+
+<h2 id="profile">2 · Profile data model</h2>
+<div class="divider"></div>
+<p>Every person has one profile. Forms read <strong>from</strong> and write <strong>to</strong> this record so data entered once is reused everywhere.</p>
+
+<h3>Account (auth)</h3>
+<ul>
+  <li><strong>Email</strong> · login identifier</li>
+  <li><strong>Password</strong> · hashed, Firebase-managed</li>
+  <li><strong>Role</strong> · Volunteer / Leader / Coordinator (default: Volunteer)</li>
+  <li><strong>Status</strong> · In-process / Active / Paused / Inactive</li>
+  <li><strong>Created at</strong> · auto-timestamp</li>
+</ul>
+
+<h3>Personal info (filled on first login)</h3>
+<ul>
+  <li>Full legal name · First · Last</li>
+  <li>Preferred name (optional)</li>
+  <li>Date of birth</li>
+  <li>Phone (cell)</li>
+  <li>Street address · City · Province · Postal</li>
+  <li>Emergency contact · Name · Phone · Relationship</li>
+</ul>
+
+<h3>Ministry info (filled on first login or later)</h3>
+<ul>
+  <li>Age groups willing to serve (multi-select: Nursery / Preschool / Elementary / Preteen / Youth)</li>
+  <li>Service times (multi-select: 9am / 11am / Wed PM / Special Events)</li>
+  <li>Spiritual journey / testimony (short paragraph)</li>
+  <li>How long attending Bethany Chapel</li>
+</ul>
+
+<h3>Compliance / audit trail (system-managed)</h3>
+<ul>
+  <li>Covenant signed · date</li>
+  <li>Police check · date submitted, date cleared, expires on</li>
+  <li>References · two received</li>
+  <li>Training progress · per-module completion date + score</li>
+  <li>Renewal due date · auto-calculated (annual)</li>
+</ul>
+
+<h2 id="flows">3 · Sign-up flows</h2>
+<div class="divider"></div>
+
+<h3>Self sign-up (public)</h3>
+<div class="flow">
+  <div class="flow-step"><b>1</b><strong>Land on site</strong><small>New visitor clicks "Sign up" on the sign-in page.</small></div>
+  <div class="flow-step"><b>2</b><strong>Enter email + password</strong><small>Firebase sends verification email.</small></div>
+  <div class="flow-step"><b>3</b><strong>Verify email</strong><small>Click link in inbox. Account becomes active.</small></div>
+  <div class="flow-step"><b>4</b><strong>Complete profile</strong><small>Guided multi-step form: personal, emergency contact, ministry prefs.</small></div>
+  <div class="flow-step"><b>5</b><strong>Welcome dashboard</strong><small>Status shows "In-process". Next steps: covenant, references, police check, training.</small></div>
+</div>
+
+<h3>Invite flow (Coordinator-initiated)</h3>
+<div class="flow">
+  <div class="flow-step"><b>1</b><strong>Coordinator sends invite</strong><small>From Admin panel, enters volunteer's email + optional pre-assigned ministry.</small></div>
+  <div class="flow-step"><b>2</b><strong>Volunteer receives email</strong><small>"You've been invited to join Bethany Chapel Safeguard Hub. Click to sign up."</small></div>
+  <div class="flow-step"><b>3</b><strong>Invitee clicks link</strong><small>Opens pre-filled sign-up (email locked to invited address).</small></div>
+  <div class="flow-step"><b>4</b><strong>Sets password + completes profile</strong><small>Same flow as self-signup, starting at step 4.</small></div>
+  <div class="flow-step"><b>5</b><strong>Coordinator notified</strong><small>Dashboard shows new volunteer, nudges for covenant + police check.</small></div>
+</div>
+
+<h2 id="wireframes">4 · Wireframes</h2>
+<div class="divider"></div>
+<p>Low-fi mockups of every key screen. Final visual design matches the existing Safeguard Hub palette (navy · teal · gold · cream · DM Serif + DM Sans).</p>
+
+<!-- WF 1: Sign-in -->
+<div class="wf">
+  <div class="wf-title">Screen 1 · Sign-in page</div>
+  <div class="wf-sub">The landing page for returning users. "Sign up" and "Forgot password" links flank the form.</div>
+  <div class="wf-frame">
+    <div class="wf-nav"><div class="brand"><small>Safeguard Framework</small><span>Bethany Chapel</span></div></div>
+    <div class="wf-body" style="max-width:440px;margin:0 auto;padding-top:48px;padding-bottom:48px">
+      <div class="wf-eyebrow">Welcome back</div>
+      <div class="wf-h1">Sign in to the Hub</div>
+      <div class="wf-p">Enter your Bethany Chapel email and password.</div>
+      <label class="wf-label">Email</label>
+      <div class="wf-input filled">sarah.j@example.com</div>
+      <label class="wf-label">Password</label>
+      <div class="wf-input">••••••••</div>
+      <button class="wf-btn">Sign in</button>
+      <button class="wf-btn secondary">Forgot password?</button>
+      <div class="wf-alt">New to Bethany Chapel? <a>Create an account →</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- WF 2: Sign-up -->
+<div class="wf">
+  <div class="wf-title">Screen 2 · Sign-up (self)</div>
+  <div class="wf-sub">Step 1 of onboarding. Just email + password. Verification email sent on submit.</div>
+  <div class="wf-frame">
+    <div class="wf-nav"><div class="brand"><small>Safeguard Framework</small><span>Bethany Chapel</span></div></div>
+    <div class="wf-body" style="max-width:440px;margin:0 auto;padding-top:48px;padding-bottom:48px">
+      <div class="wf-eyebrow">Step 1 of 4</div>
+      <div class="wf-h1">Create your account</div>
+      <div class="wf-p">Your email becomes your login. We'll send a verification link to confirm.</div>
+      <label class="wf-label">Email</label>
+      <div class="wf-input">you@example.com</div>
+      <label class="wf-label">Create a password</label>
+      <div class="wf-input">At least 8 characters</div>
+      <label class="wf-label">Confirm password</label>
+      <div class="wf-input"></div>
+      <button class="wf-btn">Send verification email</button>
+      <div class="wf-alt">Already have an account? <a>Sign in →</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- WF 3: Profile setup -->
+<div class="wf">
+  <div class="wf-title">Screen 3 · Complete profile (after verification)</div>
+  <div class="wf-sub">Three sections — personal, emergency contact, ministry prefs. Progress bar at top. All core form data lives here so every subsequent form auto-fills.</div>
+  <div class="wf-frame">
+    <div class="wf-nav">
+      <div class="brand"><small>Safeguard Framework</small><span>Bethany Chapel</span></div>
+      <div class="user">Sarah J · In-process</div>
+    </div>
+    <div class="wf-body" style="max-width:600px;margin:0 auto;padding:40px">
+      <div class="wf-eyebrow">Step 3 of 4 · About you</div>
+      <div class="wf-h1">Tell us about yourself</div>
+      <div class="wf-p">This goes into your Bethany Chapel record. You only enter it once — every form uses this data.</div>
+      <div class="wf-sectionhead">Personal information</div>
+      <div class="wf-row"><div><label class="wf-label">First name</label><div class="wf-input filled">Sarah</div></div><div><label class="wf-label">Last name</label><div class="wf-input filled">Johnson</div></div></div>
+      <div class="wf-row"><div><label class="wf-label">Date of birth</label><div class="wf-input filled">1989-03-14</div></div><div><label class="wf-label">Phone (cell)</label><div class="wf-input filled">250-555-0142</div></div></div>
+      <label class="wf-label">Address</label><div class="wf-input filled">2141 Quadra St, Victoria BC V8T 4C7</div>
+      <div class="wf-sectionhead">Emergency contact</div>
+      <div class="wf-row"><div><label class="wf-label">Name</label><div class="wf-input"></div></div><div><label class="wf-label">Phone</label><div class="wf-input"></div></div><div><label class="wf-label">Relationship</label><div class="wf-input"></div></div></div>
+      <button class="wf-btn">Continue →</button>
+      <button class="wf-btn secondary">Save &amp; finish later</button>
+    </div>
+  </div>
+</div>
+
+<!-- WF 4: Volunteer dashboard -->
+<div class="wf">
+  <div class="wf-title">Screen 4 · Volunteer dashboard (after profile complete)</div>
+  <div class="wf-sub">Personal status. Shows what's done, what's next, renewal dates. Self-serve — volunteer drives their own onboarding.</div>
+  <div class="wf-frame">
+    <div class="wf-nav">
+      <div class="brand"><small>Safeguard Framework</small><span>Bethany Chapel</span></div>
+      <span class="link">Training</span><span class="link">Forms</span><span class="link">Policies</span>
+      <div class="user">Sarah J · Volunteer</div>
+    </div>
+    <div class="wf-body">
+      <div class="wf-eyebrow">Your dashboard</div>
+      <div class="wf-h1">Welcome back, Sarah</div>
+      <div class="wf-p">You're <strong>62% through onboarding</strong>. Two items left before you can serve.</div>
+      <div class="wf-progress" style="max-width:500px;margin-bottom:32px"><div style="width:62%"></div></div>
+
+      <div class="wf-grid">
+        <div class="wf-stat"><b>4/7</b><span>Steps complete</span></div>
+        <div class="wf-stat"><b>2/4</b><span>Training done</span></div>
+        <div class="wf-stat"><b>Apr 17</b><span>Renewal due</span></div>
+      </div>
+
+      <div class="wf-sectionhead">Next steps</div>
+      <div class="wf-card"><div class="wf-card-head"><div class="wf-card-title">Complete Worker's Covenant</div><span class="wf-badge pending">Required</span></div><div style="font-size:12px;color:var(--muted)">SG-FRM-004 · Read and sign the covenant committing to the Safeguard standards.</div></div>
+      <div class="wf-card"><div class="wf-card-head"><div class="wf-card-title">Police Information Check</div><span class="wf-badge pending">Pending</span></div><div style="font-size:12px;color:var(--muted)">SG-FRM-003 · Bethany Chapel covers the cost. Submitted Apr 1 · Awaiting results.</div></div>
+
+      <div class="wf-sectionhead">Completed</div>
+      <div class="wf-card"><div class="wf-card-head"><div class="wf-card-title">Ministry Application</div><span class="wf-badge done">Done</span></div><div style="font-size:12px;color:var(--muted)">SG-FRM-001 · Submitted Apr 2</div></div>
+      <div class="wf-card"><div class="wf-card-head"><div class="wf-card-title">Training · Why We Protect</div><span class="wf-badge done">Done · 95%</span></div><div style="font-size:12px;color:var(--muted)">SG-T-001 · Completed Apr 3</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- WF 5: Coordinator dashboard -->
+<div class="wf">
+  <div class="wf-title">Screen 5 · Coordinator (Admin) dashboard</div>
+  <div class="wf-sub">The operational nerve center. List of all volunteers, filter by status, send invites, review incidents, run compliance checks.</div>
+  <div class="wf-frame">
+    <div class="wf-nav">
+      <div class="brand"><small>Safeguard Framework</small><span>Bethany Chapel</span></div>
+      <span class="link">People</span><span class="link">Incidents</span><span class="link">Reports</span><span class="link">Settings</span>
+      <div class="user">You · Coordinator</div>
+    </div>
+    <div class="wf-body">
+      <div class="wf-eyebrow">Coordinator dashboard</div>
+      <div class="wf-h1">People &amp; compliance</div>
+
+      <div class="wf-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="wf-stat"><b>47</b><span>Active</span></div>
+        <div class="wf-stat"><b>12</b><span>In-process</span></div>
+        <div class="wf-stat"><b>3</b><span>Renewal due &lt; 30d</span></div>
+        <div class="wf-stat"><b>1</b><span>Open incidents</span></div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <button class="wf-btn">+ Send invite</button>
+        <button class="wf-btn secondary">Export CSV</button>
+        <button class="wf-btn secondary">Run audit</button>
+      </div>
+
+      <table class="wf-table">
+        <thead><tr><th>Name</th><th>Status</th><th>Training</th><th>Renewal</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Sarah Johnson</td><td><span class="wf-badge pending">In-process</span></td><td>2 / 4 modules</td><td>—</td><td><a style="color:var(--teal)">Open →</a></td></tr>
+          <tr><td>Marcus Lee</td><td><span class="wf-badge done">Active</span></td><td>Complete</td><td>Mar 14, 2027</td><td><a style="color:var(--teal)">Open →</a></td></tr>
+          <tr><td>Priya Patel</td><td><span class="wf-badge done">Active · Leader</span></td><td>Complete + Leader</td><td>Jan 2, 2027</td><td><a style="color:var(--teal)">Open →</a></td></tr>
+          <tr><td>Tom Harker</td><td><span class="wf-badge expired">Expired</span></td><td>Complete</td><td><b style="color:var(--error)">Apr 2, 2026</b></td><td><a style="color:var(--teal)">Open →</a></td></tr>
+        </tbody>
+      </table>
+
+      <div class="wf-sectionhead">Recent incidents</div>
+      <div class="wf-card"><div class="wf-card-head"><div class="wf-card-title">INC-20260415-1430 · Minor injury, Room 101</div><span class="wf-badge pending">Needs review</span></div><div style="font-size:12px;color:var(--muted)">Reported by J. Williams · Apr 15 · Child scraped knee. First aid given. Parent notified.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- WF 6: Send invite -->
+<div class="wf">
+  <div class="wf-title">Screen 6 · Send invite (modal or page)</div>
+  <div class="wf-sub">Coordinator-only. Pre-fill optional role, ministry, and personal note before the invitation email goes out.</div>
+  <div class="wf-frame">
+    <div class="wf-body" style="max-width:480px;margin:0 auto;padding:40px">
+      <div class="wf-eyebrow">Coordinator · Invite volunteer</div>
+      <div class="wf-h1">Invite a new volunteer</div>
+      <div class="wf-p">They'll receive an email with a sign-up link scoped to this address.</div>
+      <label class="wf-label">Volunteer's email</label>
+      <div class="wf-input">name@example.com</div>
+      <label class="wf-label">Suggested ministry (optional)</label>
+      <div class="wf-input">Kids Church — Elementary</div>
+      <label class="wf-label">Personal note (optional)</label>
+      <div class="wf-input" style="min-height:64px">Hi! So glad you want to serve with us. Looking forward to chatting after you're onboarded.</div>
+      <button class="wf-btn">Send invitation</button>
+      <button class="wf-btn secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<h2 id="tech">5 · Technical stack</h2>
+<div class="divider"></div>
+<ul>
+  <li><strong>Firebase Authentication</strong> · email/password login, email verification, password reset, session management. Free.</li>
+  <li><strong>Firestore</strong> · NoSQL database for user profiles, form submissions, training records. Free tier supports thousands of users.</li>
+  <li><strong>Firebase Hosting</strong> (optional) · could replace GitHub Pages. Or keep GitHub Pages and just use Firebase for auth + DB.</li>
+  <li><strong>Role-based access</strong> · enforced with Firestore Security Rules (server-side, tamper-proof).</li>
+  <li><strong>Email invitations</strong> · Firebase sends transactional emails via built-in templates, no extra service needed.</li>
+</ul>
+
+<div class="note"><strong>Migration note</strong> — existing Google Sheets backend can be kept as a secondary export destination (for coordinator convenience) but Firestore becomes the primary source of truth. New forms write to both during transition.</div>
+
+<h2 id="brief">6 · Claude Code handoff brief</h2>
+<div class="divider"></div>
+<p>Paste this into Claude Code when you're ready to build.</p>
+
+<div class="note">
+<strong>Brief for Claude Code</strong>
+
+<p style="margin-top:12px">Build a user authentication + role-based access system for the Safeguard Hub, a child-protection compliance site for Bethany Chapel. The current site is a static GitHub Pages deployment (<a>github.com/Stophoto/safeguard-hub</a>) with React-in-HTML forms submitting to Google Sheets via Apps Script.</p>
+
+<p><strong>Goals</strong></p>
+<ol>
+<li>Add Firebase Auth (email/password) with email verification and password reset</li>
+<li>Add Firestore for user profiles + form submissions</li>
+<li>Implement three roles: Volunteer, Leader, Coordinator — enforced via Firestore Security Rules</li>
+<li>Build sign-in, sign-up (self), profile setup, volunteer dashboard, coordinator dashboard, invite flow</li>
+<li>Retrofit existing fillable forms (FRM-001, 006, 007, 012) to auto-fill from profile and attach user ID to submissions</li>
+<li>Keep Google Sheets backend as secondary export (don't break existing workflow)</li>
+</ol>
+
+<p><strong>Reference this document</strong> for: role permission matrix (§1), profile data model (§2), flow diagrams (§3), and wireframes (§4). The visual design should match the existing hub — navy (#1B3A4B), teal (#2E6B7F), gold (#B09055), cream (#FAF8F3), DM Serif Display + DM Sans.</p>
+
+<p><strong>Deliverables</strong></p>
+<ul>
+<li>Firebase project setup instructions for the owner</li>
+<li>New auth pages (sign-in.html, sign-up.html, profile-setup.html, forgot-password.html)</li>
+<li>Volunteer dashboard and coordinator dashboard pages</li>
+<li>Updated index.html gated by auth state</li>
+<li>Retrofitted fillable forms reading from user profile</li>
+<li>Firestore Security Rules (repo'd and documented)</li>
+<li>README update with auth setup and deployment steps</li>
+</ul>
+</div>
+
+<p style="text-align:center;color:var(--muted);font-size:12px;margin-top:60px;padding-top:24px;border-top:1px solid var(--border)">Safeguard Hub · Auth &amp; Accounts Spec · Draft v1 · April 2026</p>
+
+</div>
+</body>
+</html>

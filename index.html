@@ -1032,6 +1032,21 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
     function goForm(v){setView(v);window.scrollTo({top:0});}
     function goHome(){setView("dashboard");window.scrollTo({top:0});}
 
+    // Hash-based routing: #frm001 → open form view. Lets nav dropdowns + external links work.
+    useEffect(function(){
+      function handleHash(){
+        var hash=(window.location.hash||"").replace("#","").toLowerCase();
+        var valid=["frm001","frm002","frm004","frm005","frm006","frm007","frm012"];
+        if(valid.indexOf(hash)>=0){ setView(hash); setTab("forms"); window.scrollTo({top:0}); }
+        else if(hash==="admin"){ setView("dashboard"); setTab("tasks"); }
+        else if(hash==="documents"||hash==="docs"){ setView("dashboard"); setTab("documents"); }
+        else if(hash==="forms"){ setView("dashboard"); setTab("forms"); }
+      }
+      handleHash();
+      window.addEventListener("hashchange",handleHash);
+      return function(){ window.removeEventListener("hashchange",handleHash); };
+    },[]);
+
     var totalDocs=32;
     var connected=sheetsOk();
 
