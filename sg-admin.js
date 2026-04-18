@@ -221,6 +221,18 @@ export async function markReferenceReceived(uid, refIndex, receivedOn) {
   }, { merge: true });
 }
 
+// ── Activate a volunteer (set status to "active") ───────────
+// Also stamps `activatedAt` and `activatedBy` for audit trail.
+export async function activateUser(uid) {
+  await setDoc(doc(db, "users", uid), {
+    status: "active",
+    activatedAt: serverTimestamp(),
+    activatedBy: auth.currentUser ? auth.currentUser.uid : null,
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+
 // ── Mark a reference as NOT received (undo) ─────────────────
 export async function unmarkReferenceReceived(uid, refIndex) {
   const snap = await getDoc(doc(db, "users", uid));

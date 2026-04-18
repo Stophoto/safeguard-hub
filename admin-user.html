@@ -146,6 +146,23 @@
       You're editing your own profile. To change your own role or status, use Firestore console directly — the dropdowns below are locked as a safety net.
     </div>
 
+    <!-- ── Activation banner (shown when user is ready) ── -->
+    <div id="activationBanner" style="display:none;background:#EEFBF3;border:1.5px solid rgba(39,174,96,0.35);border-radius:14px;padding:22px 26px;margin-bottom:18px">
+      <div style="display:flex;gap:16px;align-items:flex-start">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;margin-bottom:4px">Ready for activation</div>
+          <div style="font-size:14px;color:var(--body);margin-bottom:14px">This volunteer has completed all five onboarding steps. Activate them to change their status from <em>in-process</em> to <em>active</em>.</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button type="button" class="btn btn-primary" id="activateBtn" style="background:var(--success)">Activate this volunteer</button>
+            <button type="button" class="btn btn-secondary" id="welcomeEmailBtn">Open welcome email</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <form id="form" novalidate>
 
       <!-- Role & Status -->
@@ -314,11 +331,12 @@
 
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
-  import { getOrCreateProfile, formatDate } from "./sg-profile.js";
+  import { getOrCreateProfile, formatDate, isReadyForActivation } from "./sg-profile.js";
   import {
     loadUser, updateUserProfile,
     markPoliceCheckCleared, unclearPoliceCheck,
     markReferenceReceived, unmarkReferenceReceived,
+    activateUser,
   } from "./sg-admin.js";
 
   const loadingState = document.getElementById("loadingState");
@@ -408,6 +426,17 @@
     metaUpdated.textContent  = fmt(u.updatedAt);
 
     renderCompliance(u);
+    renderActivationBanner(u);
+  }
+
+  // ── Activation banner visibility ──────────────────────────
+  function renderActivationBanner(u) {
+    const banner = document.getElementById("activationBanner");
+    if (isReadyForActivation(u)) {
+      banner.style.display = "block";
+    } else {
+      banner.style.display = "none";
+    }
   }
 
   // ── Compliance panel ────────────────────────────────────
@@ -553,6 +582,56 @@
       showMsg("Couldn't save. " + (err.message || ""), "err");
     }
   }
+
+  // ── Activation + welcome email ──────────────────────────
+  document.getElementById("activateBtn").addEventListener("click", async () => {
+    clearMsg();
+    const btn = document.getElementById("activateBtn");
+    btn.disabled = true;
+    try {
+      await activateUser(TARGET_UID);
+      showMsg("Volunteer activated. Status is now 'active'.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) {
+        // Refresh the role/status dropdowns and banner visibility
+        setv("status", updated.status);
+        renderCompliance(updated);
+        renderActivationBanner(updated);
+      }
+    } catch (err) {
+      showMsg("Couldn't activate. " + (err.message || ""), "err");
+    }
+    btn.disabled = false;
+  });
+
+  document.getElementById("welcomeEmailBtn").addEventListener("click", async () => {
+    clearMsg();
+    const u = await loadUser(TARGET_UID);
+    if (!u || !u.email) {
+      showMsg("No email on record for this volunteer.", "err");
+      return;
+    }
+    const firstName = u.preferredName || u.firstName || "friend";
+    const subject = "You're activated — welcome to Bethany Chapel Safeguard";
+    const body = [
+      "Hi " + firstName + ",",
+      "",
+      "Congratulations — you've completed every step of the Safeguard onboarding and you're now cleared to serve at Bethany Chapel.",
+      "",
+      "You can sign in to your dashboard any time at:",
+      "https://stophoto.github.io/safeguard-hub/dashboard.html",
+      "",
+      "Your ministry lead will reach out shortly to get you on the schedule. In the meantime, if you have any questions, hit reply and I'll get back to you.",
+      "",
+      "Thank you for taking these commitments seriously. We're so glad to have you.",
+      "",
+      "— Bethany Chapel Safeguard Team",
+    ].join("\n");
+    const mailto = "mailto:" + encodeURIComponent(u.email)
+      + "?subject=" + encodeURIComponent(subject)
+      + "&body=" + encodeURIComponent(body);
+    window.location.href = mailto;
+  });
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();

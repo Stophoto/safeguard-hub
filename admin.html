@@ -157,6 +157,12 @@
 
     <div id="msg" class="msg"></div>
 
+    <!-- ── Ready for activation (hidden when empty) ── -->
+    <div id="activationSection" style="display:none">
+      <div class="section-head" style="color:var(--success)">Ready for activation</div>
+      <div id="activationList" style="margin-bottom:28px"></div>
+    </div>
+
     <div class="section-head">Everyone</div>
     <div id="tableWrap"></div>
   </div>
@@ -167,8 +173,8 @@
 
 <script type="module">
   import { onUserChange, signOutUser } from "./sg-auth.js";
-  import { getOrCreateProfile, displayName } from "./sg-profile.js";
-  import { listUsers, setUserRole, setUserStatus, summarizeUsers, usersToCsv, downloadCsv } from "./sg-admin.js";
+  import { getOrCreateProfile, displayName, isReadyForActivation, formatDate } from "./sg-profile.js";
+  import { listUsers, setUserRole, setUserStatus, summarizeUsers, usersToCsv, downloadCsv, activateUser } from "./sg-admin.js";
 
   const loadingState = document.getElementById("loadingState");
   const accessDenied = document.getElementById("accessDenied");
@@ -184,6 +190,8 @@
   const refreshBtn   = document.getElementById("refreshBtn");
   const exportBtn    = document.getElementById("exportBtn");
   const tableWrap    = document.getElementById("tableWrap");
+  const activationSection = document.getElementById("activationSection");
+  const activationList    = document.getElementById("activationList");
   const signoutBtn   = document.getElementById("signoutBtn");
   const msg          = document.getElementById("msg");
 
@@ -227,6 +235,9 @@
     statInProcess.textContent = s.inProcess;
     statLeaders.textContent   = s.leaders;
     statRenewal.textContent   = s.renewalSoon;
+
+    // Ready for activation — volunteers who've completed every step
+    renderActivationQueue(users);
 
     // Table
     if (users.length === 0) {
@@ -350,6 +361,46 @@
     await signOutUser();
     location.replace("sign-in.html");
   });
+
+  // ── Activation queue ────────────────────────────────────
+  function renderActivationQueue(users) {
+    const ready = users.filter(u => isReadyForActivation(u));
+    if (ready.length === 0) {
+      activationSection.style.display = "none";
+      activationList.innerHTML = "";
+      return;
+    }
+    activationSection.style.display = "block";
+    activationList.innerHTML = ready.map(u => {
+      const fullName = [u.firstName, u.lastName].filter(Boolean).join(" ") || "(no name yet)";
+      const email = u.email || "";
+      return ''
+        + '<div style="background:var(--success-bg);border:1.5px solid rgba(39,174,96,0.3);border-radius:10px;padding:16px 20px;margin-bottom:8px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">'
+        +   '<div style="flex:1;min-width:200px">'
+        +     '<div style="font-weight:600;color:var(--navy)">' + escapeHtml(fullName) + ' <span style="font-weight:500;color:var(--success);font-size:12px">\u2014 all 5 steps complete</span></div>'
+        +     '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + escapeHtml(email) + '</div>'
+        +   '</div>'
+        +   '<div style="display:flex;gap:8px;flex-wrap:wrap">'
+        +     '<a href="admin-user.html?uid=' + u.id + '" class="btn btn-secondary" style="font-size:13px;padding:9px 16px">Review →</a>'
+        +     '<button type="button" class="btn btn-primary" data-activate="' + u.id + '" style="font-size:13px;padding:9px 16px;background:var(--success)">Activate</button>'
+        +   '</div>'
+        + '</div>';
+    }).join("");
+    activationList.querySelectorAll("[data-activate]").forEach(btn => {
+      btn.addEventListener("click", () => onActivate(btn.dataset.activate));
+    });
+  }
+
+  async function onActivate(uid) {
+    clearMsg();
+    try {
+      await activateUser(uid);
+      showMsg("Volunteer activated.", "ok");
+      await loadAndRender();
+    } catch (err) {
+      showMsg("Couldn't activate. " + (err.message || ""), "err");
+    }
+  }
 
   // ── Helpers ──
   function showMsg(text, kind) { msg.textContent = text; msg.className = "msg " + kind; }

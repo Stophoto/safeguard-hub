@@ -266,6 +266,29 @@ export function computeOnboarding(profile, trainingModuleIds) {
   return { done, total, steps, pct: Math.round((done / total) * 100) };
 }
 
+// ── Is this profile ready to be activated? ──────────────────
+// True when the user has completed every onboarding step AND
+// their status is still "in-process" (i.e., not already active).
+// Coordinators can always override by changing status manually.
+export function isReadyForActivation(profile) {
+  if (!profile) return false;
+  if (profile.status !== "in-process") return false;
+  const o = computeOnboarding(profile, trainingModulesFor(profile));
+  return o.done === o.total;
+}
+
+// ── Training modules required for a given profile's role ────
+// Volunteers need the 4 core modules. Leaders & Coordinators
+// additionally need the 3 leader-track modules.
+export function trainingModulesFor(profile) {
+  const base = ["SG-T-001","SG-T-002","SG-T-003","SG-T-004"];
+  if (!profile) return base;
+  if (profile.role === "leader" || profile.role === "coordinator") {
+    return [...base, "SG-T-101","SG-T-102","SG-T-103"];
+  }
+  return base;
+}
+
 // ── Format an ISO date / YYYY-MM-DD nicely ───────────────────
 export function formatDate(d) {
   if (!d) return "";

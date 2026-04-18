@@ -542,4 +542,63 @@ Once you've edited it locally, re-upload `covenant.html` to the `auth-feature` b
 
 ---
 
-*Last updated: April 2026 · Phase 5 complete*
+---
+
+## Phase 6 deploy — Activation workflow
+
+Adds a one-click "Activate volunteer" flow to the admin panel. When a volunteer completes all 5 onboarding steps (profile, covenant, police check cleared, 2 references received, all training modules), they appear in a new **Ready for activation** section at the top of the Admin page. One click flips their status to "active" and optionally opens a pre-written welcome email.
+
+### Step 1 — Upload to `auth-feature`
+
+**Switch GitHub branch dropdown to `auth-feature` first.** Upload these 4 files:
+
+- `sg-profile.js` (adds `isReadyForActivation` + `trainingModulesFor` helpers)
+- `sg-admin.js` (adds `activateUser` helper)
+- `admin.html` (adds "Ready for activation" section at top of People page)
+- `admin-user.html` (adds green activation banner + "Open welcome email" mailto)
+
+Commit message:
+```
+Phase 6: activation workflow with welcome email
+```
+
+No Firestore rules change needed. Wait for green checkmark on Actions.
+
+### Step 2 — Test with a real candidate
+
+1. Sign in as your Coordinator account.
+2. You (or a test volunteer) need all 5 steps done:
+   - Profile complete ✓
+   - Covenant signed ✓
+   - Police check marked cleared (you do this from the admin side)
+   - Both references marked received (admin side)
+   - All 4 volunteer training modules marked complete (or 7 for Leaders)
+3. Once everything's done, open https://stophoto.github.io/safeguard-hub/admin.html
+4. **Expected:** a green "Ready for activation" section appears at the top of the page, listing that volunteer with an **Activate** button.
+5. Click **Activate** → the volunteer's status flips to "active" and they disappear from the Ready section.
+
+### Step 3 — Test the welcome email flow
+
+1. Before activating, click **Review →** on the ready candidate — you land on `admin-user.html`.
+2. You'll see a new green "Ready for activation" banner near the top.
+3. Click **Open welcome email** — your email client opens with a pre-written message addressed to the volunteer.
+4. Review the message and send it from your email client.
+5. Then click **Activate this volunteer** to flip their status.
+
+### How the "ready" check works
+
+A profile is flagged as ready when ALL of these are true:
+- `profileComplete === true`
+- `covenant.signed === true`
+- `policeCheck.clearedAt` has a value (not just submitted)
+- `references.items` has at least 2 items where `receivedAt` is set
+- Every training module in their role's required list has `completedAt` set
+  - Volunteers: SG-T-001 through SG-T-004
+  - Leaders & Coordinators: all of the above plus SG-T-101 through SG-T-103
+- AND status is currently "in-process" (not already active or paused)
+
+Coordinators can still manually change status at any time via the Status dropdown — the activation banner is just a smart shortcut for the common case.
+
+---
+
+*Last updated: April 2026 · Phase 6 complete*
