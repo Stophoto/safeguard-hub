@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --warn:#B07A1E; --warn-bg:#FFF5E6;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.55;
+       min-height:100vh;display:flex;flex-direction:column}
+
+  /* ── Header ── */
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+       border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;
+            padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .user-pill{background:rgba(255,255,255,0.08);color:var(--white);padding:6px 14px;
+             border-radius:16px;font-size:12px;font-weight:500;display:flex;gap:10px;align-items:center}
+  .user-pill .dot{width:4px;height:4px;border-radius:50%;background:var(--gold-warm)}
+  .signout{background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.72);
+           font-size:12px;font-weight:600;padding:6px 12px;border-radius:6px;cursor:pointer;
+           font-family:var(--sans);transition:all var(--transition)}
+  .signout:hover{color:var(--white);border-color:rgba(255,255,255,0.4)}
+
+  /* ── Page layout ── */
+  .page{flex:1;padding:40px 24px 80px}
+  .wrap{max-width:1100px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:40px;color:var(--navy);font-weight:400;
+     line-height:1.1;margin-bottom:8px}
+  .lede{font-size:16px;color:var(--body);opacity:0.78;margin-bottom:22px;max-width:640px}
+
+  /* ── Progress bar ── */
+  .progress{height:8px;background:var(--border);border-radius:4px;overflow:hidden;max-width:560px;margin-bottom:30px}
+  .progress > div{height:100%;background:linear-gradient(to right,var(--teal),var(--gold));
+                  border-radius:4px;transition:width 0.4s ease}
+
+  /* ── Stat cards ── */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:36px}
+  @media (max-width:640px){.stats{grid-template-columns:1fr}}
+  .stat{background:var(--white);border:1.5px solid var(--border);border-radius:10px;
+        padding:18px 20px;display:flex;flex-direction:column;gap:4px}
+  .stat b{font-family:var(--serif);font-size:30px;color:var(--navy);font-weight:400;line-height:1}
+  .stat span{font-size:11px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:600}
+
+  /* ── Section heads ── */
+  .section-head{font-size:12px;font-weight:700;letter-spacing:0.1em;color:var(--gold);
+                text-transform:uppercase;margin:28px 0 12px}
+
+  /* ── Step cards (next / completed) ── */
+  .step{background:var(--white);border:1.5px solid var(--border);border-radius:10px;
+        padding:18px 22px;margin-bottom:10px;display:flex;gap:16px;align-items:flex-start;
+        transition:all var(--transition)}
+  .step:hover{border-color:var(--gold-warm);box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+  .step.muted{opacity:0.7}
+  .step-icon{width:36px;height:36px;border-radius:50%;background:var(--sand);
+             display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .step-icon svg{width:18px;height:18px;color:var(--teal)}
+  .step-icon.done{background:var(--success-bg)}
+  .step-icon.done svg{color:var(--success)}
+  .step-body{flex:1;min-width:0}
+  .step-head{display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:4px}
+  .step-title{font-family:var(--serif);font-size:18px;color:var(--navy);font-weight:400;line-height:1.25}
+  .step-sub{font-size:13px;color:var(--muted);line-height:1.5}
+  .badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:0.06em;
+         text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+  .badge.done{background:var(--success-bg);color:var(--success)}
+  .badge.pending{background:var(--warn-bg);color:var(--warn)}
+  .badge.required{background:var(--warn-bg);color:var(--warn)}
+  .badge.soon{background:var(--sand);color:var(--muted)}
+  .step-action{font-size:13px;color:var(--teal);font-weight:600;text-decoration:none;
+               border-bottom:1px solid rgba(46,107,127,0.3);margin-top:6px;display:inline-block}
+  .step-action:hover{color:var(--navy)}
+
+  /* ── Quick links grid ── */
+  .quick{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:32px}
+  .quick-card{background:var(--white);border:1.5px solid var(--border);border-radius:10px;
+              padding:16px 18px;text-decoration:none;transition:all var(--transition);display:block}
+  .quick-card:hover{border-color:var(--gold-warm);box-shadow:0 2px 12px rgba(0,0,0,0.04);
+                    transform:translateY(-1px)}
+  .quick-title{font-family:var(--serif);font-size:16px;color:var(--navy);margin-bottom:4px}
+  .quick-sub{font-size:12px;color:var(--muted)}
+
+  /* ── Loading ── */
+  .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
+
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="index.html">Hub</a>
+    <div class="user-pill" id="userPill" style="display:none">
+      <span id="userName">—</span><span class="dot"></span><span id="userStatus">In-process</span>
+    </div>
+    <button class="signout" id="signoutBtn">Sign out</button>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- Loading -->
+  <div class="wrap" id="loadingState">
+    <div class="loading-state">Loading your dashboard…</div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="wrap" id="dashWrap" style="display:none">
+    <div class="eyebrow">Your dashboard</div>
+    <h1 id="greeting">Welcome back</h1>
+    <div class="lede" id="summary">You're in the onboarding process. Keep going — one step at a time.</div>
+
+    <div class="progress"><div id="progressBar" style="width:0%"></div></div>
+
+    <div class="stats">
+      <div class="stat"><b id="statSteps">0/5</b><span>Onboarding steps</span></div>
+      <div class="stat"><b id="statTraining">0/4</b><span>Training modules</span></div>
+      <div class="stat"><b id="statRenewal">—</b><span>Renewal due</span></div>
+    </div>
+
+    <!-- ── Next steps ── -->
+    <div class="section-head">Next steps</div>
+    <div id="nextSteps"></div>
+
+    <!-- ── Completed ── -->
+    <div class="section-head" id="completedHead" style="display:none">Completed</div>
+    <div id="completedSteps"></div>
+
+    <!-- ── Quick links ── -->
+    <div class="section-head">Quick access</div>
+    <div class="quick">
+      <a class="quick-card" href="index.html">
+        <div class="quick-title">Safeguard Hub</div>
+        <div class="quick-sub">Policies, forms, training, SOPs</div>
+      </a>
+      <a class="quick-card" href="profile-setup.html">
+        <div class="quick-title">Edit your profile</div>
+        <div class="quick-sub">Update contact info or serving preferences</div>
+      </a>
+      <a class="quick-card" href="SG-POL-001.html">
+        <div class="quick-title">Volunteer screening policy</div>
+        <div class="quick-sub">What's required before you serve</div>
+      </a>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>Safeguard Framework · Bethany Chapel</footer>
+
+<script type="module">
+  import { onUserChange, signOutUser } from "./sg-auth.js";
+  import { getOrCreateProfile, displayName, roleLabel } from "./sg-profile.js";
+
+  const loadingState = document.getElementById("loadingState");
+  const dashWrap     = document.getElementById("dashWrap");
+  const userPill     = document.getElementById("userPill");
+  const userName     = document.getElementById("userName");
+  const userStatus   = document.getElementById("userStatus");
+  const greeting     = document.getElementById("greeting");
+  const summary      = document.getElementById("summary");
+  const progressBar  = document.getElementById("progressBar");
+  const statSteps    = document.getElementById("statSteps");
+  const statTraining = document.getElementById("statTraining");
+  const statRenewal  = document.getElementById("statRenewal");
+  const nextSteps    = document.getElementById("nextSteps");
+  const completedSteps = document.getElementById("completedSteps");
+  const completedHead  = document.getElementById("completedHead");
+  const signoutBtn   = document.getElementById("signoutBtn");
+
+  // ── Icons for step cards ──
+  const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const ICON_DOC   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+  const ICON_SHIELD= '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+
+  // ── Gate: require signed-in + verified user ──
+  onUserChange(async user => {
+    if (!user) { location.replace("sign-in.html"); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+
+    try {
+      const profile = await getOrCreateProfile();
+
+      // Route: if they haven't finished profile yet, push them there.
+      if (!profile.profileComplete) { location.replace("profile-setup.html"); return; }
+
+      // Header user pill
+      userName.textContent   = displayName(profile) || (user.email || "");
+      userStatus.textContent = roleLabel(profile) || "Volunteer";
+      userPill.style.display = "flex";
+
+      // Render
+      render(profile);
+
+      loadingState.style.display = "none";
+      dashWrap.style.display = "block";
+    } catch (err) {
+      loadingState.textContent = "Couldn't load your dashboard. " + (err.message || "");
+    }
+  });
+
+  // ── Render the dashboard from a profile ──
+  function render(profile) {
+    const name = displayName(profile) || "friend";
+    greeting.textContent = "Welcome back, " + name;
+
+    // For Phase 2, the only real step we track is the profile itself.
+    // The rest (covenant, police check, references, training) are
+    // stubs that will become real as we build each phase.
+    const steps = buildSteps(profile);
+
+    const doneCount = steps.filter(s => s.state === "done").length;
+    const totalCount = steps.length;
+
+    // Progress bar + summary copy
+    const pct = Math.round((doneCount / totalCount) * 100);
+    progressBar.style.width = pct + "%";
+    if (doneCount === totalCount) {
+      summary.textContent = "You're fully onboarded. Thank you for serving.";
+    } else {
+      summary.innerHTML = "You're <strong>" + pct + "% through onboarding</strong>. "
+        + (totalCount - doneCount) + " step" + (totalCount - doneCount === 1 ? "" : "s") + " to go.";
+    }
+
+    // Stats
+    statSteps.textContent    = doneCount + "/" + totalCount;
+    statTraining.textContent = "0/4";      // wired in a future phase
+    statRenewal.textContent  = "—";        // calculated once police check + training in place
+
+    // Split into next / completed
+    nextSteps.innerHTML = "";
+    completedSteps.innerHTML = "";
+    steps.forEach(s => {
+      const card = renderStep(s);
+      if (s.state === "done") completedSteps.appendChild(card);
+      else nextSteps.appendChild(card);
+    });
+
+    completedHead.style.display = completedSteps.children.length ? "block" : "none";
+  }
+
+  // ── Build the list of onboarding steps for this profile ──
+  // Each step: { id, title, sub, state, badge, icon, action?, muted? }
+  function buildSteps(p) {
+    return [
+      {
+        id: "profile",
+        title: "Complete your profile",
+        sub:   "Personal info, emergency contact, serving preferences.",
+        icon:  ICON_DOC,
+        state: p.profileComplete ? "done" : "next",
+        badge: p.profileComplete ? "Done" : "Required",
+        action: p.profileComplete ? { href: "profile-setup.html", label: "Edit →" }
+                                  : { href: "profile-setup.html", label: "Start →" },
+      },
+      {
+        id: "covenant",
+        title: "Sign the Worker's Covenant",
+        sub:   "SG-FRM-004 · A written commitment to the Safeguard standards. Coming in a future phase.",
+        icon:  ICON_DOC,
+        state: "soon",
+        badge: "Coming soon",
+        muted: true,
+      },
+      {
+        id: "police",
+        title: "Police Information Check",
+        sub:   "SG-FRM-003 · Required for anyone serving with children or youth. Bethany Chapel covers the cost.",
+        icon:  ICON_SHIELD,
+        state: "soon",
+        badge: "Coming soon",
+        muted: true,
+      },
+      {
+        id: "references",
+        title: "Reference checks",
+        sub:   "SG-FRM-002 · Two references required. Coming in a future phase.",
+        icon:  ICON_DOC,
+        state: "soon",
+        badge: "Coming soon",
+        muted: true,
+      },
+      {
+        id: "training",
+        title: "Safeguard training",
+        sub:   "Four short modules on why we protect and how it works. Tracking is coming in a future phase — you can read the training materials now from the Hub.",
+        icon:  ICON_DOC,
+        state: "soon",
+        badge: "Coming soon",
+        muted: true,
+      },
+    ];
+  }
+
+  // ── Render a single step card ──
+  function renderStep(s) {
+    const el = document.createElement("div");
+    el.className = "step" + (s.muted ? " muted" : "");
+    const iconCls = s.state === "done" ? "step-icon done" : "step-icon";
+    const icon = s.state === "done" ? ICON_CHECK : s.icon;
+    const badgeCls = s.state === "done" ? "badge done"
+                    : s.state === "next" ? "badge required"
+                    : "badge soon";
+    const actionHtml = s.action
+      ? '<a class="step-action" href="' + s.action.href + '">' + s.action.label + '</a>'
+      : '';
+    el.innerHTML = ''
+      + '<div class="' + iconCls + '">' + icon + '</div>'
+      + '<div class="step-body">'
+      +   '<div class="step-head">'
+      +     '<div class="step-title">' + s.title + '</div>'
+      +     '<span class="' + badgeCls + '">' + s.badge + '</span>'
+      +   '</div>'
+      +   '<div class="step-sub">' + s.sub + '</div>'
+      +   actionHtml
+      + '</div>';
+    return el;
+  }
+
+  // ── Sign out ──
+  signoutBtn.addEventListener("click", async () => {
+    signoutBtn.disabled = true;
+    try {
+      await signOutUser();
+      location.replace("sign-in.html");
+    } catch (_) {
+      signoutBtn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your profile — Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.55;
+       min-height:100vh;display:flex;flex-direction:column}
+
+  /* ── Header with user pill ── */
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+       border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .user-pill{background:rgba(255,255,255,0.08);color:var(--white);padding:6px 14px;
+             border-radius:16px;font-size:12px;font-weight:500;display:flex;gap:10px;align-items:center}
+  .user-pill .dot{width:4px;height:4px;border-radius:50%;background:var(--gold-warm)}
+
+  /* ── Page layout ── */
+  .page{flex:1;padding:40px 24px 80px}
+  .wrap{max-width:720px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:36px;color:var(--navy);font-weight:400;
+     line-height:1.1;margin-bottom:10px}
+  .lede{font-size:15px;color:var(--muted);margin-bottom:28px;max-width:560px}
+
+  /* ── Card ── */
+  .card{background:var(--white);border:1.5px solid var(--border);
+        border-radius:14px;padding:32px 36px;box-shadow:0 4px 24px rgba(0,0,0,0.04);
+        margin-bottom:18px}
+  .section-head{font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--gold);
+                text-transform:uppercase;margin-bottom:4px}
+  .section-title{font-family:var(--serif);font-size:22px;color:var(--navy);font-weight:400;
+                 margin-bottom:18px}
+
+  /* ── Form ── */
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);
+        letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+  .opt{font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0;margin-left:6px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
+      font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);
+      transition:border-color var(--transition),box-shadow var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  .fi[aria-invalid="true"]{border-color:var(--error)}
+  textarea.fi{min-height:100px;resize:vertical;font-family:var(--sans)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .row-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;margin-bottom:14px}
+  .row-addr{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;margin-bottom:14px}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  @media (max-width:600px){.row,.row-3,.row-addr{grid-template-columns:1fr}}
+
+  /* ── Checkbox pills (for age groups / service times) ── */
+  .pills{display:flex;flex-wrap:wrap;gap:10px}
+  .pill{position:relative;cursor:pointer}
+  .pill input{position:absolute;opacity:0;pointer-events:none}
+  .pill span{display:inline-flex;padding:10px 16px;border:1.5px solid var(--border);
+             border-radius:24px;font-size:13px;font-weight:600;background:var(--white);
+             color:var(--body);transition:all var(--transition);user-select:none}
+  .pill:hover span{border-color:var(--gold-warm)}
+  .pill input:checked + span{background:var(--teal);border-color:var(--teal);color:var(--white)}
+  .pill input:focus-visible + span{box-shadow:0 0 0 3px rgba(46,107,127,0.2)}
+
+  /* ── Buttons ── */
+  .actions{display:flex;gap:12px;align-items:center;margin-top:24px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+       padding:13px 26px;border:none;border-radius:8px;font-family:var(--sans);
+       font-size:15px;font-weight:700;cursor:pointer;transition:all var(--transition)}
+  .btn-primary{background:var(--navy);color:var(--white);
+               box-shadow:0 2px 8px rgba(27,58,75,0.25)}
+  .btn-primary:hover:not(:disabled){background:var(--teal)}
+  .btn-primary:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+
+  /* ── Messages & spinner ── */
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:16px;display:none}
+  .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+  .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;
+        border-radius:50%;animation:spin 0.7s linear infinite;display:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .btn.loading .spin{display:inline-block}
+  .btn.loading .label{opacity:0.7}
+
+  /* ── Loading skeleton ── */
+  .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
+
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html" aria-label="Safeguard Hub home">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <div class="user-pill" id="userPill" style="display:none">
+      <span id="userName">—</span><span class="dot"></span><span id="userStatus">In-process</span>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- Loading state while we fetch profile -->
+  <div class="wrap" id="loadingState">
+    <div class="loading-state">Loading your profile…</div>
+  </div>
+
+  <!-- Form (hidden until profile loaded) -->
+  <div class="wrap" id="formWrap" style="display:none">
+    <div class="eyebrow">Step 3 of 4 · About you</div>
+    <h1>Tell us about yourself</h1>
+    <div class="lede">This goes into your Bethany Chapel record. You only enter it once — every form uses this data.</div>
+
+    <form id="form" novalidate>
+
+      <!-- ── Personal information ── -->
+      <div class="card">
+        <div class="section-head">Personal information</div>
+        <div class="section-title">Who you are</div>
+
+        <div class="row">
+          <div class="field">
+            <label for="firstName">First name</label>
+            <input type="text" id="firstName" class="fi" autocomplete="given-name" required>
+          </div>
+          <div class="field">
+            <label for="lastName">Last name</label>
+            <input type="text" id="lastName" class="fi" autocomplete="family-name" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="preferredName">Preferred name <span class="opt">— optional, what you'd like to be called</span></label>
+          <input type="text" id="preferredName" class="fi" autocomplete="nickname">
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="dob">Date of birth</label>
+            <input type="date" id="dob" class="fi" autocomplete="bday" required>
+          </div>
+          <div class="field">
+            <label for="phone">Phone (cell)</label>
+            <input type="tel" id="phone" class="fi" autocomplete="tel" required placeholder="250-555-0142">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="street">Street address</label>
+          <input type="text" id="street" class="fi" autocomplete="street-address" required placeholder="2141 Quadra St">
+        </div>
+
+        <div class="row-addr">
+          <div class="field">
+            <label for="city">City</label>
+            <input type="text" id="city" class="fi" autocomplete="address-level2" required>
+          </div>
+          <div class="field">
+            <label for="province">Province</label>
+            <input type="text" id="province" class="fi" autocomplete="address-level1" required placeholder="BC">
+          </div>
+          <div class="field">
+            <label for="postal">Postal code</label>
+            <input type="text" id="postal" class="fi" autocomplete="postal-code" required placeholder="V8T 4C7">
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Emergency contact ── -->
+      <div class="card">
+        <div class="section-head">Emergency contact</div>
+        <div class="section-title">Who we should call if something happens</div>
+
+        <div class="row">
+          <div class="field">
+            <label for="ecName">Full name</label>
+            <input type="text" id="ecName" class="fi" required>
+          </div>
+          <div class="field">
+            <label for="ecPhone">Phone</label>
+            <input type="tel" id="ecPhone" class="fi" required placeholder="250-555-0000">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="ecRel">Relationship to you</label>
+          <input type="text" id="ecRel" class="fi" required placeholder="Spouse · Parent · Sibling · Friend">
+        </div>
+      </div>
+
+      <!-- ── Ministry preferences ── -->
+      <div class="card">
+        <div class="section-head">Serving preferences</div>
+        <div class="section-title">Where you'd like to help</div>
+
+        <div class="field">
+          <label>Which age groups are you open to serving?</label>
+          <div class="pills" role="group" aria-label="Age groups">
+            <label class="pill"><input type="checkbox" value="nursery"    name="ageGroups"><span>Nursery (0–2)</span></label>
+            <label class="pill"><input type="checkbox" value="preschool"  name="ageGroups"><span>Preschool (3–5)</span></label>
+            <label class="pill"><input type="checkbox" value="elementary" name="ageGroups"><span>Elementary (K–5)</span></label>
+            <label class="pill"><input type="checkbox" value="preteen"    name="ageGroups"><span>Preteen (6–8)</span></label>
+            <label class="pill"><input type="checkbox" value="youth"      name="ageGroups"><span>Youth (9–12)</span></label>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:20px">
+          <label>Which service times work for you?</label>
+          <div class="pills" role="group" aria-label="Service times">
+            <label class="pill"><input type="checkbox" value="9am"      name="serviceTimes"><span>Sunday 9am</span></label>
+            <label class="pill"><input type="checkbox" value="11am"     name="serviceTimes"><span>Sunday 11am</span></label>
+            <label class="pill"><input type="checkbox" value="wed-pm"   name="serviceTimes"><span>Wednesday PM</span></label>
+            <label class="pill"><input type="checkbox" value="special"  name="serviceTimes"><span>Special events</span></label>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:20px">
+          <label for="testimony">Briefly, what's your faith story? <span class="opt">— a paragraph is plenty</span></label>
+          <textarea id="testimony" class="fi" placeholder="How you came to follow Jesus, and what He's been teaching you lately…"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="attendingSince">How long have you attended Bethany Chapel?</label>
+          <input type="text" id="attendingSince" class="fi" required placeholder="e.g., 2 years · Since 2022 · Just visiting">
+        </div>
+      </div>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary" id="submit">
+          <span class="spin"></span><span class="label">Continue →</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="saveLater">Save &amp; finish later</button>
+      </div>
+
+    </form>
+  </div>
+
+</main>
+
+<footer>Safeguard Framework · Bethany Chapel</footer>
+
+<script type="module">
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile, saveProfile, displayName, roleLabel } from "./sg-profile.js";
+
+  const loadingState = document.getElementById("loadingState");
+  const formWrap     = document.getElementById("formWrap");
+  const userPill     = document.getElementById("userPill");
+  const userName     = document.getElementById("userName");
+  const userStatus   = document.getElementById("userStatus");
+  const form         = document.getElementById("form");
+  const submit       = document.getElementById("submit");
+  const saveLater    = document.getElementById("saveLater");
+  const msg          = document.getElementById("msg");
+
+  // ── Required fields for "Continue" (finishing the profile) ──
+  const REQUIRED = [
+    "firstName","lastName","dob","phone",
+    "street","city","province","postal",
+    "ecName","ecPhone","ecRel","attendingSince"
+  ];
+
+  // ── Gate: need a verified, signed-in user ──
+  onUserChange(async user => {
+    if (!user) { location.replace("sign-in.html?next=profile-setup.html"); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+
+    // Load existing profile (or create a stub) and prefill the form.
+    try {
+      const profile = await getOrCreateProfile();
+      prefill(profile);
+
+      // Header user pill
+      userName.textContent = displayName(profile) || (user.email || "");
+      userStatus.textContent = roleLabel(profile) || "In-process";
+      userPill.style.display = "flex";
+
+      // Flip loading → form
+      loadingState.style.display = "none";
+      formWrap.style.display = "block";
+    } catch (err) {
+      loadingState.textContent = "Couldn't load your profile. " + (err.message || "");
+    }
+  });
+
+  // ── Read form values into a plain profile object ──
+  function readForm() {
+    const ageGroups    = [...document.querySelectorAll('input[name="ageGroups"]:checked')].map(i => i.value);
+    const serviceTimes = [...document.querySelectorAll('input[name="serviceTimes"]:checked')].map(i => i.value);
+    return {
+      firstName:      v("firstName"),
+      lastName:       v("lastName"),
+      preferredName:  v("preferredName"),
+      dob:            v("dob"),
+      phone:          v("phone"),
+      address: { street: v("street"), city: v("city"), province: v("province"), postal: v("postal") },
+      emergencyContact: { name: v("ecName"), phone: v("ecPhone"), relationship: v("ecRel") },
+      ageGroups,
+      serviceTimes,
+      testimony:      v("testimony"),
+      attendingSince: v("attendingSince"),
+    };
+  }
+  function v(id) { return document.getElementById(id).value.trim(); }
+
+  // ── Prefill the form from an existing profile ──
+  function prefill(p) {
+    if (!p) return;
+    setv("firstName",     p.firstName);
+    setv("lastName",      p.lastName);
+    setv("preferredName", p.preferredName);
+    setv("dob",           p.dob);
+    setv("phone",         p.phone);
+    if (p.address) {
+      setv("street",   p.address.street);
+      setv("city",     p.address.city);
+      setv("province", p.address.province);
+      setv("postal",   p.address.postal);
+    }
+    if (p.emergencyContact) {
+      setv("ecName",  p.emergencyContact.name);
+      setv("ecPhone", p.emergencyContact.phone);
+      setv("ecRel",   p.emergencyContact.relationship);
+    }
+    (p.ageGroups || []).forEach(val => {
+      const cb = document.querySelector('input[name="ageGroups"][value="' + val + '"]');
+      if (cb) cb.checked = true;
+    });
+    (p.serviceTimes || []).forEach(val => {
+      const cb = document.querySelector('input[name="serviceTimes"][value="' + val + '"]');
+      if (cb) cb.checked = true;
+    });
+    setv("testimony",      p.testimony);
+    setv("attendingSince", p.attendingSince);
+  }
+  function setv(id, val) { if (val) document.getElementById(id).value = val; }
+
+  // ── Messages ──
+  function showMsg(text, kind) {
+    msg.textContent = text;
+    msg.className = "msg " + kind;
+  }
+  function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
+  function clearInvalid() {
+    document.querySelectorAll('[aria-invalid="true"]').forEach(el => el.removeAttribute("aria-invalid"));
+  }
+
+  // ── Save and continue (full validation) ──
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearMsg();
+    clearInvalid();
+
+    const data = readForm();
+
+    // Required-field check
+    const missing = [];
+    REQUIRED.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) { el.setAttribute("aria-invalid","true"); missing.push(id); }
+    });
+    if (missing.length) {
+      showMsg("Please fill in every required field before continuing. (You can use “Save & finish later” to come back.)", "err");
+      document.getElementById(missing[0]).focus();
+      return;
+    }
+
+    submit.classList.add("loading");
+    submit.disabled = true;
+    try {
+      await saveProfile({ ...data, profileComplete: true });
+      location.replace("dashboard.html");
+    } catch (err) {
+      showMsg("Couldn't save your profile. " + (err.message || "Please try again."), "err");
+      submit.classList.remove("loading");
+      submit.disabled = false;
+    }
+  });
+
+  // ── Save and come back later (no validation) ──
+  saveLater.addEventListener("click", async () => {
+    clearMsg();
+    clearInvalid();
+    saveLater.disabled = true;
+    try {
+      // Do NOT mark profileComplete. We want them back on this page next time.
+      await saveProfile({ ...readForm(), profileComplete: false });
+      showMsg("Saved. You can finish any time — we'll pick up right here.", "ok");
+    } catch (err) {
+      showMsg("Couldn't save. " + (err.message || "Please try again."), "err");
+    }
+    saveLater.disabled = false;
+  });
+</script>
+
+</body>
+</html>

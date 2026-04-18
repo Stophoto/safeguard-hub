@@ -138,11 +138,12 @@ GitHub until we finish Phase 2 so you aren't deploying a half-built system.
 
 ## What's coming next
 
-### Phase 2 — Profile + volunteer dashboard
+### Phase 2 — Profile + volunteer dashboard  ✅ built
 - New pages: `profile-setup.html`, `dashboard.html`
 - Firestore starts holding `users/{uid}` documents with personal info,
   emergency contact, ministry preferences (age groups, service times)
-- First Firestore Security Rules added
+- First Firestore Security Rules added (see `firestore.rules`)
+- See "Phase 2 deploy" section below for upload + rules publish steps
 
 ### Phase 3 — Admin / coordinator
 - New pages: `admin.html`, `invite.html`
@@ -162,4 +163,78 @@ GitHub until we finish Phase 2 so you aren't deploying a half-built system.
 
 ---
 
-*Last updated: April 2026 · Phase 1 complete*
+---
+
+## Phase 2 deploy — do these in order
+
+### Step 1 — Upload the new files to GitHub
+
+On github.com, make sure you're on the `auth-feature` branch of the
+`safeguard-hub` repo.
+
+1. Click **Add file → Upload files**.
+2. From your Mac's `safeguard-hub-main` folder, upload these 4 new files:
+   - `sg-profile.js`
+   - `profile-setup.html`
+   - `dashboard.html`
+   - `firestore.rules`
+3. Also re-upload these 3 files that I edited (same names, new content — GitHub will offer to replace):
+   - `sign-in.html`
+   - `verify-email.html`
+   - `FIREBASE-SETUP.md`
+4. Commit message: `Phase 2: profile setup, dashboard, Firestore rules`
+5. Commit directly to `auth-feature`.
+
+Wait for the Actions tab to show a green checkmark on the latest
+`pages build and deployment` run before testing.
+
+### Step 2 — Publish the Firestore Security Rules
+
+Uploading `firestore.rules` to GitHub does NOT apply it to Firestore.
+Firestore rules live inside Firebase, not your site. You have to paste
+them in once.
+
+1. Open `firestore.rules` on your Mac (or on GitHub) and **copy its
+   entire contents**.
+2. Go to https://console.firebase.google.com/project/safeguard-hub-71292/firestore/rules
+3. You'll see a code editor with the default rules. **Select all** and
+   **paste** the contents of `firestore.rules` in, replacing what's there.
+4. Click the blue **Publish** button at the top right.
+5. A confirmation dialog appears — click **Publish**.
+6. Within a few seconds, your rules are live. 🔒
+
+### Step 3 — Test the full Phase 2 flow
+
+Use a fresh incognito window.
+
+**New account path:**
+1. Delete your existing test account from
+   https://console.firebase.google.com/project/safeguard-hub-71292/authentication/users
+   (hover row → ⋮ → Delete account).
+2. Go to https://stophoto.github.io/safeguard-hub/sign-up.html and sign up
+   again with `prefontainech@gmail.com`.
+3. Verify the email (check junk).
+4. You should land on `profile-setup.html` — fill it out.
+5. Click **Continue →** → you land on `dashboard.html`.
+6. You should see "Welcome back, [your first name]" with a progress bar.
+
+**Existing-account path:**
+1. Sign out (button on the dashboard top-right).
+2. Sign back in at `sign-in.html`.
+3. You should land back on `dashboard.html` directly — not the profile form again.
+
+### Step 4 — Confirm data was saved
+
+1. Go to https://console.firebase.google.com/project/safeguard-hub-71292/firestore/data
+2. You should see a `users` collection.
+3. Click into it. You'll see one document — the ID is your Firebase user
+   ID (a long string). Click into that document.
+4. You should see all the fields from the form: `firstName`, `lastName`,
+   `dob`, `address`, `emergencyContact`, `ageGroups`, `serviceTimes`, etc.
+5. Note the `role: "volunteer"` field — this is how Phase 3's admin
+   panel will know you're not a Coordinator yet. We'll fix that in the
+   next phase.
+
+---
+
+*Last updated: April 2026 · Phase 2 complete*

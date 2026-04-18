@@ -129,6 +129,7 @@
 
 <script type="module">
   import { signIn, onUserChange, friendlyError } from "./sg-auth.js";
+  import { getOrCreateProfile, routeAfterLogin } from "./sg-profile.js";
 
   const form   = document.getElementById("form");
   const email  = document.getElementById("email");
@@ -136,14 +137,24 @@
   const msg    = document.getElementById("msg");
   const submit = document.getElementById("submit");
 
-  // If already signed in, skip the form and go to the destination.
-  // Supports ?next=/some-page.html — used when a protected page bounces
-  // an anonymous user here and wants to send them back after login.
+  // If already signed in, skip the form and route the user.
+  // ?next=/some-page.html wins when set (used by protected pages
+  // that bounce anonymous users here). Otherwise we route based
+  // on profile state: incomplete → profile-setup, complete → dashboard.
   const params = new URLSearchParams(location.search);
-  const NEXT = params.get("next") || "index.html";
+  const NEXT = params.get("next");
 
-  onUserChange(user => {
-    if (user) location.replace(NEXT);
+  onUserChange(async user => {
+    if (!user) return;
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    if (NEXT) { location.replace(NEXT); return; }
+    try {
+      const profile = await getOrCreateProfile();
+      location.replace(routeAfterLogin(profile));
+    } catch (_) {
+      // If profile lookup fails, fall back to dashboard (it'll reroute).
+      location.replace("dashboard.html");
+    }
   });
 
   function showError(text) {
