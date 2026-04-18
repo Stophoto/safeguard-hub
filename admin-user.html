@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User detail — Admin · Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.55;
+       min-height:100vh;display:flex;flex-direction:column}
+
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+       border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;
+            padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:900px;margin:0 auto}
+  .crumb{font-size:13px;color:var(--muted);margin-bottom:16px}
+  .crumb a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:36px;color:var(--navy);font-weight:400;
+     line-height:1.1;margin-bottom:8px}
+  .sub{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:24px}
+  .sub .email{font-size:14px;color:var(--body);font-weight:500;background:var(--sand);
+              padding:4px 10px;border-radius:6px}
+  .sub .uid{font-size:11px;color:var(--muted);font-family:ui-monospace,monospace}
+
+  .card{background:var(--white);border:1.5px solid var(--border);
+        border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);
+        margin-bottom:16px}
+  .section-head{font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--gold);
+                text-transform:uppercase;margin-bottom:4px}
+  .section-title{font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;
+                 margin-bottom:16px}
+
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);
+        letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+  .opt{font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0;margin-left:6px}
+  .fi{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;
+      font-family:var(--sans);font-size:14px;color:var(--body);background:var(--white);
+      transition:border-color var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  .fi:disabled{background:var(--sand);color:var(--muted)}
+  textarea.fi{min-height:90px;resize:vertical;font-family:var(--sans)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  .row-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-bottom:12px}
+  .field{margin-bottom:12px}
+  @media (max-width:600px){.row,.row-3{grid-template-columns:1fr}}
+
+  .pills{display:flex;flex-wrap:wrap;gap:8px}
+  .pill{position:relative;cursor:pointer}
+  .pill input{position:absolute;opacity:0;pointer-events:none}
+  .pill span{display:inline-flex;padding:8px 14px;border:1.5px solid var(--border);
+             border-radius:22px;font-size:12px;font-weight:600;background:var(--white);
+             color:var(--body);user-select:none}
+  .pill:hover span{border-color:var(--gold-warm)}
+  .pill input:checked + span{background:var(--teal);border-color:var(--teal);color:var(--white)}
+
+  .actions{display:flex;gap:10px;align-items:center;margin-top:22px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+       padding:12px 22px;border:none;border-radius:8px;font-family:var(--sans);
+       font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);
+       text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover:not(:disabled){background:var(--teal)}
+  .btn-primary:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:16px;display:none}
+  .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+
+  .meta{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.8}
+  .meta b{color:var(--navy);font-weight:600;font-family:var(--sans)}
+
+  .self-note{background:var(--warn-bg,#FFF5E6);border:1px solid rgba(176,122,30,0.2);
+             border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#8B5E14}
+
+  .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
+
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="admin.html">← Admin</a>
+    <a class="nav-link" href="dashboard.html">Dashboard</a>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="wrap" id="loadingState">
+    <div class="loading-state">Loading user…</div>
+  </div>
+
+  <div class="wrap" id="missingState" style="display:none">
+    <div class="crumb"><a href="admin.html">Admin</a> &rsaquo; User not found</div>
+    <h1>User not found</h1>
+    <p class="lede" style="color:var(--muted);font-size:14px;margin-bottom:20px">
+      No profile exists at that ID. The user may have been deleted, or the link may be stale.
+    </p>
+    <a class="btn btn-primary" href="admin.html">← Back to Admin</a>
+  </div>
+
+  <div class="wrap" id="view" style="display:none">
+    <div class="crumb"><a href="admin.html">Admin</a> &rsaquo; <span id="crumbName">User</span></div>
+    <div class="eyebrow">User detail</div>
+    <h1 id="fullName">—</h1>
+    <div class="sub">
+      <span class="email" id="email">—</span>
+      <span class="uid" id="uid">—</span>
+    </div>
+
+    <div id="selfNote" class="self-note" style="display:none">
+      You're editing your own profile. To change your own role or status, use Firestore console directly — the dropdowns below are locked as a safety net.
+    </div>
+
+    <form id="form" novalidate>
+
+      <!-- Role & Status -->
+      <div class="card">
+        <div class="section-head">Access</div>
+        <div class="section-title">Role &amp; status</div>
+        <div class="row">
+          <div class="field">
+            <label for="role">Role</label>
+            <select id="role" class="fi">
+              <option value="volunteer">Volunteer</option>
+              <option value="leader">Leader</option>
+              <option value="coordinator">Coordinator</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="status">Status</label>
+            <select id="status" class="fi">
+              <option value="in-process">In-process</option>
+              <option value="active">Active</option>
+              <option value="paused">Paused</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal -->
+      <div class="card">
+        <div class="section-head">Personal information</div>
+        <div class="section-title">Who they are</div>
+        <div class="row">
+          <div class="field"><label for="firstName">First name</label><input id="firstName" class="fi"></div>
+          <div class="field"><label for="lastName">Last name</label><input id="lastName" class="fi"></div>
+        </div>
+        <div class="field"><label for="preferredName">Preferred name <span class="opt">— optional</span></label><input id="preferredName" class="fi"></div>
+        <div class="row">
+          <div class="field"><label for="dob">Date of birth</label><input id="dob" type="date" class="fi"></div>
+          <div class="field"><label for="phone">Phone</label><input id="phone" type="tel" class="fi"></div>
+        </div>
+        <div class="field"><label for="street">Street address</label><input id="street" class="fi"></div>
+        <div class="row-3">
+          <div class="field"><label for="city">City</label><input id="city" class="fi"></div>
+          <div class="field"><label for="province">Province</label><input id="province" class="fi"></div>
+          <div class="field"><label for="postal">Postal code</label><input id="postal" class="fi"></div>
+        </div>
+      </div>
+
+      <!-- Emergency contact -->
+      <div class="card">
+        <div class="section-head">Emergency contact</div>
+        <div class="section-title">Who to call</div>
+        <div class="row">
+          <div class="field"><label for="ecName">Full name</label><input id="ecName" class="fi"></div>
+          <div class="field"><label for="ecPhone">Phone</label><input id="ecPhone" type="tel" class="fi"></div>
+        </div>
+        <div class="field"><label for="ecRel">Relationship</label><input id="ecRel" class="fi"></div>
+      </div>
+
+      <!-- Ministry prefs -->
+      <div class="card">
+        <div class="section-head">Serving preferences</div>
+        <div class="section-title">Where they'd like to help</div>
+        <div class="field">
+          <label>Age groups</label>
+          <div class="pills">
+            <label class="pill"><input type="checkbox" value="nursery"    name="ageGroups"><span>Nursery (0–2)</span></label>
+            <label class="pill"><input type="checkbox" value="preschool"  name="ageGroups"><span>Preschool (3–5)</span></label>
+            <label class="pill"><input type="checkbox" value="elementary" name="ageGroups"><span>Elementary (K–5)</span></label>
+            <label class="pill"><input type="checkbox" value="preteen"    name="ageGroups"><span>Preteen (6–8)</span></label>
+            <label class="pill"><input type="checkbox" value="youth"      name="ageGroups"><span>Youth (9–12)</span></label>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px">
+          <label>Service times</label>
+          <div class="pills">
+            <label class="pill"><input type="checkbox" value="9am"     name="serviceTimes"><span>Sunday 9am</span></label>
+            <label class="pill"><input type="checkbox" value="11am"    name="serviceTimes"><span>Sunday 11am</span></label>
+            <label class="pill"><input type="checkbox" value="wed-pm"  name="serviceTimes"><span>Wednesday PM</span></label>
+            <label class="pill"><input type="checkbox" value="special" name="serviceTimes"><span>Special events</span></label>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px">
+          <label for="testimony">Faith story</label>
+          <textarea id="testimony" class="fi"></textarea>
+        </div>
+        <div class="field">
+          <label for="attendingSince">Attending since</label>
+          <input id="attendingSince" class="fi">
+        </div>
+      </div>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary" id="saveBtn">Save changes</button>
+        <a class="btn btn-secondary" href="admin.html">Cancel</a>
+      </div>
+
+      <div class="meta">
+        <div><b>Profile complete:</b> <span id="metaComplete">—</span></div>
+        <div><b>Created:</b> <span id="metaCreated">—</span></div>
+        <div><b>Last updated:</b> <span id="metaUpdated">—</span></div>
+      </div>
+
+    </form>
+  </div>
+
+</main>
+
+<footer>Safeguard Framework · Bethany Chapel</footer>
+
+<script type="module">
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile } from "./sg-profile.js";
+  import { loadUser, updateUserProfile } from "./sg-admin.js";
+
+  const loadingState = document.getElementById("loadingState");
+  const missingState = document.getElementById("missingState");
+  const view         = document.getElementById("view");
+  const crumbName    = document.getElementById("crumbName");
+  const fullName     = document.getElementById("fullName");
+  const emailEl      = document.getElementById("email");
+  const uidEl        = document.getElementById("uid");
+  const selfNote     = document.getElementById("selfNote");
+  const form         = document.getElementById("form");
+  const saveBtn      = document.getElementById("saveBtn");
+  const msg          = document.getElementById("msg");
+  const metaComplete = document.getElementById("metaComplete");
+  const metaCreated  = document.getElementById("metaCreated");
+  const metaUpdated  = document.getElementById("metaUpdated");
+
+  const params = new URLSearchParams(location.search);
+  const TARGET_UID = params.get("uid");
+
+  let isSelf = false;
+
+  // ── Gate: coordinator + valid uid ───────────────────────
+  onUserChange(async user => {
+    if (!user) { location.replace("sign-in.html?next=" + encodeURIComponent("admin-user.html?uid=" + (TARGET_UID||""))); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    if (!TARGET_UID) { location.replace("admin.html"); return; }
+
+    try {
+      const me = await getOrCreateProfile();
+      if (me.role !== "coordinator") { location.replace("dashboard.html"); return; }
+      isSelf = (user.uid === TARGET_UID);
+
+      const target = await loadUser(TARGET_UID);
+      if (!target) {
+        loadingState.style.display = "none";
+        missingState.style.display = "block";
+        return;
+      }
+
+      render(target);
+      loadingState.style.display = "none";
+      view.style.display = "block";
+    } catch (err) {
+      loadingState.textContent = "Couldn't load this user. " + (err.message || "");
+    }
+  });
+
+  function render(u) {
+    const name = [u.firstName, u.lastName].filter(Boolean).join(" ") || "(no name yet)";
+    fullName.textContent = name;
+    crumbName.textContent = name;
+    emailEl.textContent = u.email || "(no email on record)";
+    uidEl.textContent = u.id;
+
+    setv("role", u.role || "volunteer");
+    setv("status", u.status || "in-process");
+    if (isSelf) {
+      document.getElementById("role").disabled = true;
+      document.getElementById("status").disabled = true;
+      selfNote.style.display = "block";
+    }
+
+    setv("firstName",     u.firstName);
+    setv("lastName",      u.lastName);
+    setv("preferredName", u.preferredName);
+    setv("dob",           u.dob);
+    setv("phone",         u.phone);
+    if (u.address) {
+      setv("street",   u.address.street);
+      setv("city",     u.address.city);
+      setv("province", u.address.province);
+      setv("postal",   u.address.postal);
+    }
+    if (u.emergencyContact) {
+      setv("ecName",  u.emergencyContact.name);
+      setv("ecPhone", u.emergencyContact.phone);
+      setv("ecRel",   u.emergencyContact.relationship);
+    }
+    (u.ageGroups || []).forEach(v => check("ageGroups", v));
+    (u.serviceTimes || []).forEach(v => check("serviceTimes", v));
+    setv("testimony",      u.testimony);
+    setv("attendingSince", u.attendingSince);
+
+    metaComplete.textContent = u.profileComplete ? "Yes" : "No";
+    metaCreated.textContent  = fmt(u.createdAt);
+    metaUpdated.textContent  = fmt(u.updatedAt);
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearMsg();
+    const updates = readForm();
+    if (isSelf) { delete updates.role; delete updates.status; }
+    saveBtn.disabled = true;
+    try {
+      await updateUserProfile(TARGET_UID, updates);
+      showMsg("Saved.", "ok");
+      setTimeout(() => { clearMsg(); }, 3000);
+    } catch (err) {
+      showMsg("Couldn't save. " + (err.message || "Please try again."), "err");
+    }
+    saveBtn.disabled = false;
+  });
+
+  function readForm() {
+    const ageGroups    = [...document.querySelectorAll('input[name="ageGroups"]:checked')].map(i=>i.value);
+    const serviceTimes = [...document.querySelectorAll('input[name="serviceTimes"]:checked')].map(i=>i.value);
+    return {
+      role:   v("role"),
+      status: v("status"),
+      firstName:     v("firstName"),
+      lastName:      v("lastName"),
+      preferredName: v("preferredName"),
+      dob:           v("dob"),
+      phone:         v("phone"),
+      address: { street: v("street"), city: v("city"), province: v("province"), postal: v("postal") },
+      emergencyContact: { name: v("ecName"), phone: v("ecPhone"), relationship: v("ecRel") },
+      ageGroups, serviceTimes,
+      testimony:      v("testimony"),
+      attendingSince: v("attendingSince"),
+    };
+  }
+  function v(id) { return document.getElementById(id).value.trim ? document.getElementById(id).value.trim() : document.getElementById(id).value; }
+  function setv(id, val) { if (val != null) document.getElementById(id).value = val; }
+  function check(name, val) {
+    const cb = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
+    if (cb) cb.checked = true;
+  }
+  function showMsg(text, kind) { msg.textContent = text; msg.className = "msg " + kind; }
+  function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
+  function fmt(ts) {
+    if (!ts) return "—";
+    const d = ts.toDate ? ts.toDate() : (ts instanceof Date ? ts : null);
+    return d ? d.toLocaleString() : "—";
+  }
+</script>
+
+</body>
+</html>

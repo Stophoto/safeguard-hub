@@ -24,6 +24,7 @@ import { auth, db } from "./sg-firebase.js";
 // populated by later phases.
 function newProfile() {
   return {
+    email:  "",              // filled from Firebase Auth at create-time
     role:   "volunteer",     // volunteer | leader | coordinator
     status: "in-process",    // in-process | active | paused | inactive
 
@@ -55,17 +56,25 @@ function newProfile() {
 // ── Get or create the current user's profile ────────────────
 // First time a user signs in, this creates a default stub.
 // Every subsequent call just reads the existing document.
+// Also backfills email onto older profiles that predate the
+// `email` field.
 export async function getOrCreateProfile() {
   const user = auth.currentUser;
   if (!user) throw new Error("Not signed in.");
   const ref = doc(db, "users", user.uid);
   const snap = await getDoc(ref);
   if (!snap.exists()) {
-    const data = newProfile();
+    const data = { ...newProfile(), email: user.email || "" };
     await setDoc(ref, data);
     return { id: user.uid, ...data };
   }
-  return { id: user.uid, ...snap.data() };
+  const data = snap.data();
+  // Backfill email if missing (for profiles created before we added the field).
+  if (!data.email && user.email) {
+    await setDoc(ref, { email: user.email }, { merge: true });
+    data.email = user.email;
+  }
+  return { id: user.uid, ...data };
 }
 
 // ── Load the current user's profile without creating it ─────

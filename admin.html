@@ -151,6 +151,7 @@
 
     <div class="actions">
       <a class="btn btn-primary" href="invite.html">+ Send invite</a>
+      <button class="btn btn-secondary" id="exportBtn">Export CSV</button>
       <button class="btn btn-secondary" id="refreshBtn">Refresh</button>
     </div>
 
@@ -167,7 +168,7 @@
 <script type="module">
   import { onUserChange, signOutUser } from "./sg-auth.js";
   import { getOrCreateProfile, displayName } from "./sg-profile.js";
-  import { listUsers, setUserRole, setUserStatus, summarizeUsers } from "./sg-admin.js";
+  import { listUsers, setUserRole, setUserStatus, summarizeUsers, usersToCsv, downloadCsv } from "./sg-admin.js";
 
   const loadingState = document.getElementById("loadingState");
   const accessDenied = document.getElementById("accessDenied");
@@ -181,6 +182,7 @@
   const statLeaders    = document.getElementById("statLeaders");
   const statRenewal    = document.getElementById("statRenewal");
   const refreshBtn   = document.getElementById("refreshBtn");
+  const exportBtn    = document.getElementById("exportBtn");
   const tableWrap    = document.getElementById("tableWrap");
   const signoutBtn   = document.getElementById("signoutBtn");
   const msg          = document.getElementById("msg");
@@ -240,6 +242,7 @@
       +     '<th>Role</th>'
       +     '<th>Status</th>'
       +     '<th>Joined</th>'
+      +     '<th></th>'
       +   '</tr></thead>'
       +   '<tbody>' + rows + '</tbody>'
       + '</table>';
@@ -279,14 +282,17 @@
     // Don't let a Coordinator demote themselves — disable role picker for own row
     const roleDisabled = isMe ? " disabled title=\"You can't change your own role\"" : "";
 
+    const emailLabel = u.email || u.preferredName || "";
+
     return '<tr data-uid="' + u.id + '">'
       + '<td>'
       +   '<div class="name">' + escapeHtml(fullName) + (isMe ? ' <small style="color:var(--muted);font-weight:500">(you)</small>' : '') + '</div>'
-      +   '<span class="email">' + escapeHtml(u.preferredName || "") + '</span>'
+      +   '<span class="email">' + escapeHtml(emailLabel) + '</span>'
       + '</td>'
       + '<td><select class="role-picker"' + roleDisabled + ' data-uid="' + u.id + '">' + roleOptions + '</select></td>'
       + '<td><select class="status-picker" data-uid="' + u.id + '">' + statusOptions + '</select> <span class="badge ' + statusBadgeCls + '" style="margin-left:6px">' + statusLabel + '</span></td>'
       + '<td style="color:var(--muted);font-size:13px">' + joined + '</td>'
+      + '<td style="text-align:right"><a href="admin-user.html?uid=' + u.id + '" style="color:var(--teal);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);font-size:13px">Open →</a></td>'
       + '</tr>';
   }
 
@@ -323,6 +329,21 @@
   refreshBtn.addEventListener("click", async () => {
     refreshBtn.disabled = true;
     try { await loadAndRender(); } finally { refreshBtn.disabled = false; }
+  });
+
+  exportBtn.addEventListener("click", async () => {
+    clearMsg();
+    exportBtn.disabled = true;
+    try {
+      const users = await listUsers();
+      const csv = usersToCsv(users);
+      const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      downloadCsv("safeguard-people-" + today + ".csv", csv);
+      showMsg("Downloaded " + users.length + " profile" + (users.length === 1 ? "" : "s") + " to your Downloads folder.", "ok");
+    } catch (err) {
+      showMsg("Couldn't export. " + (err.message || ""), "err");
+    }
+    exportBtn.disabled = false;
   });
 
   signoutBtn.addEventListener("click", async () => {

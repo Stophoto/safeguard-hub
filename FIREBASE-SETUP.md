@@ -339,4 +339,45 @@ Back at https://stophoto.github.io/safeguard-hub/dashboard.html:
 
 ---
 
-*Last updated: April 2026 · Phase 3 complete*
+---
+
+## Phase 3.5 deploy — user detail + CSV export
+
+A small expansion to the admin panel. No Firestore rules change — rules from Phase 3 already allow coordinators to read/write any profile.
+
+### Step 1 — Upload to the `auth-feature` branch
+
+**First, switch the branch dropdown to `auth-feature`** on github.com/Stophoto/safeguard-hub.
+
+Upload these 4 files:
+
+- `admin-user.html` (new — full profile view for coordinators)
+- `admin.html` (replaces — adds "Open →" column and Export CSV button)
+- `sg-admin.js` (replaces — adds loadUser, updateUserProfile, usersToCsv, downloadCsv)
+- `sg-profile.js` (replaces — now captures email on new profiles and backfills existing)
+
+Commit message:
+```
+Phase 3.5: user detail page + CSV export
+```
+
+Commit to `auth-feature`. Wait for green checkmark in Actions.
+
+### Step 2 — Test
+
+1. Sign into your Coordinator account. Hard refresh (Cmd+Shift+R).
+2. Go to the Admin page.
+3. Your own row should now show your email address under your name (the backfill kicked in the first time you loaded the admin page — it saved your email onto your profile).
+4. Click **Open →** on your own row. You land on `admin-user.html?uid=...`. You see every field of your profile. Your role/status dropdowns are locked (safety).
+5. Back to Admin. Click **Export CSV**. A file like `safeguard-people-2026-04-17.csv` downloads.
+6. Open the CSV in Excel, Numbers, or Google Sheets. You should see a row per person with every profile field as a column.
+
+### What to know about CSV export
+
+- **Downloads every person's full profile**, including emails, addresses, emergency contacts, DOBs — anything stored in Firestore. Treat this file like sensitive data.
+- **It's a snapshot**, not a live link. Running it again gives you a fresh copy.
+- **Works offline** — once downloaded, you can delete it later from the Downloads folder.
+
+---
+
+*Last updated: April 2026 · Phase 3.5 complete*

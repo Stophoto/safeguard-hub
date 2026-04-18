@@ -14,7 +14,9 @@ import {
   orderBy,
   getDocs,
   doc,
+  getDoc,
   updateDoc,
+  setDoc,
   addDoc,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -73,6 +75,94 @@ export async function createInvite({ email, suggestedMinistry = "", note = "" })
   };
   const ref = await addDoc(collection(db, "invites"), data);
   return { id: ref.id, ...data };
+}
+
+// ── Load any user's profile by uid ──────────────────────────
+// Requires the caller to be a Coordinator (enforced by rules).
+export async function loadUser(uid) {
+  const snap = await getDoc(doc(db, "users", uid));
+  if (!snap.exists()) return null;
+  return { id: uid, ...snap.data() };
+}
+
+// ── Update any user's profile fields (coordinator) ──────────
+// Merges with existing — untouched fields stay as they were.
+// `updates` can include role and status; rules allow those
+// only if the caller is a Coordinator.
+export async function updateUserProfile(uid, updates) {
+  await setDoc(doc(db, "users", uid), {
+    ...updates,
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+
+// ── Build a CSV string from a users list ────────────────────
+// Columns chosen to match what a coordinator would actually
+// want in a spreadsheet: identity, role, status, contact info,
+// emergency contact, ministry prefs, and audit timestamps.
+export function usersToCsv(users) {
+  const headers = [
+    "User ID","Email","First name","Last name","Preferred name",
+    "Role","Status","Profile complete",
+    "Date of birth","Phone",
+    "Street","City","Province","Postal",
+    "Emergency contact name","Emergency contact phone","Emergency contact relationship",
+    "Age groups","Service times",
+    "Attending since","Testimony",
+    "Created at","Updated at",
+  ];
+
+  const rows = users.map(u => [
+    u.id,
+    u.email,
+    u.firstName, u.lastName, u.preferredName,
+    u.role, u.status,
+    u.profileComplete ? "yes" : "no",
+    u.dob, u.phone,
+    u.address && u.address.street,
+    u.address && u.address.city,
+    u.address && u.address.province,
+    u.address && u.address.postal,
+    u.emergencyContact && u.emergencyContact.name,
+    u.emergencyContact && u.emergencyContact.phone,
+    u.emergencyContact && u.emergencyContact.relationship,
+    (u.ageGroups || []).join("; "),
+    (u.serviceTimes || []).join("; "),
+    u.attendingSince, u.testimony,
+    tsToIso(u.createdAt),
+    tsToIso(u.updatedAt),
+  ]);
+
+  return [headers, ...rows].map(toCsvLine).join("\r\n") + "\r\n";
+}
+
+// ── Trigger a CSV file download in the browser ──────────────
+export function downloadCsv(filename, csv) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+}
+
+// ── Helpers ─────────────────────────────────────────────────
+function toCsvLine(arr) {
+  return arr.map(cell => {
+    const s = (cell === null || cell === undefined) ? "" : String(cell);
+    // Wrap in quotes if the cell contains comma, quote, or newline.
+    if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  }).join(",");
+}
+function tsToIso(ts) {
+  if (!ts) return "";
+  if (ts.toDate) return ts.toDate().toISOString();
+  if (ts instanceof Date) return ts.toISOString();
+  return "";
 }
 
 // ── Compute summary stats from a users list ─────────────────
