@@ -315,7 +315,7 @@
         title: "Sign the Worker's Covenant",
         sub:   cov.signed
           ? "Signed" + (cov.signedAt ? " " + formatDate(cov.signedAt) : "")
-          : "SG-FRM-004 · A written commitment to the Safeguard standards.",
+          : '<a href="covenant.html" style="color:var(--teal);font-weight:600">SG-FRM-004</a> · A written commitment to the Safeguard standards.',
         icon:  ICON_DOC,
         state: cov.signed ? "done" : "next",
         badge: cov.signed ? "Done" : "Required",
@@ -328,7 +328,7 @@
           ? "Cleared " + formatDate(pc.clearedAt) + (pc.expiresOn ? " · expires " + formatDate(pc.expiresOn) : "")
           : pc.submittedAt
             ? "Submitted " + formatDate(pc.submittedAt) + " · awaiting clearance"
-            : "SG-FRM-003 · Bethany Chapel covers the cost. Valid 3 years.",
+            : '<a href="police-check.html" style="color:var(--teal);font-weight:600">SG-FRM-003</a> · Bethany Chapel covers the cost. Valid 3 years.',
         icon:  ICON_SHIELD,
         state: pc.clearedAt ? "done" : pc.submittedAt ? "pending" : "next",
         badge: pc.clearedAt ? "Done" : pc.submittedAt ? "Pending" : "Required",
@@ -341,7 +341,7 @@
           ? "Both references received."
           : refs.length > 0
             ? refsReceived + " of 2 received · awaiting the rest"
-            : "SG-FRM-002 · Two written references required.",
+            : '<a href="references.html" style="color:var(--teal);font-weight:600">SG-FRM-002</a> · Two written references required.',
         icon:  ICON_DOC,
         state: refsReceived >= 2 ? "done" : (refs.length > 0 ? "pending" : "next"),
         badge: refsReceived >= 2 ? "Done" : (refs.length > 0 ? "Pending" : "Required"),
