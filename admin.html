@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --warn:#B07A1E; --warn-bg:#FFF5E6;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.55;
+       min-height:100vh;display:flex;flex-direction:column}
+
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+       border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;
+            padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .nav-link.active{color:var(--white);background:rgba(255,255,255,0.1)}
+  .user-pill{background:rgba(255,255,255,0.08);color:var(--white);padding:6px 14px;
+             border-radius:16px;font-size:12px;font-weight:500;display:flex;gap:10px;align-items:center}
+  .user-pill .dot{width:4px;height:4px;border-radius:50%;background:var(--gold-warm)}
+  .signout{background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.72);
+           font-size:12px;font-weight:600;padding:6px 12px;border-radius:6px;cursor:pointer;
+           font-family:var(--sans);transition:all var(--transition)}
+  .signout:hover{color:var(--white);border-color:rgba(255,255,255,0.4)}
+
+  .page{flex:1;padding:40px 24px 80px}
+  .wrap{max-width:1100px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:40px;color:var(--navy);font-weight:400;
+     line-height:1.1;margin-bottom:8px}
+  .lede{font-size:16px;color:var(--body);opacity:0.78;margin-bottom:28px;max-width:640px}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+  @media (max-width:800px){.stats{grid-template-columns:1fr 1fr}}
+  @media (max-width:480px){.stats{grid-template-columns:1fr}}
+  .stat{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:18px 20px}
+  .stat b{font-family:var(--serif);font-size:30px;color:var(--navy);font-weight:400;line-height:1;display:block;margin-bottom:4px}
+  .stat span{font-size:11px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:600}
+
+  .actions{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+       padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);
+       font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);
+       text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover{background:var(--teal)}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+
+  .section-head{font-size:12px;font-weight:700;letter-spacing:0.1em;color:var(--gold);
+                text-transform:uppercase;margin:28px 0 12px}
+
+  table{width:100%;border-collapse:collapse;background:var(--white);
+        border:1.5px solid var(--border);border-radius:10px;overflow:hidden;font-size:14px}
+  th{background:var(--sand);color:var(--navy);text-align:left;padding:11px 16px;
+     font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase}
+  td{padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--cream)}
+  td .name{font-weight:600;color:var(--navy)}
+  td .email{font-size:12px;color:var(--muted);display:block;margin-top:2px}
+  .badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;
+         letter-spacing:0.06em;text-transform:uppercase}
+  .badge.active{background:var(--success-bg);color:var(--success)}
+  .badge.inprocess{background:var(--warn-bg);color:var(--warn)}
+  .badge.paused{background:var(--sand);color:var(--muted)}
+  .badge.inactive{background:var(--error-bg);color:var(--error)}
+  select.role-picker, select.status-picker{font-family:var(--sans);font-size:12px;font-weight:600;
+         padding:6px 10px;border:1.5px solid var(--border);border-radius:6px;
+         background:var(--white);color:var(--body);cursor:pointer}
+  select.role-picker:hover, select.status-picker:hover{border-color:var(--gold)}
+
+  .empty{background:var(--white);border:1.5px solid var(--border);border-radius:10px;
+         padding:48px 28px;text-align:center;color:var(--muted);font-size:14px}
+  .empty b{display:block;color:var(--navy);font-family:var(--serif);font-size:20px;
+           font-weight:400;margin-bottom:6px}
+
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:12px;display:none}
+  .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+
+  .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
+
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="dashboard.html">Dashboard</a>
+    <a class="nav-link active" href="admin.html">Admin</a>
+    <a class="nav-link" href="index.html">Hub</a>
+    <div class="user-pill" id="userPill" style="display:none">
+      <span id="userName">—</span><span class="dot"></span><span id="userStatus">Coordinator</span>
+    </div>
+    <button class="signout" id="signoutBtn">Sign out</button>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="wrap" id="loadingState">
+    <div class="loading-state">Loading admin panel…</div>
+  </div>
+
+  <div class="wrap" id="accessDenied" style="display:none">
+    <div class="eyebrow">Access denied</div>
+    <h1>Coordinator only</h1>
+    <p class="lede">This page is for Safeguard Coordinators. Your account is <strong id="deniedRole">volunteer</strong>. If you think this is a mistake, ask another Coordinator to promote your account.</p>
+    <a class="btn btn-primary" href="dashboard.html">← Back to your dashboard</a>
+  </div>
+
+  <div class="wrap" id="adminView" style="display:none">
+    <div class="eyebrow">Coordinator dashboard</div>
+    <h1>People &amp; compliance</h1>
+    <div class="lede">The roster of everyone signed up, with their status and role. Invite new volunteers, promote team members to Leader, and keep compliance on track.</div>
+
+    <div class="stats">
+      <div class="stat"><b id="statActive">0</b><span>Active</span></div>
+      <div class="stat"><b id="statInProcess">0</b><span>In-process</span></div>
+      <div class="stat"><b id="statLeaders">0</b><span>Leaders &amp; Coordinators</span></div>
+      <div class="stat"><b id="statRenewal">0</b><span>Renewal due &lt; 30d</span></div>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="invite.html">+ Send invite</a>
+      <button class="btn btn-secondary" id="refreshBtn">Refresh</button>
+    </div>
+
+    <div id="msg" class="msg"></div>
+
+    <div class="section-head">Everyone</div>
+    <div id="tableWrap"></div>
+  </div>
+
+</main>
+
+<footer>Safeguard Framework · Bethany Chapel</footer>
+
+<script type="module">
+  import { onUserChange, signOutUser } from "./sg-auth.js";
+  import { getOrCreateProfile, displayName } from "./sg-profile.js";
+  import { listUsers, setUserRole, setUserStatus, summarizeUsers } from "./sg-admin.js";
+
+  const loadingState = document.getElementById("loadingState");
+  const accessDenied = document.getElementById("accessDenied");
+  const deniedRole   = document.getElementById("deniedRole");
+  const adminView    = document.getElementById("adminView");
+  const userPill     = document.getElementById("userPill");
+  const userName     = document.getElementById("userName");
+  const userStatus   = document.getElementById("userStatus");
+  const statActive     = document.getElementById("statActive");
+  const statInProcess  = document.getElementById("statInProcess");
+  const statLeaders    = document.getElementById("statLeaders");
+  const statRenewal    = document.getElementById("statRenewal");
+  const refreshBtn   = document.getElementById("refreshBtn");
+  const tableWrap    = document.getElementById("tableWrap");
+  const signoutBtn   = document.getElementById("signoutBtn");
+  const msg          = document.getElementById("msg");
+
+  let currentUid = null;   // so we don't allow the Coordinator to demote themselves
+
+  // ── Gate: signed in, verified, role=coordinator ─────────
+  onUserChange(async user => {
+    if (!user) { location.replace("sign-in.html?next=admin.html"); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    currentUid = user.uid;
+
+    try {
+      const profile = await getOrCreateProfile();
+
+      userName.textContent   = displayName(profile) || (user.email || "");
+      userStatus.textContent = profile.role === "coordinator" ? "Coordinator"
+                             : profile.role === "leader" ? "Leader" : "Volunteer";
+      userPill.style.display = "flex";
+
+      if (profile.role !== "coordinator") {
+        deniedRole.textContent = profile.role || "volunteer";
+        loadingState.style.display = "none";
+        accessDenied.style.display = "block";
+        return;
+      }
+
+      await loadAndRender();
+      loadingState.style.display = "none";
+      adminView.style.display = "block";
+    } catch (err) {
+      loadingState.textContent = "Couldn't load admin panel. " + (err.message || "");
+    }
+  });
+
+  async function loadAndRender() {
+    const users = await listUsers();
+
+    // Stats
+    const s = summarizeUsers(users);
+    statActive.textContent    = s.active;
+    statInProcess.textContent = s.inProcess;
+    statLeaders.textContent   = s.leaders;
+    statRenewal.textContent   = s.renewalSoon;
+
+    // Table
+    if (users.length === 0) {
+      tableWrap.innerHTML = '<div class="empty"><b>No one here yet</b>Invite your first volunteer using the button above.</div>';
+      return;
+    }
+
+    const rows = users.map(u => renderRow(u)).join("");
+    tableWrap.innerHTML = ''
+      + '<table>'
+      +   '<thead><tr>'
+      +     '<th>Name</th>'
+      +     '<th>Role</th>'
+      +     '<th>Status</th>'
+      +     '<th>Joined</th>'
+      +   '</tr></thead>'
+      +   '<tbody>' + rows + '</tbody>'
+      + '</table>';
+
+    // Wire up role / status changes
+    tableWrap.querySelectorAll("select.role-picker").forEach(sel => {
+      sel.addEventListener("change", () => onRoleChange(sel));
+    });
+    tableWrap.querySelectorAll("select.status-picker").forEach(sel => {
+      sel.addEventListener("change", () => onStatusChange(sel));
+    });
+  }
+
+  function renderRow(u) {
+    const fullName = [u.firstName, u.lastName].filter(Boolean).join(" ") || "(no name yet)";
+    const email = u.email || u.invitedEmail || "—"; // we don't store email in profile; show placeholder
+    const isMe = u.id === currentUid;
+
+    const statusBadgeCls = {
+      "active":"active","in-process":"inprocess","paused":"paused","inactive":"inactive"
+    }[u.status] || "inprocess";
+    const statusLabel = (u.status || "in-process").replace("-", " ");
+
+    const createdAt = u.createdAt && u.createdAt.toDate ? u.createdAt.toDate() : null;
+    const joined = createdAt ? createdAt.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}) : "—";
+
+    const roleOptions = ["volunteer","leader","coordinator"].map(r => {
+      const sel = (u.role === r) ? " selected" : "";
+      return '<option value="' + r + '"' + sel + '>' + cap(r) + '</option>';
+    }).join("");
+
+    const statusOptions = ["in-process","active","paused","inactive"].map(s => {
+      const sel = (u.status === s) ? " selected" : "";
+      return '<option value="' + s + '"' + sel + '>' + cap(s.replace("-"," ")) + '</option>';
+    }).join("");
+
+    // Don't let a Coordinator demote themselves — disable role picker for own row
+    const roleDisabled = isMe ? " disabled title=\"You can't change your own role\"" : "";
+
+    return '<tr data-uid="' + u.id + '">'
+      + '<td>'
+      +   '<div class="name">' + escapeHtml(fullName) + (isMe ? ' <small style="color:var(--muted);font-weight:500">(you)</small>' : '') + '</div>'
+      +   '<span class="email">' + escapeHtml(u.preferredName || "") + '</span>'
+      + '</td>'
+      + '<td><select class="role-picker"' + roleDisabled + ' data-uid="' + u.id + '">' + roleOptions + '</select></td>'
+      + '<td><select class="status-picker" data-uid="' + u.id + '">' + statusOptions + '</select> <span class="badge ' + statusBadgeCls + '" style="margin-left:6px">' + statusLabel + '</span></td>'
+      + '<td style="color:var(--muted);font-size:13px">' + joined + '</td>'
+      + '</tr>';
+  }
+
+  async function onRoleChange(sel) {
+    const uid = sel.dataset.uid;
+    const role = sel.value;
+    clearMsg();
+    sel.disabled = true;
+    try {
+      await setUserRole(uid, role);
+      showMsg("Role updated.", "ok");
+      await loadAndRender();
+    } catch (err) {
+      showMsg("Couldn't change role. " + (err.message || ""), "err");
+      sel.disabled = false;
+    }
+  }
+
+  async function onStatusChange(sel) {
+    const uid = sel.dataset.uid;
+    const status = sel.value;
+    clearMsg();
+    sel.disabled = true;
+    try {
+      await setUserStatus(uid, status);
+      showMsg("Status updated.", "ok");
+      await loadAndRender();
+    } catch (err) {
+      showMsg("Couldn't change status. " + (err.message || ""), "err");
+      sel.disabled = false;
+    }
+  }
+
+  refreshBtn.addEventListener("click", async () => {
+    refreshBtn.disabled = true;
+    try { await loadAndRender(); } finally { refreshBtn.disabled = false; }
+  });
+
+  signoutBtn.addEventListener("click", async () => {
+    await signOutUser();
+    location.replace("sign-in.html");
+  });
+
+  // ── Helpers ──
+  function showMsg(text, kind) { msg.textContent = text; msg.className = "msg " + kind; }
+  function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
+  function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+  function escapeHtml(s) {
+    return String(s || "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  }
+</script>
+
+</body>
+</html>

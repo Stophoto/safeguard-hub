@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invite volunteer — Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.55;
+       min-height:100vh;display:flex;flex-direction:column}
+
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+       border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;
+            padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+
+  .page{flex:1;padding:40px 24px 80px}
+  .wrap{max-width:620px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:34px;color:var(--navy);font-weight:400;
+     line-height:1.1;margin-bottom:8px}
+  .lede{font-size:15px;color:var(--muted);margin-bottom:24px}
+
+  .card{background:var(--white);border:1.5px solid var(--border);
+        border-radius:14px;padding:32px 36px;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);
+        letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px;margin-top:14px}
+  label:first-of-type{margin-top:0}
+  .opt{font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0;margin-left:6px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
+      font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);
+      transition:border-color var(--transition),box-shadow var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  .fi[aria-invalid="true"]{border-color:var(--error)}
+  textarea.fi{min-height:90px;resize:vertical;font-family:var(--sans)}
+
+  .actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+       padding:12px 22px;border:none;border-radius:8px;font-family:var(--sans);
+       font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);
+       text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover:not(:disabled){background:var(--teal)}
+  .btn-primary:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:16px;display:none}
+  .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+
+  .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;
+        border-radius:50%;animation:spin 0.7s linear infinite;display:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .btn.loading .spin{display:inline-block}
+  .btn.loading .label{opacity:0.7}
+
+  /* ── Success card (after invite is saved) ── */
+  .done{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
+        padding:32px 36px;box-shadow:0 4px 24px rgba(0,0,0,0.04);text-align:center}
+  .done-ico{width:56px;height:56px;border-radius:50%;background:var(--success-bg);
+            display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .done-ico svg{width:26px;height:26px;color:var(--success)}
+  .email-chip{display:inline-block;background:var(--sand);padding:6px 12px;
+              border-radius:6px;font-weight:600;color:var(--navy);margin:4px 0 14px;
+              font-size:14px;word-break:break-all}
+  .preview-block{background:var(--cream);border:1px solid var(--border);border-radius:8px;
+                 padding:16px;text-align:left;font-size:13px;margin:16px 0;white-space:pre-wrap;
+                 font-family:var(--sans);color:var(--body);line-height:1.55}
+
+  .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
+
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="admin.html">← Admin</a>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="wrap" id="loadingState">
+    <div class="loading-state">Checking access…</div>
+  </div>
+
+  <!-- State A: form -->
+  <div class="wrap" id="formWrap" style="display:none">
+    <div class="eyebrow">Coordinator · Invite volunteer</div>
+    <h1>Invite a new volunteer</h1>
+    <div class="lede">Fill this in, and we'll save the invite plus open your email with a pre-written invitation to send.</div>
+
+    <div class="card">
+      <form id="form" novalidate>
+        <label for="email">Volunteer's email</label>
+        <input type="email" id="email" class="fi" required autocomplete="off" placeholder="name@example.com">
+
+        <label for="ministry">Suggested ministry <span class="opt">— optional</span></label>
+        <input type="text" id="ministry" class="fi" placeholder="e.g., Kids Church — Elementary · Sunday 9am">
+
+        <label for="note">Personal note <span class="opt">— optional</span></label>
+        <textarea id="note" class="fi" placeholder="Hi! So glad you want to serve with us. Looking forward to chatting after you're onboarded."></textarea>
+
+        <div id="msg" class="msg"></div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="submit">
+            <span class="spin"></span><span class="label">Save &amp; open email</span>
+          </button>
+          <a href="admin.html" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- State B: saved, mailto opened -->
+  <div class="wrap" id="doneWrap" style="display:none">
+    <div class="done">
+      <div class="done-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="eyebrow">Invite saved</div>
+      <h1 style="font-size:28px">Email ready to send</h1>
+      <p>We saved the invite for</p>
+      <div class="email-chip" id="doneEmail">invitee@example.com</div>
+      <p style="color:var(--muted);font-size:14px">Your email client should have opened with a pre-written message. Review and hit Send in your email client.</p>
+
+      <div class="preview-block" id="preview"></div>
+
+      <div class="actions" style="justify-content:center">
+        <button class="btn btn-primary" id="reopen">Open email again</button>
+        <a class="btn btn-secondary" href="admin.html">Back to Admin</a>
+        <a class="btn btn-secondary" href="invite.html">Send another invite</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Safeguard Framework · Bethany Chapel</footer>
+
+<script type="module">
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile } from "./sg-profile.js";
+  import { createInvite } from "./sg-admin.js";
+
+  const loadingState = document.getElementById("loadingState");
+  const formWrap     = document.getElementById("formWrap");
+  const doneWrap     = document.getElementById("doneWrap");
+  const doneEmail    = document.getElementById("doneEmail");
+  const preview      = document.getElementById("preview");
+  const reopen       = document.getElementById("reopen");
+  const form         = document.getElementById("form");
+  const emailInput   = document.getElementById("email");
+  const ministry     = document.getElementById("ministry");
+  const note         = document.getElementById("note");
+  const submit       = document.getElementById("submit");
+  const msg          = document.getElementById("msg");
+
+  // URL the invitee visits to create their account. This is the live
+  // site's sign-up page. (It's fine for now that the invitee email
+  // isn't pre-filled — they just type the same address they were
+  // invited at. Phase 4+ could add an ?email= pre-fill.)
+  const SIGNUP_URL = "https://stophoto.github.io/safeguard-hub/sign-up.html";
+
+  let lastMailto = "";
+
+  // ── Gate: must be a coordinator ─────────────────────────
+  onUserChange(async user => {
+    if (!user) { location.replace("sign-in.html?next=invite.html"); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    try {
+      const profile = await getOrCreateProfile();
+      if (profile.role !== "coordinator") {
+        location.replace("dashboard.html");
+        return;
+      }
+      loadingState.style.display = "none";
+      formWrap.style.display = "block";
+    } catch (err) {
+      loadingState.textContent = "Couldn't check access. " + (err.message || "");
+    }
+  });
+
+  // ── Build the invitation email body ─────────────────────
+  function buildEmail({ email, ministryText, personalNote }) {
+    const lines = [];
+    lines.push("Hi,");
+    lines.push("");
+    lines.push("You've been invited to join the Bethany Chapel Safeguard Hub.");
+    if (personalNote) {
+      lines.push("");
+      lines.push(personalNote);
+    }
+    if (ministryText) {
+      lines.push("");
+      lines.push("Suggested ministry: " + ministryText);
+    }
+    lines.push("");
+    lines.push("To get started, create your account here:");
+    lines.push(SIGNUP_URL);
+    lines.push("");
+    lines.push("You'll use the email address this invite was sent to, pick a password, and complete a short profile.");
+    lines.push("");
+    lines.push("Welcome,");
+    lines.push("Bethany Chapel Safeguard Team");
+
+    const subject = "You're invited to Bethany Chapel Safeguard Hub";
+    const body = lines.join("\n");
+    return {
+      subject,
+      body,
+      mailto: "mailto:" + encodeURIComponent(email)
+            + "?subject=" + encodeURIComponent(subject)
+            + "&body=" + encodeURIComponent(body),
+    };
+  }
+
+  function showMsg(text, kind) { msg.textContent = text; msg.className = "msg " + kind; }
+  function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearMsg();
+    emailInput.removeAttribute("aria-invalid");
+
+    const email = emailInput.value.trim();
+    if (!email || !email.includes("@")) {
+      emailInput.setAttribute("aria-invalid","true");
+      showMsg("Enter a valid email address.", "err");
+      emailInput.focus();
+      return;
+    }
+
+    submit.classList.add("loading");
+    submit.disabled = true;
+    try {
+      await createInvite({
+        email,
+        suggestedMinistry: ministry.value,
+        note: note.value,
+      });
+
+      const m = buildEmail({
+        email,
+        ministryText: ministry.value.trim(),
+        personalNote: note.value.trim(),
+      });
+
+      // Show success state and open the user's email client
+      doneEmail.textContent = email;
+      preview.textContent = "To: " + email + "\nSubject: " + m.subject + "\n\n" + m.body;
+      lastMailto = m.mailto;
+
+      formWrap.style.display = "none";
+      doneWrap.style.display = "block";
+
+      // Trigger the email client. Modern browsers sometimes block
+      // programmatic mailto: on load — we do it on the user's click.
+      window.location.href = m.mailto;
+    } catch (err) {
+      showMsg("Couldn't save the invite. " + (err.message || "Please try again."), "err");
+      submit.classList.remove("loading");
+      submit.disabled = false;
+    }
+  });
+
+  reopen.addEventListener("click", () => {
+    if (lastMailto) window.location.href = lastMailto;
+  });
+</script>
+
+</body>
+</html>

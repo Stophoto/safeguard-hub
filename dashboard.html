@@ -119,6 +119,7 @@
       <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
     </a>
     <a class="nav-link" href="index.html">Hub</a>
+    <a class="nav-link" id="adminLink" href="admin.html" style="display:none">Admin</a>
     <div class="user-pill" id="userPill" style="display:none">
       <span id="userName">—</span><span class="dot"></span><span id="userStatus">In-process</span>
     </div>
@@ -187,6 +188,7 @@
   const userPill     = document.getElementById("userPill");
   const userName     = document.getElementById("userName");
   const userStatus   = document.getElementById("userStatus");
+  const adminLink    = document.getElementById("adminLink");
   const greeting     = document.getElementById("greeting");
   const summary      = document.getElementById("summary");
   const progressBar  = document.getElementById("progressBar");
@@ -218,6 +220,9 @@
       userName.textContent   = displayName(profile) || (user.email || "");
       userStatus.textContent = roleLabel(profile) || "Volunteer";
       userPill.style.display = "flex";
+
+      // Admin link is only visible to Coordinators
+      if (profile.role === "coordinator") adminLink.style.display = "inline-block";
 
       // Render
       render(profile);

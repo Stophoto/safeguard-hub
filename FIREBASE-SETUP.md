@@ -145,7 +145,13 @@ GitHub until we finish Phase 2 so you aren't deploying a half-built system.
 - First Firestore Security Rules added (see `firestore.rules`)
 - See "Phase 2 deploy" section below for upload + rules publish steps
 
-### Phase 3 — Admin / coordinator
+### Phase 3 — Admin / coordinator  ✅ built
+- New pages: `admin.html`, `invite.html`
+- New helpers: `sg-admin.js`
+- Updated: `firestore.rules`, `dashboard.html`
+- See "Phase 3 deploy" section below
+
+### Phase 3 — Admin / coordinator (original description)
 - New pages: `admin.html`, `invite.html`
 - Promote your account (`prefontainech@gmail.com`) to Coordinator by
   editing its Firestore document (one-click — instructions at that time)
@@ -237,4 +243,100 @@ Use a fresh incognito window.
 
 ---
 
-*Last updated: April 2026 · Phase 2 complete*
+---
+
+## Phase 3 deploy — do these in order
+
+### Step 1 — Upload the new & edited files to GitHub
+
+On github.com, **first make sure the branch dropdown says `auth-feature`** (this is the step that tripped you up before).
+
+Upload these 5 files:
+
+- `sg-admin.js` (new)
+- `admin.html` (new)
+- `invite.html` (new)
+- `firestore.rules` (replaces the Phase 2 version)
+- `dashboard.html` (replaces — now shows an Admin link for coordinators)
+- `FIREBASE-SETUP.md` (this file, updated)
+
+Commit message:
+```
+Phase 3: coordinator admin panel + invite flow
+```
+
+Commit directly to `auth-feature`. Wait for the green checkmark on the Actions tab.
+
+### Step 2 — Publish the updated Firestore Security Rules
+
+The rules file changed (coordinators can now read everyone + manage the invites collection). Republish:
+
+1. Open `firestore.rules` on your Mac and copy its entire contents (Cmd+A, Cmd+C).
+2. Go to https://console.firebase.google.com/project/safeguard-hub-71292/firestore/rules
+3. Click inside the rules editor.
+4. Select all existing rules (Cmd+A), delete them (Delete key).
+5. Paste (Cmd+V).
+6. Click the blue **Publish** button.
+
+If you skip this step, the admin panel will show "Couldn't load admin panel" because the old rules don't allow coordinators to read other users.
+
+### Step 3 — Promote your own account to Coordinator (one-time)
+
+Your account is currently `role: "volunteer"`. To become the first Coordinator, edit your user document directly in the Firebase console (this bypasses the rules since you're using admin tools).
+
+1. Open: https://console.firebase.google.com/project/safeguard-hub-71292/firestore/data
+2. In the left column, click the **users** collection.
+3. A middle column shows one document — the ID is your Firebase user ID (a long random string). Click that document.
+4. In the right pane, you'll see all your profile fields. Find the row that says **`role`** with value **`"volunteer"`**.
+5. Hover over that row. A small **pencil icon ✏️** appears on the far right. Click it.
+6. An "Edit field" dialog opens with:
+   - Field name: `role` (leave it)
+   - Type: `string` (leave it)
+   - Value: `volunteer` — change this to **`coordinator`** (exact spelling, lowercase, no quotes needed in the input).
+7. Click **Update**.
+8. The value in the document now shows `"coordinator"`.
+
+### Step 4 — Test Phase 3
+
+Back at https://stophoto.github.io/safeguard-hub/dashboard.html:
+
+1. **Hard refresh** (Cmd+Shift+R) — needed so your browser re-reads your updated profile.
+2. Your pill should now say **`Chris · Coordinator`**.
+3. An **Admin** link should appear in the top nav. Click it.
+4. You land on `admin.html` with a People & Compliance table showing your own account listed.
+5. Stats should say: Active: 0, In-process: 1, Leaders & Coordinators: 1.
+
+### Step 5 — Test the invite flow
+
+1. From the Admin page, click **+ Send invite**.
+2. Fill in someone's email (use your own second email for testing).
+3. Click **Save & open email** — your default email app should pop up with a pre-written invitation.
+4. You can actually send it to yourself and click the sign-up link — the invitee then goes through the normal sign-up flow.
+5. Back in Admin → refresh — the new invitee appears in the People list (after they've signed up and made a profile).
+
+### Step 6 — Test role management
+
+1. In the Admin panel, find your own row. Notice the Role dropdown is **disabled** (you can't demote yourself — safety feature).
+2. Invite someone (or use an existing non-coordinator account if you have one).
+3. In their row, use the Role dropdown to promote them to **Leader**.
+4. Within a second, the change saves and the row refreshes.
+5. Test demotion too.
+
+---
+
+## If something goes wrong
+
+**"Access denied · Coordinator only" on admin.html:**
+- Your profile's role isn't `"coordinator"`. Re-check Step 3.
+- If the role field says `coordinator` but you still see access denied, hard refresh the page (Cmd+Shift+R) — your browser has cached old auth state.
+
+**"Couldn't load admin panel" or similar permission errors:**
+- The updated Firestore rules aren't published. Redo Step 2.
+
+**Admin link doesn't appear in the dashboard nav:**
+- Your profile role isn't coordinator (see above), OR
+- The browser is showing the old dashboard.html. Hard refresh.
+
+---
+
+*Last updated: April 2026 · Phase 3 complete*
