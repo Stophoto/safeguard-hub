@@ -72,6 +72,22 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // ─── Config collection ───────────────────────────────────
+    // Small key/value store for site-wide settings the client
+    // needs (e.g., the legacy Sheets password). Read-only from
+    // the app — updates happen in the Firebase console or by a
+    // Coordinator through a future admin UI.
+    //
+    // Read requires: signed-in + has a user profile (which means
+    // they've at least started signing up). This prevents random
+    // strangers from reading config even if they obtain an anon
+    // Firebase token somehow.
+    match /config/{configId} {
+      allow read: if request.auth != null
+                  && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+      allow write: if false;
+    }
+
     // ─── Everything else ─────────────────────────────────────
     // Deny by default. Future collections (incidents, submissions,
     // training records) will get their own match blocks when we

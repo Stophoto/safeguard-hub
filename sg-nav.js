@@ -149,6 +149,19 @@
     '  cursor: pointer; transition: all 0.15s; margin-left: 8px;',
     '  font-family: '+SANS+'; letter-spacing: 0.02em; }',
     '.sg-nav-action:hover { background: rgba(176,144,85,0.22); }',
+    // Phase 4: user pill + sign-out (injected when Firebase user is signed in)
+    '.sg-user-pill { background: rgba(255,255,255,0.08); color: '+WHITE+';',
+    '  padding: 5px 12px; border-radius: 16px; font-size: 11px; font-weight: 500;',
+    '  display: flex; gap: 8px; align-items: center; margin-left: 8px;',
+    '  font-family: '+SANS+'; }',
+    '.sg-user-pill .dot { width: 4px; height: 4px; border-radius: 50%;',
+    '  background: '+GOLD_WARM+'; }',
+    '.sg-signout-btn { background: none; border: 1px solid rgba(255,255,255,0.2);',
+    '  color: rgba(255,255,255,0.72); font-size: 11px; font-weight: 600;',
+    '  padding: 5px 10px; border-radius: 6px; cursor: pointer; margin-left: 6px;',
+    '  transition: all 0.15s; font-family: '+SANS+'; }',
+    '.sg-signout-btn:hover { color: '+WHITE+'; border-color: rgba(255,255,255,0.4); }',
+    '#sg-dash-link { margin-left: 4px; }',
     // Breadcrumb row
     '#sg-breadcrumb { position: fixed; top: 60px; left: 0; right: 0; z-index: 9998;',
     '  background: '+WHITE+'; border-bottom: 1px solid '+BORDER+';',
@@ -375,4 +388,96 @@
     },
     clearTrail: function () { try { sessionStorage.removeItem(TRAIL_KEY); } catch(e){} }
   };
+})();
+
+// ─────────────────────────────────────────────────────────────
+// Phase 4 · Auth-aware nav enhancements
+// Dynamically loads Firebase helpers and, for signed-in users,
+// injects a Dashboard link, a user pill, and a Sign-out button
+// into the nav bar rendered above. Gracefully does nothing if
+// Firebase isn't configured on this page.
+// ─────────────────────────────────────────────────────────────
+(async function () {
+  try {
+    var authMod = await import('./sg-auth.js');
+    var profileMod = await import('./sg-profile.js');
+
+    authMod.onUserChange(async function (user) {
+      var navInner = document.getElementById('sg-nav-inner');
+      if (!navInner) return;
+
+      // Clean up previously injected elements (auth state can change)
+      navInner.querySelectorAll('.sg-user-pill, .sg-signout-btn, #sg-dash-link')
+        .forEach(function (el) { el.remove(); });
+      // Restore any Admin nav item we hid on a prior render
+      navInner.querySelectorAll('.sg-nav-item[data-sg-hidden="admin"]').forEach(function (el) {
+        el.style.display = '';
+        el.removeAttribute('data-sg-hidden');
+      });
+
+      if (!user) return;
+
+      var profile = null;
+      try { profile = await profileMod.getOrCreateProfile(); } catch (_) { return; }
+
+      // Dashboard link — insert right after the brand
+      var brand = document.getElementById('sg-nav-brand');
+      var dashLink = document.createElement('a');
+      dashLink.id = 'sg-dash-link';
+      dashLink.className = 'sg-nav-link';
+      dashLink.href = 'dashboard.html';
+      dashLink.textContent = 'Dashboard';
+      if (brand && brand.nextSibling) {
+        navInner.insertBefore(dashLink, brand.nextSibling);
+      } else {
+        navInner.appendChild(dashLink);
+      }
+
+      // Retarget the Admin nav item based on role
+      navInner.querySelectorAll('.sg-nav-link').forEach(function (a) {
+        if ((a.textContent || '').trim() === 'Admin') {
+          if (profile.role === 'coordinator') {
+            a.setAttribute('href', 'admin.html');
+          } else {
+            var parent = a.closest('.sg-nav-item');
+            if (parent) {
+              parent.setAttribute('data-sg-hidden', 'admin');
+              parent.style.display = 'none';
+            }
+          }
+        }
+      });
+
+      // User pill
+      var name = profileMod.displayName(profile) || (user.email || '');
+      var role = profile.role === 'coordinator' ? 'Coordinator'
+               : profile.role === 'leader' ? 'Leader' : 'Volunteer';
+      var pill = document.createElement('div');
+      pill.className = 'sg-user-pill';
+      pill.innerHTML = '<span>' + escapeHtml(name) + '</span>'
+                     + '<span class="dot"></span>'
+                     + '<span>' + role + '</span>';
+      navInner.appendChild(pill);
+
+      // Sign-out button
+      var signOutBtn = document.createElement('button');
+      signOutBtn.type = 'button';
+      signOutBtn.className = 'sg-signout-btn';
+      signOutBtn.textContent = 'Sign out';
+      signOutBtn.addEventListener('click', async function () {
+        try { await authMod.signOutUser(); } catch (_) {}
+        location.replace('sign-in.html');
+      });
+      navInner.appendChild(signOutBtn);
+    });
+  } catch (err) {
+    // Firebase not available on this page — stay legacy.
+    if (window.console) console.warn('sg-nav: auth enhancements skipped:', err && err.message);
+  }
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
 })();

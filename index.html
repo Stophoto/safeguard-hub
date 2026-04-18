@@ -132,9 +132,73 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ─── Phase 4 · Firebase auth overlay ─── */
+/* Hide every direct child of <body> except the overlay until auth resolves.
+   Prevents the legacy password prompt from flashing on screen for signed-in users. */
+body:not(.sg-ready) > *:not(#sg-auth-overlay) { visibility: hidden; }
+#sg-auth-overlay {
+  position: fixed; inset: 0; z-index: 99999;
+  background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--sans); color: var(--muted); font-size: 14px;
+}
+body.sg-ready #sg-auth-overlay { display: none; }
+@keyframes sg-auth-spin { to { transform: rotate(360deg); } }
+#sg-auth-overlay .sg-spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--border); border-top-color: var(--teal);
+  border-radius: 50%; animation: sg-auth-spin 0.7s linear infinite;
+  margin: 0 auto 12px;
+}
 </style>
 </head>
 <body>
+
+<!-- ═══ PHASE 4 · FIREBASE AUTH GATE ═══ -->
+<!-- Hides the rest of the page until Firebase auth is resolved.
+     Anonymous visitors are redirected to sign-in. Signed-in users
+     have the legacy Sheets password pulled from Firestore silently
+     so they never see the old password prompt. -->
+<div id="sg-auth-overlay" class="no-print" aria-live="polite">
+  <div style="text-align:center">
+    <div class="sg-spinner" aria-hidden="true"></div>
+    <div>Checking sign-in…</div>
+  </div>
+</div>
+<script type="module">
+  import { onUserChange } from "./sg-auth.js";
+  import { db } from "./sg-firebase.js";
+  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  onUserChange(async (user) => {
+    if (!user) {
+      location.replace("sign-in.html?next=index.html");
+      return;
+    }
+    if (!user.emailVerified) {
+      location.replace("verify-email.html");
+      return;
+    }
+    // Fetch the legacy Sheets password from Firestore the first time this
+    // browser visits the hub. Saves it to localStorage the way the existing
+    // backend client expects. Once Phase 5 retires Sheets, this all goes away.
+    if (!localStorage.getItem("sg_hub_pw")) {
+      try {
+        const snap = await getDoc(doc(db, "config", "hub"));
+        if (snap.exists() && snap.data().sheetsPassword) {
+          localStorage.setItem("sg_hub_pw", snap.data().sheetsPassword);
+        }
+      } catch (err) {
+        // If the config doc isn't set up yet, fall through — the legacy
+        // password prompt will appear as a fallback.
+        console.warn("Couldn't fetch hub config:", err);
+      }
+    }
+    document.body.classList.add("sg-ready");
+  });
+</script>
+
 <div id="root"></div>
 <script src="sg-nav.js"></script>
 
