@@ -380,4 +380,166 @@ Commit to `auth-feature`. Wait for green checkmark in Actions.
 
 ---
 
-*Last updated: April 2026 · Phase 3.5 complete*
+---
+
+## Phase 4 deploy — unify navigation + gate the hub
+
+This phase connects the legacy hub to Firebase. Anonymous visitors land on sign-in. Signed-in users see a unified navigation on every page with a user pill, a Dashboard link, and a Sign-out button. The old shared-password prompt goes away because the system fetches that password from a Firestore config doc.
+
+### Step 1 — Upload to `auth-feature`
+
+**Switch the GitHub branch dropdown to `auth-feature`** first. Then upload these 3 files:
+
+- `index.html` (replaces — now has the Firebase auth gate)
+- `sg-nav.js` (replaces — now injects user pill + Dashboard link + Sign-out)
+- `firestore.rules` (replaces — allows signed-in users to read `/config/hub`)
+
+Commit message:
+```
+Phase 4: Firebase-gate the hub + unified nav
+```
+
+Commit to `auth-feature`. Wait for green checkmark in Actions.
+
+### Step 2 — Republish the Firestore rules
+
+The rules changed (new `/config` collection is readable by signed-in users with profiles).
+
+1. Copy `firestore.rules` contents on your Mac (Cmd+A, Cmd+C in TextEdit).
+2. https://console.firebase.google.com/project/safeguard-hub-71292/firestore/rules
+3. Click inside the editor, Cmd+A, Delete, Cmd+V.
+4. Click **Publish**.
+
+If you skip this step, signed-in visitors to the hub will see the legacy password prompt because the hub can't read the config doc.
+
+### Step 3 — Create the `/config/hub` document (one-time bootstrap)
+
+This is where the Sheets password lives now. Coordinators and above can read it.
+
+1. Go to https://console.firebase.google.com/project/safeguard-hub-71292/firestore/data
+2. Near the top of the left column, click **+ Start collection**.
+3. A dialog opens:
+   - **Collection ID:** type exactly `config`
+   - Click **Next**.
+4. Next panel:
+   - **Document ID:** type exactly `hub`
+   - Now add a field:
+     - **Field:** `sheetsPassword`
+     - **Type:** string
+     - **Value:** `Safeguard2026!`
+   - Click **Save**.
+5. You should now see the path `config › hub` with one field `sheetsPassword: "Safeguard2026!"`.
+
+### Step 4 — Test the gated hub
+
+1. Sign out first if you're signed in anywhere.
+2. Open a new incognito window. Go to https://stophoto.github.io/safeguard-hub/index.html
+3. Expected: you get bounced to `sign-in.html`.
+4. Sign in with your Coordinator account.
+5. After a brief "Checking sign-in…" spinner, the hub loads. You should NOT see the legacy password prompt. The hub just works.
+6. Look at the nav bar: `Dashboard` link near the left, your user pill near the right, `Sign out` button at the far right.
+7. Click around — visit a policy page (`SG-POL-001.html`). The nav on that page should also show Dashboard / user pill / Sign out.
+
+### Step 5 — Test the Admin link behavior
+
+1. As a Coordinator, the **Admin** menu item in the nav (on any page) should go directly to `admin.html` (Firebase admin panel).
+2. If you had a Volunteer account, the Admin item would be hidden.
+
+### Step 6 — Test that a new volunteer doesn't see the legacy prompt
+
+1. Sign out.
+2. Sign up with a fresh email (your second email).
+3. Verify, fill the profile, land on dashboard.
+4. Click the **Hub** link in the nav. You should see the hub content directly — no password prompt at all.
+
+### Troubleshooting
+
+**"I see the legacy password prompt after signing in" —** The `/config/hub` doc isn't set up. Redo Step 3.
+
+**"Anonymous visitors can see the hub" —** The deploy didn't pick up the new `index.html`. Hard refresh, or re-check Step 1 uploaded to `auth-feature`.
+
+**"The Dashboard link / user pill / Sign out aren't showing in the nav on policy pages" —** Hard refresh (Cmd+Shift+R). Your browser cached the old `sg-nav.js`.
+
+**"Checking sign-in…" spinner stuck forever —** Open the browser console (right-click → Inspect → Console). If you see a Firestore permission error, the rules weren't republished. Redo Step 2.
+
+---
+
+---
+
+## Phase 5 deploy — make the dashboard actionable
+
+Turns the 4 "Coming soon" cards on the volunteer dashboard into real onboarding steps. Covenant gets signed; police check gets tracked; references get collected; training gets marked complete. Coordinators see all of this on each user's detail page.
+
+### Step 1 — Upload to `auth-feature`
+
+**Switch GitHub branch dropdown to `auth-feature` first.** Upload these 8 files:
+
+**New (4):**
+- `covenant.html`
+- `police-check.html`
+- `references.html`
+- `training.html`
+
+**Replaces (4):**
+- `sg-profile.js` (adds covenant/police/references/training helpers)
+- `sg-admin.js` (adds coordinator-only compliance helpers)
+- `dashboard.html` (real data, clickable steps — no more "Coming soon")
+- `admin-user.html` (new Compliance section for coordinators)
+
+Commit message:
+```
+Phase 5: make onboarding steps actionable (covenant, police check, references, training)
+```
+
+Wait for green checkmark on Actions. No Firestore rules change needed.
+
+### Step 2 — Customize the Worker's Covenant text
+
+The covenant in `covenant.html` is starter text. Review and edit it to match Bethany Chapel's statement of faith, specific ministry commitments, and any legal phrasing you want. Edit the sections inside `covenant.html` (search for `<h3>` and the list items under each).
+
+Once you've edited it locally, re-upload `covenant.html` to the `auth-feature` branch.
+
+### Step 3 — Test as a volunteer (your own account)
+
+1. Go to your dashboard: https://stophoto.github.io/safeguard-hub/dashboard.html
+2. Hard refresh (Cmd+Shift+R).
+3. You should see 5 step cards under "Next steps" (not "Coming soon" anymore):
+   - Complete your profile — marked Done if you've done profile setup
+   - Sign the Worker's Covenant — with a **Start →** or **View →** link
+   - Police Information Check — with a link
+   - Two references — with a link
+   - Safeguard training — with a link
+4. Click each "Start →" and walk through the step. Save at each one.
+5. Come back to the dashboard — the progress bar climbs as you complete steps.
+
+### Step 4 — Test as Coordinator: marking things
+
+1. Go to Admin, click **Open →** on your own (or a test volunteer's) row.
+2. Scroll to the new **Compliance** section. You should see:
+   - Covenant status (read-only — only the volunteer can sign)
+   - Police check — with two date fields and Save/Undo buttons
+   - References — list with per-row "Mark received" buttons
+   - Training status (read-only summary)
+3. Try marking a police check cleared: pick a date → click **Save clearance** → the status updates, and the volunteer's dashboard renewal date populates automatically.
+4. If the volunteer has saved references, mark one received → the badge updates.
+
+### Step 5 — Confirm it all flows together
+
+1. On the Admin page, look at your row. Your status/role is what you set.
+2. Once a volunteer completes all 5 steps (profile, covenant, 2 refs received, police cleared, all training modules), they're ready to be **Activated** — change their status from "In-process" to "Active" via the status dropdown in Admin.
+3. (Phase 6 could auto-prompt for activation when all 5 steps are done. For now, it's a manual status change.)
+
+### Troubleshooting
+
+**"Permission denied" when signing covenant / submitting police check:**
+- The Firestore rules need to be current. Open https://console.firebase.google.com/project/safeguard-hub-71292/firestore/rules — verify the rules match the latest `firestore.rules` file. If not, republish.
+
+**Dashboard still shows "Coming soon":**
+- Browser cache. Cmd+Shift+R on dashboard.html.
+
+**Training modules don't open when clicking "View module":**
+- The training pages (SG-T-*.html) are existing static HTML. They should exist on the auth-feature branch already — they were uploaded with the original files.
+
+---
+
+*Last updated: April 2026 · Phase 5 complete*

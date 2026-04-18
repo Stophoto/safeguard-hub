@@ -139,3 +139,138 @@ export function roleLabel(profile) {
     default:            return "";
   }
 }
+
+// ═════════════════════════════════════════════════════════════
+// COMPLIANCE HELPERS — Phase 5
+// Each onboarding step is stored as a nested object on the user
+// profile document. These helpers write the right shape and a
+// server timestamp. They never touch role/status (rules block that).
+// ═════════════════════════════════════════════════════════════
+
+// ── Sign the Worker's Covenant ───────────────────────────────
+// `signatureName` is the typed-name signature captured on the covenant page.
+export async function signCovenant(signatureName) {
+  await saveProfile({
+    covenant: {
+      signed: true,
+      signedAt: new Date().toISOString(),
+      signatureName: (signatureName || "").trim(),
+    },
+  });
+}
+
+// ── Record a police-check submission (volunteer side) ────────
+// `submittedOn` is a YYYY-MM-DD string the volunteer picked.
+// Clearance and expiry are filled in later by the Coordinator.
+export async function submitPoliceCheck(submittedOn) {
+  await saveProfile({
+    policeCheck: {
+      submittedAt: submittedOn || new Date().toISOString().slice(0, 10),
+      // Preserve any existing clearedAt/expiresOn if re-submitting early
+    },
+  });
+}
+
+// ── Record two references (volunteer side) ───────────────────
+// `refs` is an array of up to 2 objects: { name, email, relationship }.
+// Each reference gets a `receivedAt` field that starts null and gets
+// set by the Coordinator when the reference actually responds.
+export async function saveReferences(refs) {
+  const items = (refs || []).slice(0, 2).map(r => ({
+    name: (r.name || "").trim(),
+    email: (r.email || "").trim().toLowerCase(),
+    relationship: (r.relationship || "").trim(),
+    receivedAt: r.receivedAt || null,
+  }));
+  await saveProfile({ references: { items } });
+}
+
+// ── Mark a training module complete (volunteer side) ─────────
+// moduleId is one of the SG-T-* codes (e.g. "SG-T-001").
+export async function markTrainingComplete(moduleId) {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not signed in.");
+  // Read first so we merge into the existing training map cleanly.
+  const snap = await getDoc(doc(db, "users", user.uid));
+  const existing = (snap.exists() && snap.data().training) || {};
+  existing[moduleId] = {
+    completedAt: new Date().toISOString(),
+  };
+  await saveProfile({ training: existing });
+}
+
+// ── Undo a training completion (e.g., marked by accident) ────
+export async function unmarkTrainingComplete(moduleId) {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not signed in.");
+  const snap = await getDoc(doc(db, "users", user.uid));
+  const existing = (snap.exists() && snap.data().training) || {};
+  delete existing[moduleId];
+  await saveProfile({ training: existing });
+}
+
+// ── Compute onboarding progress from a profile ───────────────
+// Returns { done, total, steps: [{ id, label, state, detail }], pct }.
+// `state` is one of "done" | "pending" | "not-started".
+export function computeOnboarding(profile, trainingModuleIds) {
+  if (!profile) return { done: 0, total: 0, steps: [], pct: 0 };
+  const modules = trainingModuleIds || ["SG-T-001","SG-T-002","SG-T-003","SG-T-004"];
+  const steps = [];
+
+  // Profile
+  steps.push({
+    id: "profile",
+    label: "Complete your profile",
+    state: profile.profileComplete ? "done" : "not-started",
+  });
+
+  // Covenant
+  const cov = profile.covenant || {};
+  steps.push({
+    id: "covenant",
+    label: "Sign the Worker's Covenant",
+    state: cov.signed ? "done" : "not-started",
+    detail: cov.signed ? ("Signed " + formatDate(cov.signedAt)) : null,
+  });
+
+  // Police check
+  const pc = profile.policeCheck || {};
+  let pcState = "not-started";
+  let pcDetail = null;
+  if (pc.clearedAt) { pcState = "done";    pcDetail = "Cleared " + formatDate(pc.clearedAt); }
+  else if (pc.submittedAt) { pcState = "pending"; pcDetail = "Submitted " + formatDate(pc.submittedAt) + " · awaiting clearance"; }
+  steps.push({ id: "police", label: "Police Information Check", state: pcState, detail: pcDetail });
+
+  // References
+  const refs = (profile.references && profile.references.items) || [];
+  const refReceived = refs.filter(r => r.receivedAt).length;
+  steps.push({
+    id: "references",
+    label: "Two references",
+    state: refReceived >= 2 ? "done" : (refs.length > 0 ? "pending" : "not-started"),
+    detail: refs.length > 0 ? (refReceived + " of 2 received") : null,
+  });
+
+  // Training
+  const training = profile.training || {};
+  const completedCount = modules.filter(m => training[m] && training[m].completedAt).length;
+  steps.push({
+    id: "training",
+    label: "Safeguard training (" + modules.length + " modules)",
+    state: completedCount >= modules.length ? "done" : (completedCount > 0 ? "pending" : "not-started"),
+    detail: completedCount + " of " + modules.length + " complete",
+  });
+
+  const done = steps.filter(s => s.state === "done").length;
+  const total = steps.length;
+  return { done, total, steps, pct: Math.round((done / total) * 100) };
+}
+
+// ── Format an ISO date / YYYY-MM-DD nicely ───────────────────
+export function formatDate(d) {
+  if (!d) return "";
+  try {
+    const date = (typeof d === "string") ? new Date(d) : (d.toDate ? d.toDate() : d);
+    return date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+  } catch (_) { return String(d); }
+}

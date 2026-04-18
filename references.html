@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>References — Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --warn:#B07A1E; --warn-bg:#FFF5E6;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.55;
+       min-height:100vh;display:flex;flex-direction:column}
+
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+       border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;
+            padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:760px;margin:0 auto}
+  .crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .crumb a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:36px;color:var(--navy);font-weight:400;
+     line-height:1.1;margin-bottom:10px}
+  .lede{font-size:15px;color:var(--muted);margin-bottom:24px;max-width:620px}
+
+  /* ── Summary card ── */
+  .summary-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
+                padding:22px 26px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px;
+                display:flex;gap:16px;align-items:center}
+  .summary-card.done{background:var(--success-bg);border-color:rgba(39,174,96,0.3)}
+  .summary-card .big{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1}
+  .summary-card.done .big{color:var(--success)}
+  .summary-card .txt{flex:1}
+  .summary-card .txt b{display:block;color:var(--navy);font-size:16px;font-family:var(--serif);font-weight:400;margin-bottom:2px}
+  .summary-card .txt span{color:var(--body);font-size:13px}
+
+  /* ── Info / next steps ── */
+  .info-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
+             padding:22px 26px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  .info-card h2{font-family:var(--serif);font-size:19px;color:var(--navy);font-weight:400;margin-bottom:8px}
+  .info-card p{font-size:14px;color:var(--body);line-height:1.6;margin-bottom:10px}
+  .info-card p:last-child{margin-bottom:0}
+
+  /* ── Reference rows ── */
+  .ref-group{margin-bottom:18px}
+  .ref-group-head{font-size:12px;font-weight:700;letter-spacing:0.08em;color:var(--gold);
+                  text-transform:uppercase;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+  .ref-group-head .status{font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px;
+                          letter-spacing:0.04em;text-transform:uppercase}
+  .ref-group-head .status.received{background:var(--success-bg);color:var(--success)}
+  .ref-group-head .status.pending{background:var(--warn-bg);color:var(--warn)}
+  .ref-group-head .status.empty{background:var(--sand);color:var(--muted)}
+  .ref-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;
+            padding:18px 22px;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+  .ref-card.received{background:var(--success-bg);border-color:rgba(39,174,96,0.3)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+  @media (max-width:600px){.row{grid-template-columns:1fr}}
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);
+        letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+  .fi{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;
+      font-family:var(--sans);font-size:14px;color:var(--body);background:var(--white);
+      transition:border-color var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  .received-note{font-size:13px;color:var(--success);margin-top:8px;font-weight:600}
+
+  .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+       padding:12px 22px;border:none;border-radius:8px;font-family:var(--sans);
+       font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover:not(:disabled){background:var(--teal)}
+  .btn-primary:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+  .btn-sm{padding:7px 14px;font-size:12px;font-weight:600}
+
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:14px;display:none}
+  .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+
+  .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="dashboard.html">← Dashboard</a>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="wrap" id="loadingState">
+    <div class="loading-state">Loading…</div>
+  </div>
+
+  <div class="wrap" id="view" style="display:none">
+    <div class="crumb"><a href="dashboard.html">Dashboard</a> &rsaquo; References</div>
+    <div class="eyebrow">SG-FRM-002 · References</div>
+    <h1>Two people who can vouch for you.</h1>
+    <div class="lede">Share the names and emails of two people who've seen you serve or mentor others. The Coordinator will reach out to them directly. Family members don't count — pastors, employers, mentors, or long-time fellow volunteers are ideal.</div>
+
+    <div class="summary-card" id="summary">
+      <div class="big" id="summaryBig">0/2</div>
+      <div class="txt">
+        <b id="summaryTitle">References received</b>
+        <span id="summarySub">Save your two references below to get started.</span>
+      </div>
+    </div>
+
+    <div class="info-card" id="howCard">
+      <h2>How this works</h2>
+      <p>1. You enter the name, email, and relationship for each of your two references below and save.</p>
+      <p>2. We'll offer to send a pre-written email to each one asking for a short written reference (Coordinator copies you).</p>
+      <p>3. When the Coordinator receives each reference, they mark it received here — and your dashboard updates automatically.</p>
+    </div>
+
+    <form id="form">
+
+      <div class="ref-group">
+        <div class="ref-group-head"><span>Reference 1</span><span class="status empty" id="ref0Status">Not saved</span></div>
+        <div class="ref-card" id="ref0Card">
+          <div class="row">
+            <div><label for="ref0Name">Full name</label><input id="ref0Name" class="fi"></div>
+            <div><label for="ref0Email">Email</label><input id="ref0Email" type="email" class="fi"></div>
+          </div>
+          <div><label for="ref0Rel">Relationship <span style="font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0">— e.g. "Pastor at my previous church, 5 years"</span></label><input id="ref0Rel" class="fi"></div>
+          <div class="received-note" id="ref0Received" style="display:none">—</div>
+        </div>
+      </div>
+
+      <div class="ref-group">
+        <div class="ref-group-head"><span>Reference 2</span><span class="status empty" id="ref1Status">Not saved</span></div>
+        <div class="ref-card" id="ref1Card">
+          <div class="row">
+            <div><label for="ref1Name">Full name</label><input id="ref1Name" class="fi"></div>
+            <div><label for="ref1Email">Email</label><input id="ref1Email" type="email" class="fi"></div>
+          </div>
+          <div><label for="ref1Rel">Relationship</label><input id="ref1Rel" class="fi"></div>
+          <div class="received-note" id="ref1Received" style="display:none">—</div>
+        </div>
+      </div>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary" id="saveBtn">Save references</button>
+        <button type="button" class="btn btn-secondary" id="emailBtn" disabled>Send invitation emails</button>
+        <a class="btn btn-secondary" href="dashboard.html">Back to dashboard</a>
+      </div>
+    </form>
+
+  </div>
+
+</main>
+
+<footer>Safeguard Framework · Bethany Chapel</footer>
+
+<script type="module">
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile, saveReferences, formatDate } from "./sg-profile.js";
+
+  const loadingState = document.getElementById("loadingState");
+  const view         = document.getElementById("view");
+  const summaryCard  = document.getElementById("summary");
+  const summaryBig   = document.getElementById("summaryBig");
+  const summaryTitle = document.getElementById("summaryTitle");
+  const summarySub   = document.getElementById("summarySub");
+  const form         = document.getElementById("form");
+  const saveBtn      = document.getElementById("saveBtn");
+  const emailBtn     = document.getElementById("emailBtn");
+  const msg          = document.getElementById("msg");
+
+  let currentProfile = null;
+
+  onUserChange(async (user) => {
+    if (!user) { location.replace("sign-in.html?next=references.html"); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    try {
+      currentProfile = await getOrCreateProfile();
+      render();
+      loadingState.style.display = "none";
+      view.style.display = "block";
+    } catch (err) {
+      loadingState.textContent = "Couldn't load. " + (err.message || "");
+    }
+  });
+
+  function render() {
+    const refs = (currentProfile && currentProfile.references && currentProfile.references.items) || [];
+    for (let i = 0; i < 2; i++) {
+      const r = refs[i] || {};
+      document.getElementById("ref"+i+"Name").value = r.name || "";
+      document.getElementById("ref"+i+"Email").value = r.email || "";
+      document.getElementById("ref"+i+"Rel").value = r.relationship || "";
+      const statusEl = document.getElementById("ref"+i+"Status");
+      const card = document.getElementById("ref"+i+"Card");
+      const recNote = document.getElementById("ref"+i+"Received");
+      if (r.receivedAt) {
+        statusEl.textContent = "Received";
+        statusEl.className = "status received";
+        card.classList.add("received");
+        recNote.style.display = "block";
+        recNote.textContent = "Received " + formatDate(r.receivedAt);
+      } else if (r.name || r.email) {
+        statusEl.textContent = "Pending";
+        statusEl.className = "status pending";
+        card.classList.remove("received");
+        recNote.style.display = "none";
+      } else {
+        statusEl.textContent = "Not saved";
+        statusEl.className = "status empty";
+        card.classList.remove("received");
+        recNote.style.display = "none";
+      }
+    }
+    const received = refs.filter(r => r.receivedAt).length;
+    summaryBig.textContent = received + "/2";
+    if (received >= 2) {
+      summaryCard.classList.add("done");
+      summaryTitle.textContent = "Both references received";
+      summarySub.textContent = "Thank you. This step is complete.";
+    } else if (refs.length > 0) {
+      summaryCard.classList.remove("done");
+      summaryTitle.textContent = "References received";
+      summarySub.textContent = "Waiting on the Coordinator to hear back from your references.";
+    } else {
+      summaryCard.classList.remove("done");
+      summaryTitle.textContent = "References received";
+      summarySub.textContent = "Save your two references below to get started.";
+    }
+
+    // Enable "Send invitation emails" only when both refs have at least name+email
+    const hasBoth = refs.filter(r => r.email && r.name).length >= 2 ||
+                    (document.getElementById("ref0Email").value.trim() && document.getElementById("ref0Name").value.trim() &&
+                     document.getElementById("ref1Email").value.trim() && document.getElementById("ref1Name").value.trim());
+    emailBtn.disabled = !hasBoth;
+  }
+
+  function readForm() {
+    return [0, 1].map(i => ({
+      name: document.getElementById("ref"+i+"Name").value,
+      email: document.getElementById("ref"+i+"Email").value,
+      relationship: document.getElementById("ref"+i+"Rel").value,
+      // Preserve existing receivedAt if any
+      receivedAt: (currentProfile.references &&
+                   currentProfile.references.items &&
+                   currentProfile.references.items[i] &&
+                   currentProfile.references.items[i].receivedAt) || null,
+    }));
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearMsg();
+    const refs = readForm();
+    // Basic validation
+    const filledCount = refs.filter(r => r.name.trim() && r.email.trim()).length;
+    if (filledCount === 0) {
+      showMsg("Fill in at least one reference before saving.", "err");
+      return;
+    }
+    saveBtn.disabled = true;
+    try {
+      await saveReferences(refs);
+      currentProfile = await getOrCreateProfile();
+      render();
+      showMsg("Saved.", "ok");
+    } catch (err) {
+      showMsg("Couldn't save. " + (err.message || "Please try again."), "err");
+    }
+    saveBtn.disabled = false;
+  });
+
+  // Sending invitation emails via mailto: — same handoff pattern as invite.html.
+  emailBtn.addEventListener("click", async () => {
+    clearMsg();
+    const refs = readForm();
+    // Open a mailto for each reference one after another
+    const me = [currentProfile.firstName, currentProfile.lastName].filter(Boolean).join(" ") || "the volunteer";
+    for (let i = 0; i < refs.length; i++) {
+      const r = refs[i];
+      if (!r.email || !r.name) continue;
+      const subject = "Reference request — " + me + " — Bethany Chapel Safeguard";
+      const body = "Hi " + r.name + ",\n\n" +
+        "I'm applying to serve with children and youth at Bethany Chapel, and I've listed you as a reference. The Safeguard Coordinator will reach out shortly with a brief written reference request. You can expect their email within the next few days.\n\n" +
+        "Thanks so much for being willing!\n\n" +
+        "— " + me;
+      const mailto = "mailto:" + encodeURIComponent(r.email)
+        + "?subject=" + encodeURIComponent(subject)
+        + "&body=" + encodeURIComponent(body);
+      // Open each in turn — the user can review before sending
+      if (i === 0) window.location.href = mailto;
+      else setTimeout(() => { window.open(mailto, "_blank"); }, 500);
+    }
+    showMsg("Opened your email client. Review each message and hit Send.", "ok");
+  });
+
+  // Re-enable the email button as the user types
+  ["ref0Name","ref0Email","ref1Name","ref1Email"].forEach(id => {
+    document.getElementById(id).addEventListener("input", render);
+  });
+
+  function showMsg(text, kind) { msg.textContent = text; msg.className = "msg " + kind; }
+  function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
+</script>
+
+</body>
+</html>

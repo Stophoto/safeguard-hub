@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worker's Covenant — Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.55;
+       min-height:100vh;display:flex;flex-direction:column}
+
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+       border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;
+            padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:720px;margin:0 auto}
+  .crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .crumb a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;
+     line-height:1.1;margin-bottom:10px}
+  .lede{font-size:15px;color:var(--muted);margin-bottom:24px}
+
+  /* ── Signed-state success banner ── */
+  .signed-banner{background:var(--success-bg);border:1px solid rgba(39,174,96,0.3);
+                 border-radius:10px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start;
+                 margin-bottom:20px}
+  .signed-banner .ico{width:30px;height:30px;border-radius:50%;background:var(--success);
+                      flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .signed-banner .ico svg{width:16px;height:16px;color:var(--white)}
+  .signed-banner b{display:block;color:var(--navy);font-size:16px;margin-bottom:2px;font-family:var(--serif);font-weight:400}
+  .signed-banner span{color:var(--body);font-size:13px}
+
+  /* ── Covenant text card ── */
+  .covenant-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
+                 padding:32px 36px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  .covenant-title{font-family:var(--serif);font-size:24px;color:var(--navy);font-weight:400;margin-bottom:6px}
+  .covenant-ref{font-size:11px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:20px}
+  .covenant-body h3{font-family:var(--sans);font-size:13px;font-weight:700;color:var(--navy);
+                    text-transform:uppercase;letter-spacing:0.06em;margin:22px 0 8px}
+  .covenant-body h3:first-child{margin-top:0}
+  .covenant-body p{margin-bottom:10px;color:var(--body);line-height:1.65}
+  .covenant-body ul{margin:0 0 14px 20px}
+  .covenant-body li{margin-bottom:6px;line-height:1.6}
+  .editor-note{background:var(--sand);border:1px dashed var(--border);border-radius:8px;
+               padding:10px 14px;font-size:12px;color:var(--muted);margin-bottom:18px}
+  .editor-note b{color:var(--navy)}
+
+  /* ── Sign form ── */
+  .sign-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
+             padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+  .checkrow{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;cursor:pointer}
+  .checkrow input{margin-top:3px;flex-shrink:0}
+  .checkrow span{font-size:14px;line-height:1.5}
+  label.field-label{display:block;font-size:11px;font-weight:700;color:var(--navy);
+                    letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px;margin-top:14px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
+      font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);
+      transition:border-color var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+
+  .actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+       padding:12px 22px;border:none;border-radius:8px;font-family:var(--sans);
+       font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);
+       text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover:not(:disabled){background:var(--teal)}
+  .btn-primary:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:16px;display:none}
+  .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+
+  .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="dashboard.html">← Dashboard</a>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="wrap" id="loadingState">
+    <div class="loading-state">Loading…</div>
+  </div>
+
+  <div class="wrap" id="view" style="display:none">
+    <div class="crumb"><a href="dashboard.html">Dashboard</a> &rsaquo; Worker's Covenant</div>
+    <div class="eyebrow">SG-FRM-004 · Worker's Covenant</div>
+    <h1>The commitment we make to the people we serve.</h1>
+    <div class="lede">Read the covenant below. When you're ready, sign at the bottom. This is a serious commitment and the foundation of your role at Bethany Chapel.</div>
+
+    <!-- Success state shown if already signed -->
+    <div id="signedBanner" class="signed-banner" style="display:none">
+      <div class="ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div>
+        <b>You signed the Worker's Covenant</b>
+        <span id="signedMeta">—</span>
+      </div>
+    </div>
+
+    <div class="editor-note">
+      <b>Editor's note for the Coordinator:</b> This is starter text written to match common church practices. Review and edit to match Bethany Chapel's specific statement of faith, code of conduct, and any ministry-specific commitments. Edit the sections below directly in <code>covenant.html</code>.
+    </div>
+
+    <!-- ── Covenant text ── -->
+    <div class="covenant-card">
+      <div class="covenant-title">Worker's Covenant &amp; Acknowledgement</div>
+      <div class="covenant-ref">Bethany Chapel · Safeguard Framework</div>
+
+      <div class="covenant-body">
+
+        <h3>Why this matters</h3>
+        <p>Children, youth, and vulnerable adults at Bethany Chapel are trusting us with their physical, emotional, and spiritual safety. This covenant is our shared agreement on how we honor that trust.</p>
+
+        <h3>My commitment</h3>
+        <p>Before God and this church community, I commit to the following while serving in any Bethany Chapel ministry:</p>
+
+        <ul>
+          <li>I will treat every child, youth, and vulnerable adult with dignity, patience, and the love of Christ.</li>
+          <li>I will follow the <strong>Two-Adult Rule</strong> — I will never be alone one-on-one with a minor in an unobserved setting.</li>
+          <li>I will obey the <strong>supervision ratios</strong> and <strong>bathroom/diapering protocols</strong> as documented in SG-POL-002 and SG-POL-003.</li>
+          <li>I will <strong>report immediately</strong> any suspected abuse, injury, or policy violation — whether by a child, a peer, or a leader — using SG-FRM-007 and the process in SG-POL-004.</li>
+          <li>I will complete all required <strong>screening steps</strong>: ministry application, references, police information check, training, and covenant signing.</li>
+          <li>I will <strong>honor confidentiality</strong>, discussing sensitive information only with those who have a legitimate ministry need to know.</li>
+          <li>I will not communicate privately with minors through social media, text, or other direct channels outside of church-approved means.</li>
+          <li>I will refrain from behavior — on or off-site — that would bring reproach on the name of Christ or harm the trust families place in this ministry.</li>
+          <li>I understand that my service is a privilege, not a right, and that Bethany Chapel may remove me from ministry at any time if these standards are not met.</li>
+        </ul>
+
+        <h3>What I can expect from Bethany Chapel</h3>
+        <ul>
+          <li>Clear policies, practical training, and ongoing support.</li>
+          <li>A team-based model — I will not serve alone.</li>
+          <li>Respectful process for any concerns raised about my conduct.</li>
+          <li>Coverage of the cost of my police information check.</li>
+        </ul>
+
+        <h3>Acknowledgement</h3>
+        <p>I have read, understood, and freely accept these commitments. I will refer back to them and to the Safeguard Framework policies as I serve.</p>
+      </div>
+    </div>
+
+    <!-- ── Sign card (hidden if already signed) ── -->
+    <div class="sign-card" id="signCard">
+      <h2 style="font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;margin-bottom:14px">Sign the covenant</h2>
+
+      <label class="checkrow">
+        <input type="checkbox" id="agreeBox">
+        <span>I have read the Worker's Covenant above and agree to serve under these commitments.</span>
+      </label>
+
+      <label class="field-label" for="sigName">Type your full legal name as your signature</label>
+      <input type="text" id="sigName" class="fi" placeholder="e.g., Sarah Marie Johnson" autocomplete="name">
+
+      <div id="msg" class="msg"></div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="signBtn" disabled>Sign covenant</button>
+        <a class="btn btn-secondary" href="dashboard.html">Back to dashboard</a>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>Safeguard Framework · Bethany Chapel</footer>
+
+<script type="module">
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile, signCovenant, formatDate } from "./sg-profile.js";
+
+  const loadingState = document.getElementById("loadingState");
+  const view         = document.getElementById("view");
+  const signedBanner = document.getElementById("signedBanner");
+  const signedMeta   = document.getElementById("signedMeta");
+  const signCard     = document.getElementById("signCard");
+  const agreeBox     = document.getElementById("agreeBox");
+  const sigName      = document.getElementById("sigName");
+  const signBtn      = document.getElementById("signBtn");
+  const msg          = document.getElementById("msg");
+
+  let currentProfile = null;
+
+  function updateCanSign() {
+    signBtn.disabled = !(agreeBox.checked && sigName.value.trim().length >= 2);
+  }
+  agreeBox.addEventListener("change", updateCanSign);
+  sigName.addEventListener("input", updateCanSign);
+
+  onUserChange(async (user) => {
+    if (!user) { location.replace("sign-in.html?next=covenant.html"); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    try {
+      currentProfile = await getOrCreateProfile();
+      renderState();
+      // Prefill signature with user's legal name
+      const nameGuess = [currentProfile.firstName, currentProfile.lastName].filter(Boolean).join(" ");
+      if (nameGuess) sigName.value = nameGuess;
+      updateCanSign();
+      loadingState.style.display = "none";
+      view.style.display = "block";
+    } catch (err) {
+      loadingState.textContent = "Couldn't load. " + (err.message || "");
+    }
+  });
+
+  function renderState() {
+    const cov = (currentProfile && currentProfile.covenant) || {};
+    if (cov.signed) {
+      signedBanner.style.display = "flex";
+      signedMeta.textContent = "Signed " + formatDate(cov.signedAt)
+        + (cov.signatureName ? " by " + cov.signatureName : "");
+      // Hide sign card — already done
+      signCard.style.display = "none";
+    } else {
+      signedBanner.style.display = "none";
+      signCard.style.display = "block";
+    }
+  }
+
+  signBtn.addEventListener("click", async () => {
+    clearMsg();
+    signBtn.disabled = true;
+    try {
+      await signCovenant(sigName.value);
+      showMsg("Covenant signed. Thank you.", "ok");
+      // Refresh profile state and re-render
+      currentProfile = await getOrCreateProfile();
+      renderState();
+      // Scroll up so the success banner is visible
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      showMsg("Couldn't save. " + (err.message || "Please try again."), "err");
+      signBtn.disabled = false;
+    }
+  });
+
+  function showMsg(text, kind) { msg.textContent = text; msg.className = "msg " + kind; }
+  function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
+</script>
+
+</body>
+</html>

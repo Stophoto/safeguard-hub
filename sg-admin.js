@@ -165,6 +165,76 @@ function tsToIso(ts) {
   return "";
 }
 
+// ═════════════════════════════════════════════════════════════
+// COORDINATOR COMPLIANCE HELPERS — Phase 5
+// Only coordinators can call these (enforced by Firestore rules).
+// ═════════════════════════════════════════════════════════════
+
+// ── Mark a police check as cleared ──────────────────────────
+// Sets clearedAt and expiresOn. expiresOn is auto-set to 3 years
+// from clearedAt unless explicitly provided.
+export async function markPoliceCheckCleared(uid, clearedOn, expiresOn) {
+  const cleared = clearedOn || new Date().toISOString().slice(0, 10);
+  let expiry = expiresOn;
+  if (!expiry) {
+    const d = new Date(cleared);
+    d.setFullYear(d.getFullYear() + 3);
+    expiry = d.toISOString().slice(0, 10);
+  }
+  // Merge into the existing policeCheck object so we don't lose submittedAt.
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().policeCheck) || {};
+  await setDoc(doc(db, "users", uid), {
+    policeCheck: { ...existing, clearedAt: cleared, expiresOn: expiry },
+    renewalDueOn: expiry,
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+
+// ── Clear a police check clearance (if entered in error) ────
+export async function unclearPoliceCheck(uid) {
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().policeCheck) || {};
+  delete existing.clearedAt;
+  delete existing.expiresOn;
+  await setDoc(doc(db, "users", uid), {
+    policeCheck: existing,
+    renewalDueOn: null,
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+
+// ── Mark a reference as received ────────────────────────────
+export async function markReferenceReceived(uid, refIndex, receivedOn) {
+  const date = receivedOn || new Date().toISOString().slice(0, 10);
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().references) || { items: [] };
+  const items = (existing.items || []).slice();
+  if (!items[refIndex]) return;
+  items[refIndex] = { ...items[refIndex], receivedAt: date };
+  await setDoc(doc(db, "users", uid), {
+    references: { items },
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+
+// ── Mark a reference as NOT received (undo) ─────────────────
+export async function unmarkReferenceReceived(uid, refIndex) {
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().references) || { items: [] };
+  const items = (existing.items || []).slice();
+  if (!items[refIndex]) return;
+  items[refIndex] = { ...items[refIndex], receivedAt: null };
+  await setDoc(doc(db, "users", uid), {
+    references: { items },
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+
 // ── Compute summary stats from a users list ─────────────────
 // Returns { active, inProcess, leaders, renewalSoon }.
 // `renewalSoon` counts profiles whose renewal date is within 30 days.

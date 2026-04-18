@@ -238,6 +238,60 @@
         </div>
       </div>
 
+      <!-- ── Compliance (coordinator actions) ── -->
+      <div class="card">
+        <div class="section-head">Compliance</div>
+        <div class="section-title">Onboarding status</div>
+
+        <!-- Covenant -->
+        <div class="field" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--navy)">Worker's Covenant</div>
+            <div style="font-size:12px;color:var(--muted)" id="covState">—</div>
+          </div>
+          <span class="badge" id="covBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">—</span>
+        </div>
+
+        <!-- Police check -->
+        <div class="field" style="padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--navy)">Police Information Check</div>
+              <div style="font-size:12px;color:var(--muted)" id="pcState">—</div>
+            </div>
+            <span class="badge" id="pcBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">—</span>
+          </div>
+          <div class="row" style="margin-bottom:8px">
+            <div><label for="pcCleared">Cleared on</label><input id="pcCleared" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>
+            <div><label for="pcExpires">Expires on</label><input id="pcExpires" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="pcSaveBtn">Save clearance</button>
+            <button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="pcUndoBtn">Undo clearance</button>
+          </div>
+        </div>
+
+        <!-- References -->
+        <div class="field" style="padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px">
+            <div style="font-size:13px;font-weight:600;color:var(--navy)">References</div>
+            <span class="badge" id="refsBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">—</span>
+          </div>
+          <div id="refsList"></div>
+        </div>
+
+        <!-- Training -->
+        <div class="field" style="padding:12px 0">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--navy)">Safeguard training</div>
+              <div style="font-size:12px;color:var(--muted)" id="trainingState">—</div>
+            </div>
+            <span class="badge" id="trainingBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">—</span>
+          </div>
+        </div>
+      </div>
+
       <div id="msg" class="msg"></div>
 
       <div class="actions">
@@ -260,8 +314,12 @@
 
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
-  import { getOrCreateProfile } from "./sg-profile.js";
-  import { loadUser, updateUserProfile } from "./sg-admin.js";
+  import { getOrCreateProfile, formatDate } from "./sg-profile.js";
+  import {
+    loadUser, updateUserProfile,
+    markPoliceCheckCleared, unclearPoliceCheck,
+    markReferenceReceived, unmarkReferenceReceived,
+  } from "./sg-admin.js";
 
   const loadingState = document.getElementById("loadingState");
   const missingState = document.getElementById("missingState");
@@ -348,6 +406,152 @@
     metaComplete.textContent = u.profileComplete ? "Yes" : "No";
     metaCreated.textContent  = fmt(u.createdAt);
     metaUpdated.textContent  = fmt(u.updatedAt);
+
+    renderCompliance(u);
+  }
+
+  // ── Compliance panel ────────────────────────────────────
+  function renderCompliance(u) {
+    const cov = u.covenant || {};
+    const pc  = u.policeCheck || {};
+    const refs = (u.references && u.references.items) || [];
+    const training = u.training || {};
+    const trainModules = ["SG-T-001","SG-T-002","SG-T-003","SG-T-004"];
+    const leaderModules = (u.role === "leader" || u.role === "coordinator")
+      ? ["SG-T-101","SG-T-102","SG-T-103"] : [];
+    const allModules = [...trainModules, ...leaderModules];
+    const trainingDone = allModules.filter(m => training[m] && training[m].completedAt).length;
+
+    // Covenant
+    document.getElementById("covState").textContent = cov.signed
+      ? "Signed " + formatDate(cov.signedAt) + (cov.signatureName ? " by " + cov.signatureName : "")
+      : "Not signed yet";
+    setBadge("covBadge", cov.signed ? "done" : "required", cov.signed ? "Done" : "Required");
+
+    // Police check
+    const pcStateEl = document.getElementById("pcState");
+    if (pc.clearedAt) {
+      pcStateEl.textContent = "Cleared " + formatDate(pc.clearedAt)
+        + (pc.expiresOn ? " · expires " + formatDate(pc.expiresOn) : "");
+      setBadge("pcBadge", "done", "Cleared");
+    } else if (pc.submittedAt) {
+      pcStateEl.textContent = "Submitted " + formatDate(pc.submittedAt) + " · awaiting clearance";
+      setBadge("pcBadge", "pending", "Pending");
+    } else {
+      pcStateEl.textContent = "Not submitted";
+      setBadge("pcBadge", "required", "Not started");
+    }
+    document.getElementById("pcCleared").value = pc.clearedAt || "";
+    document.getElementById("pcExpires").value = pc.expiresOn || "";
+
+    // References
+    const refsBadge = refs.filter(r => r.receivedAt).length;
+    setBadge("refsBadge",
+      refsBadge >= 2 ? "done" : (refs.length > 0 ? "pending" : "required"),
+      refsBadge + "/2 received");
+    const refsListEl = document.getElementById("refsList");
+    if (refs.length === 0) {
+      refsListEl.innerHTML = '<div style="font-size:12px;color:var(--muted)">No references entered yet.</div>';
+    } else {
+      refsListEl.innerHTML = refs.map((r, i) => {
+        const name = escapeHtml(r.name || "(no name)");
+        const email = escapeHtml(r.email || "");
+        const rel = escapeHtml(r.relationship || "");
+        const received = r.receivedAt;
+        return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;background:' + (received ? 'var(--success-bg)' : 'var(--sand)') + ';border-radius:6px;margin-bottom:6px">'
+          + '<div>'
+          +   '<div style="font-size:13px;font-weight:600;color:var(--navy)">' + name + '</div>'
+          +   '<div style="font-size:11px;color:var(--muted)">' + email + (rel ? ' · ' + rel : '') + '</div>'
+          +   (received ? '<div style="font-size:11px;color:var(--success);margin-top:2px">Received ' + formatDate(received) + '</div>' : '')
+          + '</div>'
+          + (received
+              ? '<button type="button" class="btn btn-secondary" style="font-size:11px;padding:5px 10px" data-refundo="' + i + '">Undo</button>'
+              : '<button type="button" class="btn btn-secondary" style="font-size:11px;padding:5px 10px" data-refrcvd="' + i + '">Mark received</button>')
+          + '</div>';
+      }).join("");
+      refsListEl.querySelectorAll("[data-refrcvd]").forEach(btn => {
+        btn.addEventListener("click", () => onMarkRefReceived(parseInt(btn.dataset.refrcvd, 10)));
+      });
+      refsListEl.querySelectorAll("[data-refundo]").forEach(btn => {
+        btn.addEventListener("click", () => onUnmarkRef(parseInt(btn.dataset.refundo, 10)));
+      });
+    }
+
+    // Training
+    document.getElementById("trainingState").textContent = trainingDone + " of " + allModules.length + " modules complete";
+    setBadge("trainingBadge",
+      trainingDone >= allModules.length ? "done" : (trainingDone > 0 ? "pending" : "required"),
+      trainingDone >= allModules.length ? "Done" : (trainingDone > 0 ? "In progress" : "Not started"));
+  }
+
+  function setBadge(id, kind, text) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const colors = {
+      done:    { bg: "var(--success-bg)", fg: "var(--success)" },
+      pending: { bg: "var(--warn-bg)",    fg: "var(--warn,#B07A1E)" },
+      required:{ bg: "var(--sand)",       fg: "var(--muted)" },
+    }[kind] || { bg: "var(--sand)", fg: "var(--muted)" };
+    el.textContent = text;
+    el.style.background = colors.bg;
+    el.style.color = colors.fg;
+  }
+
+  function escapeHtml(s) {
+    return String(s || "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  }
+
+  // ── Coordinator actions ─────────────────────────────────
+  document.getElementById("pcSaveBtn").addEventListener("click", async () => {
+    clearMsg();
+    const cleared = document.getElementById("pcCleared").value;
+    const expires = document.getElementById("pcExpires").value;
+    if (!cleared) { showMsg("Pick a clearance date first.", "err"); return; }
+    try {
+      await markPoliceCheckCleared(TARGET_UID, cleared, expires || null);
+      showMsg("Police check marked cleared.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) renderCompliance(updated);
+    } catch (err) {
+      showMsg("Couldn't save. " + (err.message || ""), "err");
+    }
+  });
+
+  document.getElementById("pcUndoBtn").addEventListener("click", async () => {
+    clearMsg();
+    if (!confirm("Undo this police check clearance?")) return;
+    try {
+      await unclearPoliceCheck(TARGET_UID);
+      showMsg("Clearance removed.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) renderCompliance(updated);
+    } catch (err) {
+      showMsg("Couldn't undo. " + (err.message || ""), "err");
+    }
+  });
+
+  async function onMarkRefReceived(idx) {
+    clearMsg();
+    try {
+      await markReferenceReceived(TARGET_UID, idx);
+      showMsg("Marked reference " + (idx + 1) + " received.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) renderCompliance(updated);
+    } catch (err) {
+      showMsg("Couldn't save. " + (err.message || ""), "err");
+    }
+  }
+
+  async function onUnmarkRef(idx) {
+    clearMsg();
+    try {
+      await unmarkReferenceReceived(TARGET_UID, idx);
+      showMsg("Reference " + (idx + 1) + " marked as not received.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) renderCompliance(updated);
+    } catch (err) {
+      showMsg("Couldn't save. " + (err.message || ""), "err");
+    }
   }
 
   form.addEventListener("submit", async (e) => {
