@@ -100,9 +100,41 @@
   .doc-reference td:first-child { font-family: Arial, Helvetica, sans-serif; font-weight: 700; color: var(--secondary); width: 9rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
   .doc-reference td:last-child { color: var(--body-color); }
   .page-footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #E5E2DD; text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; color: var(--muted); }
+
+  /* ─── Design-system font overrides (DM Serif Display + DM Sans) ─── */
+  body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif !important; }
+  h1, h2, h3, .cover-title, .section-title, .subsection-title { font-family: 'DM Serif Display', Georgia, serif !important; font-weight: 400 !important; }
+  .section-label, .cover-framework, .cover-meta, .callout-label, .reading-time { font-family: 'DM Sans', sans-serif !important; }
+
+  /* ─── Unified site header ─── */
+  .sg-hdr { background: linear-gradient(180deg, #0F2530 0%, #1B3A4B 100%); border-bottom: 2px solid rgba(176,144,85,0.25); padding: 14px 28px; }
+  .sg-hdr-inner { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap: 14px; font-family: 'DM Sans', sans-serif; }
+  .sg-hdr .sg-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; border-bottom: none; }
+  .sg-hdr .sg-brand-text { display: flex; flex-direction: column; line-height: 1.05; }
+  .sg-hdr .sg-brand-text small { font-size: 9px; font-weight: 700; letter-spacing: 0.22em; color: #B09055; text-transform: uppercase; }
+  .sg-hdr .sg-brand-name { font-family: 'DM Serif Display', Georgia, serif; font-size: 19px; color: #FFFFFF; margin-top: 2px; font-weight: 400; }
+  .sg-hdr .sg-nav-link { color: rgba(255,255,255,0.72); font-size: 13px; font-weight: 600; text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: all 0.2s; border-bottom: none; }
+  .sg-hdr .sg-nav-link:hover { color: #FFFFFF; background: rgba(255,255,255,0.06); }
+  @media print { .sg-hdr { display: none; } }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-doc-code="SG-T-102" data-doc-version="3.0" data-doc-date="March 2026" data-doc-status="Approved">
+
+<header class="sg-hdr">
+  <div class="sg-hdr-inner">
+    <a class="sg-brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="sg-brand-text"><small>Safeguard Framework</small><span class="sg-brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="sg-nav-link" href="dashboard.html">&larr; Dashboard</a>
+    <div id="userChip" style="margin-left:8px"></div>
+  </div>
+</header>
+
 <div class="page-wrapper">
 
   <header class="cover">
@@ -464,5 +496,10 @@
 
 
 <script src="sg-nav.js"></script>
+
+<script type="module">
+  import { mountUserChip } from "./sg-user-chip.js";
+  mountUserChip(document.getElementById("userChip"));
+</script>
 </body>
 </html>
