@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-FRM-003 — Police Check Letter &amp; Consent</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --success:#27AE60; --warn:#B07A1E; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:960px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1.title{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
+  .subtitle{font-family:var(--serif);font-size:18px;color:var(--teal);font-weight:400;font-style:italic;margin-bottom:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding-top:14px;margin-top:14px;border-top:2px solid rgba(176,144,85,0.3);font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.02em}
+  .classif{color:var(--error);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:11px}
+  .attest{display:flex;align-items:flex-start;gap:10px;margin:4px 0 16px 0;padding:10px 14px;background:var(--sand);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color var(--transition)}
+  .attest:hover{border-color:var(--gold-warm)}
+  .attest input{margin-top:2px;width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
+  .attest span{font-size:13px;color:var(--body);line-height:1.45;font-weight:500}
+  .who-note{font-size:12px;color:var(--muted);font-style:italic;margin-top:-2px;margin-bottom:14px;line-height:1.5}
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  @media(max-width:620px){.card{padding:22px 20px}}
+  .section-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+  .section-title{font-family:var(--serif);font-size:24px;color:var(--navy);font-weight:400;line-height:1.2;margin-bottom:16px}
+  .section-intro{color:var(--body);font-size:15px;margin-bottom:14px;line-height:1.65}
+  .section-intro em,.section-intro i{color:var(--muted);font-style:italic}
+  .sub-title{font-family:var(--serif);font-size:18px;color:var(--navy);font-weight:400;margin:20px 0 10px 0}
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);transition:border-color var(--transition),box-shadow var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .row-sig{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+  @media(max-width:620px){.row,.row-sig{grid-template-columns:1fr}}
+  .checklist{list-style:none;margin:10px 0 0 0;padding:0}
+  .checklist li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--sand);color:var(--body);font-size:14px;line-height:1.5}
+  .checklist li:last-child{border-bottom:none}
+  .checklist input{margin-top:3px;width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
+  .bullets{list-style:none;margin:8px 0 14px 0;padding:0}
+  .bullets li{position:relative;padding:6px 0 6px 20px;line-height:1.65;color:var(--body)}
+  .bullets li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .letter{background:#FCFAF5;border:1.5px solid var(--border);border-radius:10px;padding:26px 30px;margin:12px 0 0 0}
+  .letter p{margin-bottom:12px;line-height:1.65}
+  .letter p:last-child{margin-bottom:0}
+  .link-emph{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .link-emph:hover{border-bottom-color:var(--teal)}
+  a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover{background:var(--teal)}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+  .save-hint{font-size:12px;color:var(--muted);margin-left:auto}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+  @media print{body{background:#fff}.hdr,.actions,footer,.save-hint{display:none !important}.page{padding:0}.wrap{max-width:100%}.card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;margin-bottom:12px}.letter{break-inside:avoid}.fi{border:none;border-bottom:1px solid #999;border-radius:0;padding:4px 0;background:transparent}}
+</style>
+</head>
+<body data-doc-code="SG-FRM-003" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="dashboard.html">&larr; Dashboard</a>
+    <div id="userChip" style="margin-left:8px"></div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="wrap">
+
+    <div class="eyebrow">Safeguard Framework &middot; Form</div>
+    <h1 class="title">Police Check Letter &amp; Consent</h1>
+    <div class="subtitle">Volunteer Police Information Check &mdash; Vulnerable Sector Search</div>
+    <div class="meta">
+      <span><strong>Document Code:</strong> SG-FRM-003</span>
+      <span><strong>Version:</strong> 2.0</span>
+      <span><strong>Issued:</strong> March 2026</span>
+      <span class="classif">Confidential &mdash; Screening Purposes Only</span>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Checklist</div>
+      <div class="section-title">Progress tracker</div>
+      <p class="section-intro">Both the applicant and the ministry leader must complete their respective steps. Use this checklist to track progress.</p>
+      <ul class="checklist">
+        <li><input type="checkbox" id="f_cl1"><span>Leader issues cover letter (Section B) on church letterhead and signs it</span></li>
+        <li><input type="checkbox" id="f_cl2"><span>Applicant goes online to apply for Police Information Check (see Section A)</span></li>
+        <li><input type="checkbox" id="f_cl3"><span>Applicant uploads cover letter during online application</span></li>
+        <li><input type="checkbox" id="f_cl4"><span>Applicant signs Consent Form (Section C) and returns it to leader</span></li>
+        <li><input type="checkbox" id="f_cl5"><span>Police Check is submitted online by applicant</span></li>
+        <li><input type="checkbox" id="f_cl6"><span>Results are received directly by the church</span></li>
+        <li><input type="checkbox" id="f_cl7"><span>Screening personnel confirm results have been reviewed and filed</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section A</div>
+      <div class="section-title">Instructions to Applicant</div>
+      <p class="section-intro">All volunteers serving with children, youth, or vulnerable persons must complete a Police Information Check (PIC) with Vulnerable Sector Search through the local police service.</p>
+
+      <div class="sub-title">Online Application</div>
+      <p class="section-intro">Go to: <a class="link-emph" href="https://policeinformationcheck.calgarypolice.ca">https://policeinformationcheck.calgarypolice.ca</a></p>
+      <p class="section-intro"><em>Type this address exactly if the link is not clickable.</em></p>
+
+      <p class="section-intro"><strong>When applying:</strong></p>
+      <ul class="bullets">
+        <li>Select Volunteer Police Information Check with Vulnerable Sector Search.</li>
+        <li>Upload two pieces of government-issued ID (one must include photo).</li>
+        <li>Enter your church name as the organization.</li>
+        <li>Upload the cover letter you receive from your leader (see Section B).</li>
+      </ul>
+
+      <p class="section-intro">Once you apply, the police service will process your application. Results will be delivered digitally to the church.</p>
+      <p class="section-intro">You must also sign the Consent Form (Section C) so the church can store your results.</p>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section B</div>
+      <div class="section-title">Cover Letter</div>
+      <p class="section-intro"><em>Leaders: Print this on church letterhead, fill in the applicant&rsquo;s details, and sign it. Give the signed letter to the applicant so they can upload it during their online application.</em></p>
+
+      <div class="letter">
+        <p><strong>To:</strong> Calgary Police Service &mdash; Police Information Check Unit</p>
+        <p><strong>Re:</strong> Volunteer Police Information Check &mdash; Vulnerable Sector Screening</p>
+
+        <p>This letter confirms that the following individual has applied to serve as a volunteer with our church, in a role involving children, youth, or vulnerable persons. We request that this applicant be processed under the reduced volunteer fee category.</p>
+
+        <div class="field"><label for="f_appName">Applicant Name</label><input type="text" id="f_appName" class="fi"></div>
+        <div class="field"><label for="f_appDob">Date of Birth</label><input type="date" id="f_appDob" class="fi"></div>
+        <div class="field"><label for="f_appAddr">Address</label><input type="text" id="f_appAddr" class="fi"></div>
+
+        <p>We understand that all records provided are confidential and will be used solely for volunteer screening, in accordance with our Safeguard Framework (<a class="inline-link" href="SG-POL-001.html">SG-POL-001</a> &mdash; Screening &amp; Approval).</p>
+
+        <p>Sincerely,</p>
+
+        <div class="row-sig" style="margin-top:14px">
+          <div class="field"><label for="f_epSig">Executive Pastor or Ministry Lead &mdash; Signature</label><input type="text" id="f_epSig" class="fi"></div>
+          <div class="field"><label for="f_epSigDate">Date</label><input type="date" id="f_epSigDate" class="fi"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="f_churchName">Church Name</label><input type="text" id="f_churchName" class="fi"></div>
+          <div class="field"><label for="f_churchPhone">Phone</label><input type="tel" id="f_churchPhone" class="fi"></div>
+        </div>
+        <label class="attest"><input type="checkbox" id="f_epConsent"><span>I intend my typed name above to serve as my signature on this cover letter.</span></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section C</div>
+      <div class="section-title">Consent Form</div>
+      <p class="section-intro"><em>Applicants: Sign this form and return it to your ministry leader. Do not upload this to the police service.</em></p>
+
+      <div class="field"><label for="f_consentName">I, (print full name)</label><input type="text" id="f_consentName" class="fi"></div>
+
+      <p class="section-intro" style="margin-top:8px">hereby authorize:</p>
+      <ul class="bullets">
+        <li>The local police service to conduct a Police Information Check including Vulnerable Sector Search.</li>
+        <li>The release of the results of this check directly to my church.</li>
+        <li>The church to store this record in my confidential ministry personnel file.</li>
+      </ul>
+
+      <p class="section-intro">I understand that:</p>
+      <ul class="bullets">
+        <li>Any information obtained will be kept strictly confidential.</li>
+        <li>This check must be renewed every 3&ndash;5 years (per <a class="inline-link" href="SG-POL-001.html">SG-POL-001</a> &mdash; Screening &amp; Approval).</li>
+        <li>I may be required to provide fingerprints if requested by the police service.</li>
+      </ul>
+
+      <div class="row-sig" style="margin-top:14px">
+        <div class="field"><label for="f_applicantSig">Applicant &mdash; Signature</label><input type="text" id="f_applicantSig" class="fi" placeholder="Type your full legal name as your signature"></div>
+        <div class="field"><label for="f_applicantSigDate">Date</label><input type="date" id="f_applicantSigDate" class="fi"></div>
+      </div>
+      <label class="attest"><input type="checkbox" id="f_applicantConsent"><span>I intend my typed name above to serve as my legal signature authorizing this consent.</span></label>
+
+      <div class="row-sig">
+        <div class="field"><label for="f_wSig">Witness (Church Staff / Leader) &mdash; Signature</label><input type="text" id="f_wSig" class="fi"></div>
+        <div class="field"><label for="f_wSigDate">Date</label><input type="date" id="f_wSigDate" class="fi"></div>
+      </div>
+      <label class="attest"><input type="checkbox" id="f_wConsent"><span>I intend my typed name above to serve as my signature witnessing this consent.</span></label>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
+      <span class="save-hint" id="saveHint">Your entries save automatically on this device.</span>
+    </div>
+
+  </div>
+</main>
+
+<footer>Safeguard Framework &middot; Bethany Chapel</footer>
+
+<script type="module">
+  import { mountUserChip } from "./sg-user-chip.js";
+  mountUserChip(document.getElementById("userChip"));
+</script>
+
+<script>
+  (function(){
+    const KEY = "sg-form-SG-FRM-003";
+    const HINT = document.getElementById("saveHint");
+    const fields = () => document.querySelectorAll('.wrap input, .wrap textarea, .wrap select');
+    function snapshot(){
+      const data = {};
+      fields().forEach(el => {
+        if (el.type === 'radio'){ if (el.checked && el.name) data['r:'+el.name] = el.value; }
+        else if (el.type === 'checkbox'){ if (el.id) data['c:'+el.id] = el.checked; }
+        else if (el.id) data['v:'+el.id] = el.value;
+      });
+      return data;
+    }
+    function rehydrate(){
+      let data; try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(_) { data = {}; }
+      fields().forEach(el => {
+        if (el.type === 'radio' && el.name){ const v = data['r:'+el.name]; if (v != null && el.value === v) el.checked = true; }
+        else if (el.type === 'checkbox' && el.id){ if ('c:'+el.id in data) el.checked = !!data['c:'+el.id]; }
+        else if (el.id){ if ('v:'+el.id in data) el.value = data['v:'+el.id]; }
+      });
+    }
+    let saveTimer;
+    function save(){
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        try { localStorage.setItem(KEY, JSON.stringify(snapshot())); HINT.textContent = "Saved on this device · " + new Date().toLocaleTimeString(); }
+        catch(_) { HINT.textContent = "Couldn't save locally"; }
+      }, 300);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      rehydrate();
+      fields().forEach(el => { el.addEventListener('input', save); el.addEventListener('change', save); });
+      document.getElementById('clearBtn').addEventListener('click', () => {
+        if (!confirm('Clear all fields on this form? This cannot be undone.')) return;
+        localStorage.removeItem(KEY);
+        fields().forEach(el => {
+          if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+          else el.value = '';
+        });
+        HINT.textContent = "Cleared";
+      });
+    });
+  })();
+</script>
+
+<script src="sg-nav.js"></script>
+</body>
+</html>

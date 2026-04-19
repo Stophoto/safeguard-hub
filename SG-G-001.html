@@ -4,129 +4,159 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SG-G-001 — Safeguard Governance Policy</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --navy: #1B3A4B; --teal: #2E6B7F; --gold: #B09055; --gold-light: #C8AD78; --charcoal: #2C2825; --body-color: #3D3835; --secondary: #5C5550; --muted: #8A8480; --cream: #FAF8F3; --sand: #F5F2ED; --white: #FFFFFF; --alert-red: #C0392B; }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { font-size: 17px; -webkit-font-smoothing: antialiased; }
-  body { font-family: Georgia, 'Times New Roman', serif; color: var(--body-color); background: var(--cream); line-height: 1.65; }
-  .pw { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-  @media (min-width: 800px) { .pw { padding: 3rem 2rem 5rem; } }
-  .cover { border-bottom: 3px solid var(--gold); padding-bottom: 1.75rem; margin-bottom: 2.5rem; }
-  .cf { font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
-  .ct { font-size: 1.85rem; font-weight: 400; color: var(--navy); line-height: 1.2; margin-bottom: 0.4rem; }
-  .cs { font-size: 1.05rem; color: var(--teal); font-style: italic; margin-bottom: 1rem; }
-  .cm { font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; color: var(--muted); }
-  .sec { margin-bottom: 2.5rem; }
-  .sl { font-family: Arial, Helvetica, sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
-  .st { font-size: 1.4rem; font-weight: 400; color: var(--navy); line-height: 1.25; margin-bottom: 1rem; }
-  .sst { font-size: 1.1rem; color: var(--teal); margin-top: 1.5rem; margin-bottom: 0.6rem; }
-  p { margin-bottom: 1rem; } strong { color: var(--charcoal); }
-  .co { border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin: 1.25rem 0; background: var(--white); }
-  .co-p { border-left: 4px solid var(--gold); } .co-c { background: var(--navy); color: var(--white); border: none; } .co-c strong { color: var(--white); } .co-a { background: #FDEDEC; border-left: 4px solid var(--alert-red); }
-  .co p:last-child { margin-bottom: 0; }
-  ul, ol { margin: 0.75rem 0 1.25rem 1.5rem; } li { margin-bottom: 0.4rem; }
-  table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.9rem; }
-  th { background: var(--navy); color: var(--white); font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.65rem 0.75rem; text-align: left; }
-  td { padding: 0.6rem 0.75rem; border-bottom: 1px solid #E5E2DD; } tr:nth-child(even) { background: var(--sand); }
-  hr { border: none; border-top: 1px solid #E5E2DD; margin: 2.5rem 0; }
-  a { color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3); transition: border-color 0.15s; }
-  a:hover { border-color: var(--teal); }
-  .refs { font-family: Arial, Helvetica, sans-serif; font-size: 0.88rem; } .refs li { margin-bottom: 0.35rem; }
-  .ft { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid rgba(176,144,85,0.2); font-family: Arial, Helvetica, sans-serif; font-size: 0.72rem; color: var(--muted); display: flex; justify-content: space-between; }
-  @media print { body { background: white; } .pw { padding: 1rem; } }
+  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --warn:#B07A1E; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.65;min-height:100vh;display:flex;flex-direction:column}
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .page{flex:1;padding:36px 24px 80px}.wrap{max-width:820px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1.title{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
+  .subtitle{font-family:var(--serif);font-size:18px;color:var(--teal);font-weight:400;font-style:italic;margin-bottom:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding-top:14px;margin-top:14px;border-top:2px solid rgba(176,144,85,0.3);font-size:12px;color:var(--muted);font-weight:500}
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  @media(max-width:620px){.card{padding:22px 20px}}
+  .section-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+  .section-title{font-family:var(--serif);font-size:24px;color:var(--navy);font-weight:400;line-height:1.2;margin-bottom:14px}
+  .sub-title{font-family:var(--serif);font-size:17px;color:var(--teal);font-weight:400;font-style:italic;margin:20px 0 6px 0}
+  p{margin-bottom:14px;line-height:1.65}p:last-child{margin-bottom:0}p strong{color:var(--navy);font-weight:700}
+  ul.bullets{list-style:none;margin:0;padding:0}
+  ul.bullets li{position:relative;padding:7px 0 7px 22px;line-height:1.6;border-bottom:1px solid var(--sand)}
+  ul.bullets li:last-child{border-bottom:none}
+  ul.bullets li::before{content:"";position:absolute;left:2px;top:16px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
+  .theology-card{background:linear-gradient(135deg,rgba(176,144,85,0.08),rgba(46,107,127,0.05));border-left:4px solid var(--gold);padding:20px 24px;border-radius:0 12px 12px 0;font-size:15.5px;line-height:1.7;color:var(--body);font-style:italic}
+  a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover{background:var(--teal)}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+  @media print{body{background:#fff}.hdr,.actions,footer{display:none !important}.page{padding:0}.wrap{max-width:100%}.card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}}
 </style>
 </head>
 <body data-doc-code="SG-G-001" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
-<div class="pw">
-  <div class="cover">
-    <div class="cf">Safeguard Framework</div>
-    <h1 class="ct">Safeguard Governance Policy</h1>
-    <div class="cs">Authority &middot; Accountability &middot; Training &amp; Renewal</div>
-    <div class="cm">SG-G-001 &bull; Version 2.0 &bull; March 2026</div>
-  </div>
 
-  <div class="sec">
-    <div class="sl">Purpose</div>
-    <h2 class="st">Why This Document Exists</h2>
-    <p>The <strong>Safeguard Framework</strong> is the unified safety system for children, youth, and vulnerable adults across all ministries of Bethany Chapel. It establishes how ministries recruit, screen, train, and supervise workers who serve these groups.</p>
-    <p>This Governance Policy defines who leads the system, how it is maintained, and how training and renewal requirements are enforced&mdash;ensuring alignment with biblical values, best practices, and legal requirements.</p>
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html"><svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true"><path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/><path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/></svg><div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div></a>
+    <a class="nav-link" href="dashboard.html">&larr; Dashboard</a>
+    <div id="userChip" style="margin-left:8px"></div>
   </div>
-  <div class="sec">
-    <div class="sl">Theological Foundation</div>
-    <h2 class="st">Why We Protect</h2>
-    <div class="co co-p"><p>We affirm that every person is created in the image of God and deserves to be treated with dignity, respect, and care. Jesus welcomed children into his presence and taught that those who harm children bring judgment upon themselves. As a church family, we are called to a culture of care&mdash;stewarding those entrusted to us with proactive vigilance.</p></div>
-  </div>
-  <div class="sec">
-    <div class="sl">Definitions</div>
-    <h2 class="st">Key Terms</h2>
-    <ul>
-      <li><strong>Child / Youth:</strong> Any individual under the age of 18.</li>
-      <li><strong>Vulnerable Adult:</strong> An individual who, because of age, illness, disability, or cognitive impairment, requires assistance or is at increased risk of abuse or neglect.</li>
-      <li><strong>Safeguard Team:</strong> The designated group responsible for daily administration, oversight, and record-keeping of the Safeguard Framework.</li>
-    </ul>
-  </div>
-  <div class="sec">
-    <div class="sl">Governance</div>
-    <h2 class="st">Who Is Responsible</h2>
-    <ul>
-      <li><strong>Board of Elders:</strong> Holds ultimate accountability for safeguarding, including final approval of all policies.</li>
-      <li><strong>Executive Pastor:</strong> Provides operational oversight and ensures the Framework is implemented consistently.</li>
-      <li><strong>Safeguard Team:</strong> Manages daily operation, monitors compliance, maintains secure records, and completes the annual compliance audit.</li>
-      <li><strong>Ministry Leaders:</strong> Ensure staff and volunteers are equipped, trained, and following all Safeguard standards. Only trained and current workers may be scheduled.</li>
-      <li><strong>Staff and Volunteers:</strong> Know and follow all Safeguard policies and procedures. Complete required training before serving and renew annually.</li>
-    </ul>
-  </div>
-  <div class="sec">
-    <div class="sl">Core Policies</div>
-    <h2 class="st">The Policy Registry</h2>
-    <ul>
-      <li><a href="SG-POL-001.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-POL-001</a> &mdash; Volunteer Screening &amp; Approval</li>
-      <li><a href="SG-POL-002.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-POL-002</a> &mdash; Supervision Standards (Two-Adult Rule &amp; Ratios)</li>
-      <li><a href="SG-POL-003.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-POL-003</a> &mdash; Bathroom &amp; Diapering Protocols</li>
-      <li><a href="SG-POL-004.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-POL-004</a> &mdash; Reporting &amp; Response</li>
-    </ul>
-    <p><em>Training &amp; Renewal standards are governed by this document (see below).</em></p>
-  </div>
-  <div class="sec">
-    <div class="sl">Training &amp; Renewal</div>
-    <h2 class="st">Requirements for All Workers</h2>
-    <h3 class="sst">Before Serving</h3>
-    <ul>
-      <li><strong>Complete Safeguard Training:</strong> All new volunteers must complete training covering the Core Protection Policies before serving.</li>
-      <li><strong>Sign the Covenant:</strong> Complete <strong>SG-FRM-004</strong> (Worker&rsquo;s Covenant &amp; Acknowledgement).</li>
-      <li><strong>Confirm Clearance:</strong> You must be fully approved through the screening process (<a href="SG-POL-001.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-POL-001</a>) before training is valid for deployment.</li>
-      <li><strong>Restriction:</strong> Do not serve in any child or youth role until all training and forms are complete.</li>
-    </ul>
-    <h3 class="sst">Annual Renewal</h3>
-    <ul>
-      <li><strong>Refresher Training:</strong> Complete refresher training each ministry year.</li>
-      <li><strong>Policy Review:</strong> Review the Core Protection Policies to ensure you understand any updates.</li>
-      <li><strong>Acknowledgement:</strong> Sign <strong>SG-FRM-004</strong> confirming review and understanding.</li>
-      <li><strong>Police Check Renewal:</strong> Renew Vulnerable Sector Checks every 3 years. Bethany Chapel covers the cost.</li>
-      <li><strong>Non-Compliance:</strong> Volunteers who miss renewal deadlines must pause serving until current.</li>
-    </ul>
-    <h3 class="sst">Role-Specific Training</h3>
-    <ul>
-      <li><strong>Nursery / Preschool:</strong> <a href="SG-POL-003.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-POL-003</a> (Bathroom &amp; Diapering Protocols).</li>
-      <li><strong>Check-In / Release:</strong> <strong>SG-SOP-005</strong> (Receiving &amp; Releasing Checklist).</li>
-      <li><strong>Drivers / Transport:</strong> <strong>SG-SOP-007</strong> (Transportation Procedures) and <strong>SG-FRM-010</strong> (Driver Application).</li>
-    </ul>
-  </div>
-  <div class="sec">
-    <div class="sl">Oversight</div>
-    <h2 class="st">How the System Stays Current</h2>
-    <ul>
-      <li><strong>Annual Audit:</strong> The Safeguard Team reviews compliance and recommends updates to the Board of Elders.</li>
-      <li><strong>Incident Reporting:</strong> All incidents must be reported per <a href="SG-POL-004.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-POL-004</a>.</li>
-      <li><strong>Compliance Monitoring:</strong> Ministry Leaders verify ongoing compliance within their areas.</li>
-    </ul>
-  </div>
+</header>
 
-  <div class="ft">
-    <span>Safeguard Framework &mdash; Bethany Chapel</span>
-    <span>SG-G-001</span>
+<main class="page">
+  <div class="wrap">
+
+    <div class="eyebrow">Safeguard Framework &middot; Governance</div>
+    <h1 class="title">Safeguard Governance Policy</h1>
+    <div class="subtitle">Authority &middot; Accountability &middot; Training &amp; Renewal</div>
+    <div class="meta">
+      <span><strong>Document Code:</strong> SG-G-001</span>
+      <span><strong>Version:</strong> 2.0</span>
+      <span><strong>Issued:</strong> March 2026</span>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Purpose</div>
+      <div class="section-title">Why This Document Exists</div>
+      <p>The <strong>Safeguard Framework</strong> is the unified safety system for children, youth, and vulnerable adults across all ministries of Bethany Chapel. It establishes how ministries recruit, screen, train, and supervise workers who serve these groups.</p>
+      <p>This Governance Policy defines who leads the system, how it is maintained, and how training and renewal requirements are enforced&mdash;ensuring alignment with biblical values, best practices, and legal requirements.</p>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Theological Foundation</div>
+      <div class="section-title">Why We Protect</div>
+      <div class="theology-card">We affirm that every person is created in the image of God and deserves to be treated with dignity, respect, and care. Jesus welcomed children into his presence and taught that those who harm children bring judgment upon themselves. As a church family, we are called to a culture of care&mdash;stewarding those entrusted to us with proactive vigilance.</div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Definitions</div>
+      <div class="section-title">Key Terms</div>
+      <ul class="bullets">
+        <li><strong>Child / Youth:</strong> Any individual under the age of 18.</li>
+        <li><strong>Vulnerable Adult:</strong> An individual who, because of age, illness, disability, or cognitive impairment, requires assistance or is at increased risk of abuse or neglect.</li>
+        <li><strong>Safeguard Team:</strong> The designated group responsible for daily administration, oversight, and record-keeping of the Safeguard Framework.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Governance</div>
+      <div class="section-title">Who Is Responsible</div>
+      <ul class="bullets">
+        <li><strong>Board of Elders:</strong> Holds ultimate accountability for safeguarding, including final approval of all policies.</li>
+        <li><strong>Executive Pastor:</strong> Provides operational oversight and ensures the Framework is implemented consistently.</li>
+        <li><strong>Safeguard Team:</strong> Manages daily operation, monitors compliance, maintains secure records, and completes the annual compliance audit.</li>
+        <li><strong>Ministry Leaders:</strong> Ensure staff and volunteers are equipped, trained, and following all Safeguard standards. Only trained and current workers may be scheduled.</li>
+        <li><strong>Staff and Volunteers:</strong> Know and follow all Safeguard policies and procedures. Complete required training before serving and renew annually.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Core Policies</div>
+      <div class="section-title">The Policy Registry</div>
+      <ul class="bullets">
+        <li><a class="inline-link" href="SG-POL-001.html">SG-POL-001</a> &mdash; Volunteer Screening &amp; Approval</li>
+        <li><a class="inline-link" href="SG-POL-002.html">SG-POL-002</a> &mdash; Supervision Standards (Two-Adult Rule &amp; Ratios)</li>
+        <li><a class="inline-link" href="SG-POL-003.html">SG-POL-003</a> &mdash; Bathroom &amp; Diapering Protocols</li>
+        <li><a class="inline-link" href="SG-POL-004.html">SG-POL-004</a> &mdash; Reporting &amp; Response</li>
+      </ul>
+      <p style="margin-top:14px"><em>Training &amp; Renewal standards are governed by this document (see below).</em></p>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Training &amp; Renewal</div>
+      <div class="section-title">Requirements for All Workers</div>
+
+      <div class="sub-title">Before Serving</div>
+      <ul class="bullets">
+        <li><strong>Complete Safeguard Training:</strong> All new volunteers must complete training covering the Core Protection Policies before serving.</li>
+        <li><strong>Sign the Covenant:</strong> Complete <strong>SG-FRM-004</strong> (Worker&rsquo;s Covenant &amp; Acknowledgement).</li>
+        <li><strong>Confirm Clearance:</strong> You must be fully approved through the screening process (<a class="inline-link" href="SG-POL-001.html">SG-POL-001</a>) before training is valid for deployment.</li>
+        <li><strong>Restriction:</strong> Do not serve in any child or youth role until all training and forms are complete.</li>
+      </ul>
+
+      <div class="sub-title">Annual Renewal</div>
+      <ul class="bullets">
+        <li><strong>Refresher Training:</strong> Complete refresher training each ministry year.</li>
+        <li><strong>Policy Review:</strong> Review the Core Protection Policies to ensure you understand any updates.</li>
+        <li><strong>Acknowledgement:</strong> Sign <strong>SG-FRM-004</strong> confirming review and understanding.</li>
+        <li><strong>Police Check Renewal:</strong> Renew Vulnerable Sector Checks every 3 years. Bethany Chapel covers the cost.</li>
+        <li><strong>Non-Compliance:</strong> Volunteers who miss renewal deadlines must pause serving until current.</li>
+      </ul>
+
+      <div class="sub-title">Role-Specific Training</div>
+      <ul class="bullets">
+        <li><strong>Nursery / Preschool:</strong> <a class="inline-link" href="SG-POL-003.html">SG-POL-003</a> (Bathroom &amp; Diapering Protocols).</li>
+        <li><strong>Check-In / Release:</strong> <a class="inline-link" href="SG-SOP-005.html">SG-SOP-005</a> (Receiving &amp; Releasing Checklist).</li>
+        <li><strong>Drivers / Transport:</strong> <a class="inline-link" href="SG-SOP-007.html">SG-SOP-007</a> (Transportation Procedures) and <a class="inline-link" href="SG-FRM-010.html">SG-FRM-010</a> (Driver Application).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Oversight</div>
+      <div class="section-title">How the System Stays Current</div>
+      <ul class="bullets">
+        <li><strong>Annual Audit:</strong> The Safeguard Team reviews compliance and recommends updates to the Board of Elders.</li>
+        <li><strong>Incident Reporting:</strong> All incidents must be reported per <a class="inline-link" href="SG-POL-004.html">SG-POL-004</a>.</li>
+        <li><strong>Compliance Monitoring:</strong> Ministry Leaders verify ongoing compliance within their areas.</li>
+      </ul>
+    </div>
+
+    <div class="actions"><button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button></div>
   </div>
-</div>
+</main>
+
+<footer>Safeguard Framework &middot; Bethany Chapel</footer>
+<script type="module">import { mountUserChip } from "./sg-user-chip.js"; mountUserChip(document.getElementById("userChip"));</script>
 <script src="sg-nav.js"></script>
 </body>
 </html>

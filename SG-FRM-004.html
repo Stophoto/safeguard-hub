@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-FRM-004 — Worker's Covenant &amp; Annual Acknowledgement</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --warn:#B07A1E; --warn-bg:#FFF5E6;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;
+       min-height:100vh;display:flex;flex-direction:column}
+
+  /* ── Header ── */
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+       border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;
+            padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+
+  /* ── Page ── */
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:960px;margin:0 auto}
+
+  /* ── Cover ── */
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:10px}
+  h1.title{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;
+           line-height:1.1;margin-bottom:8px}
+  .subtitle{font-family:var(--serif);font-size:18px;color:var(--teal);font-weight:400;
+            font-style:italic;margin-bottom:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;
+        padding-top:14px;margin-top:14px;border-top:2px solid rgba(176,144,85,0.3);
+        font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.02em}
+  .classif{color:var(--error);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:11px}
+  .lede{font-size:15px;color:var(--muted);margin:22px 0 26px 0;line-height:1.65;max-width:720px;font-style:italic}
+
+  /* ── Signature consent attestation ── */
+  .attest{display:flex;align-items:flex-start;gap:10px;margin:4px 0 16px 0;
+          padding:10px 14px;background:var(--sand);border:1px solid var(--border);
+          border-radius:8px;cursor:pointer;transition:border-color var(--transition),background var(--transition)}
+  .attest:hover{border-color:var(--gold-warm)}
+  .attest input{margin-top:2px;width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
+  .attest span{font-size:13px;color:var(--body);line-height:1.45;font-weight:500}
+  .attest input:checked ~ span{color:var(--navy)}
+
+  /* ── Helper note (who fills what) ── */
+  .who-note{font-size:12px;color:var(--muted);font-style:italic;margin-top:-2px;margin-bottom:14px;line-height:1.5}
+
+  /* ── Card ── */
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
+        padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  @media(max-width:620px){.card{padding:22px 20px}}
+  .section-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
+                text-transform:uppercase;margin-bottom:6px}
+  .section-title{font-family:var(--serif);font-size:24px;color:var(--navy);font-weight:400;
+                 line-height:1.2;margin-bottom:16px}
+  .section-intro{color:var(--body);font-size:15px;margin-bottom:14px;line-height:1.65}
+  .section-intro em,.section-intro i{color:var(--muted);font-style:italic}
+
+  /* ── Form fields ── */
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);
+        letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
+      font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);
+      transition:border-color var(--transition),box-shadow var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  textarea.fi{min-height:90px;resize:vertical;font-family:var(--sans);line-height:1.55}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .row-sig{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+  @media(max-width:620px){.row,.row-sig{grid-template-columns:1fr}}
+
+  /* ── Bulleted policy lists (read-only content) ── */
+  .policy-list{list-style:none;margin:8px 0 0 0;padding:0}
+  .policy-list li{position:relative;padding:6px 0 6px 20px;line-height:1.65;color:var(--body)}
+  .policy-list li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:6px;
+                          border-radius:50%;background:var(--gold)}
+  .policy-list li + li{border-top:1px solid var(--sand);margin-top:4px}
+
+  /* ── Office use box ── */
+  .office{background:var(--sand);border:1.5px dashed rgba(176,144,85,0.45);border-radius:10px;
+          padding:18px 22px;margin-top:20px}
+  .office .hd{font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+              color:var(--muted);margin-bottom:10px}
+  .office-opts{display:flex;flex-wrap:wrap;gap:10px}
+
+  /* ── Checkbox pill ── */
+  .pill{position:relative;cursor:pointer}
+  .pill input{position:absolute;opacity:0;pointer-events:none}
+  .pill span{display:inline-flex;padding:9px 15px;border:1.5px solid var(--border);
+             border-radius:22px;font-size:13px;font-weight:600;background:var(--white);
+             color:var(--body);transition:all var(--transition);user-select:none}
+  .pill:hover span{border-color:var(--gold-warm)}
+  .pill input:checked + span{background:var(--teal);border-color:var(--teal);color:var(--white)}
+  .pill input:focus-visible + span{box-shadow:0 0 0 3px rgba(46,107,127,0.2)}
+
+  /* ── Action bar (print / clear) ── */
+  .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+       padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);
+       font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);
+       text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover{background:var(--teal)}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+  .save-hint{font-size:12px;color:var(--muted);margin-left:auto}
+
+  /* ── Links ── */
+  a.inline-link{color:var(--teal);text-decoration:none;
+                border-bottom:1px solid rgba(46,107,127,0.3);transition:border-color var(--transition)}
+  a.inline-link:hover{border-bottom-color:var(--teal)}
+
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+
+  /* ── Print ── */
+  @media print{
+    body{background:#fff}
+    .hdr,.xlink,.actions,footer,.save-hint{display:none !important}
+    .page{padding:0}
+    .wrap{max-width:100%}
+    .card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;margin-bottom:12px}
+    .fi{border:none;border-bottom:1px solid #999;border-radius:0;padding:4px 0;background:transparent}
+    textarea.fi{border:1px solid #ccc;padding:6px}
+    .pill span{border:1px solid #999 !important;color:#000 !important;background:#fff !important}
+    .pill input:checked + span{background:#000 !important;color:#fff !important}
+    thead th{background:#333 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    tbody td .fi{border-bottom:1px solid #bbb}
+  }
+</style>
+</head>
+<body data-doc-code="SG-FRM-004" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="dashboard.html">&larr; Dashboard</a>
+    <div id="userChip" style="margin-left:8px"></div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="wrap">
+
+    <!-- Cover -->
+    <div class="eyebrow">Safeguard Framework &middot; Form</div>
+    <h1 class="title">Worker&rsquo;s Covenant &amp; Annual Acknowledgement</h1>
+    <div class="subtitle">Initial Commitment and Annual Policy Renewal</div>
+    <div class="meta">
+      <span><strong>Document Code:</strong> SG-FRM-004</span>
+      <span><strong>Version:</strong> 2.0</span>
+      <span><strong>Issued:</strong> March 2026</span>
+      <span class="classif">Confidential &mdash; Ministry Personnel File</span>
+    </div>
+
+    <p class="lede">This form serves two purposes: (1) as the initial covenant every worker signs upon approval, and (2) as the annual acknowledgement renewed each ministry year. Both signatures are collected on this single document.</p>
+
+    <!-- Section 1 -->
+    <div class="card">
+      <div class="section-head">Section 1</div>
+      <div class="section-title">Worker Information</div>
+      <div class="field">
+        <label for="f_fullName">Full Name</label>
+        <input type="text" id="f_fullName" class="fi" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="f_role">Ministry Role / Area</label>
+        <input type="text" id="f_role" class="fi">
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="card">
+      <div class="section-head">Section 2</div>
+      <div class="section-title">Commitment to Child Protection</div>
+      <p class="section-intro"><em>As a ministry worker, I affirm that:</em></p>
+      <ul class="policy-list">
+        <li>I have read and understood the Safeguard Framework&rsquo;s core protection policies (<a class="inline-link" href="SG-POL-001.html">SG-POL-001</a> through <a class="inline-link" href="SG-POL-004.html">SG-POL-004</a>) and the governance policy (<a class="inline-link" href="SG-G-001.html">SG-G-001</a>).</li>
+        <li>I will abide by these policies at all times in my ministry role.</li>
+        <li>I understand that failure to follow these policies may result in removal from ministry.</li>
+      </ul>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="card">
+      <div class="section-head">Section 3</div>
+      <div class="section-title">Commitment to Personal Conduct</div>
+      <p class="section-intro"><em>I agree to:</em></p>
+      <ul class="policy-list">
+        <li>Live in a way that reflects the character of Christ, showing integrity, humility, and respect for others.</li>
+        <li>Abstain from any behavior that could reasonably be seen as abusive, exploitative, or inappropriate toward children, youth, or vulnerable persons.</li>
+        <li>Report any suspected abuse, neglect, or misconduct immediately, in accordance with <a class="inline-link" href="SG-POL-004.html">SG-POL-004</a> &mdash; Reporting &amp; Response.</li>
+        <li>Participate in required training, renewals, and refresher sessions as outlined in <a class="inline-link" href="SG-G-001.html">SG-G-001</a>.</li>
+      </ul>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="card">
+      <div class="section-head">Section 4</div>
+      <div class="section-title">Confidentiality</div>
+      <p class="section-intro"><em>I understand that in serving I may learn personal information about children, youth, families, or ministry workers. I commit to keeping all such information confidential, except where reporting obligations require disclosure.</em></p>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="card">
+      <div class="section-head">Section 5</div>
+      <div class="section-title">Initial Covenant</div>
+      <p class="section-intro"><em>I affirm my agreement with this covenant and commit myself to serving faithfully and responsibly.</em></p>
+
+      <div class="row-sig">
+        <div class="field">
+          <label for="f_workerSig">Worker &mdash; Signature</label>
+          <input type="text" id="f_workerSig" class="fi" placeholder="Type your full legal name as your signature">
+        </div>
+        <div class="field">
+          <label for="f_workerDate">Date</label>
+          <input type="date" id="f_workerDate" class="fi">
+        </div>
+      </div>
+      <label class="attest"><input type="checkbox" id="f_workerConsent"><span>I intend my typed name above to serve as my legal signature on this covenant.</span></label>
+
+      <div class="row-sig">
+        <div class="field">
+          <label for="f_witnessSig">Witness (Leader) &mdash; Signature</label>
+          <input type="text" id="f_witnessSig" class="fi">
+        </div>
+        <div class="field">
+          <label for="f_witnessDate">Date</label>
+          <input type="date" id="f_witnessDate" class="fi">
+        </div>
+      </div>
+      <label class="attest"><input type="checkbox" id="f_witnessConsent"><span>I intend my typed name above to serve as my signature witnessing this covenant.</span></label>
+    </div>
+
+    <!-- Office Use Only -->
+    <div class="office">
+      <div class="hd">For Office Use Only</div>
+      <div class="who-note" style="margin-bottom:10px">Coordinator use only &mdash; tracks that this form has been filed. Will sync to the volunteer&rsquo;s record in a future update.</div>
+      <div class="office-opts">
+        <label class="pill"><input type="checkbox" id="f_office1"><span>Copy stored in personnel file</span></label>
+        <label class="pill"><input type="checkbox" id="f_office2"><span>Training completion confirmed</span></label>
+        <label class="pill"><input type="checkbox" id="f_office3"><span>Added to annual compliance tracker</span></label>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
+      <span class="save-hint" id="saveHint">Your entries save automatically on this device.</span>
+    </div>
+
+  </div>
+</main>
+
+<footer>Safeguard Framework &middot; Bethany Chapel</footer>
+
+<script type="module">
+  // ── User chip (mounts sign-in link or user menu) ──
+  import { mountUserChip } from "./sg-user-chip.js";
+  mountUserChip(document.getElementById("userChip"));
+</script>
+
+<script>
+  // ── localStorage autosave ──────────────────────────────────
+  // Saves every input/checkbox state on this page under a single
+  // key, so a reload or tab close doesn't lose work. Stays on the
+  // device — nothing is sent to the server.
+  (function(){
+    const KEY = "sg-form-SG-FRM-004";
+    const HINT = document.getElementById("saveHint");
+    const fields = () => document.querySelectorAll('.wrap input, .wrap textarea, .wrap select');
+
+    function snapshot(){
+      const data = {};
+      fields().forEach(el => {
+        const id = el.id || el.getAttribute('data-renewal');
+        if (!id) return;
+        if (el.type === 'checkbox') data[id] = el.checked;
+        else data[id] = el.value;
+      });
+      return data;
+    }
+
+    function rehydrate(){
+      let data;
+      try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); }
+      catch (_) { data = {}; }
+      fields().forEach(el => {
+        const id = el.id || el.getAttribute('data-renewal');
+        if (!id || !(id in data)) return;
+        if (el.type === 'checkbox') el.checked = !!data[id];
+        else el.value = data[id];
+      });
+    }
+
+    let saveTimer;
+    function save(){
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        try {
+          localStorage.setItem(KEY, JSON.stringify(snapshot()));
+          HINT.textContent = "Saved on this device · " + new Date().toLocaleTimeString();
+        } catch (_) {
+          HINT.textContent = "Couldn't save locally";
+        }
+      }, 300);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      rehydrate();
+      fields().forEach(el => {
+        el.addEventListener('input', save);
+        el.addEventListener('change', save);
+      });
+
+      document.getElementById('clearBtn').addEventListener('click', () => {
+        if (!confirm('Clear all fields on this form? This cannot be undone.')) return;
+        localStorage.removeItem(KEY);
+        fields().forEach(el => {
+          if (el.type === 'checkbox') el.checked = false;
+          else el.value = '';
+        });
+        HINT.textContent = "Cleared";
+      });
+    });
+  })();
+</script>
+
+<script src="sg-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-FRM-002 — Reference Check Form</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --success:#27AE60; --warn:#B07A1E; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:960px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1.title{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
+  .meta{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding-top:14px;margin-top:14px;border-top:2px solid rgba(176,144,85,0.3);font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.02em}
+  .classif{color:var(--error);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:11px}
+  .lede{font-size:15px;color:var(--muted);margin:22px 0 26px 0;line-height:1.65;max-width:720px}
+  .attest{display:flex;align-items:flex-start;gap:10px;margin:4px 0 16px 0;padding:10px 14px;background:var(--sand);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color var(--transition)}
+  .attest:hover{border-color:var(--gold-warm)}
+  .attest input{margin-top:2px;width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
+  .attest span{font-size:13px;color:var(--body);line-height:1.45;font-weight:500}
+  .who-note{font-size:12px;color:var(--muted);font-style:italic;margin-top:-2px;margin-bottom:14px;line-height:1.5}
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  @media(max-width:620px){.card{padding:22px 20px}}
+  .section-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+  .section-title{font-family:var(--serif);font-size:24px;color:var(--navy);font-weight:400;line-height:1.2;margin-bottom:16px}
+  .section-intro{color:var(--body);font-size:15px;margin-bottom:14px;line-height:1.65}
+  .section-intro em,.section-intro i{color:var(--muted);font-style:italic}
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);transition:border-color var(--transition),box-shadow var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  textarea.fi{min-height:100px;resize:vertical;font-family:var(--sans);line-height:1.55}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .row-sig{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+  @media(max-width:620px){.row,.row-sig{grid-template-columns:1fr}}
+  .prompt{font-weight:600;color:var(--navy);margin-bottom:8px;font-size:14px;margin-top:4px}
+  .pill{position:relative;cursor:pointer}
+  .pill input{position:absolute;opacity:0;pointer-events:none}
+  .pill span{display:inline-flex;padding:9px 15px;border:1.5px solid var(--border);border-radius:22px;font-size:13px;font-weight:600;background:var(--white);color:var(--body);transition:all var(--transition);user-select:none}
+  .pill:hover span{border-color:var(--gold-warm)}
+  .pill input:checked + span{background:var(--teal);border-color:var(--teal);color:var(--white)}
+  .pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+  .qnum{font-weight:700;color:var(--navy);margin:16px 0 8px 0;font-size:15px}
+  .qnum .n{color:var(--gold);margin-right:4px}
+  .table-wrap{margin:12px 0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead th{background:var(--navy);color:var(--white);font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:12px 14px;text-align:left}
+  thead th.c{text-align:center}
+  tbody td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody td + td{border-left:1px solid var(--border)}
+  tbody tr:nth-child(even) td{background:var(--sand)}
+  td.q{font-size:14px;color:var(--body);line-height:1.5}
+  td.yn{text-align:center;width:80px}
+  .office{background:var(--sand);border:1.5px dashed rgba(176,144,85,0.45);border-radius:10px;padding:18px 22px;margin-top:20px}
+  .office .hd{font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover{background:var(--teal)}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+  .save-hint{font-size:12px;color:var(--muted);margin-left:auto}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+  @media print{body{background:#fff}.hdr,.actions,footer,.save-hint{display:none !important}.page{padding:0}.wrap{max-width:100%}.card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;margin-bottom:12px}.fi{border:none;border-bottom:1px solid #999;border-radius:0;padding:4px 0;background:transparent}textarea.fi{border:1px solid #ccc;padding:6px}.pill span{border:1px solid #999 !important;color:#000 !important;background:#fff !important}.pill input:checked + span{background:#000 !important;color:#fff !important}thead th{background:#333 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body data-doc-code="SG-FRM-002" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="dashboard.html">&larr; Dashboard</a>
+    <div id="userChip" style="margin-left:8px"></div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="wrap">
+
+    <div class="eyebrow">Safeguard Framework &middot; Form</div>
+    <h1 class="title">Reference Check Form</h1>
+    <div class="meta">
+      <span><strong>Document Code:</strong> SG-FRM-002</span>
+      <span><strong>Version:</strong> 2.0</span>
+      <span><strong>Issued:</strong> March 2026</span>
+      <span class="classif">Confidential &mdash; Screening Purposes Only</span>
+    </div>
+
+    <p class="lede">This reference check is part of the Safeguard Framework for child and youth protection. Complete this form by phone or in person with each reference provided by the applicant.</p>
+
+    <div class="card">
+      <div class="section-head">Section 1</div>
+      <div class="section-title">Applicant Information</div>
+      <div class="field"><label for="f_appName">Name of Applicant</label><input type="text" id="f_appName" class="fi"></div>
+      <div class="field"><label for="f_appRole">Position / Ministry Applied For</label><input type="text" id="f_appRole" class="fi"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 2</div>
+      <div class="section-title">Reference Information</div>
+      <div class="field"><label for="f_refName">Name of Reference</label><input type="text" id="f_refName" class="fi"></div>
+      <div class="field"><label for="f_refRel">Relationship to Applicant</label><input type="text" id="f_refRel" class="fi"></div>
+      <div class="field"><label for="f_refPE">Phone / Email</label><input type="text" id="f_refPE" class="fi"></div>
+      <div class="row">
+        <div class="field"><label for="f_refDate">Date of Contact</label><input type="date" id="f_refDate" class="fi"></div>
+        <div class="field">
+          <label>Method</label>
+          <div class="pills" style="margin-bottom:0">
+            <label class="pill"><input type="radio" name="f_method" value="phone"><span>Phone</span></label>
+            <label class="pill"><input type="radio" name="f_method" value="email"><span>Email</span></label>
+            <label class="pill"><input type="radio" name="f_method" value="inperson"><span>In Person</span></label>
+            <label class="pill"><input type="radio" name="f_method" value="other"><span>Other</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 3</div>
+      <div class="section-title">Standard Questions</div>
+
+      <div class="qnum"><span class="n">1.</span>How long have you known the applicant?</div>
+      <div class="pills">
+        <label class="pill"><input type="radio" name="f_q1" value="lt1"><span>Less than 1 year</span></label>
+        <label class="pill"><input type="radio" name="f_q1" value="1-3"><span>1&ndash;3 years</span></label>
+        <label class="pill"><input type="radio" name="f_q1" value="3-5"><span>3&ndash;5 years</span></label>
+        <label class="pill"><input type="radio" name="f_q1" value="5+"><span>5+ years</span></label>
+      </div>
+
+      <div class="qnum"><span class="n">2.</span>In what capacity have you known the applicant?</div>
+      <div class="pills">
+        <label class="pill"><input type="checkbox" id="f_q2_work"><span>Work</span></label>
+        <label class="pill"><input type="checkbox" id="f_q2_church"><span>Church</span></label>
+        <label class="pill"><input type="checkbox" id="f_q2_volunteer"><span>Volunteer</span></label>
+        <label class="pill"><input type="checkbox" id="f_q2_personal"><span>Personal</span></label>
+      </div>
+      <div class="field"><label for="f_q2_other">Other</label><input type="text" id="f_q2_other" class="fi"></div>
+
+      <div class="table-wrap" style="margin-top:16px">
+        <table>
+          <thead><tr><th>Question</th><th class="c">Yes</th><th class="c">No</th><th class="c">Unsure</th></tr></thead>
+          <tbody>
+            <tr><td class="q">3. Would you consider the applicant reliable and trustworthy?</td><td class="yn"><input type="radio" name="f_q3" value="yes"></td><td class="yn"><input type="radio" name="f_q3" value="no"></td><td class="yn"><input type="radio" name="f_q3" value="unsure"></td></tr>
+            <tr><td class="q">4. To your knowledge, has the applicant ever displayed inappropriate behavior, anger issues, or concerns with children, youth, or vulnerable persons?</td><td class="yn"><input type="radio" name="f_q4" value="yes"></td><td class="yn"><input type="radio" name="f_q4" value="no"></td><td class="yn"><input type="radio" name="f_q4" value="unsure"></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="field" style="margin-top:16px"><label for="f_q5">5. How would you describe the applicant&rsquo;s character (integrity, maturity, spiritual life)?</label><textarea id="f_q5" class="fi" style="min-height:130px"></textarea></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Question</th><th class="c">Yes</th><th class="c">No</th><th class="c">Unsure</th></tr></thead>
+          <tbody>
+            <tr><td class="q">6. Would you entrust your own child(ren) to the care of this person?</td><td class="yn"><input type="radio" name="f_q6" value="yes"></td><td class="yn"><input type="radio" name="f_q6" value="no"></td><td class="yn"><input type="radio" name="f_q6" value="unsure"></td></tr>
+            <tr><td class="q">7. Do you have any hesitation in recommending this applicant for ministry with children/youth?</td><td class="yn"><input type="radio" name="f_q7" value="yes"></td><td class="yn"><input type="radio" name="f_q7" value="no"></td><td class="yn"><input type="radio" name="f_q7" value="unsure"></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="field" style="margin-top:16px"><label for="f_qExplain">If you answered &ldquo;Yes&rdquo; or &ldquo;Unsure&rdquo; to any question, please explain</label><textarea id="f_qExplain" class="fi" style="min-height:130px"></textarea></div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 4</div>
+      <div class="section-title">Reference Confirmation</div>
+      <p class="section-intro">I confirm that the above answers reflect my honest opinion regarding this applicant.</p>
+      <div class="row-sig">
+        <div class="field"><label for="f_refSig">Reference &mdash; Signature</label><input type="text" id="f_refSig" class="fi" placeholder="Type your full name as your signature"></div>
+        <div class="field"><label for="f_refSigDate">Date</label><input type="date" id="f_refSigDate" class="fi"></div>
+      </div>
+      <label class="attest"><input type="checkbox" id="f_refConsent"><span>I intend my typed name above to serve as my signature confirming this reference.</span></label>
+    </div>
+
+    <div class="office">
+      <div class="hd">For Office Use Only</div>
+      <div class="who-note" style="margin-bottom:10px">Coordinator use only &mdash; tracks completion of this reference check. Will sync to the applicant&rsquo;s record in a future update.</div>
+      <div class="row">
+        <div class="field"><label for="f_oBy">Reference check completed by</label><input type="text" id="f_oBy" class="fi"></div>
+        <div class="field"><label for="f_oDate">Date</label><input type="date" id="f_oDate" class="fi"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
+      <span class="save-hint" id="saveHint">Your entries save automatically on this device.</span>
+    </div>
+
+  </div>
+</main>
+
+<footer>Safeguard Framework &middot; Bethany Chapel</footer>
+
+<script type="module">
+  import { mountUserChip } from "./sg-user-chip.js";
+  mountUserChip(document.getElementById("userChip"));
+</script>
+
+<script>
+  (function(){
+    const KEY = "sg-form-SG-FRM-002";
+    const HINT = document.getElementById("saveHint");
+    const fields = () => document.querySelectorAll('.wrap input, .wrap textarea, .wrap select');
+    function snapshot(){
+      const data = {};
+      fields().forEach(el => {
+        if (el.type === 'radio'){ if (el.checked && el.name) data['r:'+el.name] = el.value; }
+        else if (el.type === 'checkbox'){ if (el.id) data['c:'+el.id] = el.checked; }
+        else if (el.id) data['v:'+el.id] = el.value;
+      });
+      return data;
+    }
+    function rehydrate(){
+      let data; try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(_) { data = {}; }
+      fields().forEach(el => {
+        if (el.type === 'radio' && el.name){ const v = data['r:'+el.name]; if (v != null && el.value === v) el.checked = true; }
+        else if (el.type === 'checkbox' && el.id){ if ('c:'+el.id in data) el.checked = !!data['c:'+el.id]; }
+        else if (el.id){ if ('v:'+el.id in data) el.value = data['v:'+el.id]; }
+      });
+    }
+    let saveTimer;
+    function save(){
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        try { localStorage.setItem(KEY, JSON.stringify(snapshot())); HINT.textContent = "Saved on this device · " + new Date().toLocaleTimeString(); }
+        catch(_) { HINT.textContent = "Couldn't save locally"; }
+      }, 300);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      rehydrate();
+      fields().forEach(el => { el.addEventListener('input', save); el.addEventListener('change', save); });
+      document.getElementById('clearBtn').addEventListener('click', () => {
+        if (!confirm('Clear all fields on this form? This cannot be undone.')) return;
+        localStorage.removeItem(KEY);
+        fields().forEach(el => {
+          if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+          else el.value = '';
+        });
+        HINT.textContent = "Cleared";
+      });
+    });
+  })();
+</script>
+
+<script src="sg-nav.js"></script>
+</body>
+</html>

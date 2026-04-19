@@ -3,112 +3,153 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SG-POL-001 — Volunteer Screening & Approval</title>
+<title>SG-POL-001 — Volunteer Screening &amp; Approval</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --navy: #1B3A4B; --teal: #2E6B7F; --gold: #B09055; --gold-light: #C8AD78; --charcoal: #2C2825; --body-color: #3D3835; --secondary: #5C5550; --muted: #8A8480; --cream: #FAF8F3; --sand: #F5F2ED; --white: #FFFFFF; --alert-red: #C0392B; }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { font-size: 17px; -webkit-font-smoothing: antialiased; }
-  body { font-family: Georgia, 'Times New Roman', serif; color: var(--body-color); background: var(--cream); line-height: 1.65; }
-  .pw { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-  @media (min-width: 800px) { .pw { padding: 3rem 2rem 5rem; } }
-  .cover { border-bottom: 3px solid var(--gold); padding-bottom: 1.75rem; margin-bottom: 2.5rem; }
-  .cf { font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
-  .ct { font-size: 1.85rem; font-weight: 400; color: var(--navy); line-height: 1.2; margin-bottom: 0.4rem; }
-  .cs { font-size: 1.05rem; color: var(--teal); font-style: italic; margin-bottom: 1rem; }
-  .cm { font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; color: var(--muted); }
-  .sec { margin-bottom: 2.5rem; }
-  .sl { font-family: Arial, Helvetica, sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
-  .st { font-size: 1.4rem; font-weight: 400; color: var(--navy); line-height: 1.25; margin-bottom: 1rem; }
-  .sst { font-size: 1.1rem; color: var(--teal); margin-top: 1.5rem; margin-bottom: 0.6rem; }
-  p { margin-bottom: 1rem; } strong { color: var(--charcoal); }
-  .co { border: 1px solid #E5E2DD; border-radius: 4px; padding: 1rem 1.15rem; margin: 1.25rem 0; background: var(--white); }
-  .co-p { border-left: 4px solid var(--gold); } .co-c { background: var(--navy); color: var(--white); border: none; } .co-c strong { color: var(--white); } .co-a { background: #FDEDEC; border-left: 4px solid var(--alert-red); }
-  .co p:last-child { margin-bottom: 0; }
-  ul, ol { margin: 0.75rem 0 1.25rem 1.5rem; } li { margin-bottom: 0.4rem; }
-  table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.9rem; }
-  th { background: var(--navy); color: var(--white); font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.65rem 0.75rem; text-align: left; }
-  td { padding: 0.6rem 0.75rem; border-bottom: 1px solid #E5E2DD; } tr:nth-child(even) { background: var(--sand); }
-  hr { border: none; border-top: 1px solid #E5E2DD; margin: 2.5rem 0; }
-  a { color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3); transition: border-color 0.15s; }
-  a:hover { border-color: var(--teal); }
-  .refs { font-family: Arial, Helvetica, sans-serif; font-size: 0.88rem; } .refs li { margin-bottom: 0.35rem; }
-  .ft { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid rgba(176,144,85,0.2); font-family: Arial, Helvetica, sans-serif; font-size: 0.72rem; color: var(--muted); display: flex; justify-content: space-between; }
-  @media print { body { background: white; } .pw { padding: 1rem; } }
+  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --error-bg:#FFF0EE; --warn:#B07A1E; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.65;min-height:100vh;display:flex;flex-direction:column}
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:820px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1.title{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
+  .subtitle{font-family:var(--serif);font-size:18px;color:var(--teal);font-weight:400;font-style:italic;margin-bottom:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding-top:14px;margin-top:14px;border-top:2px solid rgba(176,144,85,0.3);font-size:12px;color:var(--muted);font-weight:500}
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  @media(max-width:620px){.card{padding:22px 20px}}
+  .section-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+  .section-title{font-family:var(--serif);font-size:24px;color:var(--navy);font-weight:400;line-height:1.2;margin-bottom:14px}
+  .sub-title{font-family:var(--serif);font-size:17px;color:var(--teal);font-weight:400;font-style:italic;margin:18px 0 6px 0}
+  p{margin-bottom:14px;line-height:1.65}
+  p:last-child{margin-bottom:0}
+  p strong{color:var(--navy);font-weight:700}
+  ul.bullets,ol.bullets{list-style:none;margin:0;padding:0}
+  ul.bullets li,ol.bullets li{position:relative;padding:7px 0 7px 22px;line-height:1.6;border-bottom:1px solid var(--sand)}
+  ul.bullets li:last-child,ol.bullets li:last-child{border-bottom:none}
+  ul.bullets li::before{content:"";position:absolute;left:2px;top:16px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
+  ol.bullets{counter-reset:step}
+  ol.bullets li{counter-increment:step}
+  ol.bullets li::before{content:counter(step);position:absolute;left:0;top:8px;width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--white);font-family:var(--sans);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  ol.bullets li{padding-left:34px}
+  .alert-card{background:var(--error-bg);border-left:4px solid var(--error);padding:16px 20px;margin:14px 0;border-radius:0 10px 10px 0;font-size:14.5px;color:var(--body);line-height:1.6}
+  .alert-card strong{color:var(--error);font-weight:700}
+  .linked{font-size:13px;color:var(--muted)}
+  .linked strong{color:var(--navy);font-weight:700}
+  .xref{list-style:none;padding:0;margin:0}
+  .xref li{padding:6px 0;font-size:14px;line-height:1.5;color:var(--body)}
+  a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover{background:var(--teal)}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+  @media print{body{background:#fff}.hdr,.actions,footer{display:none !important}.page{padding:0}.wrap{max-width:100%}.card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}ol.bullets li::before{background:#000 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
 </head>
 <body data-doc-code="SG-POL-001" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
-<div class="pw">
-  <div class="cover">
-    <div class="cf">Safeguard Framework</div>
-    <h1 class="ct">Volunteer Screening &amp; Approval</h1>
-    <div class="cs">Ministry Readiness &middot; Background Checks &middot; Onboarding</div>
-    <div class="cm">SG-POL-001 &bull; Version 2.0 &bull; March 2026</div>
-  </div>
 
-  <div class="sec">
-    <div class="sl">Purpose</div>
-    <h2 class="st">Why This Policy Exists</h2>
-    <p>Bethany Chapel is committed to equipping individuals called to serve in children&rsquo;s, youth, and vulnerable adult ministries. Our screening process ensures every team member is prepared, supported, and authorized to serve.</p>
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html"><svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true"><path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/><path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/></svg><div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div></a>
+    <a class="nav-link" href="dashboard.html">&larr; Dashboard</a>
+    <div id="userChip" style="margin-left:8px"></div>
   </div>
-  <div class="sec">
-    <div class="sl">Policy</div>
-    <h2 class="st">Screening Requirements</h2>
-    <h3 class="sst">Ministry Readiness</h3>
-    <p>All ministry partners must complete the following before beginning service:</p>
-    <ol>
-      <li><strong>SG-FRM-001</strong> &mdash; Ministry Application (includes Youth Section)</li>
-      <li><strong>SG-FRM-002</strong> &mdash; Reference Check (minimum two references)</li>
-      <li><strong>SG-FRM-003</strong> &mdash; Police Check Consent</li>
-      <li><strong>SG-FRM-004</strong> &mdash; Worker&rsquo;s Covenant &amp; Acknowledgement</li>
-      <li>Safeguard Framework Training (see <a href="SG-G-001.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-G-001</a>)</li>
-    </ol>
-    <h3 class="sst">Police Information Checks</h3>
-    <ul>
-      <li>Completed following the initial interview and references.</li>
-      <li>Valid for <strong>3 years</strong> for all ministry roles.</li>
-      <li>Bethany Chapel covers the cost.</li>
-    </ul>
-    <div class="co co-a"><p><strong>Automatic Disqualification:</strong> Individuals convicted of, or currently under investigation for, violent crimes or crimes against children/youth will not be permitted to serve in any ministry involving vulnerable participants.</p></div>
-    <h3 class="sst">Youth Helpers</h3>
-    <p>Youth helpers (under 18) are encouraged to serve. They do not count toward the Two-Adult Rule or supervision ratios until age 18, when they complete full adult screening.</p>
-  </div>
-  <div class="sec">
-    <div class="sl">Procedures</div>
-    <h2 class="st">Step-by-Step</h2>
-    <ol>
-      <li><strong>Initial Interview:</strong> A ministry leader conducts an in-person interview using <strong>SG-SOP-001</strong>.</li>
-      <li><strong>Application:</strong> Applicant completes <strong>SG-FRM-001</strong>.</li>
-      <li><strong>References:</strong> Two or more references are checked using <strong>SG-FRM-002</strong>.</li>
-      <li><strong>Police Check:</strong> Applicant signs consent (<strong>SG-FRM-003</strong>) and submits for a Police Information Check.</li>
-      <li><strong>Covenant:</strong> Applicant signs <strong>SG-FRM-004</strong>.</li>
-      <li><strong>Training:</strong> Applicant completes Safeguard Framework orientation.</li>
-      <li><strong>File Review:</strong> The Safeguard Team reviews for final approval.</li>
-    </ol>
-  </div>
-  <div class="sec">
-    <div class="sl">Exceptions</div>
-    <h2 class="st">Early Service</h2>
-    <p>Normally, volunteers must attend Bethany for at least <strong>six (6) months</strong> before serving with children, youth, or vulnerable adults.</p>
-    <p>The Safeguard Team may waive this wait for mature Christians transferring from another church, provided <strong>three (3) satisfactory references</strong> are submitted, one from their previous Pastor or Ministry Director.</p>
-    <p>Early-service volunteers may assist under supervision but do <strong>not count</strong> toward the Two-Adult Rule, may not lead alone, and must be marked as <strong>&ldquo;early-service (in process)&rdquo;</strong> on schedules.</p>
-  </div>
-  <div class="sec">
-    <div class="sl">Related Documents</div>
-    <h2 class="st">Cross-References</h2>
-    <ul class="refs">
-      <li><a href="SG-G-001.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-G-001</a> &mdash; Safeguard Governance Policy</li>
-      <li><a href="SG-POL-002.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-POL-002</a> &mdash; Supervision Standards</li>
-      <li><a href="SG-POL-003.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-POL-003</a> &mdash; Bathroom &amp; Diapering Protocols</li>
-      <li><a href="SG-POL-004.html" style="color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(46,107,127,0.3);">SG-POL-004</a> &mdash; Reporting &amp; Response</li>
-      <li><strong>SG-SOP-001</strong> &mdash; Screening &amp; Onboarding Checklist</li>
-    </ul>
-  </div>
+</header>
 
-  <div class="ft">
-    <span>Safeguard Framework &mdash; Bethany Chapel</span>
-    <span>SG-POL-001</span>
+<main class="page">
+  <div class="wrap">
+
+    <div class="eyebrow">Safeguard Framework &middot; Policy</div>
+    <h1 class="title">Volunteer Screening &amp; Approval</h1>
+    <div class="subtitle">Ministry Readiness &middot; Background Checks &middot; Onboarding</div>
+    <div class="meta">
+      <span><strong>Document Code:</strong> SG-POL-001</span>
+      <span><strong>Version:</strong> 2.0</span>
+      <span><strong>Issued:</strong> March 2026</span>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Purpose</div>
+      <div class="section-title">Why This Policy Exists</div>
+      <p>Bethany Chapel is committed to equipping individuals called to serve in children&rsquo;s, youth, and vulnerable adult ministries. Our screening process ensures every team member is prepared, supported, and authorized to serve.</p>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Policy</div>
+      <div class="section-title">Screening Requirements</div>
+
+      <div class="sub-title">Ministry Readiness</div>
+      <p>All ministry partners must complete the following before beginning service:</p>
+      <ol class="bullets">
+        <li><strong>SG-FRM-001</strong> &mdash; Ministry Application (includes Youth Section)</li>
+        <li><strong>SG-FRM-002</strong> &mdash; Reference Check (minimum two references)</li>
+        <li><strong>SG-FRM-003</strong> &mdash; Police Check Consent</li>
+        <li><strong>SG-FRM-004</strong> &mdash; Worker&rsquo;s Covenant &amp; Acknowledgement</li>
+        <li>Safeguard Framework Training (see <a class="inline-link" href="SG-G-001.html">SG-G-001</a>)</li>
+      </ol>
+
+      <div class="sub-title">Police Information Checks</div>
+      <ul class="bullets">
+        <li>Completed following the initial interview and references.</li>
+        <li>Valid for <strong>3 years</strong> for all ministry roles.</li>
+        <li>Bethany Chapel covers the cost.</li>
+      </ul>
+
+      <div class="alert-card"><strong>Automatic Disqualification:</strong> Individuals convicted of, or currently under investigation for, violent crimes or crimes against children/youth will not be permitted to serve in any ministry involving vulnerable participants.</div>
+
+      <div class="sub-title">Youth Helpers</div>
+      <p>Youth helpers (under 18) are encouraged to serve. They do not count toward the Two-Adult Rule or supervision ratios until age 18, when they complete full adult screening.</p>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Procedures</div>
+      <div class="section-title">Step-by-Step</div>
+      <ol class="bullets">
+        <li><strong>Initial Interview:</strong> A ministry leader conducts an in-person interview using <strong>SG-SOP-001</strong>.</li>
+        <li><strong>Application:</strong> Applicant completes <strong>SG-FRM-001</strong>.</li>
+        <li><strong>References:</strong> Two or more references are checked using <strong>SG-FRM-002</strong>.</li>
+        <li><strong>Police Check:</strong> Applicant signs consent (<strong>SG-FRM-003</strong>) and submits for a Police Information Check.</li>
+        <li><strong>Covenant:</strong> Applicant signs <strong>SG-FRM-004</strong>.</li>
+        <li><strong>Training:</strong> Applicant completes Safeguard Framework orientation.</li>
+        <li><strong>File Review:</strong> The Safeguard Team reviews for final approval.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Exceptions</div>
+      <div class="section-title">Early Service</div>
+      <p>Normally, volunteers must attend Bethany for at least <strong>six (6) months</strong> before serving with children, youth, or vulnerable adults.</p>
+      <p>The Safeguard Team may waive this wait for mature Christians transferring from another church, provided <strong>three (3) satisfactory references</strong> are submitted, one from their previous Pastor or Ministry Director.</p>
+      <p>Early-service volunteers may assist under supervision but do <strong>not count</strong> toward the Two-Adult Rule, may not lead alone, and must be marked as <strong>&ldquo;early-service (in process)&rdquo;</strong> on schedules.</p>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Related Documents</div>
+      <div class="section-title">Cross-References</div>
+      <ul class="xref">
+        <li><a class="inline-link" href="SG-G-001.html">SG-G-001</a> &mdash; Safeguard Governance Policy</li>
+        <li><a class="inline-link" href="SG-POL-002.html">SG-POL-002</a> &mdash; Supervision Standards</li>
+        <li><a class="inline-link" href="SG-POL-003.html">SG-POL-003</a> &mdash; Bathroom &amp; Diapering Protocols</li>
+        <li><a class="inline-link" href="SG-POL-004.html">SG-POL-004</a> &mdash; Reporting &amp; Response</li>
+        <li><a class="inline-link" href="SG-SOP-001.html">SG-SOP-001</a> &mdash; Screening &amp; Onboarding Checklist</li>
+      </ul>
+    </div>
+
+    <div class="actions"><button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button></div>
   </div>
-</div>
+</main>
+
+<footer>Safeguard Framework &middot; Bethany Chapel</footer>
+<script type="module">import { mountUserChip } from "./sg-user-chip.js"; mountUserChip(document.getElementById("userChip"));</script>
 <script src="sg-nav.js"></script>
 </body>
 </html>

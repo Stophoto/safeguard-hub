@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-FRM-011 — Transportation Log &amp; Trip Plan</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --success:#27AE60; --warn:#B07A1E; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:1040px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1.title{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
+  .subtitle{font-family:var(--serif);font-size:18px;color:var(--teal);font-weight:400;font-style:italic;margin-bottom:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding-top:14px;margin-top:14px;border-top:2px solid rgba(176,144,85,0.3);font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.02em}
+  .classif{color:var(--error);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:11px}
+  .lede{font-size:15px;color:var(--muted);margin:22px 0 26px 0;line-height:1.65;max-width:780px;font-style:italic}
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  @media(max-width:620px){.card{padding:22px 20px}}
+  .section-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+  .section-title{font-family:var(--serif);font-size:24px;color:var(--navy);font-weight:400;line-height:1.2;margin-bottom:16px}
+  .section-intro{color:var(--body);font-size:15px;margin-bottom:14px;line-height:1.65}
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);transition:border-color var(--transition),box-shadow var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  textarea.fi{min-height:80px;resize:vertical;font-family:var(--sans);line-height:1.55}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  @media(max-width:620px){.row{grid-template-columns:1fr}}
+  .table-wrap{margin:12px 0 4px 0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden}
+  .table-wrap.scroll{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:860px}
+  thead th{background:var(--navy);color:var(--white);font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:12px 14px;text-align:left;white-space:nowrap}
+  thead th.c{text-align:center}
+  tbody td{padding:0;border-bottom:1px solid var(--border);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody td .fi{border:none;border-radius:0;padding:10px 12px;background:transparent;font-size:14px}
+  tbody td .fi:focus{box-shadow:inset 0 0 0 2px var(--teal);border-radius:0}
+  tbody td + td{border-left:1px solid var(--border)}
+  tbody tr:nth-child(even) td{background:var(--sand)}
+  tbody tr:nth-child(even) td .fi{background:transparent}
+  tbody td.c{text-align:center;padding:10px 8px}
+  tbody td input[type="checkbox"]{width:18px;height:18px;accent-color:var(--teal);cursor:pointer}
+  .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover{background:var(--teal)}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+  .save-hint{font-size:12px;color:var(--muted);margin-left:auto}
+  a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+  @media print{body{background:#fff}.hdr,.actions,footer,.save-hint{display:none !important}.page{padding:0}.wrap{max-width:100%}.card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;margin-bottom:12px}.fi{border:none;border-bottom:1px solid #999;border-radius:0;padding:4px 0;background:transparent}thead th{background:#333 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}table{min-width:auto !important}@page{size:landscape}}
+</style>
+</head>
+<body data-doc-code="SG-FRM-011" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="dashboard.html">&larr; Dashboard</a>
+    <div id="userChip" style="margin-left:8px"></div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="wrap">
+
+    <div class="eyebrow">Safeguard Framework &middot; Form</div>
+    <h1 class="title">Transportation Log &amp; Trip Plan</h1>
+    <div class="subtitle">Conditional &mdash; Transport Ministry</div>
+    <div class="meta">
+      <span><strong>Document Code:</strong> SG-FRM-011</span>
+      <span><strong>Version:</strong> 2.0</span>
+      <span><strong>Issued:</strong> March 2026</span>
+      <span class="classif">Confidential &mdash; Ministry Use Only</span>
+    </div>
+
+    <p class="lede">Document trip details, drivers, and participants for all ministry-related transportation. One form per trip. See <a class="inline-link" href="SG-SOP-007.html">SG-SOP-007</a> &mdash; Transportation Procedures.</p>
+
+    <div class="card">
+      <div class="section-head">Section 1</div>
+      <div class="section-title">Trip Information</div>
+      <div class="field"><label for="f_ministry">Ministry / Program</label><input type="text" id="f_ministry" class="fi"></div>
+      <div class="row">
+        <div class="field"><label for="f_date">Trip Date</label><input type="date" id="f_date" class="fi"></div>
+        <div class="field"><label for="f_destination">Destination</label><input type="text" id="f_destination" class="fi"></div>
+      </div>
+      <div class="field"><label for="f_purpose">Purpose of Trip</label><input type="text" id="f_purpose" class="fi"></div>
+      <div class="row">
+        <div class="field"><label for="f_depart">Departure Time</label><input type="time" id="f_depart" class="fi"></div>
+        <div class="field"><label for="f_return">Return Time</label><input type="time" id="f_return" class="fi"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="f_coordinator">Trip Coordinator</label><input type="text" id="f_coordinator" class="fi"></div>
+        <div class="field"><label for="f_contactPhone">Contact Phone (During Trip)</label><input type="tel" id="f_contactPhone" class="fi"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 2</div>
+      <div class="section-title">Driver &amp; Vehicle Information</div>
+      <div class="table-wrap scroll">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:20%">Driver Name</th>
+              <th style="width:14%">Vehicle</th>
+              <th style="width:10%">Plate</th>
+              <th style="width:13%">Cell #</th>
+              <th class="c" style="width:13%">Approved (<a class="inline-link" href="SG-FRM-010.html" style="color:#fff;border-bottom-color:rgba(255,255,255,0.4)">FRM-010</a>)</th>
+              <th style="width:18%">Passengers</th>
+              <th class="c" style="width:12%">Return Confirmed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><input type="text" class="fi"></td><td><input type="text" class="fi"></td><td><input type="text" class="fi"></td><td><input type="tel" class="fi"></td><td class="c"><input type="checkbox"></td><td><input type="text" class="fi"></td><td class="c"><input type="checkbox"></td></tr>
+            <tr><td><input type="text" class="fi"></td><td><input type="text" class="fi"></td><td><input type="text" class="fi"></td><td><input type="tel" class="fi"></td><td class="c"><input type="checkbox"></td><td><input type="text" class="fi"></td><td class="c"><input type="checkbox"></td></tr>
+            <tr><td><input type="text" class="fi"></td><td><input type="text" class="fi"></td><td><input type="text" class="fi"></td><td><input type="tel" class="fi"></td><td class="c"><input type="checkbox"></td><td><input type="text" class="fi"></td><td class="c"><input type="checkbox"></td></tr>
+            <tr><td><input type="text" class="fi"></td><td><input type="text" class="fi"></td><td><input type="text" class="fi"></td><td><input type="tel" class="fi"></td><td class="c"><input type="checkbox"></td><td><input type="text" class="fi"></td><td class="c"><input type="checkbox"></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="field" style="margin-top:18px"><label for="f_notes">Emergency Notes / Special Considerations</label><textarea id="f_notes" class="fi" style="min-height:100px"></textarea></div>
+
+      <p class="section-intro" style="margin-top:14px;font-size:13px"><em>Completed forms must be submitted to the ministry office or Safeguard Lead for secure filing.</em></p>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
+      <span class="save-hint" id="saveHint">Your entries save automatically on this device.</span>
+    </div>
+
+  </div>
+</main>
+
+<footer>Safeguard Framework &middot; Bethany Chapel</footer>
+
+<script type="module">
+  import { mountUserChip } from "./sg-user-chip.js";
+  mountUserChip(document.getElementById("userChip"));
+</script>
+
+<script>
+  (function(){
+    const KEY = "sg-form-SG-FRM-011";
+    const HINT = document.getElementById("saveHint");
+    const allFields = () => document.querySelectorAll('.wrap input, .wrap textarea');
+    function snapshot(){
+      const data = {};
+      const grid = [];
+      allFields().forEach(el => {
+        if (el.type === 'radio'){ if (el.checked && el.name) data['r:'+el.name] = el.value; }
+        else if (el.type === 'checkbox'){ if (el.id) data['c:'+el.id] = el.checked; else grid.push({t:'cb', v: el.checked}); }
+        else if (el.id) data['v:'+el.id] = el.value;
+        else grid.push({t:'v', v: el.value});
+      });
+      data['__grid'] = grid;
+      return data;
+    }
+    function rehydrate(){
+      let data; try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(_) { data = {}; }
+      const grid = data['__grid'] || [];
+      let gi = 0;
+      allFields().forEach(el => {
+        if (el.type === 'radio' && el.name){ const v = data['r:'+el.name]; if (v != null && el.value === v) el.checked = true; }
+        else if (el.type === 'checkbox' && el.id){ if ('c:'+el.id in data) el.checked = !!data['c:'+el.id]; }
+        else if (el.type === 'checkbox'){ if (gi < grid.length) el.checked = !!grid[gi].v; gi++; }
+        else if (el.id){ if ('v:'+el.id in data) el.value = data['v:'+el.id]; }
+        else { if (gi < grid.length) el.value = grid[gi].v; gi++; }
+      });
+    }
+    let saveTimer;
+    function save(){ clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(snapshot())); HINT.textContent = "Saved on this device · " + new Date().toLocaleTimeString(); } catch(_) { HINT.textContent = "Couldn't save locally"; } }, 300); }
+    document.addEventListener('DOMContentLoaded', () => {
+      rehydrate();
+      allFields().forEach(el => { el.addEventListener('input', save); el.addEventListener('change', save); });
+      document.getElementById('clearBtn').addEventListener('click', () => {
+        if (!confirm('Clear all fields on this form? This cannot be undone.')) return;
+        localStorage.removeItem(KEY);
+        allFields().forEach(el => { if (el.type === 'checkbox' || el.type === 'radio') el.checked = false; else el.value = ''; });
+        HINT.textContent = "Cleared";
+      });
+    });
+  })();
+</script>
+
+<script src="sg-nav.js"></script>
+</body>
+</html>

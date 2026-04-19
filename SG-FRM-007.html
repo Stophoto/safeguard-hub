@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-FRM-007 — Suspected Abuse Report</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --warn:#B07A1E; --warn-bg:#FFF5E6; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:960px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1.title{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
+  .meta{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding-top:14px;margin-top:14px;border-top:2px solid rgba(176,144,85,0.3);font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.02em}
+  .classif{color:var(--error);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:11px}
+  .attest{display:flex;align-items:flex-start;gap:10px;margin:4px 0 16px 0;padding:10px 14px;background:var(--sand);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color var(--transition)}
+  .attest:hover{border-color:var(--gold-warm)}
+  .attest input{margin-top:2px;width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
+  .attest span{font-size:13px;color:var(--body);line-height:1.45;font-weight:500}
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  @media(max-width:620px){.card{padding:22px 20px}}
+  .section-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+  .section-title{font-family:var(--serif);font-size:24px;color:var(--navy);font-weight:400;line-height:1.2;margin-bottom:16px}
+  .section-intro{color:var(--body);font-size:15px;margin-bottom:14px;line-height:1.65}
+  .section-intro em,.section-intro i{color:var(--muted);font-style:italic}
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);transition:border-color var(--transition),box-shadow var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  textarea.fi{min-height:90px;resize:vertical;font-family:var(--sans);line-height:1.55}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .row-sig{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+  @media(max-width:620px){.row,.row-sig{grid-template-columns:1fr}}
+  .pill{position:relative;cursor:pointer}
+  .pill input{position:absolute;opacity:0;pointer-events:none}
+  .pill span{display:inline-flex;padding:9px 15px;border:1.5px solid var(--border);border-radius:22px;font-size:13px;font-weight:600;background:var(--white);color:var(--body);transition:all var(--transition);user-select:none}
+  .pill:hover span{border-color:var(--gold-warm)}
+  .pill input:checked + span{background:var(--teal);border-color:var(--teal);color:var(--white)}
+  .pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+  .no-save-notice{background:var(--error-bg);border:1.5px solid rgba(192,57,43,0.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:var(--error);display:flex;gap:12px;align-items:center}
+  .no-save-notice svg{flex-shrink:0;width:18px;height:18px}
+  .no-save-notice strong{color:var(--navy)}
+  .legal-note{background:#FFF9EB;border-left:4px solid var(--gold);padding:14px 18px;margin-bottom:18px;font-size:13px;color:var(--body);line-height:1.55;border-radius:0 8px 8px 0}
+  .legal-note strong{color:var(--navy)}
+  .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover{background:var(--teal)}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+  .save-hint{font-size:12px;color:var(--muted);margin-left:auto}
+  a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+  @media print{body{background:#fff}.hdr,.actions,footer,.save-hint,.no-save-notice{display:none !important}.page{padding:0}.wrap{max-width:100%}.card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;margin-bottom:12px}.fi{border:none;border-bottom:1px solid #999;border-radius:0;padding:4px 0;background:transparent}textarea.fi{border:1px solid #ccc;padding:6px}.pill span{border:1px solid #999 !important;color:#000 !important;background:#fff !important}.pill input:checked + span{background:#000 !important;color:#fff !important}.legal-note{break-inside:avoid}}
+</style>
+</head>
+<body data-doc-code="SG-FRM-007" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="dashboard.html">&larr; Dashboard</a>
+    <div id="userChip" style="margin-left:8px"></div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="wrap">
+
+    <div class="eyebrow">Safeguard Framework &middot; Form</div>
+    <h1 class="title">Suspected Abuse Report</h1>
+    <div class="meta">
+      <span><strong>Document Code:</strong> SG-FRM-007</span>
+      <span><strong>Version:</strong> 2.0</span>
+      <span><strong>Issued:</strong> March 2026</span>
+      <span class="classif">Confidential &mdash; To Be Shared Only With Civil Authorities</span>
+    </div>
+
+    <div class="no-save-notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span><strong>This form does not autosave.</strong> Contents are highly sensitive and are never written to this device&rsquo;s storage. Complete, Print / Save as PDF, and hand the document to the Safeguard Coordinator or civil authority.</span>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Instructions</div>
+      <div class="section-title">Before you begin</div>
+      <p class="section-intro">This form documents suspected abuse, neglect, or exploitation. Complete it as soon as possible after a disclosure or observation. Use the child&rsquo;s own words where possible. Do not investigate. Report directly to local child welfare authorities. See <a class="inline-link" href="SG-POL-004.html">SG-POL-004</a> &mdash; Reporting &amp; Response.</p>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 1</div>
+      <div class="section-title">Reporter Information</div>
+      <div class="row">
+        <div class="field"><label for="f_date">Date of Report</label><input type="date" id="f_date" class="fi"></div>
+        <div class="field"><label for="f_time">Time</label><input type="time" id="f_time" class="fi"></div>
+      </div>
+      <div class="field"><label for="f_reporterName">Name of Reporter</label><input type="text" id="f_reporterName" class="fi"></div>
+      <div class="field"><label for="f_reporterRole">Role / Position</label><input type="text" id="f_reporterRole" class="fi"></div>
+      <div class="row">
+        <div class="field"><label for="f_reporterPhone">Phone</label><input type="tel" id="f_reporterPhone" class="fi"></div>
+        <div class="field"><label for="f_reporterEmail">Email</label><input type="email" id="f_reporterEmail" class="fi"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 2</div>
+      <div class="section-title">Child Information</div>
+      <div class="field"><label for="f_childName">Child&rsquo;s Full Name</label><input type="text" id="f_childName" class="fi"></div>
+      <div class="row">
+        <div class="field"><label for="f_age">Age</label><input type="text" id="f_age" class="fi"></div>
+        <div class="field"><label for="f_childDob">Date of Birth</label><input type="date" id="f_childDob" class="fi"></div>
+      </div>
+      <div class="field"><label for="f_parentName">Parent / Guardian Name(s)</label><input type="text" id="f_parentName" class="fi"></div>
+      <div class="field"><label for="f_childAddr">Address</label><input type="text" id="f_childAddr" class="fi"></div>
+      <div class="field"><label for="f_childPhone">Phone</label><input type="tel" id="f_childPhone" class="fi"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 3</div>
+      <div class="section-title">Nature of Concern</div>
+      <p class="section-intro" style="font-weight:600;color:var(--navy)">How did the concern arise?</p>
+      <div class="pills">
+        <label class="pill"><input type="radio" name="f_nature" value="disclosure"><span>Disclosure by child</span></label>
+        <label class="pill"><input type="radio" name="f_nature" value="witnessed"><span>Witnessed incident</span></label>
+        <label class="pill"><input type="radio" name="f_nature" value="suspicion"><span>Suspicion / observation</span></label>
+        <label class="pill"><input type="radio" name="f_nature" value="other"><span>Other</span></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 4</div>
+      <div class="section-title">Report Details</div>
+      <p class="section-intro"><em>Provide a factual account of what was observed, heard, or disclosed. Use the child&rsquo;s own words if possible. Do not add personal opinion or interpretation.</em></p>
+      <div class="field"><label for="f_details">Report Details</label><textarea id="f_details" class="fi" style="min-height:240px"></textarea></div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 5</div>
+      <div class="section-title">Immediate Actions Taken</div>
+      <div class="pills">
+        <label class="pill"><input type="checkbox" id="f_act1"><span>Child removed from danger</span></label>
+        <label class="pill"><input type="checkbox" id="f_act2"><span>Parent/Guardian notified *</span></label>
+        <label class="pill"><input type="checkbox" id="f_act3"><span>Civil authorities contacted</span></label>
+        <label class="pill"><input type="checkbox" id="f_act4"><span>Other</span></label>
+      </div>
+      <p class="section-intro" style="font-size:13px"><em>* Parent/Guardian notification must not occur if they are the suspected abuser.</em></p>
+      <div class="field"><label for="f_actionDetails">Details of actions</label><textarea id="f_actionDetails" class="fi" style="min-height:130px"></textarea></div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 6</div>
+      <div class="section-title">External Reporting</div>
+      <div class="field"><label for="f_agency">Name of Agency Contacted</label><input type="text" id="f_agency" class="fi"></div>
+      <div class="field"><label for="f_agencyPhone">Phone Number</label><input type="tel" id="f_agencyPhone" class="fi"></div>
+      <div class="row">
+        <div class="field"><label for="f_reportedAt">Date / Time Reported</label><input type="datetime-local" id="f_reportedAt" class="fi"></div>
+        <div class="field"><label for="f_official">Name of Official Spoken To</label><input type="text" id="f_official" class="fi"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 7</div>
+      <div class="section-title">Signatures</div>
+
+      <div class="row-sig">
+        <div class="field"><label for="f_reporterSig">Reporter &mdash; Signature</label><input type="text" id="f_reporterSig" class="fi" placeholder="Type your full legal name as your signature"></div>
+        <div class="field"><label for="f_reporterSigDate">Date</label><input type="date" id="f_reporterSigDate" class="fi"></div>
+      </div>
+      <label class="attest"><input type="checkbox" id="f_reporterConsent"><span>I intend my typed name above to serve as my legal signature on this report.</span></label>
+
+      <div class="row-sig">
+        <div class="field"><label for="f_supSig">Supervisor / Leader Review &mdash; Signature</label><input type="text" id="f_supSig" class="fi"></div>
+        <div class="field"><label for="f_supSigDate">Date</label><input type="date" id="f_supSigDate" class="fi"></div>
+      </div>
+      <label class="attest"><input type="checkbox" id="f_supConsent"><span>I intend my typed name above to serve as my signature reviewing this report.</span></label>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
+      <span class="save-hint">Autosave is disabled &mdash; sensitive content is not stored on this device.</span>
+    </div>
+
+  </div>
+</main>
+
+<footer>Safeguard Framework &middot; Bethany Chapel</footer>
+
+<script type="module">
+  import { mountUserChip } from "./sg-user-chip.js";
+  mountUserChip(document.getElementById("userChip"));
+</script>
+
+<script>
+  // Autosave intentionally disabled for this highly sensitive report.
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      if (!confirm('Clear all fields on this form? This cannot be undone.')) return;
+      document.querySelectorAll('.wrap input, .wrap textarea').forEach(el => {
+        if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+        else el.value = '';
+      });
+    });
+  });
+</script>
+
+<script src="sg-nav.js"></script>
+</body>
+</html>

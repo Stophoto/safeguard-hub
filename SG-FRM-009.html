@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-FRM-009 — Event / Activity Permission &amp; Waiver</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --success:#27AE60; --warn:#B07A1E; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:960px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1.title{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
+  .meta{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding-top:14px;margin-top:14px;border-top:2px solid rgba(176,144,85,0.3);font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.02em}
+  .classif{color:var(--error);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:11px}
+  .attest{display:flex;align-items:flex-start;gap:10px;margin:4px 0 16px 0;padding:10px 14px;background:var(--sand);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color var(--transition)}
+  .attest:hover{border-color:var(--gold-warm)}
+  .attest input{margin-top:2px;width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
+  .attest span{font-size:13px;color:var(--body);line-height:1.45;font-weight:500}
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  @media(max-width:620px){.card{padding:22px 20px}}
+  .section-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+  .section-title{font-family:var(--serif);font-size:24px;color:var(--navy);font-weight:400;line-height:1.2;margin-bottom:16px}
+  .section-intro{color:var(--body);font-size:15px;margin-bottom:14px;line-height:1.65}
+  .section-intro em,.section-intro i{color:var(--muted);font-style:italic}
+  .sub-title{font-family:var(--serif);font-size:17px;color:var(--navy);font-weight:400;margin:18px 0 10px 0}
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);transition:border-color var(--transition),box-shadow var(--transition)}
+  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  textarea.fi{min-height:80px;resize:vertical;font-family:var(--sans);line-height:1.55}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .row-sig{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+  @media(max-width:620px){.row,.row-sig{grid-template-columns:1fr}}
+  .bullets{list-style:none;margin:8px 0 14px 0;padding:0}
+  .bullets li{position:relative;padding:6px 0 6px 20px;line-height:1.65;color:var(--body)}
+  .bullets li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
+  .btn-primary:hover{background:var(--teal)}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+  .save-hint{font-size:12px;color:var(--muted);margin-left:auto}
+  a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+  @media print{body{background:#fff}.hdr,.actions,footer,.save-hint{display:none !important}.page{padding:0}.wrap{max-width:100%}.card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;margin-bottom:12px}.fi{border:none;border-bottom:1px solid #999;border-radius:0;padding:4px 0;background:transparent}textarea.fi{border:1px solid #ccc;padding:6px}}
+</style>
+</head>
+<body data-doc-code="SG-FRM-009" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="dashboard.html">&larr; Dashboard</a>
+    <div id="userChip" style="margin-left:8px"></div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="wrap">
+
+    <div class="eyebrow">Safeguard Framework &middot; Form</div>
+    <h1 class="title">Event / Activity Permission &amp; Waiver</h1>
+    <div class="meta">
+      <span><strong>Document Code:</strong> SG-FRM-009</span>
+      <span><strong>Version:</strong> 2.0</span>
+      <span><strong>Issued:</strong> March 2026</span>
+      <span class="classif">Confidential &mdash; Ministry Use Only</span>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 1</div>
+      <div class="section-title">Event Details</div>
+      <div class="field"><label for="f_event">Event / Activity</label><input type="text" id="f_event" class="fi"></div>
+      <div class="field"><label for="f_dates">Date(s)</label><input type="text" id="f_dates" class="fi"></div>
+      <div class="field"><label for="f_location">Location</label><input type="text" id="f_location" class="fi"></div>
+      <div class="field"><label for="f_leaders">Leader(s) in Charge</label><input type="text" id="f_leaders" class="fi"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 2</div>
+      <div class="section-title">Participant Information</div>
+      <div class="field"><label for="f_childName">Child / Youth Full Name</label><input type="text" id="f_childName" class="fi"></div>
+      <div class="row">
+        <div class="field"><label for="f_dob">Date of Birth</label><input type="date" id="f_dob" class="fi"></div>
+        <div class="field"><label for="f_age">Age</label><input type="text" id="f_age" class="fi"></div>
+      </div>
+      <div class="field"><label for="f_address">Address</label><input type="text" id="f_address" class="fi"></div>
+      <div class="field"><label for="f_parentName">Parent / Guardian Name(s)</label><input type="text" id="f_parentName" class="fi"></div>
+      <div class="row">
+        <div class="field"><label for="f_phone">Phone</label><input type="tel" id="f_phone" class="fi"></div>
+        <div class="field"><label for="f_email">Email</label><input type="email" id="f_email" class="fi"></div>
+      </div>
+
+      <div class="sub-title">Alternate Emergency Contact</div>
+      <div class="field"><label for="f_altName">Name</label><input type="text" id="f_altName" class="fi"></div>
+      <div class="row">
+        <div class="field"><label for="f_altPhone">Phone</label><input type="tel" id="f_altPhone" class="fi"></div>
+        <div class="field"><label for="f_altRel">Relationship</label><input type="text" id="f_altRel" class="fi"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 3</div>
+      <div class="section-title">Medical Information</div>
+      <div class="field"><label for="f_hcn">Health Care Number</label><input type="text" id="f_hcn" class="fi"></div>
+      <div class="field"><label for="f_allergies">Allergies / Medical Conditions</label><textarea id="f_allergies" class="fi"></textarea></div>
+      <div class="field"><label for="f_meds">Medications</label><textarea id="f_meds" class="fi"></textarea></div>
+      <div class="field"><label for="f_special">Special Instructions</label><textarea id="f_special" class="fi"></textarea></div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 4</div>
+      <div class="section-title">Permissions</div>
+      <p class="section-intro"><em>By signing below, I give permission for my child/youth to participate in the above event/activity. All permissions and transportation follow the safeguards outlined in the Safeguard Framework.</em></p>
+      <p class="section-intro"><em>I authorize church staff/volunteers to:</em></p>
+      <ul class="bullets">
+        <li>Arrange for medical treatment in case of emergency.</li>
+        <li>Transport my child/youth as required for this activity (in accordance with <a class="inline-link" href="SG-POL-002.html">SG-POL-002</a> &mdash; Supervision Standards and <a class="inline-link" href="SG-SOP-007.html">SG-SOP-007</a> &mdash; Transportation Procedures).</li>
+      </ul>
+      <label class="attest"><input type="checkbox" id="f_permConsent"><span>I acknowledge and agree to the permissions above.</span></label>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 5</div>
+      <div class="section-title">Waiver &amp; Release</div>
+      <p class="section-intro"><em>I understand that while the church will take all reasonable precautions for safety, participation in activities involves inherent risk. I release the church, its staff, and volunteers from liability for accidental injury, illness, or loss during participation, except in cases of proven negligence.</em></p>
+      <label class="attest"><input type="checkbox" id="f_waiverConsent"><span>I acknowledge and accept the waiver and release above.</span></label>
+    </div>
+
+    <div class="card">
+      <div class="section-head">Section 6</div>
+      <div class="section-title">Signatures</div>
+
+      <div class="row-sig">
+        <div class="field"><label for="f_pgSig">Parent / Guardian &mdash; Signature</label><input type="text" id="f_pgSig" class="fi" placeholder="Type your full legal name as your signature"></div>
+        <div class="field"><label for="f_pgSigDate">Date</label><input type="date" id="f_pgSigDate" class="fi"></div>
+      </div>
+      <label class="attest"><input type="checkbox" id="f_pgConsent"><span>I intend my typed name above to serve as my legal signature on this permission and waiver.</span></label>
+
+      <div class="row-sig">
+        <div class="field"><label for="f_leaderSig">Leader Receiving Form &mdash; Signature</label><input type="text" id="f_leaderSig" class="fi"></div>
+        <div class="field"><label for="f_leaderSigDate">Date</label><input type="date" id="f_leaderSigDate" class="fi"></div>
+      </div>
+      <label class="attest"><input type="checkbox" id="f_leaderConsent"><span>I intend my typed name above to serve as my signature confirming receipt of this form.</span></label>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
+      <span class="save-hint" id="saveHint">Your entries save automatically on this device.</span>
+    </div>
+
+  </div>
+</main>
+
+<footer>Safeguard Framework &middot; Bethany Chapel</footer>
+
+<script type="module">
+  import { mountUserChip } from "./sg-user-chip.js";
+  mountUserChip(document.getElementById("userChip"));
+</script>
+
+<script>
+  (function(){
+    const KEY = "sg-form-SG-FRM-009";
+    const HINT = document.getElementById("saveHint");
+    const fields = () => document.querySelectorAll('.wrap input, .wrap textarea');
+    function snapshot(){
+      const data = {};
+      fields().forEach(el => {
+        if (el.type === 'radio'){ if (el.checked && el.name) data['r:'+el.name] = el.value; }
+        else if (el.type === 'checkbox'){ if (el.id) data['c:'+el.id] = el.checked; }
+        else if (el.id) data['v:'+el.id] = el.value;
+      });
+      return data;
+    }
+    function rehydrate(){
+      let data; try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(_) { data = {}; }
+      fields().forEach(el => {
+        if (el.type === 'radio' && el.name){ const v = data['r:'+el.name]; if (v != null && el.value === v) el.checked = true; }
+        else if (el.type === 'checkbox' && el.id){ if ('c:'+el.id in data) el.checked = !!data['c:'+el.id]; }
+        else if (el.id){ if ('v:'+el.id in data) el.value = data['v:'+el.id]; }
+      });
+    }
+    let saveTimer;
+    function save(){ clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(snapshot())); HINT.textContent = "Saved on this device · " + new Date().toLocaleTimeString(); } catch(_) { HINT.textContent = "Couldn't save locally"; } }, 300); }
+    document.addEventListener('DOMContentLoaded', () => {
+      rehydrate();
+      fields().forEach(el => { el.addEventListener('input', save); el.addEventListener('change', save); });
+      document.getElementById('clearBtn').addEventListener('click', () => {
+        if (!confirm('Clear all fields on this form? This cannot be undone.')) return;
+        localStorage.removeItem(KEY);
+        fields().forEach(el => { if (el.type === 'checkbox' || el.type === 'radio') el.checked = false; else el.value = ''; });
+        HINT.textContent = "Cleared";
+      });
+    });
+  })();
+</script>
+
+<script src="sg-nav.js"></script>
+</body>
+</html>
