@@ -601,4 +601,70 @@ Coordinators can still manually change status at any time via the Status dropdow
 
 ---
 
-*Last updated: April 2026 · Phase 6 complete*
+---
+
+## Phase 7 deploy — Form submissions captured in Firestore
+
+Every fillable form in the Hub (Ministry Application, Incident Report, Suspected Abuse Report, Training Record, Reference Check, Covenant Ack, Child Registration) now writes a copy to Firestore in parallel with the existing Google Sheets write. Coordinators get a new **Submissions** view in the admin panel to triage every form that comes in — without switching to Sheets.
+
+Sheets writes stay on during this transition. If Firestore capture ever fails, the legacy Sheets path is unaffected. This is intentional — we're still in belt-and-suspenders mode.
+
+### Step 1 — Upload to `auth-feature`
+
+**Switch GitHub branch dropdown to `auth-feature` first.** Upload these 6 files:
+
+- `sg-submissions.js` (new)
+- `admin-submissions.html` (new — list view)
+- `admin-submission.html` (new — single submission detail view)
+- `index.html` (replaces — now hooks every SheetsService submit into Firestore)
+- `admin.html` (replaces — adds "Admin · Submissions" link to nav)
+- `firestore.rules` (replaces — adds `/submissions` collection rules)
+
+Commit message:
+```
+Phase 7: capture form submissions to Firestore + admin submissions viewer
+```
+
+Wait for green checkmark on Actions.
+
+### Step 2 — Republish the Firestore Security Rules
+
+Rules changed (new `/submissions` collection). If you skip this, submissions will silently fail to save.
+
+1. Copy `firestore.rules` contents on your Mac (Cmd+A, Cmd+C).
+2. Go to https://console.firebase.google.com/project/safeguard-hub-71292/firestore/rules
+3. Click inside the editor → Cmd+A → Delete → Cmd+V
+4. Click **Publish**.
+
+### Step 3 — Test the capture flow
+
+1. Sign into the Hub as any user. Navigate to any fillable form (e.g., **Forms → Incident / Accident Report**).
+2. Fill it in and submit.
+3. You should see the usual "Incident reported. Record: INC-..." success message (Sheets path worked).
+4. Now go to **Admin · Submissions** from the top nav. Hard refresh (Cmd+Shift+R).
+5. The new submission should appear at the top of the list, with status **Open**.
+6. Click **Open →** on the row. You land on the detail view showing every field by name (for forms with registered schemas) or as "Field 1/2/3…" labels (for forms without schemas yet).
+7. Change status to **Reviewed**, add a note, click **Save triage**. Refresh the list — the badge updates.
+
+### Step 4 — Confirm the Firestore document looks right
+
+1. Go to https://console.firebase.google.com/project/safeguard-hub-71292/firestore/data
+2. Click the new **submissions** collection.
+3. Open the document. You should see fields:
+   - `formCode`, `formTitle`, `tabName`, `recordId`
+   - `rowData` (array — the exact row sent to Sheets)
+   - `submittedBy` (your Firebase uid), `submittedByEmail`, `submittedAt`
+   - `status` ("open" initially, updated via admin triage)
+
+### What's still on the Sheets path
+
+- All 7 forms still write to Google Sheets. Nothing is turned off yet.
+- When you're confident Firestore capture is working (a week or two of real submissions), we can flip a flag to stop writing to Sheets entirely. That's Phase 7b.
+
+### Adding schema headers to more forms
+
+Right now only **SG-FRM-001 (Ministry Application)** has a full header schema in `sg-submissions.js`. The other forms' `rowData` arrays show as "Field 1 / Field 2 / …" in the detail view. To add headers, edit the `FORM_SCHEMAS` map in `sg-submissions.js` — add a `headers: [...]` array for each form, with one string per column in the order the form writes them.
+
+---
+
+*Last updated: April 2026 · Phase 7 complete*

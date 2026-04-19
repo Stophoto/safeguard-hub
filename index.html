@@ -1245,5 +1245,40 @@ body.sg-ready #sg-auth-overlay { display: none; }
   ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(SafeguardHub));
 })();
 </script>
+
+<!-- ═══ PHASE 7 · FIRESTORE SUBMISSION CAPTURE ═══ -->
+<!-- Hooks into the legacy SheetsService so every form submission is
+     also captured to /submissions in Firestore, tagged with the
+     current user's uid and email. The Sheets write stays as the
+     primary path — Firestore runs in parallel, non-blocking, so any
+     Firestore hiccup can't break the user's form submit. -->
+<script type="module">
+  import { createSubmission } from "./sg-submissions.js";
+  import { onUserChange } from "./sg-auth.js";
+
+  onUserChange(() => {
+    if (!window.SheetsService || window.__sgSubmissionsWrapped) return;
+    window.__sgSubmissionsWrapped = true;
+
+    const origAppendRow  = window.SheetsService.appendRow;
+    const origAppendRows = window.SheetsService.appendRows;
+
+    window.SheetsService.appendRow = async function (tab, row) {
+      // Parallel capture — never blocks the user's submit
+      createSubmission({ tabName: tab, rowData: row, recordId: row && row[0] })
+        .catch(err => console.warn("Firestore submission capture failed:", err));
+      return origAppendRow(tab, row);
+    };
+
+    window.SheetsService.appendRows = async function (tab, rows) {
+      (rows || []).forEach(row => {
+        createSubmission({ tabName: tab, rowData: row, recordId: row && row[0] })
+          .catch(err => console.warn("Firestore submission capture failed:", err));
+      });
+      return origAppendRows(tab, rows);
+    };
+  });
+</script>
+
 </body>
 </html>

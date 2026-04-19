@@ -88,6 +88,34 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // ─── Submissions collection ──────────────────────────────
+    // Every fillable form in the Hub writes a copy of its
+    // submission here alongside the legacy Google Sheets write.
+    // Coordinators review/triage them in the admin panel.
+    //
+    //  • Create: any signed-in + verified user with a profile.
+    //    On create, `submittedBy` must be the caller's uid so
+    //    nobody can impersonate someone else.
+    //  • Read (single):  the submitter OR any Coordinator.
+    //  • List (query):   Coordinators only.
+    //  • Update:         Coordinators only (for status/notes).
+    //  • Delete:         never from the app.
+    match /submissions/{submissionId} {
+      allow create: if request.auth != null
+                    && request.auth.token.email_verified == true
+                    && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                    && request.resource.data.submittedBy == request.auth.uid;
+
+      allow get: if request.auth != null
+                 && (resource.data.submittedBy == request.auth.uid || isCoordinator());
+
+      allow list: if isCoordinator();
+
+      allow update: if isCoordinator();
+
+      allow delete: if false;
+    }
+
     // ─── Everything else ─────────────────────────────────────
     // Deny by default. Future collections (incidents, submissions,
     // training records) will get their own match blocks when we
