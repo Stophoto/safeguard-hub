@@ -76,7 +76,7 @@ export const FORM_SCHEMAS = {
       "Record ID",
       "Report date", "Report time",
       "Reporter name", "Reporter role", "Reporter phone", "Reporter email",
-      "Child name", "Child age", "Child date of birth",
+      "Child name",
       "Parent / guardian", "Child address", "Child phone",
       "Nature of concern",
       "Report details",

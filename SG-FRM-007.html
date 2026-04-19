@@ -147,10 +147,6 @@
       <div class="section-head">Section 2</div>
       <div class="section-title">Child Information</div>
       <div class="field"><label for="f_childName">Child&rsquo;s Full Name</label><input type="text" id="f_childName" class="fi"></div>
-      <div class="row">
-        <div class="field"><label for="f_age">Age</label><input type="text" id="f_age" class="fi"></div>
-        <div class="field"><label for="f_childDob">Date of Birth</label><input type="date" id="f_childDob" class="fi"></div>
-      </div>
       <div class="field"><label for="f_parentName">Parent / Guardian Name(s)</label><input type="text" id="f_parentName" class="fi"></div>
       <div class="field"><label for="f_childAddr">Address</label><input type="text" id="f_childAddr" class="fi"></div>
       <div class="field"><label for="f_childPhone">Phone</label><input type="tel" id="f_childPhone" class="fi"></div>
@@ -359,7 +355,7 @@
       recordId,
       val("f_date"), val("f_time"),
       val("f_reporterName").trim(), val("f_reporterRole").trim(), val("f_reporterPhone").trim(), val("f_reporterEmail").trim(),
-      val("f_childName").trim(), val("f_age"), val("f_childDob"),
+      val("f_childName").trim(),
       val("f_parentName").trim(), val("f_childAddr").trim(), val("f_childPhone").trim(),
       natureLabels[natureKey] || "",
       val("f_details").trim(),
