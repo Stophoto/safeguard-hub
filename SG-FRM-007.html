@@ -54,7 +54,18 @@
   .no-save-notice strong{color:var(--navy)}
   .legal-note{background:#FFF9EB;border-left:4px solid var(--gold);padding:14px 18px;margin-bottom:18px;font-size:13px;color:var(--body);line-height:1.55;border-radius:0 8px 8px 0}
   .legal-note strong{color:var(--navy)}
+  .submitted-banner{background:#EEFBF3;border:1.5px solid rgba(39,174,96,0.3);border-radius:10px;padding:18px 20px;margin-bottom:20px;display:flex;gap:14px;align-items:flex-start}
+  .submitted-banner .ico{width:30px;height:30px;border-radius:50%;background:var(--success);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .submitted-banner .ico svg{width:16px;height:16px;color:var(--white)}
+  .submitted-banner b{display:block;color:var(--navy);font-family:var(--serif);font-size:17px;font-weight:400;margin-bottom:3px}
+  .submitted-banner span{color:var(--body);font-size:13px;line-height:1.5;display:block}
+  .submitted-banner code{font-family:ui-monospace,Menlo,monospace;color:var(--teal);background:var(--white);padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;border:1px solid var(--border)}
+  .auth-gate{text-align:center;padding:80px 24px;color:var(--muted);font-size:14px}
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:14px;display:none}
+  .msg.ok{background:#EEFBF3;color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
   .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap;align-items:center}
+  .btn-primary:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
   .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
   .btn-primary:hover{background:var(--teal)}
@@ -83,7 +94,10 @@
 </header>
 
 <main class="page">
-  <div class="wrap">
+
+  <div class="wrap" id="authGate"><div class="auth-gate">Checking your access&hellip;</div></div>
+
+  <div class="wrap" id="formWrap" style="display:none">
 
     <div class="eyebrow">Safeguard Framework &middot; Form</div>
     <h1 class="title">Suspected Abuse Report</h1>
@@ -92,6 +106,15 @@
       <span><strong>Version:</strong> 2.0</span>
       <span><strong>Issued:</strong> March 2026</span>
       <span class="classif">Confidential &mdash; To Be Shared Only With Civil Authorities</span>
+    </div>
+
+    <div id="submittedBanner" class="submitted-banner" style="display:none">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div>
+        <b>Report submitted to the Safeguard Coordinator</b>
+        <span>Record ID: <code id="submittedRecordId">&mdash;</code></span>
+        <span style="margin-top:6px">Keep this record ID for your reference. Civil authorities must still be contacted directly &mdash; this submission does not substitute for an external report. See <a class="inline-link" href="SG-POL-004.html">SG-POL-004</a>.</span>
+      </div>
     </div>
 
     <div class="no-save-notice">
@@ -194,10 +217,13 @@
     </div>
 
     <div class="actions">
-      <button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button type="button" class="btn btn-primary" id="submitBtn">Submit to Safeguard Coordinator</button>
+      <button type="button" class="btn btn-secondary" id="printBtn">Print / Save as PDF</button>
       <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
       <span class="save-hint">Autosave is disabled &mdash; sensitive content is not stored on this device.</span>
     </div>
+
+    <div id="msg" class="msg"></div>
 
   </div>
 </main>
@@ -205,21 +231,180 @@
 <footer>Safeguard Framework &middot; Bethany Chapel</footer>
 
 <script type="module">
+  // SG-FRM-007 — Suspected Abuse Report
+  //   • Auth gate: signed-in + email verified
+  //   • Autofill: reporter name/role/phone/email + signature + today's date from profile
+  //   • Submit: writes to Firestore via createSubmission (tabName "Abuse Reports")
+  //   • Autosave intentionally disabled — highly sensitive content is
+  //     never written to this device's storage.
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
-  mountUserChip(document.getElementById("userChip"));
-</script>
+  import { createSubmission } from "./sg-submissions.js";
 
-<script>
-  // Autosave intentionally disabled for this highly sensitive report.
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      if (!confirm('Clear all fields on this form? This cannot be undone.')) return;
-      document.querySelectorAll('.wrap input, .wrap textarea').forEach(el => {
-        if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
-        else el.value = '';
-      });
-    });
+  mountUserChip(document.getElementById("userChip"));
+
+  const authGate        = document.getElementById("authGate");
+  const formWrap        = document.getElementById("formWrap");
+  const submittedBanner = document.getElementById("submittedBanner");
+  const submittedRecId  = document.getElementById("submittedRecordId");
+  const submitBtn       = document.getElementById("submitBtn");
+  const printBtn        = document.getElementById("printBtn");
+  const clearBtn        = document.getElementById("clearBtn");
+  const msg             = document.getElementById("msg");
+
+  const HERE = "SG-FRM-007.html";
+  let profile = null;
+  let submitted = false;
+
+  // ── Auth gate ─────────────────────────────────────────────
+  onUserChange(async user => {
+    if (!user) { location.replace("sign-in.html?next=" + encodeURIComponent(HERE)); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    try {
+      profile = await getOrCreateProfile();
+    } catch (_) { profile = null; }
+    prefillReporter(user);
+    authGate.style.display = "none";
+    formWrap.style.display = "block";
   });
+
+  // ── Prefill reporter + today's date/time ──────────────────
+  function prefillReporter(user) {
+    const fullName = [profile && profile.firstName, profile && profile.lastName].filter(Boolean).join(" ");
+    setIfEmpty("f_reporterName",  fullName);
+    setIfEmpty("f_reporterEmail", (user && user.email) || (profile && profile.email) || "");
+    setIfEmpty("f_reporterPhone", (profile && profile.phone) || "");
+    setIfEmpty("f_reporterSig",   fullName);
+    setIfEmpty("f_date",          todayIso());
+    setIfEmpty("f_time",          nowHm());
+    setIfEmpty("f_reporterSigDate", todayIso());
+  }
+  function setIfEmpty(id, value) {
+    const el = document.getElementById(id);
+    if (el && !el.value && value) el.value = value;
+  }
+
+  // ── Print ─────────────────────────────────────────────────
+  printBtn.addEventListener("click", () => window.print());
+
+  // ── Clear ─────────────────────────────────────────────────
+  clearBtn.addEventListener("click", () => {
+    if (submitted) return;
+    if (!confirm("Clear all fields on this form? This cannot be undone.")) return;
+    document.querySelectorAll("#formWrap input, #formWrap textarea").forEach(el => {
+      if (el.type === "checkbox" || el.type === "radio") el.checked = false;
+      else el.value = "";
+    });
+    prefillReporter(null);
+  });
+
+  // ── Submit ────────────────────────────────────────────────
+  submitBtn.addEventListener("click", async () => {
+    clearMsg();
+
+    const errors = validate();
+    if (errors.length) { showMsg("Please complete: " + errors.join(", "), "err"); return; }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting\u2026";
+
+    try {
+      const recordId = generateRecordId();
+      const rowData  = buildRowData(recordId);
+      await createSubmission({ tabName: "Abuse Reports", rowData, recordId });
+
+      submitted = true;
+      submittedRecId.textContent = recordId;
+      submittedBanner.style.display = "flex";
+      lockForm();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit to Safeguard Coordinator";
+      showMsg("Couldn't submit. " + (err && err.message ? err.message : "Please try again."), "err");
+    }
+  });
+
+  // ── Validation ────────────────────────────────────────────
+  function validate() {
+    const missing = [];
+    if (!val("f_date"))               missing.push("Date of report");
+    if (!val("f_reporterName").trim())missing.push("Reporter name");
+    if (!val("f_reporterRole").trim())missing.push("Reporter role");
+    if (!val("f_childName").trim())   missing.push("Child's name");
+    if (!val("f_details").trim())     missing.push("Report details");
+    if (!val("f_reporterSig").trim()) missing.push("Reporter signature");
+    if (!document.getElementById("f_reporterConsent").checked) missing.push("Reporter signature attestation");
+    return missing;
+  }
+
+  // ── Build rowData in FORM_SCHEMAS["Abuse Reports"].headers order ─
+  function buildRowData(recordId) {
+    const actions = [];
+    if (checked("f_act1")) actions.push("Child removed from danger");
+    if (checked("f_act2")) actions.push("Parent/Guardian notified");
+    if (checked("f_act3")) actions.push("Civil authorities contacted");
+    if (checked("f_act4")) actions.push("Other");
+
+    const natureLabels = {
+      disclosure: "Disclosure by child",
+      witnessed:  "Witnessed incident",
+      suspicion:  "Suspicion / observation",
+      other:      "Other",
+    };
+    const natureKey = radio("f_nature");
+
+    return [
+      recordId,
+      val("f_date"), val("f_time"),
+      val("f_reporterName").trim(), val("f_reporterRole").trim(), val("f_reporterPhone").trim(), val("f_reporterEmail").trim(),
+      val("f_childName").trim(), val("f_age"), val("f_childDob"),
+      val("f_parentName").trim(), val("f_childAddr").trim(), val("f_childPhone").trim(),
+      natureLabels[natureKey] || "",
+      val("f_details").trim(),
+      actions.join("; "), val("f_actionDetails").trim(),
+      val("f_agency").trim(), val("f_agencyPhone").trim(), val("f_reportedAt"), val("f_official").trim(),
+      val("f_reporterSig").trim(), val("f_reporterSigDate"),
+      val("f_supSig").trim(), val("f_supSigDate"),
+      new Date().toISOString(),
+    ];
+  }
+
+  // ── Lock form after submit so it isn't resubmitted ────────
+  function lockForm() {
+    document.querySelectorAll("#formWrap input, #formWrap textarea").forEach(el => { el.disabled = true; });
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitted";
+    clearBtn.disabled = true;
+  }
+
+  // ── Helpers ───────────────────────────────────────────────
+  function val(id)     { const el = document.getElementById(id); return el ? (el.value || "") : ""; }
+  function checked(id) { const el = document.getElementById(id); return !!(el && el.checked); }
+  function radio(name) {
+    const el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : "";
+  }
+  function todayIso() {
+    const d = new Date();
+    const p = n => String(n).padStart(2, "0");
+    return d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate());
+  }
+  function nowHm() {
+    const d = new Date();
+    const p = n => String(n).padStart(2, "0");
+    return p(d.getHours()) + ":" + p(d.getMinutes());
+  }
+  function generateRecordId() {
+    const d = new Date();
+    const p = n => String(n).padStart(2, "0");
+    const ymd = d.getFullYear() + p(d.getMonth()+1) + p(d.getDate());
+    const hms = p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds());
+    return "ABU-" + ymd + "-" + hms;
+  }
+  function showMsg(text, kind) { msg.textContent = text; msg.className = "msg " + kind; }
+  function clearMsg()          { msg.className = "msg"; msg.textContent = ""; }
 </script>
 
 <script src="sg-nav.js"></script>
