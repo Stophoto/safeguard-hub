@@ -108,14 +108,10 @@
       </svg>
       <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
     </a>
-    <a class="nav-link" href="dashboard.html">Dashboard</a>
     <a class="nav-link" href="admin.html">Admin · People</a>
     <a class="nav-link active" href="admin-submissions.html">Admin · Submissions</a>
     <a class="nav-link" href="index.html">Hub</a>
-    <div class="user-pill" id="userPill" style="display:none">
-      <span id="userName">—</span><span class="dot"></span><span id="userStatus">Coordinator</span>
-    </div>
-    <button class="signout" id="signoutBtn">Sign out</button>
+    <div id="userChip" style="margin-left:8px"></div>
   </div>
 </header>
 
@@ -158,16 +154,16 @@
 <footer>Safeguard Framework · Bethany Chapel</footer>
 
 <script type="module">
-  import { onUserChange, signOutUser } from "./sg-auth.js";
-  import { getOrCreateProfile, displayName, formatDate } from "./sg-profile.js";
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile, formatDate } from "./sg-profile.js";
   import { listSubmissions, FORM_SCHEMAS, statusBadgeClass } from "./sg-submissions.js";
+  import { mountUserChip } from "./sg-user-chip.js";
+
+  mountUserChip(document.getElementById("userChip"));
 
   const loadingState = document.getElementById("loadingState");
   const accessDenied = document.getElementById("accessDenied");
   const view         = document.getElementById("view");
-  const userPill     = document.getElementById("userPill");
-  const userName     = document.getElementById("userName");
-  const userStatus   = document.getElementById("userStatus");
   const statOpen     = document.getElementById("statOpen");
   const statReviewed = document.getElementById("statReviewed");
   const statClosed   = document.getElementById("statClosed");
@@ -175,7 +171,6 @@
   const filtersEl    = document.getElementById("filters");
   const tableWrap    = document.getElementById("tableWrap");
   const msg          = document.getElementById("msg");
-  const signoutBtn   = document.getElementById("signoutBtn");
 
   let allSubs = [];
   let currentFilter = "all";
@@ -185,11 +180,6 @@
     if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     try {
       const profile = await getOrCreateProfile();
-      userName.textContent = displayName(profile) || (user.email || "");
-      userStatus.textContent = profile.role === "coordinator" ? "Coordinator"
-                             : profile.role === "leader" ? "Leader" : "Volunteer";
-      userPill.style.display = "flex";
-
       if (profile.role !== "coordinator") {
         loadingState.style.display = "none";
         accessDenied.style.display = "block";
@@ -299,10 +289,7 @@
     return String(s || "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
   }
 
-  signoutBtn.addEventListener("click", async () => {
-    await signOutUser();
-    location.replace("sign-in.html");
-  });
+  // Sign out is handled by the user chip dropdown (sg-user-chip.js)
 </script>
 
 </body>

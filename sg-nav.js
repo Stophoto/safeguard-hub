@@ -391,22 +391,23 @@
 })();
 
 // ─────────────────────────────────────────────────────────────
-// Phase 4 · Auth-aware nav enhancements
-// Dynamically loads Firebase helpers and, for signed-in users,
-// injects a Dashboard link, a user pill, and a Sign-out button
-// into the nav bar rendered above. Gracefully does nothing if
-// Firebase isn't configured on this page.
+// Phase 8 · Auth-aware nav enhancements (user chip + role gating)
+// Replaces the old Dashboard link + user pill + Sign-out button
+// with a single user chip component that opens a dropdown menu
+// (My dashboard · Edit profile · Account settings · Sign out).
+// Also retargets the Admin nav item based on role.
 // ─────────────────────────────────────────────────────────────
 (async function () {
   try {
     var authMod = await import('./sg-auth.js');
     var profileMod = await import('./sg-profile.js');
+    var chipMod = await import('./sg-user-chip.js');
 
     authMod.onUserChange(async function (user) {
       var navInner = document.getElementById('sg-nav-inner');
       if (!navInner) return;
 
-      // Clean up previously injected elements (auth state can change)
+      // Clean up legacy Phase 4 injections if any are still lingering
       navInner.querySelectorAll('.sg-user-pill, .sg-signout-btn, #sg-dash-link')
         .forEach(function (el) { el.remove(); });
       // Restore any Admin nav item we hid on a prior render
@@ -415,23 +416,14 @@
         el.removeAttribute('data-sg-hidden');
       });
 
+      // Remove any previously mounted chip container so we can re-mount on auth change
+      var existingChip = document.getElementById('sg-nav-user-chip');
+      if (existingChip) existingChip.remove();
+
       if (!user) return;
 
       var profile = null;
       try { profile = await profileMod.getOrCreateProfile(); } catch (_) { return; }
-
-      // Dashboard link — insert right after the brand
-      var brand = document.getElementById('sg-nav-brand');
-      var dashLink = document.createElement('a');
-      dashLink.id = 'sg-dash-link';
-      dashLink.className = 'sg-nav-link';
-      dashLink.href = 'dashboard.html';
-      dashLink.textContent = 'Dashboard';
-      if (brand && brand.nextSibling) {
-        navInner.insertBefore(dashLink, brand.nextSibling);
-      } else {
-        navInner.appendChild(dashLink);
-      }
 
       // Retarget the Admin nav item based on role
       navInner.querySelectorAll('.sg-nav-link').forEach(function (a) {
@@ -448,36 +440,16 @@
         }
       });
 
-      // User pill
-      var name = profileMod.displayName(profile) || (user.email || '');
-      var role = profile.role === 'coordinator' ? 'Coordinator'
-               : profile.role === 'leader' ? 'Leader' : 'Volunteer';
-      var pill = document.createElement('div');
-      pill.className = 'sg-user-pill';
-      pill.innerHTML = '<span>' + escapeHtml(name) + '</span>'
-                     + '<span class="dot"></span>'
-                     + '<span>' + role + '</span>';
-      navInner.appendChild(pill);
-
-      // Sign-out button
-      var signOutBtn = document.createElement('button');
-      signOutBtn.type = 'button';
-      signOutBtn.className = 'sg-signout-btn';
-      signOutBtn.textContent = 'Sign out';
-      signOutBtn.addEventListener('click', async function () {
-        try { await authMod.signOutUser(); } catch (_) {}
-        location.replace('sign-in.html');
-      });
-      navInner.appendChild(signOutBtn);
+      // Mount the user chip as the last item in the nav row
+      // (brand has margin-right:auto which already floats nav items right)
+      var chipContainer = document.createElement('div');
+      chipContainer.id = 'sg-nav-user-chip';
+      chipContainer.style.marginLeft = '8px';
+      navInner.appendChild(chipContainer);
+      chipMod.mountUserChip(chipContainer);
     });
   } catch (err) {
     // Firebase not available on this page — stay legacy.
     if (window.console) console.warn('sg-nav: auth enhancements skipped:', err && err.message);
-  }
-
-  function escapeHtml(s) {
-    return String(s || '').replace(/[&<>"']/g, function (c) {
-      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
-    });
   }
 })();

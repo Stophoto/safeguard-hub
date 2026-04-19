@@ -120,10 +120,7 @@
     </a>
     <a class="nav-link" href="index.html">Hub</a>
     <a class="nav-link" id="adminLink" href="admin.html" style="display:none">Admin</a>
-    <div class="user-pill" id="userPill" style="display:none">
-      <span id="userName">—</span><span class="dot"></span><span id="userStatus">In-process</span>
-    </div>
-    <button class="signout" id="signoutBtn">Sign out</button>
+    <div id="userChip" style="margin-left:8px"></div>
   </div>
 </header>
 
@@ -180,14 +177,14 @@
 <footer>Safeguard Framework · Bethany Chapel</footer>
 
 <script type="module">
-  import { onUserChange, signOutUser } from "./sg-auth.js";
-  import { getOrCreateProfile, displayName, roleLabel, formatDate } from "./sg-profile.js";
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile, displayName, formatDate } from "./sg-profile.js";
+  import { mountUserChip } from "./sg-user-chip.js";
+
+  mountUserChip(document.getElementById("userChip"));
 
   const loadingState = document.getElementById("loadingState");
   const dashWrap     = document.getElementById("dashWrap");
-  const userPill     = document.getElementById("userPill");
-  const userName     = document.getElementById("userName");
-  const userStatus   = document.getElementById("userStatus");
   const adminLink    = document.getElementById("adminLink");
   const greeting     = document.getElementById("greeting");
   const summary      = document.getElementById("summary");
@@ -198,7 +195,6 @@
   const nextSteps    = document.getElementById("nextSteps");
   const completedSteps = document.getElementById("completedSteps");
   const completedHead  = document.getElementById("completedHead");
-  const signoutBtn   = document.getElementById("signoutBtn");
 
   // ── Icons for step cards ──
   const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -215,11 +211,6 @@
 
       // Route: if they haven't finished profile yet, push them there.
       if (!profile.profileComplete) { location.replace("profile-setup.html"); return; }
-
-      // Header user pill
-      userName.textContent   = displayName(profile) || (user.email || "");
-      userStatus.textContent = roleLabel(profile) || "Volunteer";
-      userPill.style.display = "flex";
 
       // Admin link is only visible to Coordinators
       if (profile.role === "coordinator") adminLink.style.display = "inline-block";
@@ -386,16 +377,7 @@
     return el;
   }
 
-  // ── Sign out ──
-  signoutBtn.addEventListener("click", async () => {
-    signoutBtn.disabled = true;
-    try {
-      await signOutUser();
-      location.replace("sign-in.html");
-    } catch (_) {
-      signoutBtn.disabled = false;
-    }
-  });
+  // Sign out is handled by the user chip dropdown (sg-user-chip.js)
 </script>
 
 </body>

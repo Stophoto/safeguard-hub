@@ -106,6 +106,7 @@
       <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
     </a>
     <a class="nav-link" href="dashboard.html">← Dashboard</a>
+    <div id="userChip" style="margin-left:8px"></div>
   </div>
 </header>
 
@@ -142,6 +143,9 @@
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
   import { getOrCreateProfile, markTrainingComplete, unmarkTrainingComplete, formatDate } from "./sg-profile.js";
+  import { mountUserChip } from "./sg-user-chip.js";
+
+  mountUserChip(document.getElementById("userChip"));
 
   // ── Module definitions ──────────────────────────────────────
   const VOLUNTEER_MODULES = [

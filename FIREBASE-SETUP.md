@@ -667,4 +667,85 @@ Right now only **SG-FRM-001 (Ministry Application)** has a full header schema in
 
 ---
 
-*Last updated: April 2026 · Phase 7 complete*
+---
+
+## Phase 8 deploy — Unified user chip + form autofill
+
+Two refinements rolled into one phase:
+
+1. **Unified user chip** — every page's top nav now ends with a single clickable chip (avatar + first name + role + caret). Clicking it opens a Google-style dropdown with **My dashboard · Edit profile · Account settings · Sign out**. The old standalone "Dashboard" link and "Sign out" button are gone — everything account-related lives in the chip dropdown.
+2. **Form autofill** — when you open any of the 4 main fillable forms in the Hub (Ministry Application, Incident Report, Abuse Report, Covenant Acknowledgement), fields like *Your name*, *Email*, *Phone*, *Date of birth* are auto-filled from your profile. You can still edit anything — autofill never overwrites typed values.
+
+### Step 1 — Upload to `auth-feature`
+
+**Switch GitHub branch dropdown to `auth-feature` first.** Upload these 14 files:
+
+**New (1):**
+- `sg-user-chip.js`
+
+**Replaces (13):**
+- `sg-nav.js` (uses the new chip instead of old pill/signout)
+- `dashboard.html`
+- `admin.html`
+- `admin-user.html`
+- `admin-submissions.html`
+- `admin-submission.html`
+- `profile-setup.html`
+- `invite.html`
+- `covenant.html`
+- `police-check.html`
+- `references.html`
+- `training.html`
+- `index.html` (adds profile caching + autofill helper)
+
+**Optional:**
+- `FIREBASE-SETUP.md` (this file)
+
+Commit message:
+```
+Phase 8: unified user chip menu + form autofill
+```
+
+No Firestore rules change. Wait for green checkmark on Actions.
+
+### Step 2 — Test the user chip
+
+1. Sign in and go to the dashboard. Hard refresh (Cmd+Shift+R).
+2. Look at the top nav. At the far right you should see: a gold circle with your first initial, your first name in white, your role in gold below it, and a small caret.
+3. Click the chip. A white dropdown appears with:
+   - Large avatar, your full name, your email, gold role pill
+   - My dashboard
+   - Edit profile
+   - Account settings (greyed out — placeholder for future)
+   - Sign out (red)
+4. Click outside → dropdown closes. Press Esc → closes. Click a menu item → navigates and closes.
+5. Resize the window narrow (< 640px). The chip collapses to just the avatar circle.
+6. Visit admin, admin-submissions, covenant, training, policy pages, the hub — the chip should appear and behave the same on all of them.
+
+### Step 3 — Test the form autofill
+
+1. Go to the Hub. Navigate to **Forms → Ministry Application** (or any fillable form).
+2. The "Full Legal Name", "Email", "Phone", and "Date of Birth" fields should already be populated from your profile.
+3. Clear the "Full Legal Name" field and type something different — autofill won't overwrite what you typed. That's by design.
+4. Refresh the page — the autofilled values return (you haven't submitted yet).
+
+### What autofills on which form
+
+| Form | Autofilled fields |
+|---|---|
+| [SG-FRM-001](https://stophoto.github.io/safeguard-hub/index.html#frm001) Ministry Application | Full name, email, phone, date of birth |
+| [SG-FRM-006](https://stophoto.github.io/safeguard-hub/index.html#frm006) Incident Report | Reporter name |
+| [SG-FRM-007](https://stophoto.github.io/safeguard-hub/index.html#frm007) Abuse Report | Reporter name, reporter email, reporter phone |
+| [SG-FRM-004](https://stophoto.github.io/safeguard-hub/index.html#frm004) Covenant Acknowledgement | Full name |
+
+### Troubleshooting
+
+**Chip doesn't appear on a page:** the page's module script didn't upload correctly. Hard refresh. If still missing, verify the page has `<div id="userChip"></div>` in its header and the module script imports `mountUserChip` from `./sg-user-chip.js`.
+
+**Autofill isn't happening:** the profile cache isn't loading. Open the page and check the browser console (right-click → Inspect → Console). Look for any red errors about `sg-profile.js` or permissions.
+
+**Old "Sign out" button still showing:** browser cache. Cmd+Shift+R.
+
+---
+
+*Last updated: April 2026 · Phase 8 complete*

@@ -169,7 +169,56 @@ body.sg-ready #sg-auth-overlay { display: none; }
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
   import { db } from "./sg-firebase.js";
+  import { getOrCreateProfile } from "./sg-profile.js";
   import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // ── Profile cache + "when ready" helper for React form autofill ──
+  // The React forms below can't use ES modules directly, so we hang a
+  // tiny API off window that they poll via React.useEffect.
+  window.SG_currentProfile = null;
+  window.__sgProfileWaiters = [];
+  window.SG_whenProfileReady = function (cb) {
+    if (window.SG_currentProfile) { cb(window.SG_currentProfile); return; }
+    window.__sgProfileWaiters.push(cb);
+  };
+
+  // Resolves a mapping key → value from the current profile. Mapping keys
+  // are short symbolic names the forms use; values are the actual field
+  // paths on the profile document.
+  const PROFILE_FIELD_RESOLVERS = {
+    fullName:     p => [p.firstName, p.lastName].filter(Boolean).join(" ").trim(),
+    firstName:    p => p.firstName || "",
+    lastName:     p => p.lastName || "",
+    preferredName:p => p.preferredName || "",
+    email:        p => p.email || "",
+    phone:        p => p.phone || "",
+    dob:          p => p.dob || "",
+    street:       p => (p.address && p.address.street) || "",
+    city:         p => (p.address && p.address.city) || "",
+    province:     p => (p.address && p.address.province) || "",
+    postal:       p => (p.address && p.address.postal) || "",
+    emergencyName:    p => (p.emergencyContact && p.emergencyContact.name) || "",
+    emergencyPhone:   p => (p.emergencyContact && p.emergencyContact.phone) || "",
+    emergencyRelation:p => (p.emergencyContact && p.emergencyContact.relationship) || "",
+  };
+
+  // Call from a form's useEffect:
+  //   window.SG_applyPrefill(set, { fullName: "fullName", email: "email", phone: "phone", dob: "dob" });
+  // Only fills empty fields — never overwrites what the user has typed.
+  window.SG_applyPrefill = function (setFn, mapping, getFn) {
+    window.SG_whenProfileReady(function (profile) {
+      if (!profile) return;
+      Object.keys(mapping).forEach(function (formKey) {
+        const resolver = PROFILE_FIELD_RESOLVERS[mapping[formKey]];
+        if (!resolver) return;
+        const value = resolver(profile);
+        if (!value) return;
+        // Don't overwrite a value the user already typed.
+        if (getFn && getFn(formKey)) return;
+        setFn(formKey, value);
+      });
+    });
+  };
 
   onUserChange(async (user) => {
     if (!user) {
@@ -190,11 +239,21 @@ body.sg-ready #sg-auth-overlay { display: none; }
           localStorage.setItem("sg_hub_pw", snap.data().sheetsPassword);
         }
       } catch (err) {
-        // If the config doc isn't set up yet, fall through — the legacy
-        // password prompt will appear as a fallback.
         console.warn("Couldn't fetch hub config:", err);
       }
     }
+
+    // Load profile into the cache so autofill on forms can pick it up
+    try {
+      const profile = await getOrCreateProfile();
+      window.SG_currentProfile = profile;
+      const waiters = window.__sgProfileWaiters || [];
+      window.__sgProfileWaiters = [];
+      waiters.forEach(function (cb) { try { cb(profile); } catch (_) {} });
+    } catch (err) {
+      console.warn("Couldn't load profile for autofill:", err);
+    }
+
     document.body.classList.add("sg-ready");
   });
 </script>
@@ -457,6 +516,13 @@ body.sg-ready #sg-auth-overlay { display: none; }
 
     function set(k,v){ setF(function(p){ var n=Object.assign({},p); n[k]=v; return n; }); setErrors(function(p){ var n=Object.assign({},p); delete n[k]; return n; }); }
     function get(k){ return f[k]||""; }
+
+    // Phase 8 · Autofill reporter fields from the signed-in user's profile
+    React.useEffect(function(){
+      if (window.SG_applyPrefill) window.SG_applyPrefill(set, {
+        fullName: "fullName", email: "email", phone: "phone", dob: "dob"
+      }, get);
+    }, []);
     function getList(k){ return f[k]||[]; }
     function toggleList(k,item){ setF(function(p){ var list=p[k]||[]; return Object.assign({},p,{[k]: list.indexOf(item)>=0 ? list.filter(function(x){return x!==item;}) : list.concat(item) }); }); }
 
@@ -564,6 +630,14 @@ body.sg-ready #sg-auth-overlay { display: none; }
   function FormFRM006(props) {
     var s=useState({}); var f=s[0]; var setF=s[1];
     var s2=useState({}); var errors=s2[0]; var setErrors=s2[1];
+    // Phase 8 · Autofill reporter name from signed-in user's profile
+    React.useEffect(function(){
+      if (window.SG_applyPrefill) window.SG_applyPrefill(
+        function(k,v){ setF(function(p){var n=Object.assign({},p); n[k]=v; return n; }); },
+        { reporter: "fullName" },
+        function(k){ return f[k]||""; }
+      );
+    }, []);
     var s3=useState(null); var status=s3[0]; var setStatus=s3[1];
     var s4=useState(""); var msg=s4[0]; var setMsg=s4[1];
     var s5=useState(false); var busy=s5[0]; var setBusy=s5[1];
@@ -743,6 +817,14 @@ body.sg-ready #sg-auth-overlay { display: none; }
   function FormFRM007(props) {
     var s=useState({}); var f=s[0]; var setF=s[1];
     var s2=useState({}); var errors=s2[0]; var setErrors=s2[1];
+    // Phase 8 · Autofill reporter identity from signed-in user's profile
+    React.useEffect(function(){
+      if (window.SG_applyPrefill) window.SG_applyPrefill(
+        function(k,v){ setF(function(p){var n=Object.assign({},p); n[k]=v; return n; }); },
+        { reporter: "fullName", reporterEmail: "email", reporterPhone: "phone" },
+        function(k){ return f[k]||""; }
+      );
+    }, []);
     var s3=useState(null); var status=s3[0]; var setStatus=s3[1];
     var s4=useState(""); var msg=s4[0]; var setMsg=s4[1];
     var s5=useState(false); var busy=s5[0]; var setBusy=s5[1];
@@ -898,6 +980,14 @@ body.sg-ready #sg-auth-overlay { display: none; }
   function FormFRM004(props) {
     var s=useState({}); var f=s[0]; var setF=s[1];
     var s2=useState({}); var errors=s2[0]; var setErrors=s2[1];
+    // Phase 8 · Autofill worker name from signed-in user's profile
+    React.useEffect(function(){
+      if (window.SG_applyPrefill) window.SG_applyPrefill(
+        function(k,v){ setF(function(p){var n=Object.assign({},p); n[k]=v; return n; }); },
+        { fullName: "fullName" },
+        function(k){ return f[k]||""; }
+      );
+    }, []);
     var s3=useState(null); var status=s3[0]; var setStatus=s3[1];
     var s4=useState(""); var msg=s4[0]; var setMsg=s4[1];
     var s5=useState(false); var busy=s5[0]; var setBusy=s5[1];
