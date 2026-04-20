@@ -112,9 +112,28 @@
        font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
   .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
   .btn-primary:hover{background:var(--teal)}
+  .btn-primary:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
   .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
   .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
   .save-hint{font-size:12px;color:var(--muted);margin-left:auto}
+  .auth-gate{text-align:center;padding:80px 24px;color:var(--muted);font-size:14px}
+  .submitted-banner{background:var(--success-bg);border:1.5px solid rgba(39,174,96,0.3);border-radius:10px;padding:18px 20px;margin-bottom:20px;display:flex;gap:14px;align-items:flex-start}
+  .submitted-banner .ico{width:30px;height:30px;border-radius:50%;background:var(--success);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .submitted-banner .ico svg{width:16px;height:16px;color:var(--white)}
+  .submitted-banner b{display:block;color:var(--navy);font-family:var(--serif);font-size:17px;font-weight:400;margin-bottom:3px}
+  .submitted-banner span{color:var(--body);font-size:13px;line-height:1.5;display:block}
+  .submitted-banner code{font-family:ui-monospace,Menlo,monospace;color:var(--teal);background:var(--white);padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;border:1px solid var(--border)}
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:14px;display:none}
+  .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+  /* Youth-only callout — prominent banner so adults visibly skip Sections 8 & 9 */
+  .youth-callout{display:flex;gap:14px;align-items:flex-start;background:var(--warn-bg);border:1.5px solid rgba(176,122,30,0.35);border-left:5px solid var(--warn);border-radius:10px;padding:16px 18px;margin-bottom:18px}
+  .youth-callout .ico{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--warn);color:var(--white);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:400;margin-top:2px}
+  .youth-callout .who{display:block;font-size:10px;font-weight:700;letter-spacing:0.22em;color:var(--warn);text-transform:uppercase;margin-bottom:4px}
+  .youth-callout .head{display:block;font-family:var(--serif);font-size:19px;color:var(--navy);line-height:1.25;margin-bottom:4px}
+  .youth-callout .sub{display:block;font-size:13px;color:var(--body);line-height:1.55}
+  /* Card shading for the youth cards — visually sets them apart from adult sections */
+  .card.youth{background:#FDFAF3}
   a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);transition:border-color var(--transition)}
   a.inline-link:hover{border-bottom-color:var(--teal)}
   footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
@@ -148,7 +167,10 @@
 </header>
 
 <main class="page">
-  <div class="wrap">
+
+  <div class="wrap" id="authGate"><div class="auth-gate">Checking your access&hellip;</div></div>
+
+  <div class="wrap" id="formWrap" style="display:none">
 
     <div class="eyebrow">Safeguard Framework &middot; Form</div>
     <h1 class="title">Ministry Application Form</h1>
@@ -161,6 +183,15 @@
     </div>
 
     <p class="lede">This application supports safe ministry environments by helping the church screen, equip, and place volunteers in roles that serve children and youth. All information is confidential and will only be reviewed by ministry leadership and the Safeguard Lead.</p>
+
+    <div id="submittedBanner" class="submitted-banner" style="display:none">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div>
+        <b>Application submitted to the Safeguard Coordinator</b>
+        <span>Record ID: <code id="submittedRecordId">&mdash;</code></span>
+        <span style="margin-top:6px">You can print or save a PDF copy below for your records. The coordinator will contact you about references, police check, and next steps.</span>
+      </div>
+    </div>
 
     <div class="card">
       <div class="section-head">Instructions</div>
@@ -313,10 +344,17 @@
       <label class="attest"><input type="checkbox" id="f_witConsent"><span>I intend my typed name above to serve as my signature witnessing this application.</span></label>
     </div>
 
-    <div class="card">
+    <div class="card youth">
       <div class="section-head">Section 8</div>
       <div class="section-title">Youth Applicants (Under 18)</div>
-      <p class="who-note">Complete this section only if the applicant is under 18. Youth applicants must also complete Sections 1, 4, and 9. Parent/guardian consent is required.</p>
+      <div class="youth-callout">
+        <div class="ico">!</div>
+        <div>
+          <span class="who">Youth Applicants Only</span>
+          <span class="head">Skip this section if you are 18 or older.</span>
+          <span class="sub">Sections 8 and 9 are required <strong>only</strong> for applicants under 18. If you're an adult applicant, go straight to the Submit button &mdash; do not fill anything here.</span>
+        </div>
+      </div>
 
       <div class="field"><label for="f_grade">Grade</label><input type="text" id="f_grade" class="fi"></div>
       <div class="field"><label for="f_parentName">Parent/Guardian Name(s)</label><input type="text" id="f_parentName" class="fi"></div>
@@ -346,9 +384,17 @@
       <div class="row"><div class="field"><label for="f_yr2PE">Phone / Email</label><input type="text" id="f_yr2PE" class="fi"></div><div class="field"><label for="f_yr2Rel">Relationship</label><input type="text" id="f_yr2Rel" class="fi"></div></div>
     </div>
 
-    <div class="card">
+    <div class="card youth">
       <div class="section-head">Section 9</div>
       <div class="section-title">Youth Declaration &amp; Parent/Guardian Consent</div>
+      <div class="youth-callout">
+        <div class="ico">!</div>
+        <div>
+          <span class="who">Youth Applicants Only</span>
+          <span class="head">Skip this section if you are 18 or older.</span>
+          <span class="sub">This section pairs with Section 8. Parent or guardian consent is required for all applicants under 18.</span>
+        </div>
+      </div>
 
       <div class="sub-title">Youth Declaration</div>
       <label class="attest"><input type="checkbox" id="f_yd1"><span>I affirm that the information above is true.</span></label>
@@ -401,10 +447,13 @@
     </div>
 
     <div class="actions">
-      <button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button type="button" class="btn btn-primary" id="submitBtn">Submit Application</button>
+      <button type="button" class="btn btn-secondary" id="printBtn">Print / Save as PDF</button>
       <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
       <span class="save-hint" id="saveHint">Your entries save automatically on this device.</span>
     </div>
+
+    <div id="msg" class="msg"></div>
 
   </div>
 </main>
@@ -412,55 +461,291 @@
 <footer>Safeguard Framework &middot; Bethany Chapel</footer>
 
 <script type="module">
+  // SG-FRM-001 — Ministry Application
+  //   • Auth gate: signed-in + email verified
+  //   • Autofill from profile (name/DOB/email/phone/address + age groups + service times)
+  //   • Submit: saves full application snapshot to profile.application,
+  //     updates core profile fields if the applicant edited them, and
+  //     creates a submissions record for the coordinator.
+  //   • Autosave to localStorage stays on — this form is long, not sensitive.
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile, saveProfile } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
-  mountUserChip(document.getElementById("userChip"));
-</script>
+  import { createSubmission } from "./sg-submissions.js";
 
-<script>
-  (function(){
-    const KEY = "sg-form-SG-FRM-001";
-    const HINT = document.getElementById("saveHint");
-    const fields = () => document.querySelectorAll('.wrap input, .wrap textarea, .wrap select');
-    function key(el){ return el.id || el.name ? (el.name ? el.name + ":" + (el.value||el.type) : el.id) : null; }
-    function snapshot(){
-      const data = {};
-      fields().forEach(el => {
-        if (el.type === 'radio'){ if (el.checked && el.name) data['r:'+el.name] = el.value; }
-        else if (el.type === 'checkbox'){ if (el.id) data['c:'+el.id] = el.checked; }
-        else if (el.id) data['v:'+el.id] = el.value;
-      });
-      return data;
-    }
-    function rehydrate(){
-      let data; try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(_) { data = {}; }
-      fields().forEach(el => {
-        if (el.type === 'radio' && el.name){ const v = data['r:'+el.name]; if (v != null && el.value === v) el.checked = true; }
-        else if (el.type === 'checkbox' && el.id){ if ('c:'+el.id in data) el.checked = !!data['c:'+el.id]; }
-        else if (el.id){ if ('v:'+el.id in data) el.value = data['v:'+el.id]; }
-      });
-    }
-    let saveTimer;
-    function save(){
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => {
-        try { localStorage.setItem(KEY, JSON.stringify(snapshot())); HINT.textContent = "Saved on this device · " + new Date().toLocaleTimeString(); }
-        catch(_) { HINT.textContent = "Couldn't save locally"; }
-      }, 300);
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-      rehydrate();
-      fields().forEach(el => { el.addEventListener('input', save); el.addEventListener('change', save); });
-      document.getElementById('clearBtn').addEventListener('click', () => {
-        if (!confirm('Clear all fields on this form? This cannot be undone.')) return;
-        localStorage.removeItem(KEY);
-        fields().forEach(el => {
-          if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
-          else el.value = '';
-        });
-        HINT.textContent = "Cleared";
-      });
+  mountUserChip(document.getElementById("userChip"));
+
+  const authGate        = document.getElementById("authGate");
+  const formWrap        = document.getElementById("formWrap");
+  const submittedBanner = document.getElementById("submittedBanner");
+  const submittedRecId  = document.getElementById("submittedRecordId");
+  const submitBtn       = document.getElementById("submitBtn");
+  const printBtn        = document.getElementById("printBtn");
+  const clearBtn        = document.getElementById("clearBtn");
+  const saveHint        = document.getElementById("saveHint");
+  const msg             = document.getElementById("msg");
+
+  const LS_KEY = "sg-form-SG-FRM-001";
+  const HERE = "SG-FRM-001.html";
+  let profile = null;
+  let submitted = false;
+
+  // ── Autosave helpers ────────────────────────────────
+  function allFields(){ return document.querySelectorAll('#formWrap input, #formWrap textarea, #formWrap select'); }
+  function snapshot(){
+    const data = {};
+    allFields().forEach(el => {
+      if (el.type === 'radio'){ if (el.checked && el.name) data['r:'+el.name] = el.value; }
+      else if (el.type === 'checkbox'){ if (el.id) data['c:'+el.id] = el.checked; }
+      else if (el.id) data['v:'+el.id] = el.value;
     });
-  })();
+    return data;
+  }
+  function rehydrate(){
+    let data; try { data = JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch(_) { data = {}; }
+    allFields().forEach(el => {
+      if (el.type === 'radio' && el.name){ const v = data['r:'+el.name]; if (v != null && el.value === v) el.checked = true; }
+      else if (el.type === 'checkbox' && el.id){ if ('c:'+el.id in data) el.checked = !!data['c:'+el.id]; }
+      else if (el.id){ if ('v:'+el.id in data) el.value = data['v:'+el.id]; }
+    });
+  }
+  let saveTimer;
+  function autosave(){
+    if (submitted) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      try { localStorage.setItem(LS_KEY, JSON.stringify(snapshot())); saveHint.textContent = "Saved on this device \u00B7 " + new Date().toLocaleTimeString(); }
+      catch(_) { saveHint.textContent = "Couldn't save locally"; }
+    }, 300);
+  }
+  function wireAutosave(){
+    allFields().forEach(el => {
+      el.addEventListener('input', autosave);
+      el.addEventListener('change', autosave);
+    });
+  }
+
+  // ── Auth gate ───────────────────────────────────────
+  onUserChange(async user => {
+    if (!user) { location.replace("sign-in.html?next=" + encodeURIComponent(HERE)); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    try { profile = await getOrCreateProfile(); } catch (_) { profile = null; }
+
+    authGate.style.display = "none";
+    formWrap.style.display = "block";
+    rehydrate();
+    prefillFromProfile(user);
+    wireAutosave();
+  });
+
+  // ── Prefill from profile (only for empty fields) ────
+  function prefillFromProfile(user){
+    const fullName = [profile && profile.firstName, profile && profile.lastName].filter(Boolean).join(" ");
+    setIfEmpty("f_fullName", fullName);
+    setIfEmpty("f_dob",      profile && profile.dob);
+    setIfEmpty("f_email",    (profile && profile.email) || (user && user.email) || "");
+    setIfEmpty("f_phoneCell", profile && profile.phone);
+    if (profile && profile.address) {
+      setIfEmpty("f_address",  profile.address.street);
+      setIfEmpty("f_city",     profile.address.city);
+      setIfEmpty("f_province", profile.address.province);
+      setIfEmpty("f_postal",   profile.address.postal);
+    }
+    setIfEmpty("f_attendLength", profile && profile.attendingSince);
+    const ageMap  = { nursery:"f_ageNursery", preschool:"f_agePreschool", elementary:"f_ageElem", youth:"f_ageYouth" };
+    (profile && Array.isArray(profile.ageGroups) ? profile.ageGroups : []).forEach(g => {
+      const el = document.getElementById(ageMap[g]);
+      if (el && !el.checked) el.checked = true;
+    });
+    const timeMap = { "9am":"f_timeSunday", "11am":"f_timeSunday", "wed-pm":"f_timeWed", "special":"f_timeEvents" };
+    (profile && Array.isArray(profile.serviceTimes) ? profile.serviceTimes : []).forEach(t => {
+      const el = document.getElementById(timeMap[t]);
+      if (el && !el.checked) el.checked = true;
+    });
+    setIfEmpty("f_appSig",     fullName);
+    setIfEmpty("f_appSigDate", todayIso());
+  }
+  function setIfEmpty(id, value) {
+    const el = document.getElementById(id);
+    if (!el || !value) return;
+    if (el.type === "checkbox" || el.type === "radio") return;
+    if (!el.value) el.value = value;
+  }
+
+  // ── Print / Clear ───────────────────────────────────
+  printBtn.addEventListener("click", () => window.print());
+  clearBtn.addEventListener("click", () => {
+    if (submitted) return;
+    if (!confirm('Clear all fields on this form? This cannot be undone.')) return;
+    try { localStorage.removeItem(LS_KEY); } catch(_){}
+    allFields().forEach(el => {
+      if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+      else el.value = '';
+    });
+    saveHint.textContent = "Cleared";
+    prefillFromProfile(null);
+  });
+
+  // ── Submit ──────────────────────────────────────────
+  submitBtn.addEventListener("click", async () => {
+    clearMsg();
+
+    const errors = validate();
+    if (errors.length) { showMsg("Please complete: " + errors.join(", "), "err"); return; }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting\u2026";
+
+    try {
+      const recordId = generateRecordId();
+      const rowData  = buildRowData(recordId);
+
+      // 1. Save everything to the applicant's profile —
+      //    core fields get updated in place, full application
+      //    snapshot goes under profile.application.
+      const ageGroups    = gatherAgeGroups();
+      const serviceTimes = gatherServiceTimes();
+      await saveProfile({
+        dob:   val("f_dob") || (profile && profile.dob) || "",
+        phone: val("f_phoneCell") || (profile && profile.phone) || "",
+        address: {
+          street:   val("f_address"),
+          city:     val("f_city"),
+          province: val("f_province"),
+          postal:   val("f_postal"),
+        },
+        ageGroups:    ageGroups,
+        serviceTimes: serviceTimes,
+        application: {
+          submittedAt: new Date().toISOString(),
+          recordId: recordId,
+          isYouth: isYouth(),
+        },
+      });
+
+      // 2. Create submission record for the coordinator.
+      await createSubmission({ tabName: "People", rowData, recordId });
+
+      // 3. UI
+      submitted = true;
+      submittedRecId.textContent = recordId;
+      submittedBanner.style.display = "flex";
+      lockForm();
+      try { localStorage.removeItem(LS_KEY); } catch(_){}
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Application";
+      showMsg("Couldn't submit. " + (err && err.message ? err.message : "Please try again."), "err");
+    }
+  });
+
+  // ── Validation ──────────────────────────────────────
+  function validate() {
+    const missing = [];
+    if (!val("f_fullName").trim())    missing.push("Full name");
+    if (!val("f_dob"))                missing.push("Date of birth");
+    if (!val("f_email").trim())       missing.push("Email");
+    if (!val("f_appSig").trim())      missing.push("Applicant signature");
+    if (!document.getElementById("f_dec1").checked) missing.push("Declaration #1");
+    if (!document.getElementById("f_dec2").checked) missing.push("Declaration #2");
+    if (!document.getElementById("f_dec3").checked) missing.push("Declaration #3");
+    if (!document.getElementById("f_dec4").checked) missing.push("Declaration #4");
+    if (!document.getElementById("f_appConsent").checked) missing.push("Applicant signature attestation");
+    return missing;
+  }
+
+  // ── Build rowData in FORM_SCHEMAS.People.headers order ──
+  function buildRowData(recordId) {
+    const underEighteen = isYouth();
+    return [
+      recordId,
+      val("f_fullName").trim(), val("f_dob"), underEighteen ? "Youth" : "Adult",
+      val("f_email").trim(), val("f_phoneHome").trim(), val("f_phoneCell").trim(),
+      val("f_address").trim(), val("f_city").trim(), val("f_province").trim(), val("f_postal").trim(),
+      val("f_attendLength"), radio("f_services"), radio("f_member"), radio("f_baptized"), radio("f_baptismOpen"),
+      val("f_journey").trim(),
+      val("f_c1Name").trim(), val("f_c1Phone").trim(), val("f_c1Dates"), radio("f_c1Status"), val("f_c1Roles").trim(),
+      val("f_c2Name").trim(), val("f_c2Phone").trim(), val("f_c2Dates"), radio("f_c2Status"), val("f_c2Roles").trim(),
+      gatherAgeGroups().join("; "), gatherServiceTimes().join("; "), val("f_skills").trim(),
+      radio("f_ss1"), radio("f_ss2"), radio("f_ss3"), radio("f_ss4"), radio("f_ss5"),
+      val("f_ssExplain").trim(),
+      val("f_r1Name").trim(), val("f_r1Phone").trim(), val("f_r1Email").trim(), val("f_r1Rel").trim(), val("f_r1Years"),
+      val("f_r2Name").trim(), val("f_r2Phone").trim(), val("f_r2Email").trim(), val("f_r2Rel").trim(), val("f_r2Years"),
+      val("f_appSig").trim(), val("f_appSigDate"),
+      val("f_witSig").trim(), val("f_witSigDate"),
+      val("f_grade"), val("f_parentName").trim(), val("f_parentPhone").trim(),
+      radio("f_parentsSupport"),
+      val("f_yFaith").trim(), val("f_yWhy").trim(), val("f_yGifts").trim(), val("f_yConcerns").trim(),
+      val("f_yExp").trim(),
+      val("f_yr1Name").trim(), val("f_yr1PE").trim(), val("f_yr1Rel").trim(),
+      val("f_yr2Name").trim(), val("f_yr2PE").trim(), val("f_yr2Rel").trim(),
+      val("f_youthSig").trim(), val("f_youthSigDate"),
+      val("f_pgSig").trim(), val("f_pgSigDate"),
+      val("f_wlSig").trim(), val("f_wlSigDate"),
+      new Date().toISOString(),
+    ];
+  }
+
+  function gatherAgeGroups(){
+    const arr = [];
+    if (checked("f_ageNursery"))   arr.push("nursery");
+    if (checked("f_agePreschool")) arr.push("preschool");
+    if (checked("f_ageElem"))      arr.push("elementary");
+    if (checked("f_ageYouth"))     arr.push("youth");
+    return arr;
+  }
+  function gatherServiceTimes(){
+    const arr = [];
+    if (checked("f_timeSunday")) { arr.push("9am"); arr.push("11am"); }
+    if (checked("f_timeWed"))    arr.push("wed-pm");
+    if (checked("f_timeEvents")) arr.push("special");
+    return arr;
+  }
+  function isYouth(){
+    // Treat as youth if any Section 8/9 field is filled OR if DOB < 18 years ago.
+    const ids = ["f_grade","f_parentName","f_parentPhone","f_yFaith","f_yWhy","f_yGifts","f_yConcerns","f_yExp","f_youthSig","f_pgSig"];
+    if (ids.some(id => val(id).trim())) return true;
+    const dob = val("f_dob");
+    if (dob) {
+      const birth = new Date(dob);
+      if (!isNaN(birth.getTime())) {
+        const ageYears = (Date.now() - birth.getTime()) / (1000*60*60*24*365.25);
+        if (ageYears < 18) return true;
+      }
+    }
+    return false;
+  }
+
+  // ── Lock form after submit ──────────────────────────
+  function lockForm(){
+    allFields().forEach(el => { el.disabled = true; });
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitted";
+    clearBtn.disabled = true;
+  }
+
+  // ── Helpers ─────────────────────────────────────────
+  function val(id)     { const el = document.getElementById(id); return el ? (el.value || "") : ""; }
+  function checked(id) { const el = document.getElementById(id); return !!(el && el.checked); }
+  function radio(name) {
+    const el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : "";
+  }
+  function todayIso() {
+    const d = new Date();
+    const p = n => String(n).padStart(2, "0");
+    return d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate());
+  }
+  function generateRecordId() {
+    const d = new Date();
+    const p = n => String(n).padStart(2, "0");
+    const ymd = d.getFullYear() + p(d.getMonth()+1) + p(d.getDate());
+    const hms = p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds());
+    return "APP-" + ymd + "-" + hms;
+  }
+  function showMsg(text, kind) { msg.textContent = text; msg.className = "msg " + kind; }
+  function clearMsg()          { msg.className = "msg"; msg.textContent = ""; }
 </script>
 
 <script src="sg-nav.js"></script>
