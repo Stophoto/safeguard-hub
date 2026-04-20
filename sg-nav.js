@@ -178,6 +178,10 @@
     // Body push
     'body.sg-nav-active { padding-top: 60px; }',
     'body.sg-nav-active.sg-has-crumb { padding-top: 98px; }',
+    // Hide legacy inline headers on standalone pages (the unified nav above
+    // replaces them — no need for the per-page "← Dashboard" strip that
+    // each form/policy/SOP ships with).
+    'body.sg-nav-active > header.hdr { display: none; }',
     // Back to top
     '#sg-nav-top-btn { position: fixed; bottom: 28px; right: 28px; z-index: 9997;',
     '  width: 44px; height: 44px; border-radius: 50%; background: '+NAVY+';',
