@@ -309,6 +309,86 @@
         </div>
       </div>
 
+      <!-- ── Screening (SG-SOP-001 tracker) ── -->
+      <div class="card">
+        <div class="section-head">Screening</div>
+        <div class="section-title">Interview &middot; Approval &middot; Ministry assignment</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">
+          Record the three SG-SOP-001 milestones as they happen. See
+          <a class="inline-link" href="SG-SOP-001.html" style="color:var(--teal)"><strong>SG-SOP-001</strong> &mdash; Screening &amp; Onboarding Checklist</a>
+          for the full process.
+        </p>
+
+        <!-- Interview -->
+        <div class="field" style="padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--navy)">Interview</div>
+              <div style="font-size:12px;color:var(--muted)" id="interviewState">&mdash;</div>
+            </div>
+            <span class="badge" id="interviewBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">&mdash;</span>
+          </div>
+          <div class="row" style="margin-bottom:8px">
+            <div><label for="iInterviewer">Interviewer</label><input id="iInterviewer" type="text" class="fi" style="font-size:13px;padding:9px 11px"></div>
+            <div><label for="iDate">Date</label><input id="iDate" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>
+          </div>
+          <div><label for="iNotes">Notes</label><textarea id="iNotes" class="fi" style="font-size:13px;padding:9px 11px;min-height:60px"></textarea></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="iSaveBtn">Record interview</button>
+            <button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="iClearBtn">Undo</button>
+          </div>
+        </div>
+
+        <!-- Approval -->
+        <div class="field" style="padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--navy)">Approval decision</div>
+              <div style="font-size:12px;color:var(--muted)" id="approvalState">&mdash;</div>
+            </div>
+            <span class="badge" id="approvalBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">&mdash;</span>
+          </div>
+          <div class="row" style="margin-bottom:8px">
+            <div>
+              <label for="aDecision">Decision</label>
+              <select id="aDecision" class="fi" style="font-size:13px;padding:9px 11px">
+                <option value="approved">Approved</option>
+                <option value="declined">Declined</option>
+              </select>
+            </div>
+            <div><label for="aApprovedBy">Approved by</label><input id="aApprovedBy" type="text" class="fi" style="font-size:13px;padding:9px 11px"></div>
+          </div>
+          <div class="row" style="margin-bottom:8px">
+            <div><label for="aDate">Date</label><input id="aDate" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>
+          </div>
+          <div><label for="aNotes">Notes</label><textarea id="aNotes" class="fi" style="font-size:13px;padding:9px 11px;min-height:60px"></textarea></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="aSaveBtn">Record decision</button>
+            <button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="aClearBtn">Undo</button>
+          </div>
+        </div>
+
+        <!-- Ministry assignment -->
+        <div class="field" style="padding:12px 0">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--navy)">Ministry assignment</div>
+              <div style="font-size:12px;color:var(--muted)" id="ministryState">&mdash;</div>
+            </div>
+            <span class="badge" id="ministryBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">&mdash;</span>
+          </div>
+          <div class="row" style="margin-bottom:8px">
+            <div><label for="mMinistry">Ministry</label><input id="mMinistry" type="text" class="fi" style="font-size:13px;padding:9px 11px" placeholder="e.g., Elementary &middot; Sunday 9am"></div>
+            <div><label for="mDate">Date</label><input id="mDate" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>
+          </div>
+          <div><label for="mNotes">Notes</label><textarea id="mNotes" class="fi" style="font-size:13px;padding:9px 11px;min-height:60px"></textarea></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="mSaveBtn">Assign ministry</button>
+            <button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="mClearBtn">Undo</button>
+          </div>
+        </div>
+      </div>
+
       <div id="msg" class="msg"></div>
 
       <div class="actions">
@@ -337,6 +417,10 @@
     markPoliceCheckCleared, unclearPoliceCheck,
     markReferenceReceived, unmarkReferenceReceived,
     activateUser,
+    setScreeningInterview, clearScreeningInterview,
+    setScreeningApproval, clearScreeningApproval,
+    setMinistryAssignment, clearMinistryAssignment,
+    screeningState, screeningLabel,
   } from "./sg-admin.js";
   import { mountUserChip } from "./sg-user-chip.js";
 
@@ -429,7 +513,70 @@
     metaUpdated.textContent  = fmt(u.updatedAt);
 
     renderCompliance(u);
+    renderScreening(u);
     renderActivationBanner(u);
+  }
+
+  // ── Screening panel (SG-SOP-001 tracker) ──────────────────
+  function renderScreening(u) {
+    const s = u.screening || {};
+    const iv = s.interview || {};
+    const ap = s.approval || {};
+    const ma = s.ministryAssigned || {};
+
+    // Interview
+    document.getElementById("iInterviewer").value = iv.interviewer || "";
+    document.getElementById("iDate").value        = iv.date || "";
+    document.getElementById("iNotes").value       = iv.notes || "";
+    if (iv.date) {
+      document.getElementById("interviewState").textContent =
+        "Interviewed by " + (iv.interviewer || "—") + " on " + fmtDate(iv.date);
+      setBadge("interviewBadge", "done", "Done");
+    } else {
+      document.getElementById("interviewState").textContent = "Not yet recorded";
+      setBadge("interviewBadge", "required", "Not started");
+    }
+
+    // Approval
+    document.getElementById("aDecision").value    = ap.decision || "approved";
+    document.getElementById("aApprovedBy").value  = ap.approvedBy || "";
+    document.getElementById("aDate").value        = ap.date || "";
+    document.getElementById("aNotes").value       = ap.notes || "";
+    if (ap.decision === "approved") {
+      document.getElementById("approvalState").textContent =
+        "Approved by " + (ap.approvedBy || "—") + " on " + fmtDate(ap.date);
+      setBadge("approvalBadge", "done", "Approved");
+    } else if (ap.decision === "declined") {
+      document.getElementById("approvalState").textContent =
+        "Declined by " + (ap.approvedBy || "—") + " on " + fmtDate(ap.date);
+      setBadge("approvalBadge", "required", "Declined");
+    } else {
+      document.getElementById("approvalState").textContent = "No decision recorded";
+      setBadge("approvalBadge", iv.date ? "pending" : "required", iv.date ? "Awaiting decision" : "Not started");
+    }
+
+    // Ministry assignment
+    document.getElementById("mMinistry").value = ma.ministry || "";
+    document.getElementById("mDate").value     = ma.date || "";
+    document.getElementById("mNotes").value    = ma.notes || "";
+    if (ma.ministry) {
+      document.getElementById("ministryState").textContent =
+        "Assigned to " + ma.ministry + " on " + fmtDate(ma.date);
+      setBadge("ministryBadge", "done", "Assigned");
+    } else if (ap.decision === "approved") {
+      document.getElementById("ministryState").textContent = "Ready to assign";
+      setBadge("ministryBadge", "pending", "Pending");
+    } else {
+      document.getElementById("ministryState").textContent = "Not yet assigned";
+      setBadge("ministryBadge", "required", "Not started");
+    }
+  }
+  function fmtDate(d) {
+    if (!d) return "—";
+    try {
+      const date = new Date(d);
+      return date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    } catch (_) { return String(d); }
   }
 
   // ── Activation banner visibility ──────────────────────────
@@ -585,6 +732,83 @@
       showMsg("Couldn't save. " + (err.message || ""), "err");
     }
   }
+
+  // ── Screening actions (SG-SOP-001) ──────────────────────
+  document.getElementById("iSaveBtn").addEventListener("click", async () => {
+    clearMsg();
+    const interviewer = document.getElementById("iInterviewer").value.trim();
+    const date        = document.getElementById("iDate").value;
+    const notes       = document.getElementById("iNotes").value.trim();
+    if (!interviewer) { showMsg("Enter the interviewer's name.", "err"); return; }
+    if (!date)        { showMsg("Pick the interview date.",      "err"); return; }
+    try {
+      await setScreeningInterview(TARGET_UID, { interviewer, date, notes });
+      showMsg("Interview recorded.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) renderScreening(updated);
+    } catch (err) { showMsg("Couldn't save. " + (err.message || ""), "err"); }
+  });
+  document.getElementById("iClearBtn").addEventListener("click", async () => {
+    clearMsg();
+    if (!confirm("Undo this interview record?")) return;
+    try {
+      await clearScreeningInterview(TARGET_UID);
+      showMsg("Interview record removed.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) renderScreening(updated);
+    } catch (err) { showMsg("Couldn't undo. " + (err.message || ""), "err"); }
+  });
+
+  document.getElementById("aSaveBtn").addEventListener("click", async () => {
+    clearMsg();
+    const decision   = document.getElementById("aDecision").value;
+    const approvedBy = document.getElementById("aApprovedBy").value.trim();
+    const date       = document.getElementById("aDate").value;
+    const notes      = document.getElementById("aNotes").value.trim();
+    if (!approvedBy) { showMsg("Enter who made the decision.", "err"); return; }
+    if (!date)       { showMsg("Pick the decision date.",      "err"); return; }
+    try {
+      await setScreeningApproval(TARGET_UID, { decision, approvedBy, date, notes });
+      showMsg(decision === "approved" ? "Approval recorded." : "Decline recorded.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) renderScreening(updated);
+    } catch (err) { showMsg("Couldn't save. " + (err.message || ""), "err"); }
+  });
+  document.getElementById("aClearBtn").addEventListener("click", async () => {
+    clearMsg();
+    if (!confirm("Undo this approval decision?")) return;
+    try {
+      await clearScreeningApproval(TARGET_UID);
+      showMsg("Approval decision removed.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) renderScreening(updated);
+    } catch (err) { showMsg("Couldn't undo. " + (err.message || ""), "err"); }
+  });
+
+  document.getElementById("mSaveBtn").addEventListener("click", async () => {
+    clearMsg();
+    const ministry = document.getElementById("mMinistry").value.trim();
+    const date     = document.getElementById("mDate").value;
+    const notes    = document.getElementById("mNotes").value.trim();
+    if (!ministry) { showMsg("Enter a ministry / role.", "err"); return; }
+    if (!date)     { showMsg("Pick the assignment date.", "err"); return; }
+    try {
+      await setMinistryAssignment(TARGET_UID, { ministry, date, notes });
+      showMsg("Ministry assignment recorded.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) renderScreening(updated);
+    } catch (err) { showMsg("Couldn't save. " + (err.message || ""), "err"); }
+  });
+  document.getElementById("mClearBtn").addEventListener("click", async () => {
+    clearMsg();
+    if (!confirm("Undo this ministry assignment?")) return;
+    try {
+      await clearMinistryAssignment(TARGET_UID);
+      showMsg("Ministry assignment removed.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) renderScreening(updated);
+    } catch (err) { showMsg("Couldn't undo. " + (err.message || ""), "err"); }
+  });
 
   // ── Activation + welcome email ──────────────────────────
   document.getElementById("activateBtn").addEventListener("click", async () => {

@@ -247,6 +247,129 @@ export async function unmarkReferenceReceived(uid, refIndex) {
   }, { merge: true });
 }
 
+// ═════════════════════════════════════════════════════════════
+// SCREENING HELPERS — SG-SOP-001
+// Track each volunteer's screening progress (interview, approval,
+// ministry assignment) as nested objects under profile.screening.
+// Single source of truth — no separate Firestore collection needed.
+// ═════════════════════════════════════════════════════════════
+
+// ── Record interview outcome ───────────────────────────────
+export async function setScreeningInterview(uid, { interviewer, date, notes }) {
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().screening) || {};
+  const interview = {
+    interviewer: (interviewer || "").trim(),
+    date: (date || new Date().toISOString().slice(0, 10)),
+    notes: (notes || "").trim(),
+    recordedBy: auth.currentUser ? auth.currentUser.uid : null,
+    recordedByEmail: auth.currentUser ? auth.currentUser.email : null,
+    recordedAt: new Date().toISOString(),
+  };
+  await setDoc(doc(db, "users", uid), {
+    screening: { ...existing, interview },
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+export async function clearScreeningInterview(uid) {
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().screening) || {};
+  delete existing.interview;
+  await setDoc(doc(db, "users", uid), {
+    screening: existing,
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+
+// ── Record approval decision ───────────────────────────────
+// decision: "approved" | "declined"
+export async function setScreeningApproval(uid, { decision, approvedBy, date, notes }) {
+  if (!["approved", "declined"].includes(decision)) {
+    throw new Error("Invalid decision: " + decision);
+  }
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().screening) || {};
+  const approval = {
+    decision,
+    approvedBy: (approvedBy || "").trim(),
+    date: (date || new Date().toISOString().slice(0, 10)),
+    notes: (notes || "").trim(),
+    recordedBy: auth.currentUser ? auth.currentUser.uid : null,
+    recordedByEmail: auth.currentUser ? auth.currentUser.email : null,
+    recordedAt: new Date().toISOString(),
+  };
+  await setDoc(doc(db, "users", uid), {
+    screening: { ...existing, approval },
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+export async function clearScreeningApproval(uid) {
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().screening) || {};
+  delete existing.approval;
+  await setDoc(doc(db, "users", uid), {
+    screening: existing,
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+
+// ── Record ministry assignment ─────────────────────────────
+export async function setMinistryAssignment(uid, { ministry, date, notes }) {
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().screening) || {};
+  const ministryAssigned = {
+    ministry: (ministry || "").trim(),
+    date: (date || new Date().toISOString().slice(0, 10)),
+    notes: (notes || "").trim(),
+    assignedBy: auth.currentUser ? auth.currentUser.uid : null,
+    assignedByEmail: auth.currentUser ? auth.currentUser.email : null,
+    assignedAt: new Date().toISOString(),
+  };
+  await setDoc(doc(db, "users", uid), {
+    screening: { ...existing, ministryAssigned },
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+export async function clearMinistryAssignment(uid) {
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().screening) || {};
+  delete existing.ministryAssigned;
+  await setDoc(doc(db, "users", uid), {
+    screening: existing,
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+
+// ── Compute screening state label for a profile ────────────
+// Returns one of: "not-started" | "interview-scheduled" |
+// "interview-done" | "approved" | "declined" | "assigned"
+export function screeningState(profile) {
+  const s = profile && profile.screening;
+  if (!s) return "not-started";
+  if (s.ministryAssigned && s.ministryAssigned.ministry) return "assigned";
+  if (s.approval && s.approval.decision === "declined") return "declined";
+  if (s.approval && s.approval.decision === "approved") return "approved";
+  if (s.interview && s.interview.date) return "interview-done";
+  return "not-started";
+}
+
+export function screeningLabel(state) {
+  switch (state) {
+    case "not-started":       return "Not started";
+    case "interview-done":    return "Interview done";
+    case "approved":          return "Approved";
+    case "declined":          return "Declined";
+    case "assigned":          return "Ministry assigned";
+    default:                  return state;
+  }
+}
+
 // ── Compute summary stats from a users list ─────────────────
 // Returns { active, inProcess, leaders, renewalSoon }.
 // `renewalSoon` counts profiles whose renewal date is within 30 days.
