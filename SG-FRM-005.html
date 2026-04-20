@@ -53,9 +53,6 @@
   .choice-card input:checked ~ .c-body b{color:var(--teal)}
   .choice-card .c-body b{display:block;font-family:var(--sans);font-weight:700;color:var(--navy);font-size:14px;margin-bottom:3px;text-transform:none;letter-spacing:0}
   .choice-card .c-body span{font-size:13px;color:var(--body);line-height:1.5}
-  .office{background:var(--sand);border:1.5px dashed rgba(176,144,85,0.45);border-radius:10px;padding:18px 22px;margin-top:20px}
-  .office .hd{font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-  .office-opts{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
   .pill{position:relative;cursor:pointer}
   .pill input{position:absolute;opacity:0;pointer-events:none}
   .pill span{display:inline-flex;padding:9px 15px;border:1.5px solid var(--border);border-radius:22px;font-size:13px;font-weight:600;background:var(--white);color:var(--body);transition:all var(--transition);user-select:none}
@@ -183,21 +180,6 @@
         <div class="field"><label for="f_pgSigDate">Date</label><input type="date" id="f_pgSigDate" class="fi"></div>
       </div>
       <label class="attest"><input type="checkbox" id="f_pgConsent"><span>I intend my typed name above to serve as my legal signature on this registration and release.</span></label>
-    </div>
-
-    <div class="office">
-      <div class="hd">For Office Use Only</div>
-      <div class="who-note" style="margin-bottom:10px">Coordinator use only &mdash; tracks processing of this registration.</div>
-      <div class="office-opts">
-        <label class="pill"><input type="checkbox" id="f_o1"><span>Information entered into registration system</span></label>
-        <label class="pill"><input type="checkbox" id="f_o2"><span>Allergy/medical information flagged</span></label>
-        <label class="pill"><input type="checkbox" id="f_o3"><span>Custody list verified</span></label>
-        <label class="pill"><input type="checkbox" id="f_o4"><span>Diapering preference noted on child&rsquo;s profile</span></label>
-      </div>
-      <div class="row" style="margin-top:10px">
-        <div class="field"><label for="f_oReviewer">Reviewed by</label><input type="text" id="f_oReviewer" class="fi"></div>
-        <div class="field"><label for="f_oDate">Date</label><input type="date" id="f_oDate" class="fi"></div>
-      </div>
     </div>
 
     <div class="actions">

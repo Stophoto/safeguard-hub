@@ -78,13 +78,6 @@
   .row-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
   .row-sig{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
   @media(max-width:620px){.row,.row-3,.row-4,.row-sig{grid-template-columns:1fr}}
-  .office{background:var(--sand);border:1.5px dashed rgba(176,144,85,0.45);border-radius:10px;
-          padding:18px 22px;margin-top:20px}
-  .office .hd{font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
-              color:var(--muted);margin-bottom:10px}
-  .office-opts{display:flex;flex-wrap:wrap;gap:10px}
-  .office-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-  @media(max-width:620px){.office-grid{grid-template-columns:1fr}}
   .pill{position:relative;cursor:pointer}
   .pill input{position:absolute;opacity:0;pointer-events:none}
   .pill span{display:inline-flex;padding:9px 15px;border:1.5px solid var(--border);
@@ -421,29 +414,6 @@
         <div class="field"><label for="f_wlSigDate">Date</label><input type="date" id="f_wlSigDate" class="fi"></div>
       </div>
       <label class="attest"><input type="checkbox" id="f_wlConsent"><span>I intend my typed name above to serve as my signature witnessing this consent.</span></label>
-    </div>
-
-    <div class="office">
-      <div class="hd">For Office Use Only</div>
-      <div class="who-note" style="margin-bottom:10px">Coordinator use only &mdash; tracks processing status of this application. Will sync to the volunteer&rsquo;s record in a future update.</div>
-      <div class="office-grid">
-        <div class="field"><label for="f_oReceived">Application Received</label><input type="date" id="f_oReceived" class="fi"></div>
-        <div class="field"><label for="f_oReviewer">Reviewed By</label><input type="text" id="f_oReviewer" class="fi"></div>
-      </div>
-      <div class="prompt" style="margin-top:10px;font-size:13px">References Completed</div>
-      <div class="office-opts"><label class="pill"><input type="checkbox" id="f_oRef1"><span>Reference 1</span></label><label class="pill"><input type="checkbox" id="f_oRef2"><span>Reference 2</span></label></div>
-      <div class="prompt" style="margin-top:10px;font-size:13px">Background Check</div>
-      <div class="office-opts"><label class="pill"><input type="checkbox" id="f_oBgReq"><span>Requested</span></label><label class="pill"><input type="checkbox" id="f_oBgClear"><span>Cleared</span></label></div>
-      <div class="prompt" style="margin-top:10px;font-size:13px">Youth Applicant</div>
-      <div class="office-opts"><label class="pill"><input type="radio" name="f_oYouth" value="yes"><span>Yes</span></label><label class="pill"><input type="radio" name="f_oYouth" value="no"><span>No</span></label></div>
-      <div class="prompt" style="margin-top:10px;font-size:13px">Parent Consent Verified</div>
-      <div class="office-opts"><label class="pill"><input type="radio" name="f_oParentVer" value="yes"><span>Yes</span></label><label class="pill"><input type="radio" name="f_oParentVer" value="na"><span>N/A</span></label></div>
-      <div class="prompt" style="margin-top:10px;font-size:13px">Approved</div>
-      <div class="office-opts"><label class="pill"><input type="radio" name="f_oApproved" value="yes"><span>Yes</span></label><label class="pill"><input type="radio" name="f_oApproved" value="no"><span>No</span></label></div>
-      <div class="office-grid" style="margin-top:14px">
-        <div class="field"><label for="f_oApprovedBy">Approved By</label><input type="text" id="f_oApprovedBy" class="fi"></div>
-        <div class="field"><label for="f_oApprovedDate">Date</label><input type="date" id="f_oApprovedDate" class="fi"></div>
-      </div>
     </div>
 
     <div class="actions">
