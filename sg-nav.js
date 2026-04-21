@@ -60,6 +60,7 @@
     'SG-SOP-001':  { title: 'Screening & Onboarding Checklist', href: 'SG-SOP-001.html' },
     'SG-SOP-002':  { title: 'Washroom Escort Protocol',         href: 'SG-SOP-002.html' },
     'SG-SOP-003':  { title: 'Ratio / Room Capacity Card',       href: 'SG-SOP-003.html' },
+    'SG-SOP-003-cards': { title: 'Room Posters (printable)',    href: 'SG-SOP-003-cards.html' },
     'SG-SOP-004':  { title: 'Reporting Flowchart',              href: 'SG-SOP-004.html' },
     'SG-SOP-005':  { title: 'Receiving & Releasing Children',   href: 'SG-SOP-005.html' },
     'SG-SOP-006':  { title: 'Emergency & Injury Protocols',     href: 'SG-SOP-006.html' },

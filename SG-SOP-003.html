@@ -45,6 +45,16 @@
   .linked{font-size:13px;color:var(--muted)}
   .linked strong{color:var(--navy);font-weight:700}
   a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  /* Print-posters callout (same visual pattern as SOP-001 Live Tracking) */
+  .posters-card{background:linear-gradient(135deg,rgba(46,107,127,0.06),rgba(176,144,85,0.06));border:1.5px solid var(--gold-warm);border-radius:14px;padding:24px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin:22px 0 26px 0;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+  @media(max-width:620px){.posters-card{padding:20px 18px;gap:16px}}
+  .posters-card .posters-text{flex:1;min-width:260px}
+  .posters-card .posters-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--teal);text-transform:uppercase;margin-bottom:6px}
+  .posters-card .posters-title{font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;line-height:1.25;margin-bottom:8px}
+  .posters-card .posters-desc{font-size:14px;color:var(--body);line-height:1.55;margin:0}
+  .posters-card .posters-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:8px;background:var(--navy);color:var(--white);font-family:var(--sans);font-size:14px;font-weight:700;text-decoration:none;flex-shrink:0;box-shadow:0 2px 8px rgba(27,58,75,0.2);transition:all var(--transition)}
+  .posters-card .posters-btn:hover{background:var(--teal);transform:translateY(-1px)}
+  .posters-card .posters-btn .arrow{font-size:16px;line-height:1}
   .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
   .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
@@ -76,6 +86,16 @@
     </div>
 
     <div class="lede-card">Always two adults minimum (Two-Adult Rule), regardless of group size. These ratios apply in classrooms, on trips, and at events.</div>
+
+    <!-- Print wall-poster cards callout -->
+    <div class="posters-card">
+      <div class="posters-text">
+        <div class="posters-head">Classroom Posters</div>
+        <div class="posters-title">Print the laminated wall-poster cards for each room.</div>
+        <p class="posters-desc">One print run produces all five room posters &mdash; <strong>Nursery, Toddlers, Preschool, Elementary, Youth</strong> &mdash; each showing that room&rsquo;s two-adult minimum, per-adult ratio, and max kids on one landscape sheet. Laminate and mount in every classroom.</p>
+      </div>
+      <a class="posters-btn" href="SG-SOP-003-cards.html">Open printable cards <span class="arrow">&rarr;</span></a>
+    </div>
 
     <div class="card">
       <div class="section-head">Standards</div>

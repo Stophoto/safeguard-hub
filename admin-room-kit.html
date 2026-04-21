@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classroom Kit — Admin · Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --warn:#B07A1E; --warn-bg:#FFF5E6;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .nav-link.active{color:var(--white);background:rgba(255,255,255,0.1)}
+
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:920px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:32px;color:var(--navy);font-weight:400;line-height:1.15;margin-bottom:8px}
+  .lede{font-size:15px;color:var(--muted);margin-bottom:28px;line-height:1.65;max-width:720px}
+
+  /* Status banner */
+  .year-banner{background:linear-gradient(135deg,rgba(176,144,85,0.08),rgba(46,107,127,0.05));border-left:4px solid var(--gold);padding:16px 22px;margin-bottom:28px;border-radius:0 10px 10px 0;font-size:14px;line-height:1.6;color:var(--body)}
+  .year-banner strong{color:var(--navy);font-weight:700}
+
+  /* Printable cards grid */
+  .printables{display:grid;gap:18px;grid-template-columns:1fr}
+  @media(min-width:720px){.printables{grid-template-columns:1fr 1fr}}
+
+  .printable{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:22px 24px;box-shadow:0 4px 24px rgba(0,0,0,0.04);display:flex;flex-direction:column;transition:all var(--transition)}
+  .printable:hover{border-color:var(--gold-warm);box-shadow:0 6px 28px rgba(0,0,0,0.06)}
+  .printable.pending{opacity:0.6;background:var(--sand)}
+  .printable.pending:hover{border-color:var(--border);box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+
+  .printable-code{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--teal);text-transform:uppercase;margin-bottom:6px}
+  .printable-title{font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;line-height:1.25;margin-bottom:8px}
+  .printable-desc{font-size:13.5px;color:var(--body);line-height:1.55;margin-bottom:14px;flex:1}
+  .printable-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .meta-chip{font-size:10.5px;font-weight:600;letter-spacing:0.04em;color:var(--muted);background:var(--sand);padding:4px 9px;border-radius:4px}
+  .meta-chip.accent{color:var(--teal);background:rgba(46,107,127,0.08)}
+
+  .printable-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 16px;border-radius:7px;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none;border:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.18)}
+  .btn-primary:hover{background:var(--teal);transform:translateY(-1px)}
+  .btn-secondary{background:var(--white);color:var(--teal);border:1.5px solid var(--border)}
+  .btn-secondary:hover{border-color:var(--teal);color:var(--navy)}
+  .printable .arrow{font-size:14px;line-height:1}
+
+  .pending-label{font-size:11px;font-weight:600;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase}
+
+  .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
+
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="admin.html">Admin &middot; People</a>
+    <a class="nav-link" href="admin-screening.html">Admin &middot; Screening</a>
+    <a class="nav-link" href="admin-submissions.html">Admin &middot; Submissions</a>
+    <a class="nav-link" href="admin-tasks.html">Admin &middot; Tasks</a>
+    <a class="nav-link active" href="admin-room-kit.html">Admin &middot; Room Kit</a>
+    <a class="nav-link" href="index.html">Hub</a>
+    <div id="userChip" style="margin-left:8px"></div>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="wrap" id="loadingState"><div class="loading-state">Loading classroom kit&hellip;</div></div>
+
+  <div class="wrap" id="accessDenied" style="display:none">
+    <div class="eyebrow">Access denied</div>
+    <h1>Coordinator only</h1>
+    <p class="lede">This page is for Safeguard Coordinators. If you think this is a mistake, ask another Coordinator to promote your account.</p>
+    <a class="nav-link" href="dashboard.html" style="color:var(--teal);background:var(--white);border:1.5px solid var(--border);padding:10px 18px">&larr; Back to your dashboard</a>
+  </div>
+
+  <div class="wrap" id="view" style="display:none">
+    <div class="eyebrow">Coordinator &middot; Print prep</div>
+    <h1>Classroom Kit</h1>
+    <p class="lede">Every printable in one place &mdash; room posters, quick-reference cards, and procedure summaries designed to be printed, laminated, and mounted in each ministry space. Use this at the start of each ministry year, or whenever a room needs a fresh set.</p>
+
+    <div class="year-banner">
+      <strong>Suggested rhythm:</strong> print the full kit before your fall ministry launch, and anytime a new classroom is opened or signage is damaged. Review the policy doc behind each item before printing so you know what you&rsquo;re posting.
+    </div>
+
+    <div class="printables">
+
+      <!-- SG-SOP-003 Room Capacity Cards -->
+      <div class="printable">
+        <div class="printable-code">SG-SOP-003 &middot; Cards</div>
+        <div class="printable-title">Ratio &amp; Room Capacity Cards</div>
+        <div class="printable-desc">Five landscape posters &mdash; one per room &mdash; showing the two-adult minimum, per-adult ratio, and max kids for Nursery, Toddlers, Preschool, Elementary, and Youth.</div>
+        <div class="printable-meta">
+          <span class="meta-chip accent">5 pages</span>
+          <span class="meta-chip">US Letter &middot; Landscape</span>
+          <span class="meta-chip">Laminate</span>
+        </div>
+        <div class="printable-actions">
+          <a class="btn btn-primary" href="SG-SOP-003-cards.html">Open &amp; print <span class="arrow">&rarr;</span></a>
+          <a class="btn btn-secondary" href="SG-SOP-003.html">Policy</a>
+        </div>
+      </div>
+
+      <!-- Placeholder: SG-SOP-002 Washroom Escort -->
+      <div class="printable pending">
+        <div class="printable-code">SG-SOP-002 &middot; Cards</div>
+        <div class="printable-title">Washroom Escort Protocol</div>
+        <div class="printable-desc">Quick-reference card for washroom escort procedures &mdash; two-adult escort rule, door protocol, age-appropriate assistance.</div>
+        <div class="printable-meta">
+          <span class="pending-label">Coming soon</span>
+        </div>
+      </div>
+
+      <!-- Placeholder: SG-SOP-005 Receiving & Releasing -->
+      <div class="printable pending">
+        <div class="printable-code">SG-SOP-005 &middot; Cards</div>
+        <div class="printable-title">Receiving &amp; Releasing Children</div>
+        <div class="printable-desc">Check-in / check-out quick card for every classroom &mdash; authorized pickup, ID verification, and emergency release protocols.</div>
+        <div class="printable-meta">
+          <span class="pending-label">Coming soon</span>
+        </div>
+      </div>
+
+      <!-- Placeholder: SG-SOP-004 Reporting Flowchart -->
+      <div class="printable pending">
+        <div class="printable-code">SG-SOP-004 &middot; Poster</div>
+        <div class="printable-title">Reporting Flowchart</div>
+        <div class="printable-desc">Full-poster decision tree for incident and disclosure reporting &mdash; who to call, what to document, Alberta agency numbers.</div>
+        <div class="printable-meta">
+          <span class="pending-label">Coming soon</span>
+        </div>
+      </div>
+
+      <!-- Placeholder: SG-SOP-006 Emergency -->
+      <div class="printable pending">
+        <div class="printable-code">SG-SOP-006 &middot; Poster</div>
+        <div class="printable-title">Emergency &amp; Injury Protocols</div>
+        <div class="printable-desc">Full-poster reference for medical emergencies, evacuation, and injury response &mdash; post in every classroom and common area.</div>
+        <div class="printable-meta">
+          <span class="pending-label">Coming soon</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>Safeguard Framework &middot; Bethany Chapel</footer>
+
+<script type="module">
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile } from "./sg-profile.js";
+  import { mountUserChip } from "./sg-user-chip.js";
+
+  mountUserChip(document.getElementById("userChip"));
+
+  const loadingState = document.getElementById("loadingState");
+  const accessDenied = document.getElementById("accessDenied");
+  const view         = document.getElementById("view");
+
+  onUserChange(async user => {
+    if (!user) { location.replace("sign-in.html?next=admin-room-kit.html"); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    try {
+      const me = await getOrCreateProfile();
+      if (me.role !== "coordinator") {
+        loadingState.style.display = "none";
+        accessDenied.style.display = "block";
+        return;
+      }
+      loadingState.style.display = "none";
+      view.style.display = "block";
+    } catch (err) {
+      loadingState.textContent = "Couldn't load. " + (err.message || "");
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SG-SOP-003 · Ratio & Room Capacity Cards — Bethany Chapel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B3A4B;
+    --navy-ink: #142A37;
+    --teal: #2E6B7F;
+    --gold: #B09055;
+    --gold-warm: #C4A46A;
+    --cream: #FAF8F3;
+    --cream-2: #F3EFE4;
+    --body: #3D3835;
+    --red: #C0392B;
+  }
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0;
+    background: #E7E1D0;
+    font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+    color: var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── Screen-only print banner ─── */
+  .banner {
+    max-width: 11in;
+    margin: 24px auto 8px;
+    padding: 14px 20px;
+    background: var(--cream);
+    border: 1px solid #D9D2BF;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .banner .txt {
+    font-size: 13px;
+    color: #6A635C;
+    line-height: 1.5;
+  }
+  .banner .txt b { color: var(--navy); }
+  .banner button {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 16px;
+    border: 1px solid var(--navy);
+    background: var(--navy);
+    color: var(--cream);
+    border-radius: 4px;
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+  .banner button:hover { background: var(--navy-ink); }
+
+  /* ─── Pages ─── */
+  .sheets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 12px 20px 60px;
+  }
+
+  .sheet {
+    width: 11in;
+    height: 8.5in;
+    background: var(--cream);
+    color: var(--body);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.03), 0 24px 60px -20px rgba(20,42,55,0.22), 0 8px 22px -10px rgba(20,42,55,0.12);
+  }
+
+  /* ─── Top brand bar ─── */
+  .topbar {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 0.82in;
+    background: var(--navy);
+    color: var(--cream);
+    padding: 0 0.5in;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 0.3in;
+  }
+  .topbar .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .topbar .shield { width: 36px; height: 40px; flex: 0 0 auto; }
+  .topbar .brand-txt { line-height: 1; white-space: nowrap; }
+  .topbar .brand-txt .fw {
+    font-family: 'DM Mono', monospace;
+    font-size: 8.5px;
+    letter-spacing: 0.24em;
+    color: var(--gold-warm);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .topbar .brand-txt .org {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 17px;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .topbar .doc {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-warm);
+    line-height: 1.6;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+  .topbar .doc .code { color: var(--cream); font-weight: 500; }
+
+  .poster {
+    position: absolute;
+    top: 0.82in; left: 0; right: 0; bottom: 0;
+    padding: 0.26in 0.5in 0.6in;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .poster > * { flex-shrink: 0; }
+
+  /* ─── Big title: Ratio & Room Capacity Card ─── */
+  .title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 0.12in;
+    margin-bottom: 0.16in;
+  }
+  .title-row .left .kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  .title-row .title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 42px;
+    line-height: 0.95;
+    color: var(--navy);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .title-row .title em { font-style: italic; color: var(--teal); }
+  .title-row .right {
+    text-align: right;
+    flex: 0 0 auto;
+  }
+  .title-row .right .lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 6px;
+  }
+  .title-row .right .room {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 34px;
+    line-height: 1;
+    color: var(--navy);
+  }
+  .title-row .right .age {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--body);
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ─── Numbers row: 2 adults  →  max N kids ─── */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: stretch;
+    gap: 0;
+    background: var(--cream-2);
+    border: 1.5px solid var(--navy);
+    border-radius: 4px;
+    overflow: hidden;
+    flex: 0 0 auto;
+    margin-bottom: 0.16in;
+  }
+  .hero .cell {
+    padding: 0.16in 0.2in 0.14in;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-height: 2.2in;
+    position: relative;
+    gap: 0.06in;
+  }
+  .hero .cell.result {
+    background: var(--navy);
+    color: var(--cream);
+  }
+  .hero .cell .label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    line-height: 1.05;
+    color: var(--navy);
+    white-space: nowrap;
+  }
+  .hero .cell.result .label { color: var(--gold-warm); }
+  .hero .cell .label .pre {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    font-weight: 500;
+    color: var(--teal);
+    margin-bottom: 5px;
+    white-space: nowrap;
+  }
+  .hero .cell.result .label .pre { color: var(--gold-warm); }
+  .hero .cell .big {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-weight: 400;
+    font-size: 150px;
+    line-height: 0.82;
+    color: var(--navy);
+    letter-spacing: -0.04em;
+    margin: 0.02in 0 auto;
+  }
+  .hero .cell.result .big { color: var(--cream); }
+  .hero .cell .big .colon {
+    color: var(--gold);
+    margin: 0 0.02em;
+  }
+  .hero .cell.ratio .big {
+    font-size: 130px;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .hero .cell.ratio .big .colon {
+    font-size: 0.7em;
+    position: relative;
+    top: -0.18em;
+    margin: 0 0.06em;
+  }
+  .hero .cell .sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--body);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+  .hero .cell.result .sub { color: var(--gold-warm); }
+  .hero .cell.result .sub strong { color: var(--cream); }
+  .hero .cell .sub strong { color: var(--navy); font-weight: 700; }
+
+  .hero .op {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.02in;
+    background: transparent;
+    border-left: 1px solid rgba(27,58,75,0.15);
+    border-right: 1px solid rgba(27,58,75,0.15);
+    width: 0.7in;
+  }
+  .hero .op .sym {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--gold);
+    font-style: italic;
+    padding-bottom: 0.1in;
+  }
+  .hero .op.equals { border-right: none; }
+  .hero .op.equals .sym { color: var(--gold); font-style: normal; font-size: 58px; }
+
+  /* ─── Math callout (scaling with more adults) ─── */
+  .math {
+    margin-top: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0;
+    background: transparent;
+    border-left: none;
+    overflow: hidden;
+    flex: 0 0 auto;
+    align-items: stretch;
+  }
+  .math .ratio-cell {
+    display: none;
+  }
+  .math .ratio-cell .lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 4px;
+  }
+  .math .ratio-cell .val {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 38px;
+    line-height: 1;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+  }
+  .math .ratio-cell .val .colon {
+    color: var(--gold);
+    margin: 0 0.02em;
+  }
+  .math .ratio-cell .val .per {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--body);
+    margin-left: 10px;
+    vertical-align: 0.28em;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .math .more {
+    padding: 0.04in 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    grid-column: 1 / -1;
+  }
+  .math .more .lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 6px;
+  }
+  .math .more table {
+    border-collapse: collapse;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--body);
+    width: 100%;
+  }
+  .math .more td {
+    padding: 2px 18px 2px 0;
+    vertical-align: baseline;
+  }
+  .math .more td.adults {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 22px;
+    color: var(--navy);
+    line-height: 1;
+    padding-right: 14px;
+  }
+  .math .more td.eq {
+    color: var(--gold);
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 18px;
+    padding-right: 10px;
+  }
+  .math .more td.kids {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 26px;
+    color: var(--navy);
+    line-height: 1;
+    padding-right: 12px;
+  }
+  .math .more td.note {
+    color: #6A635C;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .rule-banner {
+    margin: 0.18in -0.5in 0;
+    flex: 0 0 auto;
+    background: var(--navy);
+    color: var(--cream);
+    padding: 0.17in 0.5in;
+    display: flex;
+    align-items: center;
+    gap: 0.3in;
+    position: relative;
+  }
+  .rule-banner::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -3px; height: 3px; background: var(--gold);
+  }
+  .rule-banner .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold-warm);
+    flex: 0 0 auto;
+    border-right: 1px solid rgba(196,164,106,0.4);
+    padding-right: 0.28in;
+    line-height: 1.35;
+  }
+  .rule-banner .rule-text {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 23px;
+    font-weight: 400;
+    line-height: 1.12;
+  }
+  .rule-banner .rule-text em { font-style: italic; color: var(--gold-warm); }
+
+  /* ─── Escalation + footer ─── */
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 0.16in;
+    gap: 0.3in;
+  }
+  .escalation {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+  }
+  .escalation .bar {
+    width: 3px;
+    background: var(--red);
+    align-self: stretch;
+    flex: 0 0 auto;
+  }
+  .escalation .txt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--body);
+    max-width: 5.6in;
+  }
+  .escalation .txt .label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 3px;
+    font-weight: 500;
+  }
+  .escalation .txt strong { color: var(--navy); font-weight: 700; }
+
+  .doc-footer {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6A635C;
+    line-height: 1.6;
+    flex: 0 0 auto;
+  }
+  .doc-footer .code { color: var(--navy); font-weight: 500; margin-bottom: 2px; }
+
+  /* ─── Print ─── */
+  @page { size: letter landscape; margin: 0; }
+  @media print {
+    html, body { background: #fff !important; }
+    .banner { display: none !important; }
+    .sheets { padding: 0 !important; gap: 0 !important; }
+    .sheet {
+      box-shadow: none !important;
+      margin: 0 !important;
+      page-break-after: always;
+      break-after: page;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .sheet:last-child { page-break-after: auto; break-after: auto; }
+  }
+</style>
+</head>
+<body data-doc-code="SG-SOP-003" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+
+<div class="banner">
+  <div class="txt">
+    <b>Ratio &amp; Room Capacity Cards</b> — five posters in one file, one per room. Print on US Letter, <b>landscape</b>, at 100% scale. Laminate &amp; mount in each classroom.
+  </div>
+  <button onclick="window.print()">Print all 5 cards</button>
+</div>
+
+<div class="sheets" id="sheets"></div>
+
+<!-- Shield SVG template -->
+<template id="shield">
+  <svg class="shield" viewBox="0 0 34 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M17 1.5 L32.5 6.2 V18 C32.5 27.3 25.5 33.8 17 36.5 C8.5 33.8 1.5 27.3 1.5 18 V6.2 Z"
+          fill="#1B3A4B" stroke="#C4A46A" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M10.2 18.3 L15.2 23.3 L24 14.2" stroke="#C4A46A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </svg>
+</template>
+
+<script>
+  // ──────── Room definitions (from SG-SOP-003 v2.0) ────────
+  // ratio: children per 1 adult (base ratio); max2: capacity with the required 2 adults
+  const ROOMS = [
+    {
+      room: "Nursery",
+      age: "Infants · 0–12 months",
+      ratio: "1 : 3",
+      perAdult: 3,
+      max2: 6,
+      tiers: [
+        { adults: 2, kids: 6, note: "standard — two-adult minimum" },
+        { adults: 3, kids: 9 },
+        { adults: 4, kids: 12, note: "room ceiling" },
+      ],
+      hardCap: 12,
+      note: "Highest care intensity."
+    },
+    {
+      room: "Toddlers",
+      age: "Ages 13–35 months",
+      ratio: "1 : 5",
+      perAdult: 5,
+      max2: 10,
+      tiers: [
+        { adults: 2, kids: 10, note: "standard — two-adult minimum" },
+        { adults: 3, kids: 15 },
+        { adults: 4, kids: 20, note: "room ceiling" },
+      ],
+      hardCap: 20,
+      note: "Ratio bracket 1:4–5; card uses the upper bound."
+    },
+    {
+      room: "Preschool",
+      age: "Ages 3 yr – Kindergarten",
+      ratio: "1 : 8",
+      perAdult: 8,
+      max2: 16,
+      tiers: [
+        { adults: 2, kids: 16, note: "standard — two-adult minimum" },
+        { adults: 3, kids: 24 },
+        { adults: 4, kids: 32, note: "room ceiling" },
+      ],
+      hardCap: 32,
+      note: "Ratio bracket 1:6–8; card uses the upper bound."
+    },
+    {
+      room: "Elementary",
+      age: "Grades 1 – 6",
+      ratio: "1 : 12",
+      perAdult: 12,
+      max2: 24,
+      tiers: [
+        { adults: 2, kids: 24, note: "standard — two-adult minimum" },
+        { adults: 3, kids: 36 },
+        { adults: 4, kids: 48, note: "room ceiling" },
+      ],
+      hardCap: 48,
+      note: "Ratio bracket 1:7–12; card uses the upper bound."
+    },
+    {
+      room: "Youth",
+      age: "Grades 7 – 12",
+      ratio: "1 : 12",
+      perAdult: 12,
+      max2: 24,
+      tiers: [
+        { adults: 2, kids: 24, note: "standard — two-adult minimum" },
+        { adults: 3, kids: 36 },
+        { adults: 4, kids: 48, note: "room ceiling" },
+      ],
+      hardCap: 48,
+      note: "Ratio bracket 1:10–12; card uses the upper bound."
+    },
+  ];
+
+  const shieldTpl = document.getElementById('shield');
+
+  function buildTierRows(tiers) {
+    // Skip the baseline 2-adult row — it's already shown in the hero equation.
+    return tiers.filter(t => t.adults > 2).map(t => `
+      <tr>
+        <td class="adults">${t.adults} adults</td>
+        <td class="eq">→</td>
+        <td class="kids">up to ${t.kids} kids</td>
+        <td class="note">${t.note ? t.note : ""}</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderSheet(r) {
+    return `
+      <article class="sheet" data-screen-label="${r.room} Card">
+        <header class="topbar">
+          <div class="brand">
+            ${shieldTpl.innerHTML}
+            <div class="brand-txt">
+              <div class="fw">Safeguard Framework</div>
+              <div class="org">Bethany Chapel · Calgary</div>
+            </div>
+          </div>
+          <div class="doc">
+            <div class="code">SG-SOP-003 · v2.0</div>
+            <div>Post in classroom</div>
+          </div>
+        </header>
+
+        <div class="poster">
+
+          <div class="title-row">
+            <div class="left">
+              <div class="kicker">Safeguard · Standard Operating Procedure</div>
+              <div class="title">Ratio &amp; Room<br/>Capacity <em>Card</em></div>
+            </div>
+            <div class="right">
+              <div class="lbl">This Room</div>
+              <div class="room">${r.room}</div>
+              <div class="age">${r.age}</div>
+            </div>
+          </div>
+
+          <div class="hero">
+            <div class="cell adults">
+              <div class="label"><span class="pre">On the floor</span>Adults</div>
+              <div class="big">2</div>
+              <div class="sub"><strong>Minimum</strong> at all times — two-adult rule</div>
+            </div>
+            <div class="op"><span class="sym">×</span></div>
+            <div class="cell ratio">
+              <div class="label"><span class="pre">Per adult</span>Ratio</div>
+              <div class="big">${r.ratio.replace(':', '<span class="colon">:</span>')}</div>
+              <div class="sub">Children <strong>per adult</strong> for this age group</div>
+            </div>
+            <div class="op equals"><span class="sym">=</span></div>
+            <div class="cell result">
+              <div class="label"><span class="pre">In this room</span>Max Kids</div>
+              <div class="big">${r.max2}</div>
+              <div class="sub">with 2 adults — <strong>never exceed</strong></div>
+            </div>
+          </div>
+
+          <div class="math">
+            <div class="ratio-cell">
+              <div class="lbl">Base Ratio</div>
+              <div class="val">${r.ratio.replace(':', '<span class="colon">:</span>')}<span class="per">per adult</span></div>
+            </div>
+            <div class="more">
+              <div class="lbl">If you have extra adults, capacity scales:</div>
+              <table>${buildTierRows(r.tiers)}</table>
+            </div>
+          </div>
+
+          <div class="rule-banner">
+            <div class="tag">Non-negotiable<br/>Rule</div>
+            <div class="rule-text"><em>Two adults required at all times</em> — regardless of group size, in classrooms, on trips, and at events.</div>
+          </div>
+
+          <div class="foot">
+            <div class="escalation">
+              <div class="bar"></div>
+              <div class="txt">
+                <span class="label">Over capacity or short of adults?</span>
+                Post the <strong>Room Full</strong> sign, redirect children to another class, and <strong>call the Safeguard Coordinator.</strong>
+              </div>
+            </div>
+            <div class="doc-footer">
+              <div class="code">SG-SOP-003 · v2.0</div>
+              <div>Linked: SG-POL-002</div>
+            </div>
+          </div>
+
+        </div>
+      </article>
+    `;
+  }
+
+  document.getElementById('sheets').innerHTML = ROOMS.map(renderSheet).join('');
+</script>
+
+<script src="sg-nav.js"></script>
+</body>
+</html>
