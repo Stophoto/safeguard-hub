@@ -109,6 +109,10 @@ function injectStylesOnce() {
       transition: opacity 0.15s, transform 0.15s;
       font-family: 'DM Sans', sans-serif;
     }
+    /* When the chip opens the menu we switch to viewport-anchored
+       (position: fixed) positioning — set via JS in setOpen() — so the
+       menu always lands on-screen no matter how the parent header has
+       wrapped. The rules above are the closed/desktop defaults. */
     .sg-uc-menu.open {
       opacity: 1;
       transform: translateY(0);
@@ -294,13 +298,53 @@ export function mountUserChip(container) {
   const signoutBtn = container.querySelector("[data-sg-signout]");
 
   // ── Open / close behavior ─────────────────────────────
+  // When opening, we compute the menu's position from the chip's current
+  // viewport rect and pin the menu with `position: fixed`. This makes the
+  // menu reliable on pages where the header wraps onto multiple rows (the
+  // admin pages do this in portrait on a phone) — the absolute/right:0
+  // default would otherwise anchor the menu to the chip's right edge and
+  // let it extend off-screen to the left.
   let open = false;
+  function positionMenu() {
+    const rect = chipBtn.getBoundingClientRect();
+    const PAD = 8;
+    const vw  = document.documentElement.clientWidth;
+    const vh  = window.innerHeight;
+    // Temporarily render for measurement.
+    menu.style.position = "fixed";
+    menu.style.top      = (rect.bottom + 6) + "px";
+    // Prefer right-aligning the menu with the chip (matches desktop feel);
+    // fall back to pinning to viewport right if that would clip off-screen.
+    const menuW = menu.offsetWidth || 300;
+    if (rect.right - menuW >= PAD) {
+      menu.style.right = (vw - rect.right) + "px";
+      menu.style.left  = "auto";
+    } else {
+      menu.style.right = PAD + "px";
+      menu.style.left  = "auto";
+    }
+    // Cap height so the menu never runs past the bottom of the screen.
+    const roomBelow = vh - rect.bottom - 2 * PAD;
+    menu.style.maxHeight = Math.max(200, roomBelow) + "px";
+    menu.style.overflowY = "auto";
+  }
+  function clearMenuPosition() {
+    // Revert to the CSS defaults so the closed menu doesn't linger at a
+    // stale position (and desktop keeps its tidy absolute positioning).
+    menu.style.position = "";
+    menu.style.top = menu.style.right = menu.style.left = "";
+    menu.style.maxHeight = menu.style.overflowY = "";
+  }
   function setOpen(next) {
     open = !!next;
+    if (open) positionMenu(); else clearMenuPosition();
     menu.classList.toggle("open", open);
     chipBtn.setAttribute("aria-expanded", open ? "true" : "false");
   }
   chipBtn.addEventListener("click", (e) => { e.stopPropagation(); setOpen(!open); });
+  // Keep the menu aligned if the viewport changes while it's open.
+  window.addEventListener("resize", () => { if (open) positionMenu(); });
+  window.addEventListener("orientationchange", () => { if (open) positionMenu(); });
   // Close when any menu item (except disabled) is clicked
   menu.querySelectorAll(".sg-uc-menu-btn:not(.disabled)").forEach(btn => {
     btn.addEventListener("click", () => setOpen(false));
