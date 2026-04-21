@@ -339,26 +339,26 @@ body.sg-ready #sg-auth-overlay { display: none; }
     ]},
     { id:"forms", label:"Forms", count:12, color:"#7C6B99", docs:[
       { code:"SG-FRM-001", title:"Ministry Application", href:"SG-FRM-001.html" },
-      { code:"SG-FRM-002", title:"Reference Check", fill:"frm002" },
-      { code:"SG-FRM-003", title:"Police Check Letter & Consent" },
-      { code:"SG-FRM-004", title:"Worker\u2019s Covenant & Annual Acknowledgement", fill:"frm004" },
-      { code:"SG-FRM-005", title:"Child Registration & Medical Release", fill:"frm005" },
+      { code:"SG-FRM-002", title:"Reference Check", href:"SG-FRM-002.html" },
+      { code:"SG-FRM-003", title:"Police Check Letter & Consent", href:"SG-FRM-003.html" },
+      { code:"SG-FRM-004", title:"Worker\u2019s Covenant & Annual Acknowledgement", href:"SG-FRM-004.html" },
+      { code:"SG-FRM-005", title:"Child Registration & Medical Release", href:"SG-FRM-005.html" },
       { code:"SG-FRM-006", title:"Incident / Accident Report", href:"SG-FRM-006.html" },
       { code:"SG-FRM-007", title:"Suspected Abuse Report", href:"SG-FRM-007.html" },
-      { code:"SG-FRM-008", title:"Sign-In / Sign-Out & Attendance" },
-      { code:"SG-FRM-009", title:"Event / Activity Permission & Waiver" },
-      { code:"SG-FRM-010", title:"Driver Application & Authorization" },
-      { code:"SG-FRM-011", title:"Transportation Log & Trip Plan" },
+      { code:"SG-FRM-008", title:"Sign-In / Sign-Out & Attendance", href:"SG-FRM-008.html" },
+      { code:"SG-FRM-009", title:"Event / Activity Permission & Waiver", href:"SG-FRM-009.html" },
+      { code:"SG-FRM-010", title:"Driver Application & Authorization", href:"SG-FRM-010.html" },
+      { code:"SG-FRM-011", title:"Transportation Log & Trip Plan", href:"SG-FRM-011.html" },
       { code:"SG-FRM-012", title:"Training Completion Record", fill:"frm012" }
     ]},
     { id:"sops", label:"SOPs & Checklists", count:7, color:"var(--gold)", docs:[
-      { code:"SG-SOP-001", title:"Screening & Onboarding Checklist" },
-      { code:"SG-SOP-002", title:"Washroom Escort Protocol" },
-      { code:"SG-SOP-003", title:"Ratio / Room Capacity Card" },
-      { code:"SG-SOP-004", title:"Reporting Flowchart" },
-      { code:"SG-SOP-005", title:"Receiving & Releasing Children" },
-      { code:"SG-SOP-006", title:"Emergency & Injury Protocols" },
-      { code:"SG-SOP-007", title:"Transportation & Off-Site Safety" }
+      { code:"SG-SOP-001", title:"Screening & Onboarding Checklist", href:"SG-SOP-001.html" },
+      { code:"SG-SOP-002", title:"Washroom Escort Protocol", href:"SG-SOP-002.html" },
+      { code:"SG-SOP-003", title:"Ratio / Room Capacity Card", href:"SG-SOP-003.html" },
+      { code:"SG-SOP-004", title:"Reporting Flowchart", href:"SG-SOP-004.html" },
+      { code:"SG-SOP-005", title:"Receiving & Releasing Children", href:"SG-SOP-005.html" },
+      { code:"SG-SOP-006", title:"Emergency & Injury Protocols", href:"SG-SOP-006.html" },
+      { code:"SG-SOP-007", title:"Transportation & Off-Site Safety", href:"SG-SOP-007.html" }
     ]},
     { id:"training", label:"Training", count:8, color:"var(--success)", subs:[
       { title:"Volunteer Track", docs:[
@@ -415,12 +415,24 @@ body.sg-ready #sg-auth-overlay { display: none; }
     "SG-POL-003":  { href:"SG-POL-003.html" },
     "SG-POL-004":  { href:"SG-POL-004.html" },
     "SG-FRM-001":  { href:"SG-FRM-001.html" },
-    "SG-FRM-002":  { fill:"frm002" },
-    "SG-FRM-004":  { fill:"frm004" },
-    "SG-FRM-005":  { fill:"frm005" },
+    "SG-FRM-002":  { href:"SG-FRM-002.html" },
+    "SG-FRM-003":  { href:"SG-FRM-003.html" },
+    "SG-FRM-004":  { href:"SG-FRM-004.html" },
+    "SG-FRM-005":  { href:"SG-FRM-005.html" },
     "SG-FRM-006":  { href:"SG-FRM-006.html" },
     "SG-FRM-007":  { href:"SG-FRM-007.html" },
+    "SG-FRM-008":  { href:"SG-FRM-008.html" },
+    "SG-FRM-009":  { href:"SG-FRM-009.html" },
+    "SG-FRM-010":  { href:"SG-FRM-010.html" },
+    "SG-FRM-011":  { href:"SG-FRM-011.html" },
     "SG-FRM-012":  { fill:"frm012" },
+    "SG-SOP-001":  { href:"SG-SOP-001.html" },
+    "SG-SOP-002":  { href:"SG-SOP-002.html" },
+    "SG-SOP-003":  { href:"SG-SOP-003.html" },
+    "SG-SOP-004":  { href:"SG-SOP-004.html" },
+    "SG-SOP-005":  { href:"SG-SOP-005.html" },
+    "SG-SOP-006":  { href:"SG-SOP-006.html" },
+    "SG-SOP-007":  { href:"SG-SOP-007.html" },
     "SG-T-001":    { href:"SG-T-001.html" },
     "SG-T-002":    { href:"SG-T-002.html" },
     "SG-T-003":    { href:"SG-T-003.html" },
@@ -1226,24 +1238,13 @@ body.sg-ready #sg-auth-overlay { display: none; }
             h("div",{style:{width:6,height:6,borderRadius:"50%",background:"var(--success)"}}),
             h("span",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--success)",fontWeight:600,letterSpacing:"0.02em"}},"Connected to records")) : null)),
 
-      // Nav tabs
-      h("div",{style:{background:"var(--white)",borderBottom:"1px solid var(--border)",position:"sticky",top:0,zIndex:10}},
-        h("div",{className:"sg-tab-bar",style:{maxWidth:920,margin:"0 auto",padding:"14px 36px",display:"flex",gap:8}},
-          [{k:"documents",l:"Document Map"},{k:"tasks",l:"Admin Tasks"},{k:"forms",l:"Fillable Forms"}].map(function(item){
-            var active=tab===item.k;
-            return h("button",{key:item.k,className:"btn btn-sm",onClick:function(){setTab(item.k);},style:{
-              background:active?"var(--navy)":"transparent", color:active?"var(--white)":"var(--body)",
-              fontWeight:active?700:600, padding:"12px 28px", fontSize:15,
-              border:active?"none":"1.5px solid transparent",
-              boxShadow:active?"0 2px 8px rgba(27,58,75,0.2)":"none"
-            }},item.l);
-          }))),
-
-      // Content
+      // Content — Document Map (Admin Tasks moved to admin-tasks.html;
+      // the separate Fillable Forms tab was redundant with the Forms
+      // dropdown in the top nav and has been removed).
       h("div",{className:"sg-hub-content",style:{maxWidth:920,margin:"0 auto",padding:"32px 36px 80px"}},
 
         // Document Map
-        tab==="documents" ? h("div",{className:"animate-in"},
+        h("div",{className:"animate-in"},
           h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:8}},
             h("p",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--muted)"}},"Every document in the framework, organized by layer."),
             h("div",{style:{display:"flex",gap:6}},
@@ -1268,60 +1269,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
                 }) : allDocs.map(function(doc,di){ return h(DocRow,{key:di,doc:doc,color:layer.color,onForm:goForm}); })
               ):null);
           })
-        ) : null,
-
-        // Admin Tasks
-        tab==="tasks" ? h("div",{className:"animate-in"},
-          h("p",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--muted)",marginBottom:24,lineHeight:1.5}},"The Safeguard Coordinator\u2019s operational rhythm."),
-          h("div",{style:{display:"flex",gap:8,marginBottom:28,flexWrap:"wrap"}},
-            [{k:"weekly",l:"Weekly"},{k:"monthly",l:"Monthly"},{k:"quarterly",l:"Quarterly"},{k:"annually",l:"Annual"}].map(function(c){
-              var active=cadence===c.k;
-              return h("button",{key:c.k,className:"btn",onClick:function(){setCadence(c.k);},style:{
-                padding:"13px 26px",fontSize:15,fontWeight:active?700:600,borderRadius:8,
-                background:active?"var(--teal)":"var(--white)",color:active?"var(--white)":"var(--body)",
-                border:active?"none":"1.5px solid var(--border)",
-                boxShadow:active?"0 4px 12px rgba(46,107,127,0.25)":"var(--shadow-sm)",
-                transform:active?"translateY(-1px)":"none",transition:"all 0.2s"
-              }},c.l,h("span",{style:{marginLeft:8,fontSize:11,opacity:0.7}},tasks[c.k].length));
-            })),
-          h("div",{className:"card",style:{padding:"28px 32px"}},
-            h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:"var(--gold)",textTransform:"uppercase",marginBottom:18}},cadence+" tasks"),
-            tasks[cadence].map(function(t,i){return h("div",{key:i,style:{display:"flex",alignItems:"flex-start",gap:16,padding:"14px 0",borderBottom:i<tasks[cadence].length-1?"1px solid var(--border)":"none"}},
-              h("div",{style:{fontFamily:"var(--serif)",fontSize:18,color:"var(--gold-warm)",minWidth:28,flexShrink:0,lineHeight:1.4}},(i+1)+"."),
-              h("div",{style:{flex:1}},
-                h("div",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--body)",lineHeight:1.55,fontWeight:400}},t.t),
-                (function(){ var link=CODE_LINKS[t.r];
-                  var baseStyle={fontFamily:"var(--sans)",fontSize:11,marginTop:5,fontWeight:600,letterSpacing:"0.03em",display:"inline-block"};
-                  if(link && link.href) return h("a",{href:link.href,style:Object.assign({},baseStyle,{color:"var(--teal)",textDecoration:"none",borderBottom:"1px solid rgba(46,107,127,0.3)"})},t.r);
-                  if(link && link.fill) return h("button",{onClick:function(){goForm(link.fill);},style:Object.assign({},baseStyle,{color:"var(--teal)",background:"none",border:"none",borderBottom:"1px solid rgba(46,107,127,0.3)",cursor:"pointer",padding:0})},t.r);
-                  return h("div",{style:Object.assign({},baseStyle,{color:"var(--muted)"})},t.r);
-                })()));
-            }))
-        ) : null,
-
-        // Fillable Forms
-        tab==="forms" ? h("div",{className:"animate-in"},
-          h("p",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--muted)",marginBottom:28,lineHeight:1.5}},"Digital forms that submit directly to Google Sheets."),
-          [
-            {code:"SG-FRM-001",title:"Ministry Application",desc:"Start the screening pipeline for a new volunteer",view:"frm001",color:"var(--teal)",accent:"rgba(46,107,127,0.06)"},
-            {code:"SG-FRM-002",title:"Reference Check",desc:"Complete a reference check for an applicant",view:"frm002",color:"var(--teal)",accent:"rgba(46,107,127,0.04)"},
-            {code:"SG-FRM-004",title:"Worker\u2019s Covenant & Acknowledgement",desc:"Initial covenant or annual policy renewal",view:"frm004",color:"var(--gold)",accent:"rgba(176,144,85,0.04)"},
-            {code:"SG-FRM-005",title:"Child Registration & Medical Release",desc:"Register a child for ministry programs",view:"frm005",color:"var(--teal)",accent:"rgba(46,107,127,0.04)"},
-            {code:"SG-FRM-006",title:"Incident / Accident Report",desc:"Document and log any incident immediately",view:"frm006",color:"var(--error)",accent:"rgba(192,57,43,0.04)"},
-            {code:"SG-FRM-007",title:"Suspected Abuse Report",desc:"Confidential \u2014 report suspected abuse to authorities",view:"frm007",color:"var(--error)",accent:"rgba(192,57,43,0.04)"},
-            {code:"SG-FRM-012",title:"Training Completion Record",desc:"Log module completions for volunteers and leaders",view:"frm012",color:"var(--success)",accent:"rgba(39,174,96,0.04)"}
-          ].map(function(form){
-            return h("button",{key:form.code,className:"sg-form-card",onClick:function(){goForm(form.view);},style:{width:"100%",display:"flex",alignItems:"center",gap:24,padding:"28px 32px",background:"var(--white)",border:"1.5px solid var(--border)",borderRadius:14,cursor:"pointer",textAlign:"left",transition:"all 0.2s",marginBottom:12},
-              onMouseEnter:function(e){e.currentTarget.style.borderColor=form.color;e.currentTarget.style.boxShadow="0 6px 24px rgba(0,0,0,0.06)";e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.background=form.accent;},
-              onMouseLeave:function(e){e.currentTarget.style.borderColor="var(--border)";e.currentTarget.style.boxShadow="none";e.currentTarget.style.transform="none";e.currentTarget.style.background="var(--white)";}},
-              h("div",{className:"sg-form-bar",style:{width:5,height:48,borderRadius:3,background:form.color,flexShrink:0}}),
-              h("div",{className:"sg-form-card-inner",style:{flex:1}},
-                h("div",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,color:form.color,letterSpacing:"0.04em",marginBottom:3}},form.code),
-                h("h2",{style:{fontFamily:"var(--serif)",fontSize:22,color:"var(--navy)",lineHeight:1.2,fontWeight:400,margin:0}},form.title),
-                h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:6,fontWeight:400}},form.desc)),
-              h("div",{style:{fontFamily:"var(--sans)",fontSize:22,color:"var(--muted)",opacity:0.3,flexShrink:0}},"\u2192"));
-          })
-        ) : null,
+        ),
 
         // Footer
         h("div",{style:{marginTop:48,paddingTop:16,borderTop:"1px solid rgba(176,144,85,0.15)",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8}},

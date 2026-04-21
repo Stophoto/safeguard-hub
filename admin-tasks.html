@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin tasks — Admin · Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
+    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
+    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
+    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --warn:#B07A1E; --warn-bg:#FFF5E6;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+
+  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
+  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .nav-link.active{color:var(--white);background:rgba(255,255,255,0.1)}
+
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:920px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:32px;color:var(--navy);font-weight:400;line-height:1.15;margin-bottom:8px}
+  .lede{font-size:15px;color:var(--muted);margin-bottom:24px;line-height:1.65}
+
+  .cadence-row{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+  .cadence-btn{padding:13px 26px;font-size:15px;font-weight:600;border-radius:8px;background:var(--white);color:var(--body);border:1.5px solid var(--border);cursor:pointer;transition:all var(--transition);font-family:var(--sans);display:flex;align-items:center;gap:10px}
+  .cadence-btn:hover{border-color:var(--gold-warm)}
+  .cadence-btn.active{background:var(--teal);color:var(--white);border-color:var(--teal);font-weight:700;box-shadow:0 4px 12px rgba(46,107,127,0.25);transform:translateY(-1px)}
+  .cadence-btn .count{font-size:11px;opacity:0.7}
+
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+  .cadence-label{font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;margin-bottom:18px}
+  .task-row{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)}
+  .task-row:last-child{border-bottom:none}
+  .task-num{font-family:var(--serif);font-size:18px;color:var(--gold-warm);min-width:28px;flex-shrink:0;line-height:1.4}
+  .task-body{flex:1}
+  .task-text{font-size:15px;color:var(--body);line-height:1.55}
+  .task-ref{font-size:11px;margin-top:5px;font-weight:600;letter-spacing:0.03em;display:inline-block;color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .task-ref:hover{color:var(--navy)}
+  .task-ref.muted{color:var(--muted);border-bottom:none;cursor:default}
+
+  .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
+
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="admin.html">Admin &middot; People</a>
+    <a class="nav-link" href="admin-screening.html">Admin &middot; Screening</a>
+    <a class="nav-link" href="admin-submissions.html">Admin &middot; Submissions</a>
+    <a class="nav-link active" href="admin-tasks.html">Admin &middot; Tasks</a>
+    <a class="nav-link" href="index.html">Hub</a>
+    <div id="userChip" style="margin-left:8px"></div>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="wrap" id="loadingState"><div class="loading-state">Loading admin tasks&hellip;</div></div>
+
+  <div class="wrap" id="accessDenied" style="display:none">
+    <div class="eyebrow">Access denied</div>
+    <h1>Coordinator only</h1>
+    <p class="lede">This page is for Safeguard Coordinators. If you think this is a mistake, ask another Coordinator to promote your account.</p>
+    <a class="nav-link" href="dashboard.html" style="color:var(--teal);background:var(--white);border:1.5px solid var(--border);padding:10px 18px">&larr; Back to your dashboard</a>
+  </div>
+
+  <div class="wrap" id="view" style="display:none">
+    <div class="eyebrow">Coordinator dashboard</div>
+    <h1>Admin tasks</h1>
+    <p class="lede">The Safeguard Coordinator&rsquo;s operational rhythm &mdash; recurring tasks grouped by cadence. Each task links to the governing document.</p>
+
+    <div class="cadence-row" id="cadenceRow"></div>
+
+    <div class="card">
+      <div class="cadence-label" id="cadenceLabel">&mdash;</div>
+      <div id="taskList"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Safeguard Framework &middot; Bethany Chapel</footer>
+
+<script type="module">
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile } from "./sg-profile.js";
+  import { mountUserChip } from "./sg-user-chip.js";
+
+  mountUserChip(document.getElementById("userChip"));
+
+  // ── Task data (moved from index.html Admin Tasks tab) ──────
+  const TASKS = {
+    weekly: [
+      { t:"Review sign-in/sign-out sheets for completeness",                 r:"SG-FRM-008" },
+      { t:"Confirm two-adult rule maintained across all programs",            r:"SG-POL-002" },
+      { t:"Check ratio compliance for each room/class",                       r:"SG-SOP-003" },
+      { t:"Follow up on any incomplete screening files",                      r:"SG-SOP-001" },
+    ],
+    monthly: [
+      { t:"Conduct unannounced walkthrough of all ministry spaces",           r:"SG-T-103" },
+      { t:"Review incident log \u2014 verify follow-ups complete",            r:"SG-FRM-006" },
+      { t:"Check screening renewal dates \u2014 flag expiring within 60 days",r:"SG-POL-001" },
+      { t:"Verify all volunteers have current training status",               r:"SG-G-001" },
+    ],
+    quarterly: [
+      { t:"Audit training completion rates across active volunteers",         r:"SG-G-001" },
+      { t:"Review and update room capacity cards if needed",                  r:"SG-SOP-003" },
+      { t:"Review emergency contact info for all registered children",        r:"SG-FRM-005" },
+    ],
+    annually: [
+      { t:"Conduct full compliance audit",                                    r:"SG-SOP-007" },
+      { t:"Collect annual policy acknowledgements from all workers",          r:"SG-FRM-004" },
+      { t:"Coordinate police check renewals",                                 r:"SG-FRM-003" },
+      { t:"Run training renewal cycle",                                       r:"SG-G-001" },
+      { t:"Review and update all policies for currency",                      r:"SG-G-001" },
+      { t:"Present safeguarding report to Board of Elders",                   r:"SG-G-001" },
+    ],
+  };
+
+  // ── Code → standalone file href (for task references) ─────
+  const HREFS = {
+    "SG-G-001":    "SG-G-001.html",
+    "SG-POL-001":  "SG-POL-001.html",
+    "SG-POL-002":  "SG-POL-002.html",
+    "SG-POL-003":  "SG-POL-003.html",
+    "SG-POL-004":  "SG-POL-004.html",
+    "SG-FRM-001":  "SG-FRM-001.html",
+    "SG-FRM-002":  "SG-FRM-002.html",
+    "SG-FRM-003":  "SG-FRM-003.html",
+    "SG-FRM-004":  "SG-FRM-004.html",
+    "SG-FRM-005":  "SG-FRM-005.html",
+    "SG-FRM-006":  "SG-FRM-006.html",
+    "SG-FRM-007":  "SG-FRM-007.html",
+    "SG-FRM-008":  "SG-FRM-008.html",
+    "SG-FRM-009":  "SG-FRM-009.html",
+    "SG-FRM-010":  "SG-FRM-010.html",
+    "SG-FRM-011":  "SG-FRM-011.html",
+    "SG-SOP-001":  "SG-SOP-001.html",
+    "SG-SOP-002":  "SG-SOP-002.html",
+    "SG-SOP-003":  "SG-SOP-003.html",
+    "SG-SOP-004":  "SG-SOP-004.html",
+    "SG-SOP-005":  "SG-SOP-005.html",
+    "SG-SOP-006":  "SG-SOP-006.html",
+    "SG-SOP-007":  "SG-SOP-007.html",
+    "SG-T-001":    "SG-T-001.html",
+    "SG-T-002":    "SG-T-002.html",
+    "SG-T-003":    "SG-T-003.html",
+    "SG-T-004":    "SG-T-004.html",
+    "SG-T-101":    "SG-T-101.html",
+    "SG-T-102":    "SG-T-102.html",
+    "SG-T-103":    "SG-T-103.html",
+    "SG-T-REF-001":"SG-T-REF-001.html",
+  };
+
+  const CADENCES = [
+    { key: "weekly",    label: "Weekly" },
+    { key: "monthly",   label: "Monthly" },
+    { key: "quarterly", label: "Quarterly" },
+    { key: "annually",  label: "Annual" },
+  ];
+
+  const loadingState = document.getElementById("loadingState");
+  const accessDenied = document.getElementById("accessDenied");
+  const view         = document.getElementById("view");
+  const cadenceRow   = document.getElementById("cadenceRow");
+  const cadenceLabel = document.getElementById("cadenceLabel");
+  const taskList     = document.getElementById("taskList");
+
+  let active = "weekly";
+
+  onUserChange(async user => {
+    if (!user) { location.replace("sign-in.html?next=admin-tasks.html"); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    try {
+      const me = await getOrCreateProfile();
+      if (me.role !== "coordinator") {
+        loadingState.style.display = "none";
+        accessDenied.style.display = "block";
+        return;
+      }
+      loadingState.style.display = "none";
+      view.style.display = "block";
+      renderCadenceRow();
+      renderTasks();
+    } catch (err) {
+      loadingState.textContent = "Couldn't load. " + (err.message || "");
+    }
+  });
+
+  function renderCadenceRow() {
+    cadenceRow.innerHTML = CADENCES.map(c =>
+      '<button type="button" class="cadence-btn' + (active === c.key ? ' active' : '') + '" data-key="' + c.key + '">'
+        + c.label + ' <span class="count">' + TASKS[c.key].length + '</span>'
+      + '</button>'
+    ).join("");
+    cadenceRow.querySelectorAll(".cadence-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        active = btn.dataset.key;
+        renderCadenceRow();
+        renderTasks();
+      });
+    });
+  }
+
+  function renderTasks() {
+    cadenceLabel.textContent = active + " tasks";
+    const items = TASKS[active] || [];
+    if (items.length === 0) {
+      taskList.innerHTML = '<div style="color:var(--muted);font-size:13px">No tasks at this cadence.</div>';
+      return;
+    }
+    taskList.innerHTML = items.map((t, i) => {
+      const href = HREFS[t.r];
+      const ref = href
+        ? '<a class="task-ref" href="' + href + '">' + t.r + '</a>'
+        : '<span class="task-ref muted">' + t.r + '</span>';
+      return '<div class="task-row">'
+        + '<div class="task-num">' + (i + 1) + '.</div>'
+        + '<div class="task-body">'
+        +   '<div class="task-text">' + escapeHtml(t.t) + '</div>'
+        +   ref
+        + '</div>'
+        + '</div>';
+    }).join("");
+  }
+
+  function escapeHtml(s) {
+    return String(s || "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  }
+</script>
+
+</body>
+</html>
