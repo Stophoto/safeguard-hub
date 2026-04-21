@@ -1150,50 +1150,18 @@ body.sg-ready #sg-auth-overlay { display: none; }
   }
 
   // ════════════════════════════════════════════════
-  //  SETUP SCREEN
-  // ════════════════════════════════════════════════
-  function SetupScreen(props) {
-    var s1=useState(""); var password=s1[0]; var setPassword=s1[1];
-    var s2=useState(""); var errMsg=s2[0]; var setErr=s2[1];
-    var s3=useState(false); var busy=s3[0]; var setBusy=s3[1];
-
-    async function handleSignIn() {
-      setErr("");
-      if (!password.trim()) { setErr("Password is required."); return; }
-      setBusy(true);
-      try {
-        await window.SG_Hub.testPassword(password.trim());
-        window.SG_Hub.savePassword(password.trim());
-        props.onComplete();
-      } catch(err) {
-        setErr(err.message || "Invalid password. Contact your Safeguard Coordinator.");
-      }
-      setBusy(false);
-    }
-
-    return h("div",{style:{minHeight:"100vh",background:"var(--cream)",display:"flex",alignItems:"center",justifyContent:"center",padding:"32px 20px"}},
-      h("div",{className:"card animate-up",style:{maxWidth:440,width:"100%",padding:"48px 44px",borderRadius:16}},
-        h("div",{style:{textAlign:"center",marginBottom:36}},
-          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.2em",color:"var(--gold)",textTransform:"uppercase",marginBottom:8}},"Safeguard Framework"),
-          h("h1",{style:{fontFamily:"var(--serif)",fontSize:32,color:"var(--navy)",fontWeight:400,margin:0}},"Safeguard Hub"),
-          h("p",{style:{fontFamily:"var(--sans)",fontSize:15,color:"var(--muted)",marginTop:14,lineHeight:1.6}},"Enter your password to continue.")),
-        errMsg ? h("div",{style:{padding:"12px 16px",borderRadius:8,background:"var(--error-bg)",border:"1.5px solid rgba(192,57,43,0.15)",color:"var(--error)",fontFamily:"var(--sans)",fontSize:14,fontWeight:500,marginBottom:20}},errMsg) : null,
-        h("div",{style:{marginBottom:28}},
-          h("input",{className:"fi",type:"password",value:password,onChange:function(e){setPassword(e.target.value);},placeholder:"Password",onKeyDown:function(e){if(e.key==="Enter")handleSignIn();},style:{fontSize:16,padding:"15px 16px",textAlign:"center"}})),
-        h("button",{className:"btn btn-primary",onClick:handleSignIn,disabled:busy,style:{width:"100%",padding:"16px",fontSize:16}},busy?"Signing in\u2026":"Sign In")));
-  }
-
-  // ════════════════════════════════════════════════
   //  MAIN HUB
   // ════════════════════════════════════════════════
   function SafeguardHub() {
-    var s0=useState(window.SG_Hub.isConfigured()); var configured=s0[0]; var setConfigured=s0[1];
     var s1=useState("dashboard"); var view=s1[0]; var setView=s1[1];
     var s2=useState(new Set(["governance"])); var expanded=s2[0]; var setExpanded=s2[1];
     var s3=useState("documents"); var tab=s3[0]; var setTab=s3[1];
     var s4=useState("weekly"); var cadence=s4[0]; var setCadence=s4[1];
 
-    if (!configured) return h(SetupScreen, { onComplete: function(){ setConfigured(true); } });
+    // Firebase auth is the only gate for the Hub. The legacy shared-team
+    // password (once shown via SetupScreen) has been retired — submissions
+    // are persisted to Firestore, and the Sheets mirror runs best-effort
+    // only when config/hub.sheetsPassword is present.
 
     function toggle(id){setExpanded(function(prev){var n=new Set(prev);if(n.has(id))n.delete(id);else n.add(id);return n;});}
     function goForm(v){setView(v);window.scrollTo({top:0});}
@@ -1285,12 +1253,13 @@ body.sg-ready #sg-auth-overlay { display: none; }
 })();
 </script>
 
-<!-- ═══ PHASE 7 · FIRESTORE SUBMISSION CAPTURE ═══ -->
-<!-- Hooks into the legacy SheetsService so every form submission is
-     also captured to /submissions in Firestore, tagged with the
-     current user's uid and email. The Sheets write stays as the
-     primary path — Firestore runs in parallel, non-blocking, so any
-     Firestore hiccup can't break the user's form submit. -->
+<!-- ═══ SUBMISSION WRITE PATH ═══ -->
+<!-- Firestore is the source of truth for every Hub form submission.
+     The legacy Google Sheets mirror runs best-effort — if the shared
+     Apps Script password is present (populated from config/hub in
+     Firestore) it writes a duplicate row; if not, the Sheets call is
+     skipped silently. Either way the user's submit succeeds as long
+     as the Firestore write succeeds. -->
 <script type="module">
   import { createSubmission } from "./sg-submissions.js";
   import { onUserChange } from "./sg-auth.js";
@@ -1301,20 +1270,28 @@ body.sg-ready #sg-auth-overlay { display: none; }
 
     const origAppendRow  = window.SheetsService.appendRow;
     const origAppendRows = window.SheetsService.appendRows;
+    const hasLegacyPw    = () => !!(window.SG_Hub && window.SG_Hub.isConfigured());
 
     window.SheetsService.appendRow = async function (tab, row) {
-      // Parallel capture — never blocks the user's submit
-      createSubmission({ tabName: tab, rowData: row, recordId: row && row[0] })
-        .catch(err => console.warn("Firestore submission capture failed:", err));
-      return origAppendRow(tab, row);
+      // Firestore is primary — awaited, must succeed for the form to succeed.
+      await createSubmission({ tabName: tab, rowData: row, recordId: row && row[0] });
+      // Sheets mirror is best-effort — only attempted when the legacy password
+      // is set, and any failure is logged (never surfaced to the user).
+      if (hasLegacyPw()) {
+        origAppendRow(tab, row).catch(err => console.warn("Sheets mirror failed:", err));
+      }
+      return { success: true };
     };
 
     window.SheetsService.appendRows = async function (tab, rows) {
-      (rows || []).forEach(row => {
-        createSubmission({ tabName: tab, rowData: row, recordId: row && row[0] })
-          .catch(err => console.warn("Firestore submission capture failed:", err));
-      });
-      return origAppendRows(tab, rows);
+      const list = rows || [];
+      for (const row of list) {
+        await createSubmission({ tabName: tab, rowData: row, recordId: row && row[0] });
+      }
+      if (hasLegacyPw()) {
+        origAppendRows(tab, list).catch(err => console.warn("Sheets mirror failed:", err));
+      }
+      return { success: true };
     };
   });
 </script>
