@@ -203,13 +203,21 @@
     '#sg-nav-footer a:hover { text-decoration: underline; }',
     // Mobile
     '@media (max-width: 760px) {',
-    '  #sg-nav-inner { padding: 0 16px; height: 54px; gap: 0; }',
+    // Nav row scrolls horizontally so all items stay reachable with a swipe.
+    '  #sg-nav-inner { padding: 0 16px; height: 54px; gap: 0;',
+    '    overflow-x: auto; overflow-y: hidden;',
+    '    -webkit-overflow-scrolling: touch; scrollbar-width: none; }',
+    '  #sg-nav-inner::-webkit-scrollbar { display: none; height: 0; }',
+    '  #sg-nav-brand, .sg-nav-item, .sg-nav-action { flex-shrink: 0; }',
     '  #sg-nav-brand small { font-size: 8px; letter-spacing: 0.18em; }',
     '  #sg-nav-brand .sg-brand-name { font-size: 15px; }',
     '  .sg-nav-link { padding: 6px 10px; font-size: 12px; }',
     '  .sg-nav-link .sg-nav-label-long { display: none; }',
-    '  .sg-nav-dropdown { min-width: 260px; left: auto; right: 0;',
-    '    transform: none; }',
+    // Dropdowns anchor to the viewport (position: fixed) so they escape the
+    // horizontally-scrolling nav container and stay reachable on a phone.
+    '  .sg-nav-dropdown { min-width: 260px; left: auto; right: 8px;',
+    '    transform: none; position: fixed; top: 54px;',
+    '    max-width: calc(100vw - 16px); }',
     '  .sg-nav-action { padding: 6px 10px; font-size: 11px; }',
     '  body.sg-nav-active { padding-top: 54px; }',
     '  #sg-breadcrumb { top: 54px; }',
