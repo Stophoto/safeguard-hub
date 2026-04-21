@@ -59,6 +59,7 @@
     'SG-FRM-012':  { title: 'Training Completion Record',       href: 'index.html#frm012', fillable: true },
     'SG-SOP-001':  { title: 'Screening & Onboarding Checklist', href: 'SG-SOP-001.html' },
     'SG-SOP-002':  { title: 'Washroom Escort Protocol',         href: 'SG-SOP-002.html' },
+    'SG-SOP-002-cards': { title: 'Washroom Escort Card (printable)', href: 'SG-SOP-002-cards.html' },
     'SG-SOP-003':  { title: 'Ratio / Room Capacity Card',       href: 'SG-SOP-003.html' },
     'SG-SOP-003-cards': { title: 'Room Posters (printable)',    href: 'SG-SOP-003-cards.html' },
     'SG-SOP-004':  { title: 'Reporting Flowchart',              href: 'SG-SOP-004.html' },

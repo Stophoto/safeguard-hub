@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SG-SOP-002 · Washroom Escort Protocol — Bethany Chapel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B3A4B;
+    --navy-ink: #142A37;
+    --teal: #2E6B7F;
+    --gold: #B09055;
+    --gold-warm: #C4A46A;
+    --cream: #FAF8F3;
+    --cream-2: #F3EFE4;
+    --body: #3D3835;
+    --red: #C0392B;
+  }
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0;
+    background: #E7E1D0;
+    font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+    color: var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .banner {
+    max-width: 8.5in;
+    margin: 24px auto 8px;
+    padding: 14px 20px;
+    background: var(--cream);
+    border: 1px solid #D9D2BF;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .banner .txt { font-size: 13px; color: #6A635C; line-height: 1.5; }
+  .banner .txt b { color: var(--navy); }
+  .banner button {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    padding: 9px 16px;
+    border: 1px solid var(--navy);
+    background: var(--navy); color: var(--cream);
+    border-radius: 4px; cursor: pointer; flex: 0 0 auto;
+  }
+  .banner button:hover { background: var(--navy-ink); }
+
+  .sheets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 12px 20px 60px;
+  }
+
+  /* ─── Full-page portrait card (US Letter) ─── */
+  .card {
+    width: 8.5in;
+    height: 11in;
+    background: var(--cream);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.03), 0 24px 60px -20px rgba(20,42,55,0.22), 0 8px 22px -10px rgba(20,42,55,0.12);
+  }
+
+  /* ─── Top brand bar ─── */
+  .topbar {
+    height: 0.85in;
+    background: var(--navy);
+    color: var(--cream);
+    padding: 0 0.55in;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 0.3in;
+    flex: 0 0 auto;
+  }
+  .topbar .brand { display: flex; align-items: center; gap: 14px; }
+  .topbar .shield { width: 36px; height: 40px; flex: 0 0 auto; }
+  .topbar .brand-txt { line-height: 1; }
+  .topbar .brand-txt .fw {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.26em;
+    color: var(--gold-warm);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .topbar .brand-txt .org {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 18px;
+    letter-spacing: 0.01em;
+  }
+  .topbar .doc {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-warm);
+    line-height: 1.6;
+  }
+  .topbar .doc .code { color: var(--cream); font-weight: 500; }
+
+  /* ─── Body ─── */
+  .body {
+    flex: 1;
+    padding: 0.3in 0.6in 0.3in;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* ─── Title ─── */
+  .title-row {
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 0.12in;
+    margin-bottom: 0.16in;
+  }
+  .title-row .kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  .title-row .title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 40px;
+    line-height: 0.98;
+    color: var(--navy);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+  .title-row .title em { font-style: italic; color: var(--teal); }
+
+  /* ─── Core rule (full-bleed navy band) ─── */
+  .core-rule {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 0.18in 0.6in;
+    margin: 0 -0.6in 0.2in;
+    position: relative;
+  }
+  .core-rule::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--gold);
+  }
+  .core-rule .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--gold-warm);
+    margin-bottom: 10px;
+  }
+  .core-rule .rule-text {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.18;
+  }
+  .core-rule .rule-text em { font-style: italic; color: var(--gold-warm); }
+
+  /* ─── Steps section ─── */
+  .steps-head {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.16in;
+    display: flex;
+    align-items: center;
+    gap: 0.16in;
+  }
+  .steps-head::after {
+    content: ""; flex: 1; height: 1px;
+    background: rgba(46,107,127,0.28);
+  }
+
+  .steps {
+    list-style: none;
+    padding: 0; margin: 0 0 0.14in;
+    display: flex;
+    flex-direction: column;
+    gap: 0.08in;
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 0.5in 1fr;
+    gap: 0.16in;
+    align-items: baseline;
+  }
+  .steps .num {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 32px;
+    line-height: 0.85;
+    color: var(--navy);
+    text-align: right;
+    letter-spacing: -0.02em;
+  }
+  .steps .txt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.38;
+    color: var(--body);
+  }
+  .steps .txt strong { color: var(--navy); font-weight: 700; }
+  .steps .txt .lead {
+    display: block;
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-weight: 400;
+    color: var(--navy);
+    font-size: 16px;
+    letter-spacing: -0.005em;
+    line-height: 1.1;
+    margin-bottom: 3px;
+  }
+  .steps .txt .lead em { font-style: italic; color: var(--teal); }
+
+  /* ─── Never block ─── */
+  .never {
+    border: 2px dashed var(--red);
+    background: rgba(192,57,43,0.04);
+    padding: 0.14in 0.22in 0.14in 0.24in;
+    margin-top: 0;
+  }
+  .never .head {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 500;
+    margin-bottom: 7px;
+  }
+  .never ul {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .never li {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    line-height: 1.35;
+    color: var(--body);
+    padding-left: 0.26in;
+    position: relative;
+  }
+  .never li::before {
+    content: "✕";
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+    color: var(--red);
+    font-size: 14px;
+    line-height: 1.35;
+  }
+  .never li strong { color: var(--navy); font-weight: 700; }
+
+  /* ─── Escalation ─── */
+  .escalation {
+    display: flex;
+    gap: 12px;
+    margin-top: 0.14in;
+  }
+  .escalation .bar {
+    width: 3px;
+    background: var(--red);
+    align-self: stretch;
+    flex: 0 0 auto;
+  }
+  .escalation .txt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    line-height: 1.42;
+    color: var(--body);
+  }
+  .escalation .label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .escalation strong { color: var(--navy); font-weight: 700; }
+
+  /* ─── Doc code footer (minimal) ─── */
+  .doc-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 8.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #8A837B;
+    padding: 0 0.6in 0.7in;
+    flex: 0 0 auto;
+  }
+  .doc-footer .code { color: var(--navy); font-weight: 500; }
+
+  /* ─── Print ─── */
+  @page { size: letter portrait; margin: 0; }
+  @media print {
+    html, body { background: #fff !important; }
+    .banner { display: none !important; }
+    .sheets { padding: 0 !important; gap: 0 !important; }
+    .card {
+      box-shadow: none !important;
+      margin: 0 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
+</head>
+<body data-doc-code="SG-SOP-002" data-doc-version="1.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+
+<div class="banner">
+  <div class="txt">
+    <b>Washroom Escort Protocol · Quick-Reference Card</b> — one card per US Letter portrait sheet. Print at 100%, laminate, clip to binder.
+  </div>
+  <button onclick="window.print()">Print card</button>
+</div>
+
+<div class="sheets">
+  <article class="card" data-screen-label="SOP-002 Washroom Escort Card">
+    <header class="topbar">
+      <div class="brand">
+        <svg class="shield" viewBox="0 0 34 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M17 1.5 L32.5 6.2 V18 C32.5 27.3 25.5 33.8 17 36.5 C8.5 33.8 1.5 27.3 1.5 18 V6.2 Z"
+                fill="#1B3A4B" stroke="#C4A46A" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M10.2 18.3 L15.2 23.3 L24 14.2" stroke="#C4A46A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="brand-txt">
+          <div class="fw">Safeguard Framework</div>
+          <div class="org">Bethany Chapel · Calgary</div>
+        </div>
+      </div>
+      <div class="doc">
+        <div class="code">SG-SOP-002 · v1.0</div>
+        <div>Desk Binder</div>
+      </div>
+    </header>
+
+    <div class="body">
+
+      <div class="title-row">
+        <div class="kicker">Safeguard · Standard Operating Procedure</div>
+        <div class="title">Washroom Escort<br/><em>Protocol</em></div>
+      </div>
+
+      <div class="core-rule">
+        <div class="tag">The Core Rule · Non-negotiable</div>
+        <div class="rule-text"><em>No adult is ever alone with a child in a washroom.</em> Two adults escort, every time.</div>
+      </div>
+
+      <div class="steps-head">Protocol · when a child needs the washroom</div>
+
+      <ol class="steps">
+        <li>
+          <div class="num">1</div>
+          <div class="txt"><span class="lead">Pause &amp; pair up.</span>Acknowledge the child. Signal a <strong>second approved volunteer</strong> to escort with you. Never proceed alone.</div>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <div class="txt"><span class="lead">Take a buddy child if possible.</span>Escort two children together when you can; a single child only goes with two adults.</div>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <div class="txt"><span class="lead">Walk — don't enter.</span>Walk the child to the washroom. <strong>Both adults wait outside the door</strong>, within sight of each other.</div>
+        </li>
+        <li>
+          <div class="num">4</div>
+          <div class="txt"><span class="lead">Door open, stall closed.</span>Prop the washroom door open. The child uses a <strong>closed stall</strong> independently.</div>
+        </li>
+        <li>
+          <div class="num">5</div>
+          <div class="txt"><span class="lead">Check in verbally.</span>If the child takes longer than 2 minutes, knock and speak from outside the door. Do not enter.</div>
+        </li>
+        <li>
+          <div class="num">6</div>
+          <div class="txt"><span class="lead">Return &amp; log.</span>Walk the child back to the classroom. Note the escort on the <strong>session check-sheet</strong>.</div>
+        </li>
+      </ol>
+
+      <div class="never">
+        <div class="head">Never · under any circumstance</div>
+        <ul>
+          <li>Enter a stall while a child is inside it.</li>
+          <li>Escort a child to the washroom <strong>alone</strong> — even briefly, even with a parent's verbal OK.</li>
+          <li>Close the outer washroom door behind you.</li>
+          <li>Assist with clothing or toileting without the <strong>second adult present and visible</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="escalation">
+        <div class="bar"></div>
+        <div class="txt">
+          <span class="label">If the child needs physical assistance</span>
+          Stop. Call the <strong>parent or guardian</strong> to the washroom to assist. If unreachable, call the <strong>Safeguard Coordinator</strong>. Both adults remain present throughout.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="doc-footer">
+      <div class="code">SG-SOP-002 · v1.0</div>
+      <div>Bethany Chapel · Calgary</div>
+    </div>
+  </article>
+</div>
+
+<script src="sg-nav.js"></script>
+</body>
+</html>
