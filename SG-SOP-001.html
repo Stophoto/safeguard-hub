@@ -9,7 +9,9 @@
 <style>
   :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --success:#27AE60; --warn:#B07A1E; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.65;min-height:100vh;display:flex;flex-direction:column}
+
+  /* Header (standard) */
   .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
   .hdr-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
   .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
@@ -18,57 +20,104 @@
   .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
   .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
   .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+
   .page{flex:1;padding:36px 24px 80px}
-  .wrap{max-width:960px;margin:0 auto}
+  .wrap{max-width:880px;margin:0 auto}
+
+  /* Title */
   .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
-  h1.title{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
-  .subtitle{font-family:var(--serif);font-size:18px;color:var(--teal);font-weight:400;font-style:italic;margin-bottom:14px}
+  h1.title{font-family:var(--serif);font-size:40px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px;letter-spacing:-0.01em}
+  .subtitle{font-family:var(--serif);font-size:19px;color:var(--teal);font-weight:400;font-style:italic;margin-bottom:16px}
   .meta{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding-top:14px;margin-top:14px;border-top:2px solid rgba(176,144,85,0.3);font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.02em}
-  .lede{font-size:15px;color:var(--muted);margin:22px 0 26px 0;line-height:1.65;max-width:780px;font-style:italic}
-  .attest{display:flex;align-items:flex-start;gap:10px;margin:4px 0 16px 0;padding:10px 14px;background:var(--sand);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color var(--transition)}
-  .attest:hover{border-color:var(--gold-warm)}
-  .attest input{margin-top:2px;width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
-  .attest span{font-size:13px;color:var(--body);line-height:1.45;font-weight:500}
+  .lede{font-size:16px;color:var(--body);margin:24px 0 28px 0;line-height:1.7;max-width:720px}
+
+  /* Generic card */
   .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
   @media(max-width:620px){.card{padding:22px 20px}}
   .section-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
-  .section-title{font-family:var(--serif);font-size:24px;color:var(--navy);font-weight:400;line-height:1.2;margin-bottom:16px}
-  .section-intro{color:var(--body);font-size:15px;margin-bottom:14px;line-height:1.65}
-  .section-intro em,.section-intro i{color:var(--muted);font-style:italic}
-  .step-title{font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--navy);text-transform:uppercase;margin:22px 0 8px 0;padding-left:10px;border-left:3px solid var(--gold)}
-  label{display:block;font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
-  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);transition:border-color var(--transition),box-shadow var(--transition)}
-  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
-  textarea.fi{min-height:90px;resize:vertical;font-family:var(--sans);line-height:1.55}
-  .field{margin-bottom:14px}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-  .row-sig{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
-  @media(max-width:620px){.row,.row-sig{grid-template-columns:1fr}}
-  .checklist{list-style:none;margin:0;padding:0}
-  .checklist li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--sand);color:var(--body);font-size:14px;line-height:1.5}
-  .checklist li:last-child{border-bottom:none}
-  .checklist input{margin-top:3px;width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
-  a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
-  .pill{position:relative;cursor:pointer}
-  .pill input{position:absolute;opacity:0;pointer-events:none}
-  .pill span{display:inline-flex;padding:9px 15px;border:1.5px solid var(--border);border-radius:22px;font-size:13px;font-weight:600;background:var(--white);color:var(--body);transition:all var(--transition);user-select:none}
-  .pill:hover span{border-color:var(--gold-warm)}
-  .pill input:checked + span{background:var(--teal);border-color:var(--teal);color:var(--white)}
-  .pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
-  .approval-card{background:linear-gradient(135deg,rgba(176,144,85,0.06),rgba(46,107,127,0.04));border:1.5px solid var(--gold-warm);border-radius:12px;padding:22px 24px;margin-top:12px}
-  .approval-head{font-size:11px;font-weight:700;letter-spacing:0.2em;color:var(--navy);text-transform:uppercase;margin-bottom:14px}
+  .section-title{font-family:var(--serif);font-size:26px;color:var(--navy);font-weight:400;line-height:1.2;margin-bottom:14px}
+
+  /* Live Tracking callout */
+  .tracking-card{background:linear-gradient(135deg,rgba(46,107,127,0.06),rgba(176,144,85,0.06));border:1.5px solid var(--gold-warm);border-radius:14px;padding:26px 30px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:36px}
+  @media(max-width:620px){.tracking-card{padding:22px 20px}}
+  .tracking-card .section-head{color:var(--teal)}
+  .tracking-card .tracking-title{font-family:var(--serif);font-size:22px;color:var(--navy);font-weight:400;line-height:1.25;margin-bottom:10px}
+  .tracking-card p{margin-bottom:12px;line-height:1.65;color:var(--body)}
+  .tracking-card ul{list-style:none;padding:0;margin:0 0 14px 0}
+  .tracking-card li{padding:7px 0;font-size:14.5px;line-height:1.6;display:flex;gap:10px;align-items:flex-start}
+  .tracking-card li::before{content:"\2192";color:var(--gold-warm);font-weight:700;flex-shrink:0}
+  .tracking-card .footnote{font-size:12px;color:var(--muted);font-style:italic;margin:0;line-height:1.6}
+  .tracking-card code{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:var(--white);padding:1px 7px;border-radius:3px;border:1px solid var(--border);color:var(--teal);font-style:normal}
+
+  /* Workflow section header */
+  .workflow-intro{display:flex;align-items:center;gap:14px;margin:8px 0 12px 0}
+  .workflow-intro .label{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .workflow-intro .rule{flex:1;height:1px;background:rgba(176,144,85,0.3)}
+  .workflow-title{font-family:var(--serif);font-size:30px;color:var(--navy);font-weight:400;line-height:1.15;margin-bottom:4px}
+  .workflow-sub{font-size:14px;color:var(--muted);margin-bottom:26px;font-style:italic}
+
+  /* Step cards — the visual redesign */
+  .step{display:flex;gap:20px;align-items:flex-start;margin-bottom:14px;position:relative}
+  .step::before{content:"";position:absolute;left:21px;top:52px;bottom:-14px;width:2px;background:linear-gradient(180deg,var(--gold-warm),transparent);opacity:0.35}
+  .step:last-child::before{display:none}
+  .step-num{width:44px;height:44px;border-radius:50%;background:var(--navy);color:var(--white);font-family:var(--serif);font-size:20px;font-weight:400;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(27,58,75,0.18);z-index:1}
+  .step-body{flex:1;background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.03);transition:border-color var(--transition),box-shadow var(--transition)}
+  .step-body:hover{border-color:var(--gold-warm);box-shadow:0 4px 20px rgba(0,0,0,0.05)}
+  .step-header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .step-name{font-family:var(--serif);font-size:21px;color:var(--navy);font-weight:400;line-height:1.2}
+  .step-doc{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.06em;color:var(--teal);background:rgba(46,107,127,0.08);padding:3px 10px;border-radius:4px;text-decoration:none;text-transform:uppercase;border:none;transition:all var(--transition)}
+  .step-doc:hover{background:rgba(46,107,127,0.15);color:var(--navy)}
+  .step-reqs{list-style:none;padding:0;margin:0 0 12px 0}
+  .step-reqs li{position:relative;padding:7px 0 7px 22px;line-height:1.6;color:var(--body);font-size:14.5px;border-bottom:1px solid var(--sand)}
+  .step-reqs li:last-child{border-bottom:none}
+  .step-reqs li::before{content:"";position:absolute;left:4px;top:15px;width:8px;height:8px;border-radius:50%;background:var(--gold-warm)}
+  .step-reqs li strong{color:var(--navy);font-weight:700}
+  .step-tracked{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--muted);padding:10px 14px;background:var(--sand);border-radius:6px;margin-top:14px;line-height:1.55}
+  .step-tracked strong{color:var(--navy);font-weight:700;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0}
+  .step-tracked a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .step-tracked a:hover{color:var(--navy)}
+  @media(max-width:620px){.step{gap:14px}.step-body{padding:16px 18px}.step-num{width:38px;height:38px;font-size:17px}.step::before{left:18px}}
+
+  /* Interview Guide (appendix) */
+  .guide-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:32px 36px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px;margin-top:36px}
+  @media(max-width:620px){.guide-card{padding:24px 22px}}
+  .guide-card .section-title{font-size:28px;margin-bottom:8px}
+  .guide-intro{color:var(--muted);font-size:14.5px;font-style:italic;line-height:1.75;margin-bottom:26px;padding-left:14px;border-left:3px solid var(--gold-warm)}
+  .guide-block{margin-bottom:24px;padding-bottom:22px;border-bottom:1px solid var(--sand)}
+  .guide-block:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0}
+  .guide-block-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .guide-block-num{font-family:var(--serif);font-size:17px;color:var(--gold-warm);font-weight:400;min-width:24px;font-style:italic}
+  .guide-block-title{font-family:var(--serif);font-size:19px;color:var(--navy);font-weight:400}
+  .guide-qs{list-style:none;padding:0;margin:0}
+  .guide-qs li{position:relative;padding:8px 0 8px 22px;line-height:1.65;color:var(--body);font-size:14.5px}
+  .guide-qs li::before{content:"\201C";position:absolute;left:0;top:2px;color:var(--teal);font-family:var(--serif);font-weight:400;font-size:26px;line-height:1}
+
+  /* Cross-refs */
   .xref{list-style:none;padding:0;margin:0}
-  .xref li{padding:6px 0;color:var(--body);font-size:14px;line-height:1.55}
-  .xref li strong{color:var(--navy);font-weight:700}
-  .actions{display:flex;gap:10px;margin:26px 0 0 0;flex-wrap:wrap;align-items:center}
+  .xref li{padding:8px 0;font-size:14px;line-height:1.5;color:var(--body);border-bottom:1px solid var(--sand)}
+  .xref li:last-child{border-bottom:none}
+
+  /* Link style */
+  a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);transition:border-color var(--transition),color var(--transition)}
+  a.inline-link:hover{color:var(--navy);border-bottom-color:var(--navy)}
+
+  /* Actions */
+  .actions{display:flex;gap:10px;margin:36px 0 0 0;flex-wrap:wrap;align-items:center}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
   .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
   .btn-primary:hover{background:var(--teal)}
-  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
-  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
-  .save-hint{font-size:12px;color:var(--muted);margin-left:auto}
+
   footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
-  @media print{body{background:#fff}.hdr,.actions,footer,.save-hint{display:none !important}.page{padding:0}.wrap{max-width:100%}.card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;margin-bottom:12px}.fi{border:none;border-bottom:1px solid #999;border-radius:0;padding:4px 0;background:transparent}.pill span{border:1px solid #999 !important;color:#000 !important;background:#fff !important}.pill input:checked + span{background:#000 !important;color:#fff !important}}
+
+  @media print{
+    body{background:#fff}
+    .hdr,.actions,footer{display:none !important}
+    .page{padding:0}
+    .wrap{max-width:100%}
+    .card,.tracking-card,.guide-card,.step-body{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}
+    .step-num{background:#000 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .step::before{display:none}
+  }
 </style>
 </head>
 <body data-doc-code="SG-SOP-001" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
@@ -99,168 +148,222 @@
       <span><strong>Issued:</strong> March 2026</span>
     </div>
 
-    <p class="lede">No one serves in ministry with children, youth, or vulnerable adults until every step below is complete. This checklist walks a ministry leader or Safeguard Coordinator through the full screening and onboarding workflow &mdash; from first conversation to final approval.</p>
+    <p class="lede">No one serves in ministry with children, youth, or vulnerable adults until every step below is complete. This document describes the full screening and onboarding workflow &mdash; what happens at each stage, what it produces, and where the record lives in the admin panel.</p>
 
-    <div class="card" style="background:linear-gradient(135deg,rgba(46,107,127,0.06),rgba(176,144,85,0.06));border:1.5px solid var(--gold-warm)">
-      <div class="section-head" style="color:var(--teal)">Live Tracking</div>
-      <div class="section-title" style="font-size:20px;margin-bottom:10px">This is the reference. Actual tracking lives in the admin panel.</div>
-      <p style="margin-bottom:14px;line-height:1.65">
-        Use this document to understand the SOP. When you're ready to <em>record</em> a volunteer's interview, approval decision, or ministry assignment, go to the live tracker:
-      </p>
-      <ul style="list-style:none;padding:0;margin:0 0 14px 0;font-size:14px;line-height:1.75">
-        <li>&rsaquo; <a class="inline-link" href="admin-screening.html"><strong>Admin &middot; Screening roster</strong></a> &mdash; every volunteer's stage at a glance; filter by interview-done, approved, assigned, etc.</li>
-        <li>&rsaquo; <a class="inline-link" href="admin-user.html"><strong>Admin &middot; People</strong></a> &rarr; click a volunteer &rarr; record interview / approval / ministry assignment inline on their profile.</li>
-        <li>&rsaquo; <a class="inline-link" href="admin-submissions.html"><strong>Admin &middot; Submissions</strong></a> &mdash; every <a class="inline-link" href="SG-FRM-001.html"><strong>SG-FRM-001</strong></a> application lands here for coordinator review.</li>
+    <!-- Live Tracking callout -->
+    <div class="tracking-card">
+      <div class="section-head">Live Tracking</div>
+      <div class="tracking-title">This is the reference. Actual tracking lives in the admin panel.</div>
+      <p>Use this document to understand the SOP. To <em>record</em> a volunteer&rsquo;s interview, approval decision, or ministry assignment, go to the live tracker:</p>
+      <ul>
+        <li><a class="inline-link" href="admin-screening.html"><strong>Admin &middot; Screening roster</strong></a> &mdash; every volunteer&rsquo;s stage at a glance; filter by interview-done, approved, assigned, etc.</li>
+        <li><a class="inline-link" href="admin.html"><strong>Admin &middot; People</strong></a> &rarr; click a volunteer &rarr; record interview / approval / ministry assignment inline on their profile.</li>
+        <li><a class="inline-link" href="admin-submissions.html"><strong>Admin &middot; Submissions</strong></a> &mdash; every <a class="inline-link" href="SG-FRM-001.html"><strong>SG-FRM-001</strong></a> application lands here for coordinator review.</li>
       </ul>
-      <p style="font-size:12px;color:var(--muted);font-style:italic;margin:0">Coordinator-only. State is stored on each volunteer's profile as <code style="font-family:ui-monospace,Menlo,monospace;font-size:11px;background:var(--white);padding:1px 6px;border-radius:3px;border:1px solid var(--border)">profile.screening</code> &mdash; a single source of truth across the Hub.</p>
+      <p class="footnote">Coordinator-only. State is stored on each volunteer&rsquo;s profile as <code>profile.screening</code> &mdash; a single source of truth across the Hub.</p>
     </div>
 
-    <div class="card">
-      <div class="section-head">Workflow</div>
-      <div class="section-title">Screening Workflow</div>
-
-      <div class="step-title">Step 1 &mdash; Application</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="f_s1a"><span><strong>Ministry Application (<a class="inline-link" href="SG-FRM-001.html">SG-FRM-001</a>)</strong> received and reviewed.</span></li>
-        <li><input type="checkbox" id="f_s1b"><span>Confirm at least 6 months of regular attendance (or elder-approved exception documented).</span></li>
-      </ul>
-
-      <div class="step-title">Step 2 &mdash; Interview</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="f_s2a"><span>Schedule an in-person screening conversation (10&ndash;15 minutes).</span></li>
-        <li><input type="checkbox" id="f_s2b"><span>Use the Interview Guide on page 3 of this document.</span></li>
-        <li><input type="checkbox" id="f_s2c"><span>Record interviewer name and date below.</span></li>
-      </ul>
-      <div class="row" style="margin-top:10px">
-        <div class="field"><label for="f_interviewer">Interviewer</label><input type="text" id="f_interviewer" class="fi"></div>
-        <div class="field"><label for="f_interviewDate">Date</label><input type="date" id="f_interviewDate" class="fi"></div>
-      </div>
-
-      <div class="step-title">Step 3 &mdash; References</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="f_s3a"><span><strong>Reference Check Form (<a class="inline-link" href="SG-FRM-002.html">SG-FRM-002</a>)</strong> &mdash; collect and contact two references.</span></li>
-        <li><input type="checkbox" id="f_s3b"><span>Document responses. Flag any concerns to Safeguard Coordinator.</span></li>
-      </ul>
-
-      <div class="step-title">Step 4 &mdash; Police Information Check</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="f_s4a"><span><strong>Police Check Consent (<a class="inline-link" href="SG-FRM-003.html">SG-FRM-003</a>)</strong> signed by applicant.</span></li>
-        <li><input type="checkbox" id="f_s4b"><span>Issue cover letter from SG-FRM-003 requesting Vulnerable Sector Check.</span></li>
-        <li><input type="checkbox" id="f_s4c"><span>Results received and filed. (Church covers cost for approved volunteers.)</span></li>
-      </ul>
-
-      <div class="step-title">Step 5 &mdash; Covenant &amp; Acknowledgement</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="f_s5a"><span><strong>Worker&rsquo;s Covenant (<a class="inline-link" href="SG-FRM-004.html">SG-FRM-004</a>)</strong> read, signed, and filed.</span></li>
-      </ul>
-
-      <div class="step-title">Step 6 &mdash; Training</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="f_s6a"><span>Volunteer completes Safeguard Training (volunteer track, SG-T-001 through SG-T-005).</span></li>
-        <li><input type="checkbox" id="f_s6b"><span>Training completion recorded in tracking system.</span></li>
-      </ul>
-
-      <div class="step-title">Step 7 &mdash; Final Approval</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="f_s7a"><span>All documents on file and complete.</span></li>
-        <li><input type="checkbox" id="f_s7b"><span>Ministry leader recommends applicant for approval.</span></li>
-        <li><input type="checkbox" id="f_s7c"><span>Safeguard Coordinator or elder signs off.</span></li>
-      </ul>
+    <!-- Workflow -->
+    <div class="workflow-intro">
+      <span class="label">Screening Workflow</span>
+      <span class="rule"></span>
     </div>
+    <h2 class="workflow-title">Seven steps, in order.</h2>
+    <p class="workflow-sub">Each step produces a record in the admin panel shown at the bottom of its card.</p>
 
-    <div class="card">
-      <div class="section-head">Approval &amp; Sign-Off</div>
-      <div class="section-title">Final Sign-Off</div>
-      <p class="section-intro">Complete this section once all seven screening steps above are finished. File this checklist in the volunteer&rsquo;s record.</p>
-
-      <div class="approval-card">
-        <div class="approval-head">Approved for Ministry</div>
-        <div class="field"><label for="f_applicantName">Applicant Name</label><input type="text" id="f_applicantName" class="fi"></div>
-        <label style="margin-bottom:8px;display:block">Decision</label>
-        <div class="pills">
-          <label class="pill"><input type="radio" name="f_decision" value="yes"><span>Yes</span></label>
-          <label class="pill"><input type="radio" name="f_decision" value="no"><span>No</span></label>
-          <label class="pill"><input type="radio" name="f_decision" value="deferred"><span>Deferred (reason attached)</span></label>
+    <!-- Step 1 -->
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-header">
+          <div class="step-name">Application</div>
+          <a class="step-doc" href="SG-FRM-001.html">SG-FRM-001</a>
         </div>
-        <div class="row-sig" style="margin-top:14px">
-          <div class="field"><label for="f_approvedBy">Approved by</label><input type="text" id="f_approvedBy" class="fi"></div>
-          <div class="field"><label for="f_approvedDate">Date</label><input type="date" id="f_approvedDate" class="fi"></div>
-        </div>
-        <label class="attest"><input type="checkbox" id="f_approvedConsent"><span>I intend my typed name above to serve as my signature approving this screening.</span></label>
-        <div class="field"><label for="f_ministry">Ministry Assigned</label><input type="text" id="f_ministry" class="fi"></div>
+        <ul class="step-reqs">
+          <li><strong>Ministry Application (<a class="inline-link" href="SG-FRM-001.html">SG-FRM-001</a>)</strong> received and reviewed.</li>
+          <li>Confirm at least 6 months of regular attendance (or elder-approved exception documented).</li>
+        </ul>
+        <div class="step-tracked"><strong>Tracked in:</strong><span><a href="admin-submissions.html">Admin &middot; Submissions</a> &mdash; every SG-FRM-001 submission lands here for review.</span></div>
       </div>
     </div>
 
-    <div class="card">
+    <!-- Step 2 -->
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-header">
+          <div class="step-name">Interview</div>
+        </div>
+        <ul class="step-reqs">
+          <li>Schedule an in-person screening conversation (10&ndash;15 minutes).</li>
+          <li>Use the <a class="inline-link" href="#interview-guide">Interview Guide</a> below.</li>
+          <li>Record interviewer name and date in the admin panel.</li>
+        </ul>
+        <div class="step-tracked"><strong>Recorded in:</strong><span><a href="admin-screening.html">Admin &middot; Screening</a> &rarr; Interview section on the volunteer&rsquo;s profile.</span></div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-header">
+          <div class="step-name">References</div>
+          <a class="step-doc" href="SG-FRM-002.html">SG-FRM-002</a>
+        </div>
+        <ul class="step-reqs">
+          <li><strong>Reference Check Form (<a class="inline-link" href="SG-FRM-002.html">SG-FRM-002</a>)</strong> &mdash; collect and contact two references.</li>
+          <li>Document responses. Flag any concerns to Safeguard Coordinator.</li>
+        </ul>
+        <div class="step-tracked"><strong>Tracked in:</strong><span><a href="admin.html">Admin &middot; People</a> &rarr; Compliance &rarr; References on the volunteer&rsquo;s profile.</span></div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-header">
+          <div class="step-name">Police Information Check</div>
+          <a class="step-doc" href="SG-FRM-003.html">SG-FRM-003</a>
+        </div>
+        <ul class="step-reqs">
+          <li><strong>Police Check Consent (<a class="inline-link" href="SG-FRM-003.html">SG-FRM-003</a>)</strong> signed by applicant.</li>
+          <li>Issue cover letter from <a class="inline-link" href="SG-FRM-003.html">SG-FRM-003</a> requesting Vulnerable Sector Check.</li>
+          <li>Results received and filed. (Church covers cost for approved volunteers.)</li>
+        </ul>
+        <div class="step-tracked"><strong>Tracked in:</strong><span><a href="admin.html">Admin &middot; People</a> &rarr; Compliance &rarr; Police Information Check.</span></div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-header">
+          <div class="step-name">Covenant &amp; Acknowledgement</div>
+          <a class="step-doc" href="SG-FRM-004.html">SG-FRM-004</a>
+        </div>
+        <ul class="step-reqs">
+          <li><strong>Worker&rsquo;s Covenant (<a class="inline-link" href="SG-FRM-004.html">SG-FRM-004</a>)</strong> read, signed, and filed.</li>
+        </ul>
+        <div class="step-tracked"><strong>Tracked in:</strong><span><a href="admin.html">Admin &middot; People</a> &rarr; Compliance &rarr; Worker&rsquo;s Covenant.</span></div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="step-header">
+          <div class="step-name">Training</div>
+          <a class="step-doc" href="SG-G-001.html">SG-G-001</a>
+        </div>
+        <ul class="step-reqs">
+          <li>Volunteer completes Safeguard Training (volunteer track, <a class="inline-link" href="SG-T-001.html"><strong>SG-T-001</strong></a> through <a class="inline-link" href="SG-T-004.html"><strong>SG-T-004</strong></a>).</li>
+          <li>Training completion recorded in tracking system.</li>
+        </ul>
+        <div class="step-tracked"><strong>Tracked in:</strong><span><a href="admin.html">Admin &middot; People</a> &rarr; Compliance &rarr; Safeguard training.</span></div>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <div class="step-header">
+          <div class="step-name">Final Approval</div>
+        </div>
+        <ul class="step-reqs">
+          <li>All documents on file and complete.</li>
+          <li>Ministry leader recommends applicant for approval.</li>
+          <li>Safeguard Coordinator or elder signs off.</li>
+        </ul>
+        <div class="step-tracked"><strong>Recorded in:</strong><span><a href="admin-screening.html">Admin &middot; Screening</a> &rarr; Approval decision + Ministry assignment on the volunteer&rsquo;s profile.</span></div>
+      </div>
+    </div>
+
+    <!-- Cross-references -->
+    <div class="card" style="margin-top:36px">
       <div class="section-head">Linked Documents</div>
       <div class="section-title">Cross-References</div>
       <ul class="xref">
-        <li><a class="inline-link" href="SG-POL-001.html">SG-POL-001</a> &mdash; Screening &amp; Approval Policy</li>
-        <li><a class="inline-link" href="SG-G-001.html">SG-G-001</a> &mdash; Safeguard Governance (includes Training &amp; Renewal standards)</li>
-        <li><a class="inline-link" href="SG-FRM-001.html">SG-FRM-001</a> &mdash; Ministry Application</li>
-        <li><a class="inline-link" href="SG-FRM-002.html">SG-FRM-002</a> &mdash; Reference Check Form</li>
-        <li><a class="inline-link" href="SG-FRM-003.html">SG-FRM-003</a> &mdash; Police Check Consent</li>
-        <li><a class="inline-link" href="SG-FRM-004.html">SG-FRM-004</a> &mdash; Worker&rsquo;s Covenant &amp; Acknowledgement</li>
+        <li><a class="inline-link" href="SG-POL-001.html"><strong>SG-POL-001</strong></a> &mdash; Screening &amp; Approval Policy</li>
+        <li><a class="inline-link" href="SG-G-001.html"><strong>SG-G-001</strong></a> &mdash; Safeguard Governance (includes Training &amp; Renewal standards)</li>
+        <li><a class="inline-link" href="SG-FRM-001.html"><strong>SG-FRM-001</strong></a> &mdash; Ministry Application</li>
+        <li><a class="inline-link" href="SG-FRM-002.html"><strong>SG-FRM-002</strong></a> &mdash; Reference Check Form</li>
+        <li><a class="inline-link" href="SG-FRM-003.html"><strong>SG-FRM-003</strong></a> &mdash; Police Check Consent</li>
+        <li><a class="inline-link" href="SG-FRM-004.html"><strong>SG-FRM-004</strong></a> &mdash; Worker&rsquo;s Covenant &amp; Acknowledgement</li>
       </ul>
     </div>
 
-    <div class="card">
+    <!-- Interview Guide appendix -->
+    <div class="guide-card" id="interview-guide">
       <div class="section-head">Appendix</div>
       <div class="section-title">Screening Interview Guide</div>
-      <p class="section-intro"><em>This interview is a friendly, 10&ndash;15 minute conversation &mdash; not an interrogation. The goal is to hear the applicant&rsquo;s story, understand their motivation, and prayerfully assess readiness for a role of trust. Choose a few questions from each category below.</em></p>
+      <div class="guide-intro">This interview is a friendly, 10&ndash;15 minute conversation &mdash; not an interrogation. The goal is to hear the applicant&rsquo;s story, understand their motivation, and prayerfully assess readiness for a role of trust. Choose a few questions from each category below.</div>
 
-      <div class="step-title">Spiritual Background &amp; Motivation</div>
-      <ul class="checklist">
-        <li><span>Can you share a bit about your faith journey?</span></li>
-        <li><span>What led you to apply to serve with children or youth?</span></li>
-        <li><span>What do you hope to offer through this ministry? What do you hope to grow in?</span></li>
-      </ul>
-
-      <div class="step-title">Character &amp; Readiness</div>
-      <ul class="checklist">
-        <li><span>What strengths do you bring to working with kids or youth?</span></li>
-        <li><span>What situations tend to challenge or frustrate you?</span></li>
-        <li><span>What does being trustworthy with kids and families mean to you?</span></li>
-      </ul>
-
-      <div class="step-title">Judgment &amp; Team Interactions</div>
-      <ul class="checklist">
-        <li><span>How do you respond when someone in leadership gives you feedback or correction?</span></li>
-        <li><span>Have you ever had to handle a situation where someone wasn&rsquo;t following expectations? How did you respond?</span></li>
-        <li><span>Are you comfortable working as part of a team in flexible or fast-paced settings?</span></li>
-      </ul>
-
-      <div class="step-title">Personal Integrity &amp; Boundaries</div>
-      <ul class="checklist">
-        <li><span>Are there any past experiences, struggles, or personal challenges we should be aware of that could affect your ability to serve?</span></li>
-        <li><span>Is there anything you&rsquo;d want leadership to know so we can support you well?</span></li>
-      </ul>
-
-      <div class="step-title">Closing &amp; Next Steps</div>
-      <ul class="checklist">
-        <li><span>You&rsquo;ll receive training on safety expectations and procedures. Is there anything that makes you feel nervous or unsure about volunteering?</span></li>
-        <li><span>Do you have any questions for us about the ministry or next steps?</span></li>
-      </ul>
-
-      <div class="field" style="margin-top:22px"><label for="f_notes">Interviewer Notes</label><textarea id="f_notes" class="fi" style="min-height:140px" placeholder="Record anything worth following up on. Note any concerns, strengths, or items to discuss with the Safeguard Coordinator."></textarea></div>
-
-      <label style="margin:14px 0 8px 0;display:block">Any Concerns Flagged?</label>
-      <div class="pills" style="margin-bottom:14px">
-        <label class="pill"><input type="radio" name="f_concerns" value="none"><span>No concerns</span></label>
-        <label class="pill"><input type="radio" name="f_concerns" value="referred"><span>Yes &mdash; referred to Safeguard Coordinator</span></label>
+      <div class="guide-block">
+        <div class="guide-block-head">
+          <span class="guide-block-num">i.</span>
+          <span class="guide-block-title">Spiritual Background &amp; Motivation</span>
+        </div>
+        <ul class="guide-qs">
+          <li>Can you share a bit about your faith journey?</li>
+          <li>What led you to apply to serve with children or youth?</li>
+          <li>What do you hope to offer through this ministry? What do you hope to grow in?</li>
+        </ul>
       </div>
 
-      <div class="row-sig">
-        <div class="field"><label for="f_interviewerSig">Interviewer Signature</label><input type="text" id="f_interviewerSig" class="fi" placeholder="Type your full legal name as your signature"></div>
-        <div class="field"><label for="f_interviewerSigDate">Date</label><input type="date" id="f_interviewerSigDate" class="fi"></div>
+      <div class="guide-block">
+        <div class="guide-block-head">
+          <span class="guide-block-num">ii.</span>
+          <span class="guide-block-title">Character &amp; Readiness</span>
+        </div>
+        <ul class="guide-qs">
+          <li>What strengths do you bring to working with kids or youth?</li>
+          <li>What situations tend to challenge or frustrate you?</li>
+          <li>What does being trustworthy with kids and families mean to you?</li>
+        </ul>
       </div>
-      <label class="attest"><input type="checkbox" id="f_interviewerConsent"><span>I intend my typed name above to serve as my signature completing this interview.</span></label>
+
+      <div class="guide-block">
+        <div class="guide-block-head">
+          <span class="guide-block-num">iii.</span>
+          <span class="guide-block-title">Judgment &amp; Team Interactions</span>
+        </div>
+        <ul class="guide-qs">
+          <li>How do you respond when someone in leadership gives you feedback or correction?</li>
+          <li>Have you ever had to handle a situation where someone wasn&rsquo;t following expectations? How did you respond?</li>
+          <li>Are you comfortable working as part of a team in flexible or fast-paced settings?</li>
+        </ul>
+      </div>
+
+      <div class="guide-block">
+        <div class="guide-block-head">
+          <span class="guide-block-num">iv.</span>
+          <span class="guide-block-title">Personal Integrity &amp; Boundaries</span>
+        </div>
+        <ul class="guide-qs">
+          <li>Are there any past experiences, struggles, or personal challenges we should be aware of that could affect your ability to serve?</li>
+          <li>Is there anything you&rsquo;d want leadership to know so we can support you well?</li>
+        </ul>
+      </div>
+
+      <div class="guide-block">
+        <div class="guide-block-head">
+          <span class="guide-block-num">v.</span>
+          <span class="guide-block-title">Closing &amp; Next Steps</span>
+        </div>
+        <ul class="guide-qs">
+          <li>You&rsquo;ll receive training on safety expectations and procedures. Is there anything that makes you feel nervous or unsure about volunteering?</li>
+          <li>Do you have any questions for us about the ministry or next steps?</li>
+        </ul>
+      </div>
     </div>
 
     <div class="actions">
       <button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
-      <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
-      <span class="save-hint" id="saveHint">Your entries save automatically on this device.</span>
     </div>
 
   </div>
@@ -271,43 +374,6 @@
 <script type="module">
   import { mountUserChip } from "./sg-user-chip.js";
   mountUserChip(document.getElementById("userChip"));
-</script>
-
-<script>
-  (function(){
-    const KEY = "sg-form-SG-SOP-001";
-    const HINT = document.getElementById("saveHint");
-    const fields = () => document.querySelectorAll('.wrap input, .wrap textarea');
-    function snapshot(){
-      const data = {};
-      fields().forEach(el => {
-        if (el.type === 'radio'){ if (el.checked && el.name) data['r:'+el.name] = el.value; }
-        else if (el.type === 'checkbox'){ if (el.id) data['c:'+el.id] = el.checked; }
-        else if (el.id) data['v:'+el.id] = el.value;
-      });
-      return data;
-    }
-    function rehydrate(){
-      let data; try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(_) { data = {}; }
-      fields().forEach(el => {
-        if (el.type === 'radio' && el.name){ const v = data['r:'+el.name]; if (v != null && el.value === v) el.checked = true; }
-        else if (el.type === 'checkbox' && el.id){ if ('c:'+el.id in data) el.checked = !!data['c:'+el.id]; }
-        else if (el.id){ if ('v:'+el.id in data) el.value = data['v:'+el.id]; }
-      });
-    }
-    let saveTimer;
-    function save(){ clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(snapshot())); HINT.textContent = "Saved on this device · " + new Date().toLocaleTimeString(); } catch(_) { HINT.textContent = "Couldn't save locally"; } }, 300); }
-    document.addEventListener('DOMContentLoaded', () => {
-      rehydrate();
-      fields().forEach(el => { el.addEventListener('input', save); el.addEventListener('change', save); });
-      document.getElementById('clearBtn').addEventListener('click', () => {
-        if (!confirm('Clear all fields on this form? This cannot be undone.')) return;
-        localStorage.removeItem(KEY);
-        fields().forEach(el => { if (el.type === 'checkbox' || el.type === 'radio') el.checked = false; else el.value = ''; });
-        HINT.textContent = "Cleared";
-      });
-    });
-  })();
 </script>
 
 <script src="sg-nav.js"></script>
