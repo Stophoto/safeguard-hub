@@ -118,6 +118,11 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-doc-code="SG-T-103" data-doc-version="3.0" data-doc-date="March 2026" data-doc-status="Approved">
+<style id="sg-guard-style">body{visibility:hidden}</style>
+<script type="module">
+  import { requireAuth } from "./sg-guard.js";
+  requireAuth();
+</script>
 
 <header class="sg-hdr">
   <div class="sg-hdr-inner">
