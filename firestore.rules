@@ -24,13 +24,208 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ─── Helper: is the caller a Coordinator? ────────────────
-    // Checks the caller's own /users/{uid} document for role.
-    // Costs 1 extra read per request that uses it.
+    // ─── Helpers ─────────────────────────────────────────────
     function isCoordinator() {
       return request.auth != null
         && exists(/databases/$(database)/documents/users/$(request.auth.uid))
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'coordinator';
+    }
+
+    function hasProfile() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function unchanged(field) {
+      return request.resource.data.get(field, null) == resource.data.get(field, null);
+    }
+
+    function validUserCreate(uid) {
+      return request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly([
+          'email',
+          'role',
+          'status',
+          'firstName',
+          'lastName',
+          'preferredName',
+          'dob',
+          'phone',
+          'address',
+          'emergencyContact',
+          'ageGroups',
+          'serviceTimes',
+          'testimony',
+          'attendingSince',
+          'profileComplete',
+          'createdAt'
+        ])
+        && request.resource.data.role == 'volunteer'
+        && request.resource.data.status == 'in-process'
+        && (!request.resource.data.keys().hasAny(['email']) || request.resource.data.email == request.auth.token.email)
+        && request.resource.data.createdAt == request.time;
+    }
+
+    function validUserSelfUpdate(uid) {
+      return request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'email',
+          'firstName',
+          'lastName',
+          'preferredName',
+          'dob',
+          'phone',
+          'address',
+          'emergencyContact',
+          'ageGroups',
+          'serviceTimes',
+          'testimony',
+          'attendingSince',
+          'profileComplete',
+          'covenant',
+          'policeCheck',
+          'references',
+          'training',
+          'updatedAt'
+        ])
+        && unchanged('role')
+        && unchanged('status')
+        && unchanged('screening')
+        && unchanged('renewalDueOn')
+        && unchanged('activatedAt')
+        && unchanged('activatedBy')
+        && unchanged('updatedBy')
+        && validSelfPoliceCheck()
+        && validSelfReferences()
+        && (!request.resource.data.keys().hasAny(['email']) || request.resource.data.email == request.auth.token.email)
+        && (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt == request.time);
+    }
+
+    function validSelfPoliceCheck() {
+      let pc = request.resource.data.get('policeCheck', {});
+      return pc is map
+        && pc.keys().hasOnly(['submittedAt', 'clearedAt', 'expiresOn'])
+        && request.resource.data.get('policeCheck', {}).get('clearedAt', null)
+          == resource.data.get('policeCheck', {}).get('clearedAt', null)
+        && request.resource.data.get('policeCheck', {}).get('expiresOn', null)
+          == resource.data.get('policeCheck', {}).get('expiresOn', null);
+    }
+
+    function validSelfReferences() {
+      let refs = request.resource.data.get('references', {'items': []}).get('items', []);
+      let oldRefs = resource.data.get('references', {'items': []}).get('items', []);
+      return refs is list
+        && refs.size() <= 2
+        && (
+          refs.size() < 1
+          || (
+            refs[0] is map
+            && refs[0].keys().hasOnly(['name', 'email', 'relationship', 'receivedAt'])
+            && (
+              refs[0].get('receivedAt', null) == null
+              || (oldRefs.size() > 0 && refs[0].get('receivedAt', null) == oldRefs[0].get('receivedAt', null))
+            )
+          )
+        )
+        && (
+          refs.size() < 2
+          || (
+            refs[1] is map
+            && refs[1].keys().hasOnly(['name', 'email', 'relationship', 'receivedAt'])
+            && (
+              refs[1].get('receivedAt', null) == null
+              || (oldRefs.size() > 1 && refs[1].get('receivedAt', null) == oldRefs[1].get('receivedAt', null))
+            )
+          )
+        );
+    }
+
+    function validSubmissionFormPair() {
+      return (request.resource.data.formCode == 'SG-FRM-001' && request.resource.data.tabName == 'People')
+        || (request.resource.data.formCode == 'SG-FRM-002' && request.resource.data.tabName == 'References')
+        || (request.resource.data.formCode == 'SG-FRM-004' && request.resource.data.tabName == 'Acknowledgements')
+        || (request.resource.data.formCode == 'SG-FRM-005' && request.resource.data.tabName == 'Registrations')
+        || (request.resource.data.formCode == 'SG-FRM-006' && request.resource.data.tabName == 'Incidents')
+        || (request.resource.data.formCode == 'SG-FRM-007' && request.resource.data.tabName == 'Abuse Reports')
+        || (request.resource.data.formCode == 'SG-FRM-012' && request.resource.data.tabName == 'Training Log');
+    }
+
+    function validSubmissionCreate() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && hasProfile()
+        && request.resource.data.keys().hasOnly([
+          'formCode',
+          'formTitle',
+          'tabName',
+          'recordId',
+          'rowData',
+          'submittedBy',
+          'submittedByEmail',
+          'submittedAt',
+          'status',
+          'reviewedBy',
+          'reviewedByEmail',
+          'reviewedAt',
+          'notes'
+        ])
+        && request.resource.data.formCode in [
+          'SG-FRM-001',
+          'SG-FRM-002',
+          'SG-FRM-004',
+          'SG-FRM-005',
+          'SG-FRM-006',
+          'SG-FRM-007',
+          'SG-FRM-012'
+        ]
+        && request.resource.data.tabName in [
+          'People',
+          'References',
+          'Acknowledgements',
+          'Registrations',
+          'Incidents',
+          'Abuse Reports',
+          'Training Log'
+        ]
+        && validSubmissionFormPair()
+        && request.resource.data.submittedBy == request.auth.uid
+        && request.resource.data.submittedByEmail == request.auth.token.email
+        && request.resource.data.submittedAt == request.time
+        && request.resource.data.status == 'open'
+        && request.resource.data.reviewedBy == null
+        && request.resource.data.reviewedByEmail == null
+        && request.resource.data.reviewedAt == null
+        && request.resource.data.notes == ''
+        && request.resource.data.rowData is list
+        && request.resource.data.rowData.size() <= 100
+        && request.resource.data.recordId is string
+        && request.resource.data.recordId.size() <= 80;
+    }
+
+    function validSubmissionUpdate() {
+      return isCoordinator()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'status',
+          'notes',
+          'reviewedAt',
+          'reviewedBy',
+          'reviewedByEmail',
+          'updatedAt'
+        ])
+        && request.resource.data.status in ['open', 'reviewed', 'closed']
+        && request.resource.data.notes is string
+        && request.resource.data.notes.size() <= 5000
+        && request.resource.data.updatedAt == request.time
+        && (
+          request.resource.data.status == 'open'
+          || (
+            request.resource.data.reviewedAt == request.time
+            && request.resource.data.reviewedBy == request.auth.uid
+            && request.resource.data.reviewedByEmail == request.auth.token.email
+          )
+        );
     }
 
     // ─── Users collection ────────────────────────────────────
@@ -43,22 +238,12 @@ service cloud.firestore {
       // Create: only yourself, and only with a safe starting state.
       // Blocks anyone trying to sign up as a coordinator or skipping
       // the in-process status.
-      allow create: if request.auth != null
-                    && request.auth.uid == uid
-                    && request.resource.data.role == 'volunteer'
-                    && request.resource.data.status == 'in-process';
+      allow create: if validUserCreate(uid);
 
       // Update:
       //   • As yourself, you can change any field EXCEPT role/status.
       //   • As a Coordinator, you can change anything on anyone.
-      allow update: if request.auth != null && (
-        (
-          request.auth.uid == uid
-          && request.resource.data.role   == resource.data.role
-          && request.resource.data.status == resource.data.status
-        )
-        || isCoordinator()
-      );
+      allow update: if validUserSelfUpdate(uid) || isCoordinator();
 
       // Delete: never from the app.
       allow delete: if false;
@@ -73,18 +258,10 @@ service cloud.firestore {
     }
 
     // ─── Config collection ───────────────────────────────────
-    // Small key/value store for site-wide settings the client
-    // needs (e.g., the legacy Sheets password). Read-only from
-    // the app — updates happen in the Firebase console or by a
-    // Coordinator through a future admin UI.
-    //
-    // Read requires: signed-in + has a user profile (which means
-    // they've at least started signing up). This prevents random
-    // strangers from reading config even if they obtain an anon
-    // Firebase token somehow.
+    // Site-wide config. Coordinator-only because config may contain
+    // operational secrets or sensitive switches.
     match /config/{configId} {
-      allow read: if request.auth != null
-                  && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+      allow read: if isCoordinator();
       allow write: if false;
     }
 
@@ -101,17 +278,14 @@ service cloud.firestore {
     //  • Update:         Coordinators only (for status/notes).
     //  • Delete:         never from the app.
     match /submissions/{submissionId} {
-      allow create: if request.auth != null
-                    && request.auth.token.email_verified == true
-                    && exists(/databases/$(database)/documents/users/$(request.auth.uid))
-                    && request.resource.data.submittedBy == request.auth.uid;
+      allow create: if validSubmissionCreate();
 
       allow get: if request.auth != null
                  && (resource.data.submittedBy == request.auth.uid || isCoordinator());
 
       allow list: if isCoordinator();
 
-      allow update: if isCoordinator();
+      allow update: if validSubmissionUpdate();
 
       allow delete: if false;
     }

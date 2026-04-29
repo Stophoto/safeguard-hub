@@ -403,32 +403,18 @@ Commit to `auth-feature`. Wait for green checkmark in Actions.
 
 ### Step 2 — Republish the Firestore rules
 
-The rules changed (new `/config` collection is readable by signed-in users with profiles).
+The rules changed. `/config` is now Coordinator-only because it may contain operational secrets or sensitive switches.
 
 1. Copy `firestore.rules` contents on your Mac (Cmd+A, Cmd+C in TextEdit).
 2. https://console.firebase.google.com/project/safeguard-hub-71292/firestore/rules
 3. Click inside the editor, Cmd+A, Delete, Cmd+V.
 4. Click **Publish**.
 
-If you skip this step, signed-in visitors to the hub will see the legacy password prompt because the hub can't read the config doc.
+If you skip this step, the app will still have the older, weaker client-side access rules.
 
-### Step 3 — Create the `/config/hub` document (one-time bootstrap)
+### Step 3 — Do not create a client-readable Sheets password
 
-This is where the Sheets password lives now. Coordinators and above can read it.
-
-1. Go to https://console.firebase.google.com/project/safeguard-hub-71292/firestore/data
-2. Near the top of the left column, click **+ Start collection**.
-3. A dialog opens:
-   - **Collection ID:** type exactly `config`
-   - Click **Next**.
-4. Next panel:
-   - **Document ID:** type exactly `hub`
-   - Now add a field:
-     - **Field:** `sheetsPassword`
-     - **Type:** string
-     - **Value:** `Safeguard2026!`
-   - Click **Save**.
-5. You should now see the path `config › hub` with one field `sheetsPassword: "Safeguard2026!"`.
+The old `/config/hub.sheetsPassword` bootstrap has been retired for security. Do not create or expose a shared Apps Script password to client browsers. Hub submissions should write to Firestore only until a server-side Sheets mirror is added.
 
 ### Step 4 — Test the gated hub
 
