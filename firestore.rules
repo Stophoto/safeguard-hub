@@ -40,14 +40,6 @@ service cloud.firestore {
       return request.resource.data.get(field, null) == resource.data.get(field, null);
     }
 
-    function validRole(role) {
-      return role in ['volunteer', 'leader', 'coordinator'];
-    }
-
-    function validStatus(status) {
-      return status in ['in-process', 'active', 'paused', 'inactive'];
-    }
-
     function validUserCreate(uid) {
       return request.auth != null
         && request.auth.uid == uid
