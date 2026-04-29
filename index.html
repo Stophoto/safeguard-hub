@@ -158,8 +158,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
 <!-- ═══ PHASE 4 · FIREBASE AUTH GATE ═══ -->
 <!-- Hides the rest of the page until Firebase auth is resolved.
      Anonymous visitors are redirected to sign-in. Signed-in users
-     have the legacy Sheets password pulled from Firestore silently
-     so they never see the old password prompt. -->
+     submit Hub forms through Firestore; no shared client secret is loaded. -->
 <div id="sg-auth-overlay" class="no-print" aria-live="polite">
   <div style="text-align:center">
     <div class="sg-spinner" aria-hidden="true"></div>
@@ -168,9 +167,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
 </div>
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
-  import { db } from "./sg-firebase.js";
   import { getOrCreateProfile } from "./sg-profile.js";
-  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   // ── Profile cache + "when ready" helper for React form autofill ──
   // The React forms below can't use ES modules directly, so we hang a
@@ -229,19 +226,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       location.replace("verify-email.html");
       return;
     }
-    // Fetch the legacy Sheets password from Firestore the first time this
-    // browser visits the hub. Saves it to localStorage the way the existing
-    // backend client expects. Once Phase 5 retires Sheets, this all goes away.
-    if (!localStorage.getItem("sg_hub_pw")) {
-      try {
-        const snap = await getDoc(doc(db, "config", "hub"));
-        if (snap.exists() && snap.data().sheetsPassword) {
-          localStorage.setItem("sg_hub_pw", snap.data().sheetsPassword);
-        }
-      } catch (err) {
-        console.warn("Couldn't fetch hub config:", err);
-      }
-    }
+    localStorage.removeItem("sg_hub_pw");
 
     // Load profile into the cache so autofill on forms can pick it up
     try {
@@ -264,38 +249,18 @@ body.sg-ready #sg-auth-overlay { display: none; }
 <script>
 /* ═══ HUB BACKEND CLIENT ═══ */
 (function(){
-  var STORAGE_KEY = "sg_hub_pw";
-  var BACKEND_URL = "https://script.google.com/macros/s/AKfycbzaPYsIj00ztt2la7cVrJyxm4OYl3EFS_t-I9u0bXpZV0CeaYvko23OLYYjcYFS4qoxpg/exec";
-
   localStorage.removeItem("sg_hub_auth");
   localStorage.removeItem("sg_hub_config");
+  localStorage.removeItem("sg_hub_pw");
 
-  function getPassword() { return localStorage.getItem(STORAGE_KEY) || ""; }
-  function savePassword(pw) { localStorage.setItem(STORAGE_KEY, pw); }
-  function clear() { localStorage.removeItem(STORAGE_KEY); }
-  function isConfigured() { return !!getPassword(); }
+  function clear() { localStorage.removeItem("sg_hub_pw"); }
+  function isConfigured() { return true; }
 
   async function call(action, data) {
-    var pw = getPassword();
-    if (!pw) throw { type: "NOT_CONFIGURED", message: "Not signed in." };
-    var payload = Object.assign({ action: action, password: pw }, data || {});
-    var res;
-    try {
-      res = await fetch(BACKEND_URL, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(payload), redirect: "follow" });
-    } catch(err) { throw { type: "NETWORK_ERROR", message: "Network error \u2014 check your connection." }; }
-    var result;
-    try { result = await res.json(); } catch(err) { throw { type: "API_ERROR", message: "Invalid response from server." }; }
-    if (!result.success) {
-      if (result.error === "AUTH_FAILED") { clear(); }
-      throw { type: result.error || "API_ERROR", message: result.message || "Server error." };
-    }
-    return result;
+    throw { type: "NOT_READY", message: "Submission service is still loading. Please try again." };
   }
 
   async function testPassword(pw) {
-    var res = await fetch(BACKEND_URL, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify({ action: "ping", password: pw }), redirect: "follow" });
-    var result = await res.json();
-    if (!result.success) throw new Error(result.message || "Invalid password.");
     return true;
   }
 
@@ -304,7 +269,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
   function getErrorMessage(err) { if (err && err.message) return err.message; return "An unexpected error occurred."; }
 
   window.SheetsService = { appendRow: appendRow, appendRows: appendRows, isConfigured: isConfigured, getErrorMessage: getErrorMessage };
-  window.SG_Hub = { isConfigured: isConfigured, savePassword: savePassword, clear: clear, testPassword: testPassword };
+  window.SG_Hub = { isConfigured: isConfigured, savePassword: function(){}, clear: clear, testPassword: testPassword };
 })();
 </script>
 
@@ -321,7 +286,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
   var todayISO = function(){ return new Date().toISOString().slice(0,10); };
   var nowTime = function(){ var d=new Date(); return pad(d.getHours())+":"+pad(d.getMinutes()); };
   var genId = function(pfx){ var d=new Date(); return pfx+"-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds()); };
-  var sheetsOk = function(){ var s=window.SheetsService; return s && s.isConfigured(); };
+  var sheetsOk = function(){ var s=window.SheetsService; return !!(s && s.appendRow); };
   var MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   var timestamp = function(){ var d=new Date(); var hr=d.getHours(); var ampm=hr>=12?"PM":"AM"; var h12=hr%12||12; return MONTHS[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear()+" at "+h12+":"+pad(d.getMinutes())+" "+ampm; };
   var renewalDate = function(months){ var d=new Date(); d.setMonth(d.getMonth()+(months||12)); return d.toISOString().slice(0,10); };
@@ -561,7 +526,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       var rid = genId("PEO");
       var row = [rid, get("fullName").trim(), get("email").trim(), get("phone").trim(), get("dob"), "Adult", getList("ages").join(", "), getList("times").join(", "), todayISO(), "","","","","","","","","",renewalDate(12),"In Process",timestamp()];
       var S = window.SheetsService;
-      if(!sheetsOk()){ console.log("FRM-001 stub:",rid,row); await new Promise(function(r){setTimeout(r,600);}); setStatus("success"); setStatusMsg("Submitted (offline). Record: "+rid); setBusy(false); return; }
+      if(!sheetsOk()){ setStatus("error"); setStatusMsg("Submission service is still loading. Please try again."); setBusy(false); return; }
       try{ await S.appendRow("People",row); setStatus("success"); setStatusMsg("Application submitted. Record: "+rid); } catch(err){ setStatus("error"); setStatusMsg(S.getErrorMessage(err)); }
       setBusy(false);
     }
@@ -681,7 +646,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       var rid=genId("INC");
       var row=[rid,get("date"),get("time"),get("location").trim(),get("program").trim(),get("type"),get("persons").trim(),get("childAge").trim(),get("parent").trim(),get("desc").trim(),f.firstAid?"Yes":"No",f.parentNotified?"Yes":"No",f.emergency?"Yes":"No",get("actions").trim(),get("w1"),get("w2"),get("reporter").trim(),get("role").trim(),"","","Open","","",timestamp()];
       var S=window.SheetsService;
-      if(!sheetsOk()){console.log("FRM-006 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
+      if(!sheetsOk()){setStatus("error");setMsg("Submission service is still loading. Please try again.");setBusy(false);return;}
       try{await S.appendRow("Incidents",row);setStatus("success");setMsg("Incident reported. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
       setBusy(false);
     }
@@ -771,7 +736,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       setStatus("submitting");
       var rows=entries.filter(function(e){return e.code;}).map(function(e){return[genId("TRN"),trainee.name.trim(),trainee.email.trim(),e.code,e.title,trainee.track,e.date,e.method,verif.by.trim(),verif.date,verif.notes.trim(),renewalDate(12),timestamp()];});
       var S=window.SheetsService;
-      if(!sheetsOk()){console.log("FRM-012 stub:",rows);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Logged "+rows.length+" module(s) for "+trainee.name+" (offline)");return;}
+      if(!sheetsOk()){setStatus("error");setMsg("Submission service is still loading. Please try again.");return;}
       try{await S.appendRows("Training Log",rows);setStatus("success");setMsg(rows.length===1?"Logged: "+rows[0][3]+" for "+trainee.name:"Logged "+rows.length+" modules for "+trainee.name);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
     }
 
@@ -860,7 +825,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       var rid=genId("ABR");
       var row=[rid,get("reportDate"),get("reportTime"),get("reporter").trim(),get("reporterRole").trim(),get("reporterPhone").trim(),get("reporterEmail").trim(),get("childName").trim(),get("childAge").trim(),get("childDob"),get("parentNames").trim(),get("parentPhone").trim(),get("concern"),get("details").trim(),f.removedFromDanger?"Yes":"No",f.parentNotified?"Yes":"No",f.authoritiesContacted?"Yes":"No",get("actionsDetail").trim(),get("agencyName").trim(),get("agencyPhone").trim(),get("agencyDate"),get("officialName").trim(),"Open","",timestamp()];
       var S=window.SheetsService;
-      if(!sheetsOk()){console.log("FRM-007 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
+      if(!sheetsOk()){setStatus("error");setMsg("Submission service is still loading. Please try again.");setBusy(false);return;}
       try{await S.appendRow("Abuse Reports",row);setStatus("success");setMsg("Abuse report filed. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
       setBusy(false);
     }
@@ -941,7 +906,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       var rid=genId("REF");
       var row=[rid,get("applicantName").trim(),get("position").trim(),get("refName").trim(),get("refRelationship").trim(),get("refContact").trim(),get("contactDate"),get("contactMethod"),get("yearsKnown"),get("capacity"),get("reliable"),get("concerns"),get("character").trim(),get("trustChildren"),get("hesitation"),get("explain").trim(),get("completedBy").trim(),todayISO(),timestamp()];
       var S=window.SheetsService;
-      if(!sheetsOk()){console.log("FRM-002 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
+      if(!sheetsOk()){setStatus("error");setMsg("Submission service is still loading. Please try again.");setBusy(false);return;}
       try{await S.appendRow("References",row);setStatus("success");setMsg("Reference check logged. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
       setBusy(false);
     }
@@ -1020,7 +985,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       var rid=genId("ACK");
       var row=[rid,get("fullName").trim(),get("role").trim(),todayISO(),get("witnessName").trim(),f.isRenewal?"Renewal":"Initial",new Date().getFullYear().toString(),renewalDate(12),timestamp()];
       var S=window.SheetsService;
-      if(!sheetsOk()){console.log("FRM-004 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
+      if(!sheetsOk()){setStatus("error");setMsg("Submission service is still loading. Please try again.");setBusy(false);return;}
       try{await S.appendRow("Acknowledgements",row);setStatus("success");setMsg("Covenant recorded. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
       setBusy(false);
     }
@@ -1083,7 +1048,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       var rid=genId("REG");
       var row=[rid,get("childName").trim(),get("dob"),get("address").trim(),get("city").trim(),get("postal").trim(),get("school").trim(),get("parentName").trim(),get("phoneHome").trim(),get("phone").trim(),get("email").trim(),get("emergName").trim(),get("emergPhone").trim(),get("emergRelation").trim(),get("doctor").trim(),get("doctorPhone").trim(),get("healthNum").trim(),get("allergies").trim(),get("conditions").trim(),get("medications").trim(),get("otherHealth").trim(),get("diaperPref")||"Standard",get("pickupPersons").trim(),todayISO(),timestamp()];
       var S=window.SheetsService;
-      if(!sheetsOk()){console.log("FRM-005 stub:",rid,row);await new Promise(function(r){setTimeout(r,600);});setStatus("success");setMsg("Submitted (offline). Record: "+rid);setBusy(false);return;}
+      if(!sheetsOk()){setStatus("error");setMsg("Submission service is still loading. Please try again.");setBusy(false);return;}
       try{await S.appendRow("Registrations",row);setStatus("success");setMsg("Child registered. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
       setBusy(false);
     }
@@ -1160,9 +1125,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
     var s4=useState("weekly"); var cadence=s4[0]; var setCadence=s4[1];
 
     // Firebase auth is the only gate for the Hub. The legacy shared-team
-    // password (once shown via SetupScreen) has been retired — submissions
-    // are persisted to Firestore, and the Sheets mirror runs best-effort
-    // only when config/hub.sheetsPassword is present.
+    // password has been retired; submissions are persisted to Firestore.
 
     function toggle(id){setExpanded(function(prev){var n=new Set(prev);if(n.has(id))n.delete(id);else n.add(id);return n;});}
     function goForm(v){setView(v);window.scrollTo({top:0});}
@@ -1256,11 +1219,9 @@ body.sg-ready #sg-auth-overlay { display: none; }
 
 <!-- ═══ SUBMISSION WRITE PATH ═══ -->
 <!-- Firestore is the source of truth for every Hub form submission.
-     The legacy Google Sheets mirror runs best-effort — if the shared
-     Apps Script password is present (populated from config/hub in
-     Firestore) it writes a duplicate row; if not, the Sheets call is
-     skipped silently. Either way the user's submit succeeds as long
-     as the Firestore write succeeds. -->
+     The legacy Google Sheets mirror has been disabled because it required
+     a shared client-readable secret. The user's submit succeeds only after
+     the Firestore write succeeds. -->
 <script type="module">
   import { createSubmission } from "./sg-submissions.js";
   import { onUserChange } from "./sg-auth.js";
@@ -1269,18 +1230,9 @@ body.sg-ready #sg-auth-overlay { display: none; }
     if (!window.SheetsService || window.__sgSubmissionsWrapped) return;
     window.__sgSubmissionsWrapped = true;
 
-    const origAppendRow  = window.SheetsService.appendRow;
-    const origAppendRows = window.SheetsService.appendRows;
-    const hasLegacyPw    = () => !!(window.SG_Hub && window.SG_Hub.isConfigured());
-
     window.SheetsService.appendRow = async function (tab, row) {
       // Firestore is primary — awaited, must succeed for the form to succeed.
       await createSubmission({ tabName: tab, rowData: row, recordId: row && row[0] });
-      // Sheets mirror is best-effort — only attempted when the legacy password
-      // is set, and any failure is logged (never surfaced to the user).
-      if (hasLegacyPw()) {
-        origAppendRow(tab, row).catch(err => console.warn("Sheets mirror failed:", err));
-      }
       return { success: true };
     };
 
@@ -1288,9 +1240,6 @@ body.sg-ready #sg-auth-overlay { display: none; }
       const list = rows || [];
       for (const row of list) {
         await createSubmission({ tabName: tab, rowData: row, recordId: row && row[0] });
-      }
-      if (hasLegacyPw()) {
-        origAppendRows(tab, list).catch(err => console.warn("Sheets mirror failed:", err));
       }
       return { success: true };
     };
