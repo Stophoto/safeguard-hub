@@ -27,6 +27,7 @@ This is the consolidated security backlog from the Codex review and Claude PII a
 
 6. **F-06: Long-form PII autosaves to browser storage.**
    Several forms save drafts in `localStorage`. Disable autosave for sensitive/minor data, or make it opt-in with clear expiry and logout cleanup.
+   2026-04-30 quick win: `SG-FRM-005` no longer autosaves child medical data and removes the old `sg-form-SG-FRM-005` browser draft on load. This is the first slice of the full audit's F-05 autosave finding. Before general volunteer use, replace the silent old-draft cleanup with a one-time warning so users are not surprised if they had an in-progress draft.
 
 7. **F-07: Sensitive payloads appeared in fallback console logs.**
    Legacy offline form branches logged entire submission rows. Remove these logs and fail closed if persistence is unavailable.
@@ -69,4 +70,3 @@ This is the consolidated security backlog from the Codex review and Claude PII a
 3. Add the `safeguard_lead` model and audit logging for suspected abuse reports.
 4. Reduce localStorage PII, add timeout/sign-out cleanup, and add export warnings.
 5. Deploy rules, then run the live penetration test with explicit approval and cleanup plan.
-

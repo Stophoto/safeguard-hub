@@ -22,6 +22,14 @@ import {
 
 import { auth } from "./sg-firebase.js";
 
+// Browser back/forward cache can show a stale signed-in page after sign-out.
+// Reload restored pages so Firebase Auth and the page gate run again.
+if (typeof window !== "undefined") {
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) window.location.reload();
+  });
+}
+
 // ── Sign-up ─────────────────────────────────────────────────
 // Creates an account, then immediately sends a verification email.
 // After this, the user is *signed in* but their email is not verified.
