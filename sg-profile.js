@@ -27,6 +27,9 @@ function newProfile() {
     email:  "",              // filled from Firebase Auth at create-time
     role:   "volunteer",     // volunteer | leader | coordinator
     status: "in-process",    // in-process | active | paused | inactive
+    safeguard_lead: false,
+    safeguard_lead_admin: false,
+    mfaEnrolled: false,
 
     // Personal info (filled in profile-setup)
     firstName: "",
@@ -132,6 +135,8 @@ export function displayName(profile) {
 // ── Role label for the user pill ────────────────────────────
 export function roleLabel(profile) {
   if (!profile) return "";
+  if (profile.safeguard_lead_admin) return "Safeguard Lead Admin";
+  if (profile.safeguard_lead) return "Safeguard Lead";
   switch (profile.role) {
     case "coordinator": return "Coordinator";
     case "leader":      return "Leader";

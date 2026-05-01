@@ -222,6 +222,8 @@ const ICONS = {
 // ── Role → label ────────────────────────────────────────────
 function roleLabel(profile) {
   if (!profile) return "";
+  if (profile.safeguard_lead_admin) return "Safeguard Lead Admin";
+  if (profile.safeguard_lead) return "Safeguard Lead";
   switch (profile.role) {
     case "coordinator": return "Coordinator";
     case "leader":      return "Leader";
