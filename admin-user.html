@@ -411,7 +411,7 @@
 
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
-  import { getOrCreateProfile, formatDate, isReadyForActivation } from "./sg-profile.js";
+  import { getOrCreateProfile, formatDate, isReadyForActivation, covenantStatus } from "./sg-profile.js";
   import {
     loadUser, updateUserProfile,
     markPoliceCheckCleared, unclearPoliceCheck,
@@ -601,11 +601,32 @@
     const allModules = [...trainModules, ...leaderModules];
     const trainingDone = allModules.filter(m => training[m] && training[m].completedAt).length;
 
-    // Covenant
-    document.getElementById("covState").textContent = cov.signed
-      ? "Signed " + formatDate(cov.signedAt) + (cov.signatureName ? " by " + cov.signatureName : "")
-      : "Not signed yet";
-    setBadge("covBadge", cov.signed ? "done" : "required", cov.signed ? "Done" : "Required");
+    // Covenant — annual acknowledgement; show validity window
+    const covSt = covenantStatus(u);
+    const priorCount = Array.isArray(u.covenantHistory) ? u.covenantHistory.length : 0;
+    const priorSuffix = priorCount > 0
+      ? " · " + priorCount + " prior signature" + (priorCount === 1 ? "" : "s") + " on file"
+      : "";
+    if (covSt.state === "signed") {
+      document.getElementById("covState").textContent =
+        "Signed " + formatDate(covSt.signedAt)
+        + (cov.signatureName ? " by " + cov.signatureName : "")
+        + " · renews " + formatDate(covSt.expiresAt)
+        + priorSuffix;
+      setBadge("covBadge", "done", "Done");
+    } else if (covSt.state === "due-soon") {
+      document.getElementById("covState").textContent =
+        "Renews in " + covSt.daysUntilRenewal + " day" + (covSt.daysUntilRenewal === 1 ? "" : "s")
+        + " · expires " + formatDate(covSt.expiresAt) + priorSuffix;
+      setBadge("covBadge", "pending", "Renew soon");
+    } else if (covSt.state === "expired") {
+      document.getElementById("covState").textContent =
+        "Expired " + formatDate(covSt.expiresAt) + " · re-sign required" + priorSuffix;
+      setBadge("covBadge", "required", "Expired");
+    } else {
+      document.getElementById("covState").textContent = "Not signed yet";
+      setBadge("covBadge", "required", "Required");
+    }
 
     // Police check
     const pcStateEl = document.getElementById("pcState");

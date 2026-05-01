@@ -147,16 +147,81 @@ export function roleLabel(profile) {
 // server timestamp. They never touch role/status (rules block that).
 // ═════════════════════════════════════════════════════════════
 
-// ── Sign the Worker's Covenant ───────────────────────────────
+// ── Worker's Covenant validity window ────────────────────────
+// Signed covenants are valid for one year. After that the volunteer
+// must re-sign (annual acknowledgement). 30 days before expiry the
+// dashboard shows a yellow nudge; after expiry the volunteer is
+// blocked until they re-sign.
+export const COVENANT_VALIDITY_DAYS = 365;
+export const COVENANT_DUE_SOON_DAYS = 30;
+
+// ── Sign or renew the Worker's Covenant ──────────────────────
 // `signatureName` is the typed-name signature captured on the covenant page.
+// On every signing we:
+//   1. Archive the previous signature (if any) into covenantHistory[]
+//   2. Write a fresh covenant record with new signedAt + expiresAt
+// This gives a complete audit trail of every annual acknowledgement.
 export async function signCovenant(signatureName) {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not signed in.");
+  const snap = await getDoc(doc(db, "users", user.uid));
+  const existing = snap.exists() ? snap.data() : {};
+  const priorHistory = Array.isArray(existing.covenantHistory) ? existing.covenantHistory : [];
+  const priorCovenant = existing.covenant || {};
+
+  const now = new Date();
+  const expires = new Date(now);
+  expires.setDate(expires.getDate() + COVENANT_VALIDITY_DAYS);
+
+  const newHistory = priorCovenant.signed
+    ? [...priorHistory, {
+        signedAt: priorCovenant.signedAt || null,
+        signatureName: priorCovenant.signatureName || "",
+        expiresAt: priorCovenant.expiresAt || null,
+      }]
+    : priorHistory;
+
   await saveProfile({
     covenant: {
       signed: true,
-      signedAt: new Date().toISOString(),
+      signedAt: now.toISOString(),
       signatureName: (signatureName || "").trim(),
+      expiresAt: expires.toISOString(),
     },
+    covenantHistory: newHistory,
   });
+}
+
+// ── Compute current covenant status from a profile ───────────
+// Returns: { state, daysUntilRenewal, expiresAt, signedAt }
+//   state ∈ "not-signed" | "signed" | "due-soon" | "expired"
+// Older signatures missing expiresAt are treated as expiring 365
+// days after signedAt so legacy records still render correctly.
+export function covenantStatus(profile) {
+  const cov = (profile && profile.covenant) || {};
+  if (!cov.signed) {
+    return { state: "not-signed", daysUntilRenewal: null, expiresAt: null, signedAt: null };
+  }
+  let expiresAt = cov.expiresAt ? new Date(cov.expiresAt) : null;
+  if (!expiresAt && cov.signedAt) {
+    expiresAt = new Date(cov.signedAt);
+    expiresAt.setDate(expiresAt.getDate() + COVENANT_VALIDITY_DAYS);
+  }
+  if (!expiresAt) {
+    return { state: "signed", daysUntilRenewal: null, expiresAt: null, signedAt: cov.signedAt || null };
+  }
+  const msPerDay = 86400000;
+  const daysUntilRenewal = Math.ceil((expiresAt.getTime() - Date.now()) / msPerDay);
+  let state;
+  if (daysUntilRenewal < 0) state = "expired";
+  else if (daysUntilRenewal <= COVENANT_DUE_SOON_DAYS) state = "due-soon";
+  else state = "signed";
+  return {
+    state,
+    daysUntilRenewal,
+    expiresAt: expiresAt.toISOString(),
+    signedAt: cov.signedAt || null,
+  };
 }
 
 // ── Record a police-check submission (volunteer side) ────────
@@ -224,13 +289,27 @@ export function computeOnboarding(profile, trainingModuleIds) {
     state: profile.profileComplete ? "done" : "not-started",
   });
 
-  // Covenant
-  const cov = profile.covenant || {};
+  // Covenant — annual acknowledgement; "done" only while inside the validity window
+  const covSt = covenantStatus(profile);
+  let covStepState, covStepDetail;
+  if (covSt.state === "signed") {
+    covStepState = "done";
+    covStepDetail = "Signed " + formatDate(covSt.signedAt) + " · renews " + formatDate(covSt.expiresAt);
+  } else if (covSt.state === "due-soon") {
+    covStepState = "pending";
+    covStepDetail = "Renews in " + covSt.daysUntilRenewal + " day" + (covSt.daysUntilRenewal === 1 ? "" : "s");
+  } else if (covSt.state === "expired") {
+    covStepState = "not-started";
+    covStepDetail = "Expired " + formatDate(covSt.expiresAt) + " · re-sign required";
+  } else {
+    covStepState = "not-started";
+    covStepDetail = null;
+  }
   steps.push({
     id: "covenant",
     label: "Sign the Worker's Covenant",
-    state: cov.signed ? "done" : "not-started",
-    detail: cov.signed ? ("Signed " + formatDate(cov.signedAt)) : null,
+    state: covStepState,
+    detail: covStepDetail,
   });
 
   // Police check

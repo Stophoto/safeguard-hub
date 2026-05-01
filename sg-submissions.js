@@ -116,11 +116,6 @@ export const FORM_SCHEMAS = {
     formTitle: "Reference Check",
     idPrefix: "REF",
   },
-  "Acknowledgements": {
-    formCode: "SG-FRM-004",
-    formTitle: "Worker's Covenant Acknowledgement",
-    idPrefix: "COV",
-  },
   "Registrations": {
     formCode: "SG-FRM-005",
     formTitle: "Child Registration & Medical Release",

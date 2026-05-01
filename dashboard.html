@@ -178,7 +178,7 @@
 
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
-  import { getOrCreateProfile, displayName, formatDate } from "./sg-profile.js";
+  import { getOrCreateProfile, displayName, formatDate, covenantStatus } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
 
   mountUserChip(document.getElementById("userChip"));
@@ -258,8 +258,17 @@
     const trainingDone = allModules.filter(m => training[m] && training[m].completedAt).length;
     statTraining.textContent = trainingDone + "/" + allModules.length;
 
-    // Renewal — driven by police check expiry for now
-    statRenewal.textContent  = profile.renewalDueOn ? formatDate(profile.renewalDueOn) : "—";
+    // Renewal — soonest of covenant expiry and police-check expiry
+    const covSt = covenantStatus(profile);
+    const pcExpiresOn = (profile.policeCheck && profile.policeCheck.expiresOn) || null;
+    const renewalDates = [];
+    if (covSt.expiresAt) renewalDates.push(new Date(covSt.expiresAt));
+    if (pcExpiresOn)     renewalDates.push(new Date(pcExpiresOn));
+    if (profile.renewalDueOn) renewalDates.push(new Date(profile.renewalDueOn));
+    const soonest = renewalDates.length
+      ? new Date(Math.min(...renewalDates.map(d => d.getTime())))
+      : null;
+    statRenewal.textContent  = soonest ? formatDate(soonest.toISOString()) : "—";
 
     // Split into next / completed
     nextSteps.innerHTML = "";
@@ -277,7 +286,6 @@
   // Each step: { id, title, sub, state, badge, icon, action }
   function buildSteps(p) {
     p = p || {};
-    const cov = p.covenant || {};
     const pc  = p.policeCheck || {};
     const refs = (p.references && p.references.items) || [];
     const refsReceived = refs.filter(r => r.receivedAt).length;
@@ -301,17 +309,39 @@
         badge: p.profileComplete ? "Done" : "Required",
         action: { href: "profile-setup.html", label: p.profileComplete ? "Edit →" : "Start →" },
       },
-      {
-        id: "covenant",
-        title: "Sign the Worker's Covenant",
-        sub:   cov.signed
-          ? "Signed" + (cov.signedAt ? " " + formatDate(cov.signedAt) : "")
-          : '<a href="covenant.html" style="color:var(--teal);font-weight:600">SG-FRM-004</a> · A written commitment to the Safeguard standards.',
-        icon:  ICON_DOC,
-        state: cov.signed ? "done" : "next",
-        badge: cov.signed ? "Done" : "Required",
-        action: { href: "covenant.html", label: cov.signed ? "View →" : "Start →" },
-      },
+      (() => {
+        const st = covenantStatus(p);
+        let sub, state, badge, label;
+        if (st.state === "signed") {
+          sub   = "Signed " + formatDate(st.signedAt) + " · renews " + formatDate(st.expiresAt);
+          state = "done";
+          badge = "Done";
+          label = "View →";
+        } else if (st.state === "due-soon") {
+          sub   = "Renews in " + st.daysUntilRenewal + " day" + (st.daysUntilRenewal === 1 ? "" : "s")
+                + " · re-sign by " + formatDate(st.expiresAt);
+          state = "pending";
+          badge = "Renew soon";
+          label = "Renew →";
+        } else if (st.state === "expired") {
+          sub   = "Expired " + formatDate(st.expiresAt) + " · re-sign required to keep serving";
+          state = "next";
+          badge = "Overdue";
+          label = "Re-sign →";
+        } else {
+          sub   = '<a href="covenant.html" style="color:var(--teal);font-weight:600">SG-FRM-004</a> · A written commitment to the Safeguard standards.';
+          state = "next";
+          badge = "Required";
+          label = "Start →";
+        }
+        return {
+          id: "covenant",
+          title: "Sign the Worker's Covenant",
+          sub, state, badge,
+          icon: ICON_DOC,
+          action: { href: "covenant.html", label },
+        };
+      })(),
       {
         id: "police",
         title: "Police Information Check",

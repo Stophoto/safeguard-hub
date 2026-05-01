@@ -306,7 +306,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       { code:"SG-FRM-001", title:"Ministry Application", href:"SG-FRM-001.html" },
       { code:"SG-FRM-002", title:"Reference Check", href:"SG-FRM-002.html" },
       { code:"SG-FRM-003", title:"Police Check Letter & Consent", href:"SG-FRM-003.html" },
-      { code:"SG-FRM-004", title:"Worker\u2019s Covenant & Annual Acknowledgement", href:"SG-FRM-004.html" },
+      { code:"SG-FRM-004", title:"Worker\u2019s Covenant & Annual Acknowledgement", href:"covenant.html" },
       { code:"SG-FRM-005", title:"Child Registration & Medical Release", href:"SG-FRM-005.html" },
       { code:"SG-FRM-006", title:"Incident / Accident Report", href:"SG-FRM-006.html" },
       { code:"SG-FRM-007", title:"Suspected Abuse Report", href:"SG-FRM-007.html" },
@@ -382,7 +382,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
     "SG-FRM-001":  { href:"SG-FRM-001.html" },
     "SG-FRM-002":  { href:"SG-FRM-002.html" },
     "SG-FRM-003":  { href:"SG-FRM-003.html" },
-    "SG-FRM-004":  { href:"SG-FRM-004.html" },
+    "SG-FRM-004":  { href:"covenant.html" },
     "SG-FRM-005":  { href:"SG-FRM-005.html" },
     "SG-FRM-006":  { href:"SG-FRM-006.html" },
     "SG-FRM-007":  { href:"SG-FRM-007.html" },
@@ -953,73 +953,8 @@ body.sg-ready #sg-auth-overlay { display: none; }
           h("button",{className:"btn btn-secondary",onClick:function(){window.print();}},"Save as PDF"))));
   }
 
-  // ════════════════════════════════════════════════
-  //  FORM: FRM-004 — Worker's Covenant & Acknowledgement
-  // ════════════════════════════════════════════════
-  function FormFRM004(props) {
-    var s=useState({}); var f=s[0]; var setF=s[1];
-    var s2=useState({}); var errors=s2[0]; var setErrors=s2[1];
-    // Phase 8 · Autofill worker name from signed-in user's profile
-    React.useEffect(function(){
-      if (window.SG_applyPrefill) window.SG_applyPrefill(
-        function(k,v){ setF(function(p){var n=Object.assign({},p); n[k]=v; return n; }); },
-        { fullName: "fullName" },
-        function(k){ return f[k]||""; }
-      );
-    }, []);
-    var s3=useState(null); var status=s3[0]; var setStatus=s3[1];
-    var s4=useState(""); var msg=s4[0]; var setMsg=s4[1];
-    var s5=useState(false); var busy=s5[0]; var setBusy=s5[1];
-    function set(k,v){ setF(function(p){var n=Object.assign({},p);n[k]=v;return n;}); setErrors(function(p){var n=Object.assign({},p);delete n[k];return n;}); }
-    function get(k){ return f[k]||""; }
-    function validate(){
-      var e={};
-      if(!get("fullName").trim()) e.fullName="Required";
-      if(!get("role").trim()) e.role="Required";
-      if(!f.c1||!f.c2||!f.c3||!f.c4) e.commitments="All four commitments must be checked";
-      setErrors(e); return Object.keys(e).length===0;
-    }
-    async function submit(){
-      if(!validate()){setStatus("error");setMsg("Complete all required fields.");window.scrollTo({top:0,behavior:"smooth"});return;}
-      setBusy(true);setStatus(null);
-      var rid=genId("ACK");
-      var row=[rid,get("fullName").trim(),get("role").trim(),todayISO(),get("witnessName").trim(),f.isRenewal?"Renewal":"Initial",new Date().getFullYear().toString(),renewalDate(12),timestamp()];
-      var S=window.SheetsService;
-      if(!sheetsOk()){setStatus("error");setMsg("Submission service is still loading. Please try again.");setBusy(false);return;}
-      try{await S.appendRow("Acknowledgements",row);setStatus("success");setMsg("Covenant recorded. Record: "+rid);}catch(err){setStatus("error");setMsg(S.getErrorMessage(err));}
-      setBusy(false);
-    }
-    return h("div",{className:"animate-up",style:{maxWidth:760,margin:"0 auto"}},
-      h("button",{className:"btn btn-ghost btn-sm no-print",onClick:props.onBack,style:{marginBottom:20}},"\u2190 Back to Hub"),
-      h("div",{className:"card",style:{padding:"40px 44px",borderRadius:16}},
-        h("div",{style:{marginBottom:8}},
-          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.16em",color:"var(--gold)",textTransform:"uppercase"}},"Safeguard Framework"),
-          h("h2",{style:{fontFamily:"var(--serif)",fontSize:28,color:"var(--navy)",margin:"6px 0 0",fontWeight:400}},"Worker\u2019s Covenant & Acknowledgement"),
-          h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:4}},"SG-FRM-004")),
-        h("div",{style:{height:2,background:"linear-gradient(to right, var(--gold-warm), transparent)",margin:"16px 0 28px",borderRadius:1}}),
-        h(StatusBanner,{status:status,msg:msg}),
-        h(SectionHead,{num:"1",title:"Worker Information"}),
-        h("div",{className:"sg-two-col",style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}},
-          h(Field,{label:"Full Name",req:true,error:errors.fullName},h(Inp,{value:get("fullName"),onChange:function(e){set("fullName",e.target.value);},ac:"name",error:errors.fullName})),
-          h(Field,{label:"Ministry Role / Area",req:true,error:errors.role},h(Inp,{value:get("role"),onChange:function(e){set("role",e.target.value);},error:errors.role}))),
-        h(Field,{label:"Type"},h("div",{style:{display:"flex",gap:16}},
-          h("label",{style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},h("input",{type:"radio",name:"renewType",checked:!f.isRenewal,onChange:function(){set("isRenewal",false);}}),h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},"Initial Covenant")),
-          h("label",{style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},h("input",{type:"radio",name:"renewType",checked:!!f.isRenewal,onChange:function(){set("isRenewal",true);}}),h("span",{style:{fontFamily:"var(--sans)",fontSize:14}},"Annual Renewal")))),
-        h(SectionHead,{num:"2",title:"Commitments"}),
-        errors.commitments?h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--error)",marginBottom:12,fontWeight:500}},errors.commitments):null,
-        ["I have read and understood the Safeguard Framework\u2019s core protection policies (SG-POL-001 through SG-POL-004) and the governance policy (SG-G-001).",
-         "I will abide by these policies at all times in my ministry role and understand that failure to follow them may result in removal from ministry.",
-         "I agree to live with integrity, report any suspected abuse immediately per SG-POL-004, and participate in all required training and renewals.",
-         "I commit to keeping all personal information about children, families, and workers confidential, except where reporting obligations require disclosure."
-        ].map(function(txt,i){return h("label",{key:i,style:{display:"flex",alignItems:"flex-start",gap:12,cursor:"pointer",marginBottom:14}},
-          h("input",{type:"checkbox",checked:!!f["c"+(i+1)],onChange:function(){set("c"+(i+1),!f["c"+(i+1)]);},style:{marginTop:3}}),
-          h("span",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--body)",lineHeight:1.55}},txt));}),
-        h(SectionHead,{num:"3",title:"Witness"}),
-        h(Field,{label:"Witness / Leader Name"},h(Inp,{value:get("witnessName"),onChange:function(e){set("witnessName",e.target.value);}})),
-        h("div",{className:"no-print",style:{marginTop:36,display:"flex",gap:12,flexWrap:"wrap"}},
-          h("button",{className:"btn btn-primary",onClick:submit,disabled:busy},busy?"Submitting\u2026":"Submit Covenant"),
-          h("button",{className:"btn btn-secondary",onClick:function(){window.print();}},"Save as PDF"))));
-  }
+  // FRM-004 (Worker's Covenant) is now handled by covenant.html with Firestore-backed
+  // annual signing + signing history — see SG-FRM-004 entry in CODE_LINKS above.
 
   // ════════════════════════════════════════════════
   //  FORM: FRM-005 — Child Registration & Medical Release
@@ -1135,7 +1070,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
     useEffect(function(){
       function handleHash(){
         var hash=(window.location.hash||"").replace("#","").toLowerCase();
-        var valid=["frm001","frm002","frm004","frm005","frm006","frm007","frm012"];
+        var valid=["frm001","frm002","frm005","frm006","frm007","frm012"];
         if(valid.indexOf(hash)>=0){ setView(hash); setTab("forms"); window.scrollTo({top:0}); }
         else if(hash==="admin"){ setView("dashboard"); setTab("tasks"); }
         else if(hash==="documents"||hash==="docs"){ setView("dashboard"); setTab("documents"); }
@@ -1152,7 +1087,6 @@ body.sg-ready #sg-auth-overlay { display: none; }
     // Route to forms
     if(view==="frm001") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM001,{onBack:goHome}));
     if(view==="frm002") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM002,{onBack:goHome}));
-    if(view==="frm004") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM004,{onBack:goHome}));
     if(view==="frm005") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM005,{onBack:goHome}));
     if(view==="frm006") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM006,{onBack:goHome}));
     if(view==="frm007") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM007,{onBack:goHome}));

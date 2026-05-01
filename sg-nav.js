@@ -48,7 +48,7 @@
     'SG-FRM-001':  { title: 'Ministry Application',             href: 'SG-FRM-001.html', fillable: true },
     'SG-FRM-002':  { title: 'Reference Check',                  href: 'SG-FRM-002.html' },
     'SG-FRM-003':  { title: "Police Check Letter & Consent",    href: 'SG-FRM-003.html' },
-    'SG-FRM-004':  { title: "Worker's Covenant & Acknowledgement", href: 'SG-FRM-004.html' },
+    'SG-FRM-004':  { title: "Worker's Covenant & Acknowledgement", href: 'covenant.html' },
     'SG-FRM-005':  { title: 'Child Registration & Medical Release', href: 'SG-FRM-005.html' },
     'SG-FRM-006':  { title: 'Incident / Accident Report',       href: 'SG-FRM-006.html', fillable: true },
     'SG-FRM-007':  { title: 'Suspected Abuse Report',           href: 'SG-FRM-007.html', fillable: true },

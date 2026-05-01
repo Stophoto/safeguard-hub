@@ -722,7 +722,7 @@ No Firestore rules change. Wait for green checkmark on Actions.
 | [SG-FRM-001](https://stophoto.github.io/safeguard-hub/index.html#frm001) Ministry Application | Full name, email, phone, date of birth |
 | [SG-FRM-006](https://stophoto.github.io/safeguard-hub/index.html#frm006) Incident Report | Reporter name |
 | [SG-FRM-007](https://stophoto.github.io/safeguard-hub/index.html#frm007) Abuse Report | Reporter name, reporter email, reporter phone |
-| [SG-FRM-004](https://stophoto.github.io/safeguard-hub/index.html#frm004) Covenant Acknowledgement | Full name |
+| [SG-FRM-004](https://stophoto.github.io/safeguard-hub/covenant.html) Covenant Acknowledgement | Full name |
 
 ### Troubleshooting
 
