@@ -11,6 +11,8 @@ This is the consolidated security backlog from the Codex review and Claude PII a
 1. **F-01: Suspected abuse reports need a higher access tier and audit trail.**
    `SG-FRM-007` submissions currently live in the shared `submissions` collection. Any Coordinator can list/read them, and there is no durable "who viewed this" audit log. Add a `safeguard_lead` tier, separate storage or query model for abuse reports, and server-backed audit events for reads.
 
+   Phase A implementation note: Phase A does NOT provide reliable read-audit logs. Direct client reads can occur without audit entries. This is acceptable while no real abuse reports exist. Phase B (Cloud Functions + custom claims + Blaze) MUST be deployed before any real volunteers use this system.
+
 2. **F-02: Legacy Apps Script password was exposed to every signed-in browser.**
    The Hub previously fetched `config/hub.sheetsPassword` and persisted it as `sg_hub_pw` in `localStorage`. Shared devices and devtools could expose it. The first remediation removes this client secret path; any future Sheets mirror must run behind trusted server-side Firebase ID token verification.
 

@@ -27,6 +27,7 @@
   h1{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
   .lede{font-size:15px;color:var(--body);opacity:.78;margin-bottom:22px;max-width:760px}
   .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:24px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  .notice{background:var(--warn-bg);border:1px solid rgba(176,122,30,0.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#8B5E14}
   table{width:100%;border-collapse:collapse;background:var(--white);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;font-size:13px}
   th{background:var(--sand);color:var(--navy);text-align:left;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
   td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
@@ -87,6 +88,7 @@
     <div class="eyebrow"><a href="SG-FRM-007.html" style="color:inherit;text-decoration:none">SG-FRM-007</a></div>
     <h1>Suspected abuse reports</h1>
     <p class="lede">This list is separate from ordinary coordinator submissions. Every row here is restricted to Safeguard Leads in Phase A.</p>
+    <div id="leadNotifications"></div>
     <div id="tableWrap"></div>
   </div>
 
@@ -136,6 +138,7 @@
   import {
     ABUSE_REPORT_HEADERS,
     getAbuseReport,
+    listLeadNotifications,
     listAbuseReports,
     updateAbuseReport,
     statusBadgeClass,
@@ -176,6 +179,7 @@
 
   async function renderList() {
     const reports = await listAbuseReports({ count: 200 });
+    await renderLeadNotifications();
     listView.style.display = "block";
     if (reports.length === 0) {
       tableWrap.innerHTML = '<div class="empty-state">No suspected abuse reports have been submitted.</div>';
@@ -187,6 +191,25 @@
     tableWrap.querySelectorAll("tr[data-id]").forEach(tr => {
       tr.addEventListener("click", () => { location.href = "admin-abuse-report.html?id=" + encodeURIComponent(tr.dataset.id); });
     });
+  }
+
+  async function renderLeadNotifications() {
+    const el = document.getElementById("leadNotifications");
+    try {
+      const notes = await listLeadNotifications({ count: 5 });
+      if (!notes.length) { el.innerHTML = ""; return; }
+      el.innerHTML = notes.map(n => {
+        return '<div class="notice">Temporary abuse-report access granted for report <span class="code">'
+          + escapeHtml(n.reportId || "-")
+          + '</span> until '
+          + (n.expiresAt ? formatDate(n.expiresAt) : "-")
+          + '. Reason: '
+          + escapeHtml(n.reason || "-")
+          + '</div>';
+      }).join("");
+    } catch (_) {
+      el.innerHTML = "";
+    }
   }
 
   function renderListRow(report) {

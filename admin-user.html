@@ -195,6 +195,23 @@
           </div>
         </div>
         <div class="access-summary" id="safeguardAccessSummary"></div>
+        <div class="field" style="margin-top:14px">
+          <label>Safeguard Lead flags</label>
+          <div class="pills">
+            <label class="pill"><input type="checkbox" id="mfaEnrolled"><span>2FA verified</span></label>
+            <label class="pill"><input type="checkbox" id="safeguardLead"><span>Safeguard Lead</span></label>
+            <label class="pill"><input type="checkbox" id="safeguardLeadAdmin"><span>Lead Admin</span></label>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px">Rules block Safeguard Lead access unless 2FA is marked verified first.</div>
+          <button type="button" class="btn btn-secondary" id="saveSafeguardAccessBtn" style="font-size:12px;padding:8px 14px;margin-top:10px">Save Safeguard access</button>
+        </div>
+        <div class="field" style="margin-top:16px">
+          <label for="tempReportId">Temporary abuse-report access</label>
+          <input id="tempReportId" class="fi" placeholder="abuseReports document ID">
+          <label for="tempReason">Mandatory written reason</label>
+          <textarea id="tempReason" class="fi" placeholder="Why this 24-hour access is needed"></textarea>
+          <button type="button" class="btn btn-secondary" id="grantTempAccessBtn" style="font-size:12px;padding:8px 14px;margin-top:10px">Grant 24-hour access</button>
+        </div>
       </div>
 
       <!-- Personal -->
@@ -420,7 +437,7 @@
   import { onUserChange } from "./sg-auth.js";
   import { getOrCreateProfile, formatDate, isReadyForActivation, covenantStatus } from "./sg-profile.js";
   import {
-    loadUser, updateUserProfile,
+    loadUser, updateUserProfile, setSafeguardAccess, grantTemporaryAbuseAccess,
     markPoliceCheckCleared, unclearPoliceCheck,
     markReferenceReceived, unmarkReferenceReceived,
     activateUser,
@@ -488,6 +505,9 @@
 
     setv("role", u.role || "volunteer");
     setv("status", u.status || "in-process");
+    document.getElementById("mfaEnrolled").checked = !!u.mfaEnrolled;
+    document.getElementById("safeguardLead").checked = !!u.safeguard_lead;
+    document.getElementById("safeguardLeadAdmin").checked = !!u.safeguard_lead_admin;
     renderSafeguardAccessSummary(u);
     if (isSelf) {
       document.getElementById("role").disabled = true;
@@ -719,6 +739,41 @@
   }
 
   // ── Coordinator actions ─────────────────────────────────
+  document.getElementById("saveSafeguardAccessBtn").addEventListener("click", async () => {
+    clearMsg();
+    const mfaEnrolled = document.getElementById("mfaEnrolled").checked;
+    const safeguardLead = document.getElementById("safeguardLead").checked;
+    const safeguardLeadAdmin = document.getElementById("safeguardLeadAdmin").checked;
+    if (safeguardLead && !mfaEnrolled) {
+      showMsg("Mark 2FA verified before granting Safeguard Lead access.", "err");
+      return;
+    }
+    try {
+      await setSafeguardAccess(TARGET_UID, { mfaEnrolled, safeguardLead, safeguardLeadAdmin });
+      showMsg("Safeguard access updated.", "ok");
+      const updated = await loadUser(TARGET_UID);
+      if (updated) render(updated);
+    } catch (err) {
+      showMsg("Couldn't update Safeguard access. " + (err.message || ""), "err");
+    }
+  });
+
+  document.getElementById("grantTempAccessBtn").addEventListener("click", async () => {
+    clearMsg();
+    const reportId = document.getElementById("tempReportId").value.trim();
+    const reason = document.getElementById("tempReason").value.trim();
+    if (!reportId) { showMsg("Enter the abuse report document ID.", "err"); return; }
+    if (!reason) { showMsg("Enter the written reason for break-glass access.", "err"); return; }
+    try {
+      await grantTemporaryAbuseAccess(TARGET_UID, { reportId, reason });
+      showMsg("Temporary abuse-report access granted for 24 hours. Safeguard Leads will see an in-app notification.", "ok");
+      document.getElementById("tempReportId").value = "";
+      document.getElementById("tempReason").value = "";
+    } catch (err) {
+      showMsg("Couldn't grant temporary access. " + (err.message || ""), "err");
+    }
+  });
+
   document.getElementById("pcSaveBtn").addEventListener("click", async () => {
     clearMsg();
     const cleared = document.getElementById("pcCleared").value;

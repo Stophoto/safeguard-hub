@@ -75,6 +75,12 @@ export async function listAbuseReports({ count = 200 } = {}) {
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
+export async function listLeadNotifications({ count = 10 } = {}) {
+  const q = query(collection(db, "leadNotifications"), orderBy("grantedAt", "desc"), limit(count));
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
 export async function getAbuseReport(id) {
   const snap = await getDoc(doc(db, "abuseReports", id));
   if (!snap.exists()) return null;

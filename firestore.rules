@@ -43,6 +43,14 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.safeguard_lead_admin == true;
     }
 
+    function hasTemporaryAbuseAccess(reportId) {
+      return request.auth != null
+        && hasProfile()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('temporaryAbuseAccess', {}) is map
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('temporaryAbuseAccess', {}).get('reportId', '') == reportId
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('temporaryAbuseAccess', {}).get('expiresAt', request.time) > request.time;
+    }
+
     function isBootstrapSafeguardLeadAdmin(uid) {
       return request.auth != null
         && request.auth.uid == uid
@@ -180,6 +188,38 @@ service cloud.firestore {
         )
         && (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt == request.time)
         && (!request.resource.data.keys().hasAny(['updatedBy']) || request.resource.data.updatedBy == request.auth.uid);
+    }
+
+    function validTemporaryAbuseAccessUpdate() {
+      let access = request.resource.data.get('temporaryAbuseAccess', null);
+      return isSafeguardLeadAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'temporaryAbuseAccess',
+          'updatedAt',
+          'updatedBy'
+        ])
+        && access is map
+        && access.keys().hasOnly([
+          'grantedBy',
+          'grantedByEmail',
+          'grantedAt',
+          'expiresAt',
+          'reason',
+          'reportId'
+        ])
+        && access.grantedBy == request.auth.uid
+        && access.grantedByEmail == request.auth.token.email
+        && access.grantedAt == request.time
+        && access.expiresAt is timestamp
+        && access.expiresAt > request.time
+        && access.reason is string
+        && access.reason.size() > 0
+        && access.reason.size() <= 1000
+        && access.reportId is string
+        && access.reportId.size() > 0
+        && access.reportId.size() <= 120
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.updatedBy == request.auth.uid;
     }
 
     function validSelfPoliceCheck() {
@@ -413,7 +453,8 @@ service cloud.firestore {
       //   • Safeguard Lead Admins can manage safeguard_lead flags.
       allow update: if validUserSelfUpdate(uid)
                     || validCoordinatorUserUpdate()
-                    || validSafeguardAccessUpdate(uid);
+                    || validSafeguardAccessUpdate(uid)
+                    || validTemporaryAbuseAccessUpdate();
 
       // Delete: never from the app.
       allow delete: if false;
@@ -466,9 +507,30 @@ service cloud.firestore {
     // Leads can read/list/update report documents.
     match /abuseReports/{reportId} {
       allow create: if validAbuseReportCreate();
-      allow get, list: if isSafeguardLead();
+      allow get: if isSafeguardLead() || hasTemporaryAbuseAccess(reportId);
+      allow list: if isSafeguardLead();
       allow update: if validAbuseReportUpdate();
       allow delete: if false;
+    }
+
+    match /leadNotifications/{notificationId} {
+      allow create: if isSafeguardLeadAdmin()
+                    && request.resource.data.keys().hasOnly([
+                      'type',
+                      'targetUid',
+                      'reportId',
+                      'reason',
+                      'grantedBy',
+                      'grantedByEmail',
+                      'grantedAt',
+                      'expiresAt'
+                    ])
+                    && request.resource.data.type == 'temporaryAbuseAccess'
+                    && request.resource.data.grantedBy == request.auth.uid
+                    && request.resource.data.grantedByEmail == request.auth.token.email
+                    && request.resource.data.grantedAt == request.time;
+      allow get, list: if isSafeguardLead();
+      allow update, delete: if false;
     }
 
     // ─── Everything else ─────────────────────────────────────
