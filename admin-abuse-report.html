@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="same-origin">
+<title>Abuse reports — Admin · Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1B3A4B;--navy-deep:#0F2530;--teal:#2E6B7F;--gold:#B09055;--cream:#FAF8F3;--sand:#F2EFE8;--body:#3D3835;--muted:#9A958F;--border:#E4E0DA;--white:#FFFFFF;--error:#C0392B;--error-bg:#FFF0EE;--success:#27AE60;--success-bg:#EEFBF3;--warn:#B07A1E;--warn-bg:#FFF5E6;--serif:'DM Serif Display',Georgia,serif;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);font-size:15px;line-height:1.55;min-height:100vh;display:flex;flex-direction:column}
+  .hdr{background:linear-gradient(180deg,var(--navy-deep),var(--navy));border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  .hdr-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px}
+  .nav-link:hover,.nav-link.active{color:var(--white);background:rgba(255,255,255,0.08)}
+  .page{flex:1;padding:36px 24px 80px}
+  .wrap{max-width:1000px;margin:0 auto}
+  .crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .crumb a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:38px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
+  .lede{font-size:15px;color:var(--body);opacity:.78;margin-bottom:22px;max-width:760px}
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:24px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  table{width:100%;border-collapse:collapse;background:var(--white);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;font-size:13px}
+  th{background:var(--sand);color:var(--navy);text-align:left;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+  tr:hover td{background:var(--cream);cursor:pointer}
+  .code{font-family:ui-monospace,monospace;color:var(--teal);font-size:12px}
+  .meta{color:var(--muted);font-size:12px}
+  .badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase}
+  .badge.done{background:var(--success-bg);color:var(--success)}
+  .badge.pending,.badge.required{background:var(--warn-bg);color:var(--warn)}
+  .data-row{display:grid;grid-template-columns:190px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+  .data-row:last-child{border-bottom:none}
+  .data-row .k{font-weight:600;color:var(--navy);font-size:12px}
+  .data-row .v{word-break:break-word}
+  .data-row .empty{color:var(--muted);font-style:italic}
+  .fi{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:14px;color:var(--body);background:var(--white)}
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);letter-spacing:.04em;text-transform:uppercase;margin:14px 0 6px}
+  textarea.fi{min-height:90px;resize:vertical}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white)}
+  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:14px;display:none}
+  .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
+  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+  .loading-state,.empty-state{text-align:center;padding:80px 24px;color:var(--muted)}
+  @media(max-width:650px){.data-row{grid-template-columns:1fr;gap:2px}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="dashboard.html">
+      <svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
+        <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
+      </svg>
+      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+    </a>
+    <a class="nav-link" href="admin-submissions.html">Admin · Submissions</a>
+    <a class="nav-link active" href="admin-abuse-report.html">Abuse Reports</a>
+    <div id="userChip" style="margin-left:8px"></div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="wrap" id="loadingState"><div class="loading-state">Loading abuse reports...</div></div>
+
+  <div class="wrap" id="accessDenied" style="display:none">
+    <div class="eyebrow">Access denied</div>
+    <h1>Safeguard Lead only</h1>
+    <p class="lede">Suspected abuse reports are restricted to approved Safeguard Leads.</p>
+    <a class="btn btn-primary" href="dashboard.html">Back to dashboard</a>
+  </div>
+
+  <div class="wrap" id="listView" style="display:none">
+    <div class="crumb"><a href="admin-submissions.html">Submissions</a> &rsaquo; Abuse reports</div>
+    <div class="eyebrow"><a href="SG-FRM-007.html" style="color:inherit;text-decoration:none">SG-FRM-007</a></div>
+    <h1>Suspected abuse reports</h1>
+    <p class="lede">This list is separate from ordinary coordinator submissions. Every row here is restricted to Safeguard Leads in Phase A.</p>
+    <div id="tableWrap"></div>
+  </div>
+
+  <div class="wrap" id="detailView" style="display:none">
+    <div class="crumb"><a href="admin-abuse-report.html">Abuse reports</a> &rsaquo; <span id="crumbRecord">Report</span></div>
+    <div class="eyebrow" id="formCodeLabel"><a href="SG-FRM-007.html" style="color:inherit;text-decoration:none">SG-FRM-007</a></div>
+    <h1 id="recordTitle">Suspected abuse report</h1>
+    <p class="lede">Reporter identity is shown only to the assigned Safeguard Lead. Assign the report to yourself before follow-up if it is currently unassigned.</p>
+
+    <div class="card">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+        <span class="code" id="recordId">-</span>
+        <span class="meta">Submitted <span id="submittedAt">-</span></span>
+        <span class="badge" id="statusBadge">open</span>
+      </div>
+      <div id="dataBlock"></div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Lead triage</div>
+      <label for="status">Status</label>
+      <select id="status" class="fi">
+        <option value="open">Open</option>
+        <option value="reviewed">Reviewed</option>
+        <option value="closed">Closed</option>
+      </select>
+      <label for="notes">Internal notes</label>
+      <textarea id="notes" class="fi"></textarea>
+      <label for="closureReason">Closure reason <span style="font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0">required to close</span></label>
+      <textarea id="closureReason" class="fi"></textarea>
+      <div id="msg" class="msg"></div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="saveBtn">Save triage</button>
+        <button type="button" class="btn btn-secondary" id="assignBtn">Assign to me</button>
+        <a class="btn btn-secondary" href="admin-abuse-report.html">Back to list</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer style="text-align:center;padding:24px;font-size:12px;color:var(--muted)">Safeguard Framework · Bethany Chapel</footer>
+
+<script type="module">
+  import { onUserChange } from "./sg-auth.js";
+  import { getOrCreateProfile, formatDate } from "./sg-profile.js";
+  import { mountUserChip } from "./sg-user-chip.js";
+  import {
+    ABUSE_REPORT_HEADERS,
+    getAbuseReport,
+    listAbuseReports,
+    updateAbuseReport,
+    statusBadgeClass,
+  } from "./sg-abuse-reports.js";
+
+  mountUserChip(document.getElementById("userChip"));
+
+  const params = new URLSearchParams(location.search);
+  const REPORT_ID = params.get("id");
+  const loadingState = document.getElementById("loadingState");
+  const accessDenied = document.getElementById("accessDenied");
+  const listView = document.getElementById("listView");
+  const detailView = document.getElementById("detailView");
+  const tableWrap = document.getElementById("tableWrap");
+  const dataBlock = document.getElementById("dataBlock");
+  const msg = document.getElementById("msg");
+  let currentUser = null;
+  let currentReport = null;
+
+  onUserChange(async user => {
+    if (!user) { location.replace("sign-in.html?next=" + encodeURIComponent(location.pathname.split("/").pop() + location.search)); return; }
+    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
+    currentUser = user;
+    try {
+      const profile = await getOrCreateProfile();
+      if (!profile.safeguard_lead) {
+        loadingState.style.display = "none";
+        accessDenied.style.display = "block";
+        return;
+      }
+      if (REPORT_ID) await renderDetail(REPORT_ID);
+      else await renderList();
+      loadingState.style.display = "none";
+    } catch (err) {
+      loadingState.textContent = "Couldn't load abuse reports. " + (err.message || "");
+    }
+  });
+
+  async function renderList() {
+    const reports = await listAbuseReports({ count: 200 });
+    listView.style.display = "block";
+    if (reports.length === 0) {
+      tableWrap.innerHTML = '<div class="empty-state">No suspected abuse reports have been submitted.</div>';
+      return;
+    }
+    tableWrap.innerHTML = '<table><thead><tr><th>When</th><th>Record</th><th>Child</th><th>Status</th><th></th></tr></thead><tbody>'
+      + reports.map(renderListRow).join("")
+      + '</tbody></table>';
+    tableWrap.querySelectorAll("tr[data-id]").forEach(tr => {
+      tr.addEventListener("click", () => { location.href = "admin-abuse-report.html?id=" + encodeURIComponent(tr.dataset.id); });
+    });
+  }
+
+  function renderListRow(report) {
+    const row = report.rowData || [];
+    const childName = row[7] || "-";
+    const status = report.status || "open";
+    return '<tr data-id="' + escapeHtml(report.id) + '">'
+      + '<td class="meta">' + (report.submittedAt ? formatDate(report.submittedAt) : "-") + '</td>'
+      + '<td class="code">' + escapeHtml(report.recordId || report.id) + '</td>'
+      + '<td>' + escapeHtml(childName) + '</td>'
+      + '<td><span class="badge ' + statusBadgeClass(status) + '">' + escapeHtml(status) + '</span></td>'
+      + '<td style="text-align:right"><a class="code" href="admin-abuse-report.html?id=' + encodeURIComponent(report.id) + '" onclick="event.stopPropagation()">Open</a></td>'
+      + '</tr>';
+  }
+
+  async function renderDetail(id) {
+    currentReport = await getAbuseReport(id);
+    if (!currentReport) {
+      accessDenied.style.display = "block";
+      loadingState.style.display = "none";
+      return;
+    }
+    detailView.style.display = "block";
+    document.getElementById("crumbRecord").textContent = currentReport.recordId || currentReport.id;
+    document.getElementById("recordId").textContent = currentReport.recordId || currentReport.id;
+    document.getElementById("submittedAt").textContent = currentReport.submittedAt ? formatDate(currentReport.submittedAt) : "-";
+    const status = currentReport.status || "open";
+    const badge = document.getElementById("statusBadge");
+    badge.className = "badge " + statusBadgeClass(status);
+    badge.textContent = status;
+    document.getElementById("status").value = status;
+    document.getElementById("notes").value = currentReport.notes || "";
+    document.getElementById("closureReason").value = currentReport.closureReason || "";
+    renderDataRows(currentReport);
+  }
+
+  function renderDataRows(report) {
+    const row = report.rowData || [];
+    const assignedElsewhere = report.assignedLeadUid && report.assignedLeadUid !== currentUser.uid;
+    dataBlock.innerHTML = row.map((value, idx) => {
+      const label = ABUSE_REPORT_HEADERS[idx] || ("Field " + (idx + 1));
+      const reporterField = idx >= 3 && idx <= 6;
+      const display = assignedElsewhere && reporterField ? "Reporter identity restricted to assigned lead" : value;
+      const v = display === null || display === undefined || display === ""
+        ? '<span class="v empty">-</span>'
+        : '<span class="v">' + escapeHtml(String(display)) + '</span>';
+      return '<div class="data-row"><div class="k">' + escapeHtml(label) + '</div>' + v + '</div>';
+    }).join("");
+  }
+
+  document.getElementById("assignBtn").addEventListener("click", async () => {
+    clearMsg();
+    try {
+      await updateAbuseReport(currentReport.id, { assignedLeadUid: currentUser.uid });
+      showMsg("Assigned to you.", "ok");
+      await renderDetail(currentReport.id);
+    } catch (err) {
+      showMsg("Couldn't assign. " + (err.message || ""), "err");
+    }
+  });
+
+  document.getElementById("saveBtn").addEventListener("click", async () => {
+    clearMsg();
+    const status = document.getElementById("status").value;
+    const closureReason = document.getElementById("closureReason").value.trim();
+    if (status === "closed" && !closureReason) {
+      showMsg("Enter a closure reason before closing this report.", "err");
+      return;
+    }
+    try {
+      await updateAbuseReport(currentReport.id, {
+        status,
+        notes: document.getElementById("notes").value,
+        closureReason,
+      });
+      showMsg("Saved.", "ok");
+      await renderDetail(currentReport.id);
+    } catch (err) {
+      showMsg("Couldn't save. " + (err.message || ""), "err");
+    }
+  });
+
+  function showMsg(text, kind) { msg.textContent = text; msg.className = "msg " + kind; }
+  function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
+  function escapeHtml(s) {
+    return String(s || "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  }
+</script>
+</body>
+</html>
