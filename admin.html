@@ -85,6 +85,11 @@
   .badge.inprocess{background:var(--warn-bg);color:var(--warn)}
   .badge.paused{background:var(--sand);color:var(--muted)}
   .badge.inactive{background:var(--error-bg);color:var(--error)}
+  .access-flags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+  .access-flag{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;
+               letter-spacing:0.05em;text-transform:uppercase;background:var(--sand);color:var(--muted)}
+  .access-flag.lead{background:rgba(46,107,127,0.10);color:var(--teal)}
+  .access-flag.admin{background:rgba(176,144,85,0.16);color:var(--gold)}
   select.role-picker, select.status-picker{font-family:var(--sans);font-size:12px;font-weight:600;
          padding:6px 10px;border:1.5px solid var(--border);border-radius:6px;
          background:var(--white);color:var(--body);cursor:pointer}
@@ -279,6 +284,11 @@
       const sel = (u.role === r) ? " selected" : "";
       return '<option value="' + r + '"' + sel + '>' + cap(r) + '</option>';
     }).join("");
+    const accessFlags = [
+      u.safeguard_lead ? '<span class="access-flag lead">Safeguard Lead</span>' : '',
+      u.safeguard_lead_admin ? '<span class="access-flag admin">Lead Admin</span>' : '',
+      u.mfaEnrolled ? '<span class="access-flag">2FA noted</span>' : '',
+    ].filter(Boolean).join("");
 
     const statusOptions = ["in-process","active","paused","inactive"].map(s => {
       const sel = (u.status === s) ? " selected" : "";
@@ -295,7 +305,9 @@
       +   '<div class="name">' + escapeHtml(fullName) + (isMe ? ' <small style="color:var(--muted);font-weight:500">(you)</small>' : '') + '</div>'
       +   '<span class="email">' + escapeHtml(emailLabel) + '</span>'
       + '</td>'
-      + '<td><select class="role-picker"' + roleDisabled + ' data-uid="' + u.id + '">' + roleOptions + '</select></td>'
+      + '<td><select class="role-picker"' + roleDisabled + ' data-uid="' + u.id + '">' + roleOptions + '</select>'
+      +   (accessFlags ? '<div class="access-flags">' + accessFlags + '</div>' : '')
+      + '</td>'
       + '<td><select class="status-picker" data-uid="' + u.id + '">' + statusOptions + '</select> <span class="badge ' + statusBadgeCls + '" style="margin-left:6px">' + statusLabel + '</span></td>'
       + '<td style="color:var(--muted);font-size:13px">' + joined + '</td>'
       + '<td style="text-align:right"><a href="admin-user.html?uid=' + u.id + '" style="color:var(--teal);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);font-size:13px">Open →</a></td>'

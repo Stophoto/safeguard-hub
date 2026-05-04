@@ -31,6 +31,24 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'coordinator';
     }
 
+    function isSafeguardLead() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.safeguard_lead == true;
+    }
+
+    function isSafeguardLeadAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.safeguard_lead_admin == true;
+    }
+
+    function isBootstrapSafeguardLeadAdmin(uid) {
+      return request.auth != null
+        && request.auth.uid == uid
+        && request.auth.uid == 'jsDZZRTQxIaJpe8Sy2LHOgvCpw22';
+    }
+
     function hasProfile() {
       return request.auth != null
         && exists(/databases/$(database)/documents/users/$(request.auth.uid));
@@ -47,6 +65,9 @@ service cloud.firestore {
           'email',
           'role',
           'status',
+          'safeguard_lead',
+          'safeguard_lead_admin',
+          'mfaEnrolled',
           'firstName',
           'lastName',
           'preferredName',
@@ -63,6 +84,9 @@ service cloud.firestore {
         ])
         && request.resource.data.role == 'volunteer'
         && request.resource.data.status == 'in-process'
+        && request.resource.data.safeguard_lead == false
+        && request.resource.data.safeguard_lead_admin == false
+        && request.resource.data.mfaEnrolled == false
         && (!request.resource.data.keys().hasAny(['email']) || request.resource.data.email == request.auth.token.email)
         && request.resource.data.createdAt == request.time;
     }
@@ -92,6 +116,9 @@ service cloud.firestore {
         ])
         && unchanged('role')
         && unchanged('status')
+        && unchanged('safeguard_lead')
+        && unchanged('safeguard_lead_admin')
+        && unchanged('mfaEnrolled')
         && unchanged('screening')
         && unchanged('renewalDueOn')
         && unchanged('activatedAt')
@@ -101,6 +128,58 @@ service cloud.firestore {
         && validSelfReferences()
         && (!request.resource.data.keys().hasAny(['email']) || request.resource.data.email == request.auth.token.email)
         && (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt == request.time);
+    }
+
+    function validCoordinatorUserUpdate() {
+      return isCoordinator()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'email',
+          'role',
+          'status',
+          'firstName',
+          'lastName',
+          'preferredName',
+          'dob',
+          'phone',
+          'address',
+          'emergencyContact',
+          'ageGroups',
+          'serviceTimes',
+          'testimony',
+          'attendingSince',
+          'profileComplete',
+          'covenant',
+          'covenantHistory',
+          'policeCheck',
+          'references',
+          'training',
+          'screening',
+          'renewalDueOn',
+          'activatedAt',
+          'activatedBy',
+          'updatedAt',
+          'updatedBy'
+        ]);
+    }
+
+    function validSafeguardAccessUpdate(uid) {
+      return (isSafeguardLeadAdmin() || isBootstrapSafeguardLeadAdmin(uid))
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'safeguard_lead',
+          'safeguard_lead_admin',
+          'mfaEnrolled',
+          'updatedAt',
+          'updatedBy'
+        ])
+        && request.resource.data.get('safeguard_lead', null) is bool
+        && request.resource.data.get('safeguard_lead_admin', null) is bool
+        && request.resource.data.get('mfaEnrolled', null) is bool
+        && (
+          request.resource.data.get('safeguard_lead', false) == false
+          || request.resource.data.get('mfaEnrolled', false) == true
+        )
+        && (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt == request.time)
+        && (!request.resource.data.keys().hasAny(['updatedBy']) || request.resource.data.updatedBy == request.auth.uid);
     }
 
     function validSelfPoliceCheck() {
@@ -228,6 +307,94 @@ service cloud.firestore {
         );
     }
 
+    function validAbuseReportCreate() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && hasProfile()
+        && request.resource.data.keys().hasOnly([
+          'schemaVersion',
+          'formCode',
+          'formTitle',
+          'tabName',
+          'recordId',
+          'rowData',
+          'submittedBy',
+          'submittedByEmail',
+          'submittedAt',
+          'status',
+          'assignedLeadUid',
+          'allowedReaders',
+          'reviewedBy',
+          'reviewedByEmail',
+          'reviewedAt',
+          'closedBy',
+          'closedAt',
+          'closureReason',
+          'notes',
+          'legalHold',
+          'retentionUntil',
+          'createdVia'
+        ])
+        && request.resource.data.schemaVersion == 1
+        && request.resource.data.formCode == 'SG-FRM-007'
+        && request.resource.data.tabName == 'Abuse Reports'
+        && request.resource.data.submittedBy == request.auth.uid
+        && request.resource.data.submittedByEmail == request.auth.token.email
+        && request.resource.data.submittedAt == request.time
+        && request.resource.data.status == 'open'
+        && request.resource.data.assignedLeadUid == null
+        && request.resource.data.allowedReaders is list
+        && request.resource.data.allowedReaders.size() == 0
+        && request.resource.data.reviewedBy == null
+        && request.resource.data.reviewedByEmail == null
+        && request.resource.data.reviewedAt == null
+        && request.resource.data.closedBy == null
+        && request.resource.data.closedAt == null
+        && request.resource.data.closureReason == ''
+        && request.resource.data.notes == ''
+        && request.resource.data.legalHold == true
+        && request.resource.data.retentionUntil == null
+        && request.resource.data.createdVia == 'direct-client-phase-a'
+        && request.resource.data.rowData is list
+        && request.resource.data.rowData.size() <= 100
+        && request.resource.data.recordId is string
+        && request.resource.data.recordId.size() <= 80;
+    }
+
+    function validAbuseReportUpdate() {
+      return isSafeguardLead()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'status',
+          'assignedLeadUid',
+          'reviewedBy',
+          'reviewedByEmail',
+          'reviewedAt',
+          'closedBy',
+          'closedAt',
+          'closureReason',
+          'notes',
+          'updatedAt',
+          'updatedBy'
+        ])
+        && request.resource.data.status in ['open', 'reviewed', 'closed']
+        && request.resource.data.notes is string
+        && request.resource.data.notes.size() <= 5000
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.legalHold == resource.data.legalHold
+        && request.resource.data.retentionUntil == resource.data.retentionUntil
+        && (
+          request.resource.data.status != 'closed'
+          || (
+            request.resource.data.closureReason is string
+            && request.resource.data.closureReason.size() > 0
+            && request.resource.data.closureReason.size() <= 5000
+            && request.resource.data.closedAt == request.time
+            && request.resource.data.closedBy == request.auth.uid
+          )
+        );
+    }
+
     // ─── Users collection ────────────────────────────────────
     match /users/{uid} {
 
@@ -241,9 +408,12 @@ service cloud.firestore {
       allow create: if validUserCreate(uid);
 
       // Update:
-      //   • As yourself, you can change any field EXCEPT role/status.
-      //   • As a Coordinator, you can change anything on anyone.
-      allow update: if validUserSelfUpdate(uid) || isCoordinator();
+      //   • As yourself, you can change only volunteer-owned fields.
+      //   • Coordinators can manage ordinary profile/compliance fields.
+      //   • Safeguard Lead Admins can manage safeguard_lead flags.
+      allow update: if validUserSelfUpdate(uid)
+                    || validCoordinatorUserUpdate()
+                    || validSafeguardAccessUpdate(uid);
 
       // Delete: never from the app.
       allow delete: if false;
@@ -287,6 +457,17 @@ service cloud.firestore {
 
       allow update: if validSubmissionUpdate();
 
+      allow delete: if false;
+    }
+
+    // ─── Abuse reports collection ───────────────────────────
+    // Phase A: no Cloud Functions. Verified users can create a
+    // locked-down SG-FRM-007 document directly. Only Safeguard
+    // Leads can read/list/update report documents.
+    match /abuseReports/{reportId} {
+      allow create: if validAbuseReportCreate();
+      allow get, list: if isSafeguardLead();
+      allow update: if validAbuseReportUpdate();
       allow delete: if false;
     }
 

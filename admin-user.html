@@ -97,6 +97,11 @@
 
   .self-note{background:var(--warn-bg,#FFF5E6);border:1px solid rgba(176,122,30,0.2);
              border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#8B5E14}
+  .access-summary{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .access-summary span{display:inline-flex;font-size:10px;font-weight:700;padding:4px 9px;border-radius:4px;
+                       letter-spacing:0.05em;text-transform:uppercase;background:var(--sand);color:var(--muted)}
+  .access-summary span.on{background:rgba(46,107,127,0.10);color:var(--teal)}
+  .access-summary span.admin{background:rgba(176,144,85,0.16);color:var(--gold)}
 
   .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
 
@@ -189,6 +194,7 @@
             </select>
           </div>
         </div>
+        <div class="access-summary" id="safeguardAccessSummary"></div>
       </div>
 
       <!-- Personal -->
@@ -482,6 +488,7 @@
 
     setv("role", u.role || "volunteer");
     setv("status", u.status || "in-process");
+    renderSafeguardAccessSummary(u);
     if (isSelf) {
       document.getElementById("role").disabled = true;
       document.getElementById("status").disabled = true;
@@ -516,6 +523,15 @@
     renderCompliance(u);
     renderScreening(u);
     renderActivationBanner(u);
+  }
+
+  function renderSafeguardAccessSummary(u) {
+    const el = document.getElementById("safeguardAccessSummary");
+    el.innerHTML = [
+      '<span class="' + (u.safeguard_lead ? 'on' : '') + '">Safeguard Lead: ' + (u.safeguard_lead ? 'Yes' : 'No') + '</span>',
+      '<span class="' + (u.safeguard_lead_admin ? 'admin' : '') + '">Lead Admin: ' + (u.safeguard_lead_admin ? 'Yes' : 'No') + '</span>',
+      '<span class="' + (u.mfaEnrolled ? 'on' : '') + '">2FA noted: ' + (u.mfaEnrolled ? 'Yes' : 'No') + '</span>',
+    ].join("");
   }
 
   // ── Screening panel (SG-SOP-001 tracker) ──────────────────

@@ -44,6 +44,20 @@ export async function setUserRole(uid, role) {
   });
 }
 
+// ── Change safeguard access flags ───────────────────────────
+// Phase A stores these as profile booleans. Rules restrict writes
+// to safeguard_lead_admin users plus the temporary bootstrap UID.
+export async function setSafeguardAccess(uid, { safeguardLead, safeguardLeadAdmin, mfaEnrolled } = {}) {
+  const patch = {
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  };
+  if (safeguardLead !== undefined) patch.safeguard_lead = !!safeguardLead;
+  if (safeguardLeadAdmin !== undefined) patch.safeguard_lead_admin = !!safeguardLeadAdmin;
+  if (mfaEnrolled !== undefined) patch.mfaEnrolled = !!mfaEnrolled;
+  await updateDoc(doc(db, "users", uid), patch);
+}
+
 // ── Change a user's status ──────────────────────────────────
 // status: "in-process" | "active" | "paused" | "inactive"
 export async function setUserStatus(uid, status) {
@@ -104,7 +118,7 @@ export async function updateUserProfile(uid, updates) {
 export function usersToCsv(users) {
   const headers = [
     "User ID","Email","First name","Last name","Preferred name",
-    "Role","Status","Profile complete",
+    "Role","Safeguard lead","Safeguard lead admin","MFA enrolled","Status","Profile complete",
     "Date of birth","Phone",
     "Street","City","Province","Postal",
     "Emergency contact name","Emergency contact phone","Emergency contact relationship",
@@ -117,7 +131,11 @@ export function usersToCsv(users) {
     u.id,
     u.email,
     u.firstName, u.lastName, u.preferredName,
-    u.role, u.status,
+    u.role,
+    u.safeguard_lead ? "yes" : "no",
+    u.safeguard_lead_admin ? "yes" : "no",
+    u.mfaEnrolled ? "yes" : "no",
+    u.status,
     u.profileComplete ? "yes" : "no",
     u.dob, u.phone,
     u.address && u.address.street,
