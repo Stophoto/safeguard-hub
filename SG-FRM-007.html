@@ -111,7 +111,7 @@
     <div id="submittedBanner" class="submitted-banner" style="display:none">
       <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
       <div>
-        <b>Report submitted to the Safeguard Coordinator</b>
+        <b>Report submitted to the Safeguard Lead</b>
         <span>Record ID: <code id="submittedRecordId">&mdash;</code></span>
         <span style="margin-top:6px">Keep this record ID for your reference. Civil authorities must still be contacted directly &mdash; this submission does not substitute for an external report. See <a class="inline-link" href="SG-POL-004.html">SG-POL-004</a>.</span>
       </div>
@@ -119,7 +119,7 @@
 
     <div class="no-save-notice">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      <span><strong>This form does not autosave.</strong> Contents are highly sensitive and are never written to this device&rsquo;s storage. Complete, Print / Save as PDF, and hand the document to the Safeguard Coordinator or civil authority.</span>
+      <span><strong>This form does not autosave.</strong> Contents are highly sensitive and are never written to this device&rsquo;s storage. Complete, Print / Save as PDF, and hand the document to the Safeguard Lead or civil authority.</span>
     </div>
 
     <div class="card">
@@ -229,7 +229,7 @@
     </div>
 
     <div class="actions">
-      <button type="button" class="btn btn-primary" id="submitBtn">Submit to Safeguard Coordinator</button>
+      <button type="button" class="btn btn-primary" id="submitBtn">Submit to Safeguard Lead</button>
       <button type="button" class="btn btn-secondary" id="printBtn">Print / Save as PDF</button>
       <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
       <span class="save-hint">Autosave is disabled &mdash; sensitive content is not stored on this device.</span>
@@ -246,13 +246,13 @@
   // SG-FRM-007 — Suspected Abuse Report
   //   • Auth gate: signed-in + email verified
   //   • Autofill: reporter name/role/phone/email + signature + today's date from profile
-  //   • Submit: writes to Firestore via createSubmission (tabName "Abuse Reports")
+  //   • Submit: writes to Firestore /abuseReports via createAbuseReport
   //   • Autosave intentionally disabled — highly sensitive content is
   //     never written to this device's storage.
   import { onUserChange } from "./sg-auth.js";
   import { getOrCreateProfile } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
-  import { createSubmission } from "./sg-submissions.js";
+  import { createAbuseReport } from "./sg-abuse-reports.js";
 
   mountUserChip(document.getElementById("userChip"));
 
@@ -324,7 +324,7 @@
     try {
       const recordId = generateRecordId();
       const rowData  = buildRowData(recordId);
-      await createSubmission({ tabName: "Abuse Reports", rowData, recordId });
+      await createAbuseReport({ rowData, recordId });
 
       submitted = true;
       submittedRecId.textContent = recordId;
@@ -333,7 +333,7 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Submit to Safeguard Coordinator";
+      submitBtn.textContent = "Submit to Safeguard Lead";
       showMsg("Couldn't submit. " + (err && err.message ? err.message : "Please try again."), "err");
     }
   });

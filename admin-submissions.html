@@ -65,6 +65,9 @@
               transition:all var(--transition);font-family:var(--sans)}
   .filter-btn:hover{border-color:var(--gold)}
   .filter-btn.active{background:var(--navy);border-color:var(--navy);color:var(--white)}
+  .lead-link{display:none;background:rgba(46,107,127,0.10);border:1.5px solid rgba(46,107,127,0.25);
+             color:var(--teal);padding:8px 14px;border-radius:18px;font-size:12px;font-weight:700;
+             text-decoration:none;margin-left:auto}
 
   .section-head{font-size:12px;font-weight:700;letter-spacing:0.1em;color:var(--gold);
                 text-transform:uppercase;margin:8px 0 12px}
@@ -135,7 +138,7 @@
     <div class="crumb"><a href="admin.html">Admin</a> &rsaquo; Submissions</div>
     <div class="eyebrow">Form submissions</div>
     <h1>Every form, all in one place.</h1>
-    <div class="lede">Every submission from the fillable forms in the Hub (applications, incidents, abuse reports, training logs, covenants, references, registrations) is captured here for review. Filter by form type and mark each one as reviewed or closed.</div>
+    <div class="lede">Every ordinary submission from the fillable forms in the Hub is captured here for review. Suspected abuse reports are separated into Safeguard Lead access only.</div>
 
     <div class="stats">
       <div class="stat"><b id="statOpen">0</b><span>Open · needs review</span></div>
@@ -147,6 +150,7 @@
     <div class="filters" id="filters">
       <span class="section-head" style="margin:0 6px 0 0;padding-top:3px">Filter by form</span>
       <!-- buttons injected -->
+      <a class="lead-link" id="abuseReportsLink" href="admin-abuse-report.html">Abuse reports</a>
     </div>
 
     <div id="msg" class="msg"></div>
@@ -161,6 +165,7 @@
   import { onUserChange } from "./sg-auth.js";
   import { getOrCreateProfile, formatDate } from "./sg-profile.js";
   import { listSubmissions, FORM_SCHEMAS, statusBadgeClass } from "./sg-submissions.js";
+  import { countAbuseReports } from "./sg-abuse-reports.js";
   import { mountUserChip } from "./sg-user-chip.js";
 
   mountUserChip(document.getElementById("userChip"));
@@ -173,6 +178,7 @@
   const statClosed   = document.getElementById("statClosed");
   const statTotal    = document.getElementById("statTotal");
   const filtersEl    = document.getElementById("filters");
+  const abuseReportsLink = document.getElementById("abuseReportsLink");
   const tableWrap    = document.getElementById("tableWrap");
   const msg          = document.getElementById("msg");
 
@@ -189,6 +195,7 @@
         accessDenied.style.display = "block";
         return;
       }
+      await renderAbuseReportLink(profile);
 
       await loadAndRender();
       loadingState.style.display = "none";
@@ -197,6 +204,17 @@
       loadingState.textContent = "Couldn't load submissions. " + (err.message || "");
     }
   });
+
+  async function renderAbuseReportLink(profile) {
+    if (!profile.safeguard_lead) return;
+    abuseReportsLink.style.display = "inline-flex";
+    try {
+      const n = await countAbuseReports();
+      abuseReportsLink.textContent = "Abuse reports (" + n + ")";
+    } catch (_) {
+      abuseReportsLink.textContent = "Abuse reports";
+    }
+  }
 
   async function loadAndRender() {
     try {
@@ -217,7 +235,7 @@
   }
 
   function renderFilters() {
-    // Keep the section-head label
+    // Keep the section-head label and the lead-only abuse report link.
     filtersEl.innerHTML = '<span class="section-head" style="margin:0 6px 0 0;padding-top:3px">Filter by form</span>';
     const allBtn = mkBtn("all", "All (" + allSubs.length + ")");
     filtersEl.appendChild(allBtn);
@@ -230,6 +248,7 @@
       if (n === 0) return; // skip empty filters
       filtersEl.appendChild(mkBtn(schema.formCode, schema.formCode + " (" + n + ")"));
     });
+    filtersEl.appendChild(abuseReportsLink);
   }
   function mkBtn(key, label) {
     const b = document.createElement("button");
