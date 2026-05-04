@@ -58,6 +58,38 @@ export async function setSafeguardAccess(uid, { safeguardLead, safeguardLeadAdmi
   await updateDoc(doc(db, "users", uid), patch);
 }
 
+export async function grantTemporaryAbuseAccess(uid, { reportId, reason }) {
+  const cleanReportId = (reportId || "").trim();
+  const cleanReason = (reason || "").trim();
+  if (!cleanReportId) throw new Error("Report ID is required.");
+  if (!cleanReason) throw new Error("Written reason is required.");
+  const now = new Date();
+  const expires = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+  const grant = {
+    grantedBy: auth.currentUser ? auth.currentUser.uid : null,
+    grantedByEmail: auth.currentUser ? auth.currentUser.email : null,
+    grantedAt: serverTimestamp(),
+    expiresAt: expires,
+    reason: cleanReason,
+    reportId: cleanReportId,
+  };
+  await updateDoc(doc(db, "users", uid), {
+    temporaryAbuseAccess: grant,
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  });
+  await addDoc(collection(db, "leadNotifications"), {
+    type: "temporaryAbuseAccess",
+    targetUid: uid,
+    reportId: cleanReportId,
+    reason: cleanReason,
+    grantedBy: auth.currentUser ? auth.currentUser.uid : null,
+    grantedByEmail: auth.currentUser ? auth.currentUser.email : null,
+    grantedAt: serverTimestamp(),
+    expiresAt: expires,
+  });
+}
+
 // ── Change a user's status ──────────────────────────────────
 // status: "in-process" | "active" | "paused" | "inactive"
 export async function setUserStatus(uid, status) {
