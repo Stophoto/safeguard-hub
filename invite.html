@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
 <title>Invite volunteer — Safeguard Hub</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" integrity="sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ" crossorigin="anonymous">
 <style>
   :root {
     --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
@@ -217,18 +218,14 @@
   });
 
   // ── Build the invitation email body ─────────────────────
-  function buildEmail({ email, ministryText, personalNote }) {
+  function buildEmail({ email, ministryText }) {
     const lines = [];
     lines.push("Hi,");
     lines.push("");
     lines.push("You've been invited to join the Bethany Chapel Safeguard Hub.");
-    if (personalNote) {
-      lines.push("");
-      lines.push(personalNote);
-    }
     if (ministryText) {
       lines.push("");
-      lines.push("Suggested ministry: " + ministryText);
+      lines.push("A ministry note is saved in Safeguard Hub. Please sign in to review next steps.");
     }
     lines.push("");
     lines.push("To get started, create your account here:");
@@ -278,7 +275,6 @@
       const m = buildEmail({
         email,
         ministryText: ministry.value.trim(),
-        personalNote: note.value.trim(),
       });
 
       // Show success state and open the user's email client

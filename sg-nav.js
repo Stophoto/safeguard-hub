@@ -35,6 +35,8 @@
     var fontLink = document.createElement('link');
     fontLink.rel = 'stylesheet';
     fontLink.href = 'https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap';
+    fontLink.integrity = 'sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ';
+    fontLink.crossOrigin = 'anonymous';
     document.head.appendChild(fontLink);
   }
 
@@ -382,7 +384,7 @@
     if (docVersion) left += ' · v' + docVersion;
     if (docDate) left += ' · ' + docDate;
     left += ' · ' + docStatus;
-    footer.innerHTML = '<span>'+left+'</span><a href="index.html">Safeguard Hub →</a>';
+    footer.innerHTML = '<span>'+left+'</span><span><a href="privacy.html">Privacy</a> · <a href="index.html">Safeguard Hub →</a></span>';
     var wrapper = document.querySelector('.page-wrapper, .pw');
     if (wrapper && wrapper.parentNode) {
       wrapper.parentNode.insertBefore(footer, wrapper.nextSibling);
