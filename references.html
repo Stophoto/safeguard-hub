@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
 <title>References — Safeguard Hub</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" integrity="sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ" crossorigin="anonymous">
 <style>
   :root {
     --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
@@ -310,15 +311,13 @@
     clearMsg();
     const refs = readForm();
     // Open a mailto for each reference one after another
-    const me = [currentProfile.firstName, currentProfile.lastName].filter(Boolean).join(" ") || "the volunteer";
     for (let i = 0; i < refs.length; i++) {
       const r = refs[i];
       if (!r.email || !r.name) continue;
-      const subject = "Reference request — " + me + " — Bethany Chapel Safeguard";
-      const body = "Hi " + r.name + ",\n\n" +
-        "I'm applying to serve with children and youth at Bethany Chapel, and I've listed you as a reference. The Safeguard Coordinator will reach out shortly with a brief written reference request. You can expect their email within the next few days.\n\n" +
-        "Thanks so much for being willing!\n\n" +
-        "— " + me;
+      const subject = "Safeguard reference follow-up";
+      const body = "Hello,\n\n" +
+        "Bethany Chapel may contact you about a Safeguard reference request. Please do not include personal details in email until the Safeguard Coordinator contacts you directly.\n\n" +
+        "Thank you.";
       const mailto = "mailto:" + encodeURIComponent(r.email)
         + "?subject=" + encodeURIComponent(subject)
         + "&body=" + encodeURIComponent(body);

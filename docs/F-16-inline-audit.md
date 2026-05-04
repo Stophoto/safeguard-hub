@@ -1,0 +1,510 @@
+# F-16 Inline Audit
+
+Generated for the May 4, 2026 security wrap PR. This is a cleanup inventory so a future PR can remove CSP `unsafe-inline`.
+
+## Inline Script Tags (96)
+
+- SG-FRM-001.html:434 — `<script type="module">`
+- SG-FRM-002.html:83 — `<script type="module">`
+- SG-FRM-002.html:220 — `<script type="module">`
+- SG-FRM-002.html:225 — `<script>`
+- SG-FRM-003.html:75 — `<script type="module">`
+- SG-FRM-003.html:219 — `<script type="module">`
+- SG-FRM-003.html:224 — `<script>`
+- SG-FRM-005.html:76 — `<script type="module">`
+- SG-FRM-005.html:202 — `<script type="module">`
+- SG-FRM-005.html:207 — `<script>`
+- SG-FRM-006.html:294 — `<script type="module">`
+- SG-FRM-007.html:246 — `<script type="module">`
+- SG-FRM-008.html:77 — `<script type="module">`
+- SG-FRM-008.html:189 — `<script type="module">`
+- SG-FRM-008.html:194 — `<script>`
+- SG-FRM-009.html:65 — `<script type="module">`
+- SG-FRM-009.html:184 — `<script type="module">`
+- SG-FRM-009.html:189 — `<script>`
+- SG-FRM-010.html:78 — `<script type="module">`
+- SG-FRM-010.html:201 — `<script type="module">`
+- SG-FRM-010.html:206 — `<script>`
+- SG-FRM-011.html:71 — `<script type="module">`
+- SG-FRM-011.html:165 — `<script type="module">`
+- SG-FRM-011.html:170 — `<script>`
+- SG-G-001.html:49 — `<script type="module">`
+- SG-G-001.html:165 — `<script type="module">import { mountUserChip } from "./sg-user-chip.js"; mountUserChip(document.getElementById("userChip"));</script>`
+- SG-POL-001.html:61 — `<script type="module">`
+- SG-POL-001.html:158 — `<script type="module">import { mountUserChip } from "./sg-user-chip.js"; mountUserChip(document.getElementById("userChip"));</script>`
+- SG-POL-002.html:62 — `<script type="module">`
+- SG-POL-002.html:178 — `<script type="module">import { mountUserChip } from "./sg-user-chip.js"; mountUserChip(document.getElementById("userChip"));</script>`
+- SG-POL-003.html:50 — `<script type="module">`
+- SG-POL-003.html:143 — `<script type="module">import { mountUserChip } from "./sg-user-chip.js"; mountUserChip(document.getElementById("userChip"));</script>`
+- SG-POL-004.html:57 — `<script type="module">`
+- SG-POL-004.html:187 — `<script type="module">import { mountUserChip } from "./sg-user-chip.js"; mountUserChip(document.getElementById("userChip"));</script>`
+- SG-SOP-001.html:126 — `<script type="module">`
+- SG-SOP-001.html:380 — `<script type="module">`
+- SG-SOP-002.html:63 — `<script type="module">`
+- SG-SOP-002.html:168 — `<script type="module">`
+- SG-SOP-003-cards.html:494 — `<script type="module">`
+- SG-SOP-003-cards.html:517 — `<script>`
+- SG-SOP-003.html:69 — `<script type="module">`
+- SG-SOP-003.html:156 — `<script type="module">`
+- SG-SOP-004.html:51 — `<script type="module">`
+- SG-SOP-004.html:143 — `<script type="module">`
+- SG-SOP-005.html:54 — `<script type="module">`
+- SG-SOP-005.html:138 — `<script type="module">`
+- SG-SOP-006.html:55 — `<script type="module">`
+- SG-SOP-006.html:150 — `<script type="module">`
+- SG-SOP-007.html:57 — `<script type="module">`
+- SG-SOP-007.html:155 — `<script type="module">`
+- SG-T-001.html:132 — `<script type="module">`
+- SG-T-001.html:461 — `<script>`
+- SG-T-001.html:530 — `<script type="module">`
+- SG-T-002.html:152 — `<script type="module">`
+- SG-T-002.html:457 — `<script>`
+- SG-T-002.html:531 — `<script type="module">`
+- SG-T-003.html:127 — `<script type="module">`
+- SG-T-003.html:384 — `<script>`
+- SG-T-003.html:453 — `<script type="module">`
+- SG-T-004.html:117 — `<script type="module">`
+- SG-T-004.html:366 — `<script>`
+- SG-T-004.html:435 — `<script type="module">`
+- SG-T-101.html:129 — `<script type="module">`
+- SG-T-101.html:432 — `<script>`
+- SG-T-101.html:501 — `<script type="module">`
+- SG-T-102.html:125 — `<script type="module">`
+- SG-T-102.html:437 — `<script>`
+- SG-T-102.html:506 — `<script type="module">`
+- SG-T-103.html:123 — `<script type="module">`
+- SG-T-103.html:411 — `<script>`
+- SG-T-103.html:480 — `<script type="module">`
+- SG-T-REF-001.html:108 — `<script type="module">`
+- SG-T-REF-001.html:336 — `<script type="module">`
+- admin-abuse-report.html:135 — `<script type="module">`
+- admin-room-kit.html:188 — `<script type="module">`
+- admin-screening.html:143 — `<script type="module">`
+- admin-submission.html:178 — `<script type="module">`
+- admin-submissions.html:165 — `<script type="module">`
+- admin-tasks.html:112 — `<script type="module">`
+- admin-user.html:437 — `<script type="module">`
+- admin.html:181 — `<script type="module">`
+- covenant.html:224 — `<script type="module">`
+- dashboard.html:180 — `<script type="module">`
+- forgot-password.html:140 — `<script type="module">`
+- index.html:169 — `<script type="module">`
+- index.html:250 — `<script>`
+- index.html:277 — `<script>`
+- index.html:1161 — `<script type="module">`
+- invite.html:174 — `<script type="module">`
+- police-check.html:178 — `<script type="module">`
+- profile-setup.html:269 — `<script type="module">`
+- references.html:190 — `<script type="module">`
+- sign-in.html:131 — `<script type="module">`
+- sign-up.html:123 — `<script type="module">`
+- training.html:144 — `<script type="module">`
+- verify-email.html:135 — `<script type="module">`
+
+## Inline style= Attributes (405)
+
+- SG-FRM-001.html:159 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-FRM-001.html:167 — `<div class="wrap" id="formWrap" style="display:none">`
+- SG-FRM-001.html:181 — `<div id="submittedBanner" class="submitted-banner" style="display:none">`
+- SG-FRM-001.html:186 — `<span style="margin-top:6px">You can print or save a PDF copy below for your records. The coordinator will contact you about references, police check, and next steps.</span>`
+- SG-FRM-001.html:222 — `<div class="prompt" style="margin-top:14px">Do you attend two or more services per month?</div>`
+- SG-FRM-001.html:231 — `<p class="section-intro" style="margin-top:14px"><em>If not baptized, are you open to discussing baptism with a pastor?</em></p>`
+- SG-FRM-001.html:234 — `<div class="field" style="margin-top:14px"><label for="f_journey">Briefly describe your spiritual journey and faith in Christ</label><textarea id="f_journey" class="fi" style="min-height:140px"></textarea></div>`
+- SG-FRM-001.html:273 — `<div class="prompt" style="margin-top:14px">Which service times are you available?</div>`
+- SG-FRM-001.html:280 — `<div class="field" style="margin-top:14px"><label for="f_skills">List any training, experience, skills, or interests relevant to children/youth ministry</label><textarea id="f_skills" class="fi" style="min-height:120px"></textarea></div>`
+- SG-FRM-001.html:301 — `<div class="field" style="margin-top:18px"><label for="f_ssExplain">If you answered &ldquo;Yes&rdquo; to any question, please explain</label><textarea id="f_ssExplain" class="fi" style="min-height:120px"></textarea></div>`
+- SG-FRM-001.html:328 — `<div class="row-sig" style="margin-top:18px">`
+- SG-FRM-001.html:357 — `<div class="prompt" style="margin-top:14px">Are your parents supportive of your ministry involvement?</div>`
+- SG-FRM-001.html:372 — `<div style="font-weight:600;color:var(--navy);margin:14px 0 8px 0">Reference #1</div>`
+- SG-FRM-001.html:376 — `<div style="font-weight:600;color:var(--navy);margin:14px 0 8px 0">Reference #2</div>`
+- SG-FRM-001.html:398 — `<div class="row-sig" style="margin-top:14px">`
+- SG-FRM-002.html:98 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-FRM-002.html:133 — `<div class="pills" style="margin-bottom:0">`
+- SG-FRM-002.html:164 — `<div class="table-wrap" style="margin-top:16px">`
+- SG-FRM-002.html:174 — `<div class="field" style="margin-top:16px"><label for="f_q5">5. How would you describe the applicant&rsquo;s character (integrity, maturity, spiritual life)?</label><textarea id="f_q5" class="fi" style="min-height:130px"></textarea></div>`
+- SG-FRM-002.html:186 — `<div class="field" style="margin-top:16px"><label for="f_qExplain">If you answered &ldquo;Yes&rdquo; or &ldquo;Unsure&rdquo; to any question, please explain</label><textarea id="f_qExplain" class="fi" style="min-height:130px"></textarea></d…`
+- SG-FRM-002.html:202 — `<div class="who-note" style="margin-bottom:10px">Coordinator use only &mdash; tracks completion of this reference check. Will sync to the applicant&rsquo;s record in a future update.</div>`
+- SG-FRM-003.html:90 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-FRM-003.html:162 — `<div class="row-sig" style="margin-top:14px">`
+- SG-FRM-003.html:181 — `<p class="section-intro" style="margin-top:8px">hereby authorize:</p>`
+- SG-FRM-003.html:195 — `<div class="row-sig" style="margin-top:14px">`
+- SG-FRM-005.html:91 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-FRM-005.html:178 — `<div class="field"><label for="f_pickup">Authorized pickup persons</label><textarea id="f_pickup" class="fi" style="min-height:120px"></textarea></div>`
+- SG-FRM-006.html:104 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-FRM-006.html:112 — `<div class="wrap" id="formWrap" style="display:none">`
+- SG-FRM-006.html:124 — `<div id="submittedBanner" class="submitted-banner" style="display:none">`
+- SG-FRM-006.html:129 — `<span style="margin-top:6px">Keep this record ID for your reference. You can print or save a PDF copy below.</span>`
+- SG-FRM-006.html:172 — `<div class="field"><label for="f_desc">Description</label><textarea id="f_desc" class="fi" style="min-height:180px"></textarea></div>`
+- SG-FRM-006.html:227 — `<thead><tr><th style="width:18%">Date</th><th style="width:30%">Action Taken</th><th style="width:22%">Person Responsible</th><th style="width:30%">Notes / Outcome</th></tr></thead>`
+- SG-FRM-006.html:242 — `<div class="pills" style="margin-bottom:0">`
+- SG-FRM-006.html:251 — `<div class="pills" style="margin-bottom:0">`
+- SG-FRM-006.html:270 — `<div class="field" style="margin-top:10px">`
+- SG-FRM-006.html:272 — `<div class="pills" style="margin-bottom:8px">`
+- SG-FRM-007.html:93 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-FRM-007.html:101 — `<div class="wrap" id="formWrap" style="display:none">`
+- SG-FRM-007.html:112 — `<div id="submittedBanner" class="submitted-banner" style="display:none">`
+- SG-FRM-007.html:117 — `<span style="margin-top:6px">Keep this record ID for your reference. Civil authorities must still be contacted directly &mdash; this submission does not substitute for an external report. See <a class="inline-link" href="SG-POL-004.html">SG…`
+- SG-FRM-007.html:159 — `<p class="section-intro" style="font-weight:600;color:var(--navy)">How did the concern arise?</p>`
+- SG-FRM-007.html:172 — `<div class="field"><label for="f_details">Report Details</label><textarea id="f_details" class="fi" style="min-height:240px"></textarea></div>`
+- SG-FRM-007.html:184 — `<p class="section-intro" style="font-size:13px"><em>* Parent/Guardian notification must not occur if they are the suspected abuser.</em></p>`
+- SG-FRM-007.html:185 — `<div class="field"><label for="f_actionDetails">Details of actions</label><textarea id="f_actionDetails" class="fi" style="min-height:130px"></textarea></div>`
+- SG-FRM-007.html:199 — `<div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7">`
+- SG-FRM-007.html:200 — `<strong style="color:var(--navy)">Key numbers (tap to dial):</strong><br>`
+- SG-FRM-008.html:92 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-FRM-008.html:128 — `<div class="pills" style="margin:0">`
+- SG-FRM-008.html:143 — `<th style="width:24%">Child&rsquo;s Name</th>`
+- SG-FRM-008.html:144 — `<th style="width:10%">Time In</th>`
+- SG-FRM-008.html:145 — `<th style="width:20%">Parent/Guardian Sign-In</th>`
+- SG-FRM-008.html:146 — `<th style="width:10%">Time Out</th>`
+- SG-FRM-008.html:147 — `<th style="width:20%">Parent/Guardian Sign-Out</th>`
+- SG-FRM-008.html:148 — `<th style="width:16%">Leader Initials</th>`
+- SG-FRM-008.html:171 — `<div class="field" style="margin-top:18px"><label for="f_notes">Notes (late pickup, custody exceptions, incidents)</label><textarea id="f_notes" class="fi"></textarea></div>`
+- SG-FRM-009.html:80 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-FRM-010.html:93 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-FRM-010.html:142 — `<p class="section-intro" style="margin-top:16px"><em>For volunteers who regularly transport minors or drive church-owned/rented vehicles, the church may require a policy declarations page or certificate of insurance showing liability covera…`
+- SG-FRM-010.html:181 — `<div class="who-note" style="margin-bottom:10px">Coordinator use only &mdash; tracks verified driver-screening items.</div>`
+- SG-FRM-011.html:86 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-FRM-011.html:131 — `<th style="width:20%">Driver Name</th>`
+- SG-FRM-011.html:132 — `<th style="width:14%">Vehicle</th>`
+- SG-FRM-011.html:133 — `<th style="width:10%">Plate</th>`
+- SG-FRM-011.html:134 — `<th style="width:13%">Cell #</th>`
+- SG-FRM-011.html:135 — `<th class="c" style="width:13%">Approved (<a class="inline-link" href="SG-FRM-010.html" style="color:#fff;border-bottom-color:rgba(255,255,255,0.4)">FRM-010</a>)</th>`
+- SG-FRM-011.html:136 — `<th style="width:18%">Passengers</th>`
+- SG-FRM-011.html:137 — `<th class="c" style="width:12%">Return Confirmed</th>`
+- SG-FRM-011.html:149 — `<div class="field" style="margin-top:18px"><label for="f_notes">Emergency Notes / Special Considerations</label><textarea id="f_notes" class="fi" style="min-height:100px"></textarea></div>`
+- SG-FRM-011.html:151 — `<p class="section-intro" style="margin-top:14px;font-size:13px"><em>Completed forms must be submitted to the ministry office or Safeguard Lead for secure filing.</em></p>`
+- SG-G-001.html:58 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-G-001.html:118 — `<p style="margin-top:14px"><em>Training &amp; Renewal standards are governed by this document (see below).</em></p>`
+- SG-POL-001.html:70 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-POL-002.html:71 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-POL-003.html:59 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-POL-004.html:66 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-POL-004.html:112 — `<p style="margin-top:14px"><strong>No Internal Filtering:</strong> Reports of abuse must not be filtered, delayed, or handled solely by church leadership.</p>`
+- SG-SOP-001.html:141 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-SOP-001.html:293 — `<div class="card" style="margin-top:36px">`
+- SG-SOP-002.html:75 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-SOP-002.html:156 — `<div class="linked" style="margin-top:0;padding-top:0;border-top:none"><strong>Linked:</strong> <a class="inline-link" href="SG-POL-003.html">SG-POL-003</a> (Bathroom &amp; Diapering) &nbsp;&bull;&nbsp; SG-OPS-001 (Admin Guide)</div>`
+- SG-SOP-003.html:78 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-SOP-003.html:144 — `<div class="linked" style="margin-top:0"><strong>Linked:</strong> <a class="inline-link" href="SG-POL-002.html">SG-POL-002</a> (Supervision Standards) &nbsp;&bull;&nbsp; SG-OPS-001 (Admin Guide)</div>`
+- SG-SOP-004.html:60 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-SOP-005.html:63 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-SOP-005.html:126 — `<div class="linked" style="margin-top:0"><strong>Linked:</strong> <a class="inline-link" href="SG-POL-002.html">SG-POL-002</a> (Supervision Standards) &nbsp;&bull;&nbsp; <a class="inline-link" href="SG-FRM-005.html">SG-FRM-005</a> &nbsp;&bu…`
+- SG-SOP-006.html:64 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-SOP-006.html:126 — `<div class="trigger" style="font-style:italic">Significant bleeding, head injury, suspected fracture, unconsciousness, or any injury requiring medical attention.</div>`
+- SG-SOP-006.html:138 — `<div class="linked" style="margin-top:0"><strong>Linked:</strong> <a class="inline-link" href="SG-POL-004.html">SG-POL-004</a> (Reporting &amp; Response) &nbsp;&bull;&nbsp; <a class="inline-link" href="SG-FRM-006.html">SG-FRM-006</a> (Incid…`
+- SG-SOP-007.html:66 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-SOP-007.html:143 — `<div class="linked" style="margin-top:0"><strong>Linked:</strong> <a class="inline-link" href="SG-POL-001.html">SG-POL-001</a> &nbsp;&bull;&nbsp; <a class="inline-link" href="SG-POL-002.html">SG-POL-002</a> &nbsp;&bull;&nbsp; <a class="inli…`
+- SG-T-001.html:147 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-T-001.html:158 — `<span><span style="color:#2E6B7F;font-weight:600">SG-T-001</span></span>`
+- SG-T-001.html:245 — `<p>Reporting a concern almost never happens&mdash;and that&rsquo;s a good thing. The whole point of this system is to create an environment where problems are extremely unlikely in the first place. But if something ever does come up, you ne…`
+- SG-T-001.html:262 — `<div class="protection-card-ref"><a href="SG-POL-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);font-size:inherit">SG-POL-001</a></div>`
+- SG-T-001.html:268 — `<div class="protection-card-ref"><a href="SG-POL-002.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);font-size:inherit">SG-POL-002</a></div>`
+- SG-T-001.html:274 — `<div class="protection-card-ref"><a href="SG-POL-002.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);font-size:inherit">SG-POL-002</a></div>`
+- SG-T-001.html:280 — `<div class="protection-card-ref"><a href="SG-POL-003.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);font-size:inherit">SG-POL-003</a></div>`
+- SG-T-001.html:286 — `<div class="protection-card-ref"><a href="SG-POL-004.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);font-size:inherit">SG-POL-004</a></div>`
+- SG-T-001.html:292 — `<div class="protection-card-ref"><a href="SG-G-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);font-size:inherit">SG-G-001</a></div>`
+- SG-T-001.html:428 — `<div style="text-align: center;">`
+- SG-T-001.html:438 — `<div class="complete-section" id="complete-section" style="display: none;">`
+- SG-T-001.html:445 — `<tr><td>Module Code</td><td><span style="color:#2E6B7F;font-weight:600">SG-T-001</span></td></tr>`
+- SG-T-001.html:448 — `<tr><td>Parent Policy</td><td><a href="SG-G-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-G-001</a> &mdash; Safeguard Governance Policy</td></tr>`
+- SG-T-001.html:449 — `<tr><td>Next Module</td><td><a href="SG-T-002.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-002</a> &mdash; Supervision: Two-Adult Rule, Ratios &amp; High-Risk Settings</td></tr>`
+- SG-T-002.html:167 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-T-002.html:178 — `<span><span style="color:#2E6B7F;font-weight:600">SG-T-002</span></span>`
+- SG-T-002.html:305 — `<p>Every room has a Room Capacity Card (<span style="color:#2E6B7F;font-weight:600" title="Ratio / Room Capacity Card">SG-SOP-003</span>) posted near the door. It shows the maximum number of children your room can hold based on how many lea…`
+- SG-T-002.html:329 — `<p>Bathrooms involve privacy, physical vulnerability, and the potential for isolation. Every bathroom interaction must follow a clear protocol. The Washroom Escort Protocol (<span style="color:#2E6B7F;font-weight:600" title="Washroom Escort…`
+- SG-T-002.html:422 — `<div style="text-align: center;">`
+- SG-T-002.html:432 — `<div class="complete-section" id="complete-section" style="display: none;">`
+- SG-T-002.html:439 — `<tr><td>Module Code</td><td><span style="color:#2E6B7F;font-weight:600">SG-T-002</span></td></tr>`
+- SG-T-002.html:442 — `<tr><td>Parent Policies</td><td><a href="SG-POL-002.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-POL-002</a> &mdash; Supervision Standards &bull; <a href="SG-POL-003.html" style="color:#2E…`
+- SG-T-002.html:443 — `<tr><td>Related SOPs</td><td><span style="color:#2E6B7F;font-weight:600" title="Washroom Escort Protocol">SG-SOP-002</span> (Washroom Escort) &bull; <span style="color:#2E6B7F;font-weight:600" title="Ratio / Room Capacity Card">SG-SOP-003</…`
+- SG-T-002.html:444 — `<tr><td>Previous Module</td><td><a href="SG-T-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-001</a> &mdash; Why We Protect &amp; How It Works</td></tr>`
+- SG-T-002.html:445 — `<tr><td>Next Module</td><td><a href="SG-T-003.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-003</a> &mdash; Recognizing Abuse &amp; Reporting It</td></tr>`
+- SG-T-003.html:142 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-T-003.html:153 — `<span><span style="color:#2E6B7F;font-weight:600">SG-T-003</span></span>`
+- SG-T-003.html:243 — `Complete the Suspected Abuse Report (<span style="color:#2E6B7F;font-weight:600" title="Suspected Abuse Report">SG-FRM-007</span>) the same day. Use the child&rsquo;s own words. Record only facts&mdash;what was said, what you observed, what…`
+- SG-T-003.html:268 — `<p>Use the Incident/Accident Report (<span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span>) whenever a child is injured, a behavioural incident occurs, or a medical situation arises. Write facts on…`
+- SG-T-003.html:272 — `<div class="form-compare-card-code"><span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span></div>`
+- SG-T-003.html:277 — `<div class="form-compare-card-code"><span style="color:#2E6B7F;font-weight:600" title="Suspected Abuse Report">SG-FRM-007</span></div>`
+- SG-T-003.html:331 — `<li><label><input type="radio" name="q4" value="b"> Yes&mdash;every incident involving injury must be documented on <span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span>, regardless of severity.</l…`
+- SG-T-003.html:349 — `<div style="text-align: center;">`
+- SG-T-003.html:359 — `<div class="complete-section" id="complete-section" style="display: none;">`
+- SG-T-003.html:366 — `<tr><td>Module Code</td><td><span style="color:#2E6B7F;font-weight:600">SG-T-003</span></td></tr>`
+- SG-T-003.html:369 — `<tr><td>Parent Policy</td><td><a href="SG-POL-004.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-POL-004</a> &mdash; Reporting &amp; Response</td></tr>`
+- SG-T-003.html:370 — `<tr><td>Related</td><td><span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span> (Incident Report) &bull; <span style="color:#2E6B7F;font-weight:600" title="Suspected Abuse Report">SG-FRM-007</span> (…`
+- SG-T-003.html:371 — `<tr><td>Previous Module</td><td><a href="SG-T-002.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-002</a> &mdash; Supervision: Two-Adult Rule, Ratios &amp; High-Risk Settings</td></tr>`
+- SG-T-003.html:372 — `<tr><td>Next Module</td><td><a href="SG-T-004.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-004</a> &mdash; Operations, Safety &amp; Your Commitment</td></tr>`
+- SG-T-004.html:132 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-T-004.html:143 — `<span><span style="color:#2E6B7F;font-weight:600">SG-T-004</span></span>`
+- SG-T-004.html:166 — `<p><strong>Receiving children:</strong> Greet the family. Parent signs in on the attendance sheet (<span style="color:#2E6B7F;font-weight:600" title="Sign-In / Sign-Out & Attendance">SG-FRM-008</span>). Confirm the child&rsquo;s name and ch…`
+- SG-T-004.html:232 — `<p><strong>Approved drivers</strong> must be on file through the Driver Application (<span style="color:#2E6B7F;font-weight:600" title="Driver Application & Authorization">SG-FRM-010</span>) before transporting anyone for ministry purposes.…`
+- SG-T-004.html:248 — `<p><strong>Allergies and medication:</strong> Check the registration form (<span style="color:#2E6B7F;font-weight:600" title="Child Registration & Medical Release">SG-FRM-005</span>) before every shift for allergies and medical notes. Never…`
+- SG-T-004.html:260 — `<p>You have now completed the Safeguard Framework volunteer training. Before you begin serving, sign the <strong>Worker&rsquo;s Covenant</strong> (<a href="covenant.html" style="color:#2E6B7F;font-weight:600">SG-FRM-004</a>)&mdash;a persona…`
+- SG-T-004.html:332 — `<div style="text-align: center;">`
+- SG-T-004.html:342 — `<div class="complete-section" id="complete-section" style="display: none;">`
+- SG-T-004.html:344 — `<div class="complete-confirmation" id="complete-confirm">&#10003; All four modules completed. Your training record has been updated. <a href="covenant.html" style="color:#2E6B7F;font-weight:600">Sign the Worker&rsquo;s Covenant (SG-FRM-004)…`
+- SG-T-004.html:349 — `<tr><td>Module Code</td><td><span style="color:#2E6B7F;font-weight:600">SG-T-004</span></td></tr>`
+- SG-T-004.html:352 — `<tr><td>Related</td><td><span style="color:#2E6B7F;font-weight:600" title="Receiving & Releasing Children">SG-SOP-005</span> (Receiving &amp; Releasing) &bull; <span style="color:#2E6B7F;font-weight:600" title="Emergency & Injury Protocols"…`
+- SG-T-004.html:353 — `<tr><td>Previous Module</td><td><a href="SG-T-003.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-003</a> &mdash; Recognizing Abuse &amp; Reporting It</td></tr>`
+- SG-T-004.html:354 — `<tr><td>Next Step</td><td>Sign Worker&rsquo;s Covenant (<span style="color:#2E6B7F;font-weight:600" title="Worker's Covenant & Acknowledgement">SG-FRM-004</span>) &rarr; Final Approval</td></tr>`
+- SG-T-101.html:144 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-T-101.html:155 — `<span><span style="color:#2E6B7F;font-weight:600">SG-T-101</span></span>`
+- SG-T-101.html:215 — `<p>The Safeguard Framework (<a href="SG-G-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-G-001</a>) defines a clear chain of authority and accountability. Understanding where you sit in …`
+- SG-T-101.html:247 — `<td>Repeated variances from the same volunteer, an incomplete screening file, any incident requiring documentation (<span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span> or <span style="color:#2E6B…`
+- SG-T-101.html:331 — `<p>The next two modules will give you the specific operational tools: how to screen and manage volunteers (<a href="SG-T-102.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-102</a>), and ho…`
+- SG-T-101.html:398 — `<div style="text-align: center;">`
+- SG-T-101.html:408 — `<div class="complete-section" id="complete-section" style="display: none;">`
+- SG-T-101.html:415 — `<tr><td>Module Code</td><td><span style="color:#2E6B7F;font-weight:600">SG-T-101</span></td></tr>`
+- SG-T-101.html:418 — `<tr><td>Parent Policy</td><td><a href="SG-G-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-G-001</a> &mdash; Safeguard Governance Policy</td></tr>`
+- SG-T-101.html:419 — `<tr><td>Prerequisite</td><td>Volunteer Track (<a href="SG-T-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-001</a> through <a href="SG-T-004.html" style="color:#2E6B7F;text-decoration:…`
+- SG-T-101.html:420 — `<tr><td>Next Module</td><td><a href="SG-T-102.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-102</a> &mdash; Screening &amp; Managing Volunteers</td></tr>`
+- SG-T-102.html:140 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-T-102.html:151 — `<span><span style="color:#2E6B7F;font-weight:600">SG-T-102</span></span>`
+- SG-T-102.html:184 — `<p>The Screening &amp; Onboarding Checklist (<span style="color:#2E6B7F;font-weight:600" title="Screening & Onboarding Checklist">SG-SOP-001</span>) defines seven steps. Every step must be completed before a person serves. You are responsib…`
+- SG-T-102.html:190 — `<div class="pipeline-step-ref"><span style="color:#2E6B7F;font-weight:600" title="Ministry Application">SG-FRM-001</span></div>`
+- SG-T-102.html:196 — `<div class="pipeline-step-desc">A 10&ndash;15 minute in-person conversation using the Interview Guide built into <span style="color:#2E6B7F;font-weight:600" title="Screening & Onboarding Checklist">SG-SOP-001</span>. This is your most impor…`
+- SG-T-102.html:197 — `<div class="pipeline-step-ref"><span style="color:#2E6B7F;font-weight:600" title="Screening & Onboarding Checklist">SG-SOP-001</span> (Interview Guide)</div>`
+- SG-T-102.html:204 — `<div class="pipeline-step-ref"><span style="color:#2E6B7F;font-weight:600" title="Reference Check">SG-FRM-002</span></div>`
+- SG-T-102.html:211 — `<div class="pipeline-step-ref"><span style="color:#2E6B7F;font-weight:600" title="Police Check Letter & Consent">SG-FRM-003</span></div>`
+- SG-T-102.html:218 — `<div class="pipeline-step-ref"><span style="color:#2E6B7F;font-weight:600" title="Worker's Covenant & Acknowledgement">SG-FRM-004</span></div>`
+- SG-T-102.html:224 — `<div class="pipeline-step-desc">The applicant completes the full Volunteer Track (<a href="SG-T-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-001</a> through <a href="SG-T-004.html" s…`
+- SG-T-102.html:225 — `<div class="pipeline-step-ref"><a href="SG-T-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);font-size:inherit">SG-T-001</a> &ndash; <a href="SG-T-004.html" style="color:#2E6B7F;text-decorati…`
+- SG-T-102.html:232 — `<div class="pipeline-step-ref"><span style="color:#2E6B7F;font-weight:600" title="Screening & Onboarding Checklist">SG-SOP-001</span> (Approval section)</div>`
+- SG-T-102.html:248 — `<p>The Interview Guide in <span style="color:#2E6B7F;font-weight:600" title="Screening & Onboarding Checklist">SG-SOP-001</span> gives you the questions. This section teaches you how to use them.</p>`
+- SG-T-102.html:266 — `<p><span style="color:#2E6B7F;font-weight:600" title="Screening & Onboarding Checklist">SG-SOP-001</span> asks whether there are past experiences or personal challenges that could affect their ability to serve. This question exists for a re…`
+- SG-T-102.html:330 — `<p><strong>Policy review and acknowledgement</strong> &mdash; <span style="color:#2E6B7F;font-weight:600" title="Worker's Covenant & Acknowledgement">SG-FRM-004</span> re-signed annually.</p>`
+- SG-T-102.html:402 — `<div style="text-align: center;">`
+- SG-T-102.html:412 — `<div class="complete-section" id="complete-section" style="display: none;">`
+- SG-T-102.html:419 — `<tr><td>Module Code</td><td><span style="color:#2E6B7F;font-weight:600">SG-T-102</span></td></tr>`
+- SG-T-102.html:422 — `<tr><td>Parent Policy</td><td><a href="SG-POL-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-POL-001</a> &mdash; Volunteer Screening &amp; Approval</td></tr>`
+- SG-T-102.html:423 — `<tr><td>Related Tools</td><td><span style="color:#2E6B7F;font-weight:600" title="Screening & Onboarding Checklist">SG-SOP-001</span> &mdash; Screening &amp; Onboarding Checklist (includes Interview Guide)</td></tr>`
+- SG-T-102.html:424 — `<tr><td>Prerequisite</td><td><a href="SG-T-101.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-101</a> &mdash; Leading &amp; Sustaining the Safeguard System</td></tr>`
+- SG-T-102.html:425 — `<tr><td>Next Module</td><td><a href="SG-T-103.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-103</a> &mdash; Incidents, Compliance &amp; Oversight</td></tr>`
+- SG-T-103.html:138 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-T-103.html:149 — `<span><span style="color:#2E6B7F;font-weight:600">SG-T-103</span></span>`
+- SG-T-103.html:175 — `<li><strong>Confirm the child is safe</strong> and has received appropriate first aid (<span style="color:#2E6B7F;font-weight:600" title="Emergency & Injury Protocols">SG-SOP-006</span>).</li>`
+- SG-T-103.html:176 — `<li><strong>Ensure the volunteer completes <span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span></strong> (Incident/Accident Report) the same day. Review it for completeness&mdash;facts only, no op…`
+- SG-T-103.html:181 — `<p><strong>Follow-up matters.</strong> Use the follow-up section of <span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span> to track what happens next: parent communication, leadership review, any ch…`
+- SG-T-103.html:212 — `<li><strong>Ensure documentation.</strong> The volunteer completes <span style="color:#2E6B7F;font-weight:600" title="Suspected Abuse Report">SG-FRM-007</span> (Suspected Abuse Report) the same day. Review it for completeness. The form must…`
+- SG-T-103.html:308 — `<p>Your quick-reference guide (<a href="SG-T-REF-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-REF-001</a>) is your daily companion&mdash;the &ldquo;what form do I use when?&rdquo; lo…`
+- SG-T-103.html:376 — `<div style="text-align: center;">`
+- SG-T-103.html:386 — `<div class="complete-section" id="complete-section" style="display: none;">`
+- SG-T-103.html:393 — `<tr><td>Module Code</td><td><span style="color:#2E6B7F;font-weight:600">SG-T-103</span></td></tr>`
+- SG-T-103.html:396 — `<tr><td>Parent Policy</td><td><a href="SG-POL-004.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-POL-004</a> &mdash; Reporting &amp; Response</td></tr>`
+- SG-T-103.html:397 — `<tr><td>Related Tools</td><td><span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span> &mdash; Incident / Accident Report &bull; <span style="color:#2E6B7F;font-weight:600" title="Suspected Abuse Repo…`
+- SG-T-103.html:398 — `<tr><td>Prerequisite</td><td><a href="SG-T-102.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-102</a> &mdash; Screening &amp; Managing Volunteers</td></tr>`
+- SG-T-103.html:399 — `<tr><td>Reference Card</td><td><a href="SG-T-REF-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-REF-001</a> &mdash; Leader Quick-Reference Guide</td></tr>`
+- SG-T-REF-001.html:123 — `<div id="userChip" style="margin-left:8px"></div>`
+- SG-T-REF-001.html:134 — `<span><span style="color:#2E6B7F;font-weight:600">SG-T-REF-001</span></span>`
+- SG-T-REF-001.html:163 — `<td><span style="color:#2E6B7F;font-weight:600" title="Suspected Abuse Report">SG-FRM-007</span> (Suspected Abuse Report)<br><span style="color:#2E6B7F;font-weight:600" title="Reporting Flowchart">SG-SOP-004</span> (Reporting Flowchart)</td…`
+- SG-T-REF-001.html:168 — `<td><span style="color:#2E6B7F;font-weight:600" title="Emergency & Injury Protocols">SG-SOP-006</span> (Emergency Protocols)<br><span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span> (Incident Repor…`
+- SG-T-REF-001.html:173 — `<td><span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span> (Incident / Accident Report)<br><span style="color:#2E6B7F;font-weight:600" title="Emergency & Injury Protocols">SG-SOP-006</span> (Emergen…`
+- SG-T-REF-001.html:183 — `<td><span style="color:#2E6B7F;font-weight:600" title="Ratio / Room Capacity Card">SG-SOP-003</span> (Room Capacity Card)</td>`
+- SG-T-REF-001.html:188 — `<td><span style="color:#2E6B7F;font-weight:600" title="Screening & Onboarding Checklist">SG-SOP-001</span> (Screening Checklist)<br><span style="color:#2E6B7F;font-weight:600" title="Ministry Application">SG-FRM-001</span> (Ministry Applica…`
+- SG-T-REF-001.html:189 — `<td>Application &rarr; Interview (<span style="color:#2E6B7F;font-weight:600" title="Screening & Onboarding Checklist">SG-SOP-001</span> guide) &rarr; References (FRM-002) &rarr; Police check (FRM-003) &rarr; Covenant (FRM-004) &rarr; Train…`
+- SG-T-REF-001.html:193 — `<td><span style="color:#2E6B7F;font-weight:600" title="Washroom Escort Protocol">SG-SOP-002</span> (Washroom Escort Protocol)</td>`
+- SG-T-REF-001.html:198 — `<td><span style="color:#2E6B7F;font-weight:600" title="Receiving & Releasing Children">SG-SOP-005</span> (Receiving / Releasing)<br><span style="color:#2E6B7F;font-weight:600" title="Sign-In / Sign-Out & Attendance">SG-FRM-008</span> (Sign-…`
+- SG-T-REF-001.html:203 — `<td><span style="color:#2E6B7F;font-weight:600" title="Transportation & Off-Site Safety">SG-SOP-007</span> (Transportation Procedures)<br><span style="color:#2E6B7F;font-weight:600" title="Event / Activity Permission & Waiver">SG-FRM-009</s…`
+- SG-T-REF-001.html:208 — `<td><span style="color:#2E6B7F;font-weight:600" title="Emergency & Injury Protocols">SG-SOP-006</span> (Emergency Protocols)<br>Attendance clipboard</td>`
+- SG-T-REF-001.html:213 — `<td><span style="color:#2E6B7F;font-weight:600" title="Worker's Covenant & Acknowledgement">SG-FRM-004</span> (Covenant &amp; Acknowledgement)<br><span style="color:#2E6B7F;font-weight:600" title="Training Completion Record">SG-FRM-012</spa…`
+- SG-T-REF-001.html:238 — `<td><span style="color:#2E6B7F;font-weight:600" title="Ministry Application">SG-FRM-001</span></td>`
+- SG-T-REF-001.html:244 — `<td><span style="color:#2E6B7F;font-weight:600" title="Reference Check">SG-FRM-002</span></td>`
+- SG-T-REF-001.html:250 — `<td><span style="color:#2E6B7F;font-weight:600" title="Police Check Letter & Consent">SG-FRM-003</span></td>`
+- SG-T-REF-001.html:256 — `<td><span style="color:#2E6B7F;font-weight:600" title="Worker's Covenant & Acknowledgement">SG-FRM-004</span></td>`
+- SG-T-REF-001.html:262 — `<td><span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span></td>`
+- SG-T-REF-001.html:268 — `<td><span style="color:#2E6B7F;font-weight:600" title="Suspected Abuse Report">SG-FRM-007</span></td>`
+- SG-T-REF-001.html:274 — `<td><span style="color:#2E6B7F;font-weight:600" title="Sign-In / Sign-Out & Attendance">SG-FRM-008</span></td>`
+- SG-T-REF-001.html:280 — `<td><span style="color:#2E6B7F;font-weight:600" title="Training Completion Record">SG-FRM-012</span></td>`
+- SG-T-REF-001.html:303 — `<p><strong>Abuse reports (<span style="color:#2E6B7F;font-weight:600" title="Suspected Abuse Report">SG-FRM-007</span>):</strong> Safeguard Team, Elders, and civil authorities only. Never share with other volunteers, parents of other childr…`
+- SG-T-REF-001.html:304 — `<p><strong>Incident reports (<span style="color:#2E6B7F;font-weight:600" title="Incident / Accident Report">SG-FRM-006</span>):</strong> Share with the parents of the child involved. Do not share details with other families.</p>`
+- SG-T-REF-001.html:319 — `<tr><td>Document Code</td><td><span style="color:#2E6B7F;font-weight:600">SG-T-REF-001</span></td></tr>`
+- SG-T-REF-001.html:322 — `<tr><td>Companion To</td><td><a href="SG-T-101.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-101</a>, <a href="SG-T-102.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px s…`
+- admin-abuse-report.html:73 — `<div id="userChip" style="margin-left:8px"></div>`
+- admin-abuse-report.html:80 — `<div class="wrap" id="accessDenied" style="display:none">`
+- admin-abuse-report.html:87 — `<div class="wrap" id="listView" style="display:none">`
+- admin-abuse-report.html:89 — `<div class="eyebrow"><a href="SG-FRM-007.html" style="color:inherit;text-decoration:none">SG-FRM-007</a></div>`
+- admin-abuse-report.html:96 — `<div class="wrap" id="detailView" style="display:none">`
+- admin-abuse-report.html:98 — `<div class="eyebrow" id="formCodeLabel"><a href="SG-FRM-007.html" style="color:inherit;text-decoration:none">SG-FRM-007</a></div>`
+- admin-abuse-report.html:103 — `<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px">`
+- admin-abuse-report.html:121 — `<label for="closureReason">Closure reason <span style="font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0">required to close</span></label>`
+- admin-abuse-report.html:133 — `<footer style="text-align:center;padding:24px;font-size:12px;color:var(--muted)">Safeguard Framework · Bethany Chapel</footer>`
+- admin-abuse-report.html:225 — `+ '<td style="text-align:right"><a class="code" href="admin-abuse-report.html?id=' + encodeURIComponent(report.id) + '" onclick="event.stopPropagation()">Open</a></td>'`
+- admin-room-kit.html:93 — `<div id="userChip" style="margin-left:8px"></div>`
+- admin-room-kit.html:101 — `<div class="wrap" id="accessDenied" style="display:none">`
+- admin-room-kit.html:105 — `<a class="nav-link" href="dashboard.html" style="color:var(--teal);background:var(--white);border:1.5px solid var(--border);padding:10px 18px">&larr; Back to your dashboard</a>`
+- admin-room-kit.html:108 — `<div class="wrap" id="view" style="display:none">`
+- admin-screening.html:94 — `<div id="userChip" style="margin-left:8px"></div>`
+- admin-screening.html:102 — `<div class="wrap" id="accessDenied" style="display:none">`
+- admin-screening.html:106 — `<a class="nav-link" href="dashboard.html" style="color:var(--teal);background:var(--white);border:1.5px solid var(--border);padding:10px 18px">&larr; Back to your dashboard</a>`
+- admin-screening.html:109 — `<div class="wrap" id="view" style="display:none">`
+- admin-submission.html:112 — `<div id="userChip" style="margin-left:8px"></div>`
+- admin-submission.html:120 — `<div class="wrap" id="missingState" style="display:none">`
+- admin-submission.html:123 — `<p style="color:var(--muted);margin-bottom:20px">The submission you're looking for doesn't exist (or you don't have access).</p>`
+- admin-submission.html:127 — `<div class="wrap" id="view" style="display:none">`
+- admin-submission.html:157 — `<label for="notes">Internal notes <span style="font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0">— visible to coordinators only</span></label>`
+- admin-submission.html:251 — `dataBlock.innerHTML = '<div style="color:var(--muted);font-size:13px">No form data captured.</div>';`
+- admin-submissions.html:122 — `<div id="userChip" style="margin-left:8px"></div>`
+- admin-submissions.html:132 — `<div class="wrap" id="accessDenied" style="display:none">`
+- admin-submissions.html:135 — `<p class="lede">This page is for Safeguard Coordinators. <a href="dashboard.html" style="color:var(--teal)">Back to your dashboard.</a></p>`
+- admin-submissions.html:138 — `<div class="wrap" id="view" style="display:none">`
+- admin-submissions.html:152 — `<span class="section-head" style="margin:0 6px 0 0;padding-top:3px">Filter by form</span>`
+- admin-submissions.html:240 — `filtersEl.innerHTML = '<span class="section-head" style="margin:0 6px 0 0;padding-top:3px">Filter by form</span>';`
+- admin-submissions.html:295 — `const form = s.formCode + ' <span style="color:var(--muted);font-weight:500">&middot; ' + escapeHtml(s.formTitle || "") + '</span>';`
+- admin-submissions.html:306 — `+ '<td style="text-align:right"><a class="open-link" href="admin-submission.html?id=' + s.id + '" onclick="event.stopPropagation()">Open →</a></td>'`
+- admin-tasks.html:80 — `<div id="userChip" style="margin-left:8px"></div>`
+- admin-tasks.html:88 — `<div class="wrap" id="accessDenied" style="display:none">`
+- admin-tasks.html:92 — `<a class="nav-link" href="dashboard.html" style="color:var(--teal);background:var(--white);border:1.5px solid var(--border);padding:10px 18px">&larr; Back to your dashboard</a>`
+- admin-tasks.html:95 — `<div class="wrap" id="view" style="display:none">`
+- admin-tasks.html:237 — `taskList.innerHTML = '<div style="color:var(--muted);font-size:13px">No tasks at this cadence.</div>';`
+- admin-user.html:124 — `<div id="userChip" style="margin-left:8px"></div>`
+- admin-user.html:134 — `<div class="wrap" id="missingState" style="display:none">`
+- admin-user.html:137 — `<p class="lede" style="color:var(--muted);font-size:14px;margin-bottom:20px">`
+- admin-user.html:143 — `<div class="wrap" id="view" style="display:none">`
+- admin-user.html:152 — `<div id="selfNote" class="self-note" style="display:none">`
+- admin-user.html:157 — `<div id="activationBanner" style="display:none;background:#EEFBF3;border:1.5px solid rgba(39,174,96,0.35);border-radius:14px;padding:22px 26px;margin-bottom:18px">`
+- admin-user.html:158 — `<div style="display:flex;gap:16px;align-items:flex-start">`
+- admin-user.html:159 — `<div style="width:36px;height:36px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0">`
+- admin-user.html:162 — `<div style="flex:1;min-width:0">`
+- admin-user.html:163 — `<div style="font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;margin-bottom:4px">Ready for activation</div>`
+- admin-user.html:164 — `<div style="font-size:14px;color:var(--body);margin-bottom:14px">This volunteer has completed all five onboarding steps. Activate them to change their status from <em>in-process</em> to <em>active</em>.</div>`
+- admin-user.html:165 — `<div style="display:flex;gap:10px;flex-wrap:wrap">`
+- admin-user.html:166 — `<button type="button" class="btn btn-primary" id="activateBtn" style="background:var(--success)">Activate this volunteer</button>`
+- admin-user.html:199 — `<div class="field" style="margin-top:14px">`
+- admin-user.html:206 — `<div style="font-size:12px;color:var(--muted);margin-top:8px">Rules block Safeguard Lead access unless 2FA is marked verified first.</div>`
+- admin-user.html:207 — `<button type="button" class="btn btn-secondary" id="saveSafeguardAccessBtn" style="font-size:12px;padding:8px 14px;margin-top:10px">Save Safeguard access</button>`
+- admin-user.html:209 — `<div class="field" style="margin-top:16px">`
+- admin-user.html:214 — `<button type="button" class="btn btn-secondary" id="grantTempAccessBtn" style="font-size:12px;padding:8px 14px;margin-top:10px">Grant 24-hour access</button>`
+- admin-user.html:264 — `<div class="field" style="margin-top:14px">`
+- admin-user.html:273 — `<div class="field" style="margin-top:14px">`
+- admin-user.html:289 — `<div class="field" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">`
+- admin-user.html:291 — `<div style="font-size:13px;font-weight:600;color:var(--navy)">Worker's Covenant</div>`
+- admin-user.html:292 — `<div style="font-size:12px;color:var(--muted)" id="covState">—</div>`
+- admin-user.html:294 — `<span class="badge" id="covBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">—</span>`
+- admin-user.html:298 — `<div class="field" style="padding:12px 0;border-bottom:1px solid var(--border)">`
+- admin-user.html:299 — `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px">`
+- admin-user.html:301 — `<div style="font-size:13px;font-weight:600;color:var(--navy)">Police Information Check</div>`
+- admin-user.html:302 — `<div style="font-size:12px;color:var(--muted)" id="pcState">—</div>`
+- admin-user.html:304 — `<span class="badge" id="pcBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">—</span>`
+- admin-user.html:306 — `<div class="row" style="margin-bottom:8px">`
+- admin-user.html:307 — `<div><label for="pcCleared">Cleared on</label><input id="pcCleared" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>`
+- admin-user.html:308 — `<div><label for="pcExpires">Expires on</label><input id="pcExpires" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>`
+- admin-user.html:310 — `<div style="display:flex;gap:8px;flex-wrap:wrap">`
+- admin-user.html:311 — `<button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="pcSaveBtn">Save clearance</button>`
+- admin-user.html:312 — `<button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="pcUndoBtn">Undo clearance</button>`
+- admin-user.html:317 — `<div class="field" style="padding:12px 0;border-bottom:1px solid var(--border)">`
+- admin-user.html:318 — `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px">`
+- admin-user.html:319 — `<div style="font-size:13px;font-weight:600;color:var(--navy)">References</div>`
+- admin-user.html:320 — `<span class="badge" id="refsBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">—</span>`
+- admin-user.html:326 — `<div class="field" style="padding:12px 0">`
+- admin-user.html:327 — `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px">`
+- admin-user.html:329 — `<div style="font-size:13px;font-weight:600;color:var(--navy)">Safeguard training</div>`
+- admin-user.html:330 — `<div style="font-size:12px;color:var(--muted)" id="trainingState">—</div>`
+- admin-user.html:332 — `<span class="badge" id="trainingBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">—</span>`
+- admin-user.html:341 — `<p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">`
+- admin-user.html:343 — `<a class="inline-link" href="SG-SOP-001.html" style="color:var(--teal)"><strong>SG-SOP-001</strong> &mdash; Screening &amp; Onboarding Checklist</a>`
+- admin-user.html:348 — `<div class="field" style="padding:12px 0;border-bottom:1px solid var(--border)">`
+- admin-user.html:349 — `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px">`
+- admin-user.html:351 — `<div style="font-size:13px;font-weight:600;color:var(--navy)">Interview</div>`
+- admin-user.html:352 — `<div style="font-size:12px;color:var(--muted)" id="interviewState">&mdash;</div>`
+- admin-user.html:354 — `<span class="badge" id="interviewBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">&mdash;</span>`
+- admin-user.html:356 — `<div class="row" style="margin-bottom:8px">`
+- admin-user.html:357 — `<div><label for="iInterviewer">Interviewer</label><input id="iInterviewer" type="text" class="fi" style="font-size:13px;padding:9px 11px"></div>`
+- admin-user.html:358 — `<div><label for="iDate">Date</label><input id="iDate" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>`
+- admin-user.html:360 — `<div><label for="iNotes">Notes</label><textarea id="iNotes" class="fi" style="font-size:13px;padding:9px 11px;min-height:60px"></textarea></div>`
+- admin-user.html:361 — `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">`
+- admin-user.html:362 — `<button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="iSaveBtn">Record interview</button>`
+- admin-user.html:363 — `<button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="iClearBtn">Undo</button>`
+- admin-user.html:368 — `<div class="field" style="padding:12px 0;border-bottom:1px solid var(--border)">`
+- admin-user.html:369 — `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px">`
+- admin-user.html:371 — `<div style="font-size:13px;font-weight:600;color:var(--navy)">Approval decision</div>`
+- admin-user.html:372 — `<div style="font-size:12px;color:var(--muted)" id="approvalState">&mdash;</div>`
+- admin-user.html:374 — `<span class="badge" id="approvalBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">&mdash;</span>`
+- admin-user.html:376 — `<div class="row" style="margin-bottom:8px">`
+- admin-user.html:379 — `<select id="aDecision" class="fi" style="font-size:13px;padding:9px 11px">`
+- admin-user.html:384 — `<div><label for="aApprovedBy">Approved by</label><input id="aApprovedBy" type="text" class="fi" style="font-size:13px;padding:9px 11px"></div>`
+- admin-user.html:386 — `<div class="row" style="margin-bottom:8px">`
+- admin-user.html:387 — `<div><label for="aDate">Date</label><input id="aDate" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>`
+- admin-user.html:389 — `<div><label for="aNotes">Notes</label><textarea id="aNotes" class="fi" style="font-size:13px;padding:9px 11px;min-height:60px"></textarea></div>`
+- admin-user.html:390 — `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">`
+- admin-user.html:391 — `<button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="aSaveBtn">Record decision</button>`
+- admin-user.html:392 — `<button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="aClearBtn">Undo</button>`
+- admin-user.html:397 — `<div class="field" style="padding:12px 0">`
+- admin-user.html:398 — `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px">`
+- admin-user.html:400 — `<div style="font-size:13px;font-weight:600;color:var(--navy)">Ministry assignment</div>`
+- admin-user.html:401 — `<div style="font-size:12px;color:var(--muted)" id="ministryState">&mdash;</div>`
+- admin-user.html:403 — `<span class="badge" id="ministryBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase">&mdash;</span>`
+- admin-user.html:405 — `<div class="row" style="margin-bottom:8px">`
+- admin-user.html:406 — `<div><label for="mMinistry">Ministry</label><input id="mMinistry" type="text" class="fi" style="font-size:13px;padding:9px 11px" placeholder="e.g., Elementary &middot; Sunday 9am"></div>`
+- admin-user.html:407 — `<div><label for="mDate">Date</label><input id="mDate" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>`
+- admin-user.html:409 — `<div><label for="mNotes">Notes</label><textarea id="mNotes" class="fi" style="font-size:13px;padding:9px 11px;min-height:60px"></textarea></div>`
+- admin-user.html:410 — `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">`
+- admin-user.html:411 — `<button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="mSaveBtn">Assign ministry</button>`
+- admin-user.html:412 — `<button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="mClearBtn">Undo</button>`
+- admin-user.html:692 — `refsListEl.innerHTML = '<div style="font-size:12px;color:var(--muted)">No references entered yet.</div>';`
+- admin-user.html:699 — `return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;background:' + (received ? 'var(--success-bg)' : 'var(--sand)') + ';border-radius:6px;margin-bottom:6px">'`
+- admin-user.html:701 — `+   '<div style="font-size:13px;font-weight:600;color:var(--navy)">' + name + '</div>'`
+- admin-user.html:702 — `+   '<div style="font-size:11px;color:var(--muted)">' + email + (rel ? ' · ' + rel : '') + '</div>'`
+- admin-user.html:703 — `+   (received ? '<div style="font-size:11px;color:var(--success);margin-top:2px">Received ' + formatDate(received) + '</div>' : '')`
+- admin-user.html:706 — `? '<button type="button" class="btn btn-secondary" style="font-size:11px;padding:5px 10px" data-refundo="' + i + '">Undo</button>'`
+- admin-user.html:707 — `: '<button type="button" class="btn btn-secondary" style="font-size:11px;padding:5px 10px" data-refrcvd="' + i + '">Mark received</button>')`
+- admin.html:130 — `<div id="userChip" style="margin-left:8px"></div>`
+- admin.html:140 — `<div class="wrap" id="accessDenied" style="display:none">`
+- admin.html:147 — `<div class="wrap" id="adminView" style="display:none">`
+- admin.html:168 — `<div id="activationSection" style="display:none">`
+- admin.html:169 — `<div class="section-head" style="color:var(--success)">Ready for activation</div>`
+- admin.html:170 — `<div id="activationList" style="margin-bottom:28px"></div>`
+- admin.html:306 — `+   '<div class="name">' + escapeHtml(fullName) + (isMe ? ' <small style="color:var(--muted);font-weight:500">(you)</small>' : '') + '</div>'`
+- admin.html:312 — `+ '<td><select class="status-picker" data-uid="' + u.id + '">' + statusOptions + '</select> <span class="badge ' + statusBadgeCls + '" style="margin-left:6px">' + statusLabel + '</span></td>'`
+- admin.html:313 — `+ '<td style="color:var(--muted);font-size:13px">' + joined + '</td>'`
+- admin.html:314 — `+ '<td style="text-align:right"><a href="admin-user.html?uid=' + u.id + '" style="color:var(--teal);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);font-size:13px">Open →</a></td>'`
+- admin.html:388 — `+ '<div style="background:var(--success-bg);border:1.5px solid rgba(39,174,96,0.3);border-radius:10px;padding:16px 20px;margin-bottom:8px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">'`
+- admin.html:389 — `+   '<div style="flex:1;min-width:200px">'`
+- admin.html:390 — `+     '<div style="font-weight:600;color:var(--navy)">' + escapeHtml(fullName) + ' <span style="font-weight:500;color:var(--success);font-size:12px">\u2014 all 5 steps complete</span></div>'`
+- admin.html:391 — `+     '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + escapeHtml(email) + '</div>'`
+- admin.html:393 — `+   '<div style="display:flex;gap:8px;flex-wrap:wrap">'`
+- admin.html:394 — `+     '<a href="admin-user.html?uid=' + u.id + '" class="btn btn-secondary" style="font-size:13px;padding:9px 16px">Review →</a>'`
+- admin.html:395 — `+     '<button type="button" class="btn btn-primary" data-activate="' + u.id + '" style="font-size:13px;padding:9px 16px;background:var(--success)">Activate</button>'`
+- covenant.html:129 — `<div id="userChip" style="margin-left:8px"></div>`
+- covenant.html:139 — `<div class="wrap" id="view" style="display:none">`
+- covenant.html:146 — `<div id="signedBanner" class="signed-banner" style="display:none">`
+- covenant.html:163 — `<p style="font-style:italic;color:var(--muted);border-left:3px solid var(--gold);padding-left:12px;margin-bottom:22px">`
+- covenant.html:194 — `<h2 id="signCardTitle" style="font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;margin-bottom:14px">Sign the covenant</h2>`
+- covenant.html:213 — `<div class="history-card" id="historyCard" style="display:none">`
+- dashboard.html:123 — `<a class="nav-link" id="adminLink" href="admin.html" style="display:none">Admin</a>`
+- dashboard.html:124 — `<div id="userChip" style="margin-left:8px"></div>`
+- dashboard.html:136 — `<div class="wrap" id="dashWrap" style="display:none">`
+- dashboard.html:141 — `<div class="progress"><div id="progressBar" style="width:0%"></div></div>`
+- dashboard.html:154 — `<div class="section-head" id="completedHead" style="display:none">Completed</div>`
+- dashboard.html:178 — `<footer>Safeguard Framework · Bethany Chapel · <a href="privacy.html" style="color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">Privacy</a></footer>`
+- dashboard.html:333 — `sub   = '<a href="covenant.html" style="color:var(--teal);font-weight:600">SG-FRM-004</a> · A written commitment to the Safeguard standards.';`
+- dashboard.html:353 — `: '<a href="police-check.html" style="color:var(--teal);font-weight:600">SG-FRM-003</a> · Bethany Chapel covers the cost. Valid 3 years.',`
+- dashboard.html:366 — `: '<a href="references.html" style="color:var(--teal);font-weight:600">SG-FRM-002</a> · Two written references required.',`
+- forgot-password.html:122 — `<div class="card sent" id="sentCard" style="display:none">`
+- forgot-password.html:130 — `<p class="lede" style="margin-bottom:6px">We sent a password reset link to</p>`
+- forgot-password.html:132 — `<p class="lede" style="margin-top:6px">Click the link in that email to set a new password. It may take a minute to arrive — check your spam folder if you don't see it.</p>`
+- index.html:164 — `<div style="text-align:center">`
+- invite.html:109 — `<div id="userChip" style="margin-left:8px"></div>`
+- invite.html:120 — `<div class="wrap" id="formWrap" style="display:none">`
+- invite.html:149 — `<div class="wrap" id="doneWrap" style="display:none">`
+- invite.html:155 — `<h1 style="font-size:28px">Email ready to send</h1>`
+- invite.html:158 — `<p style="color:var(--muted);font-size:14px">Your email client should have opened with a pre-written message. Review and hit Send in your email client.</p>`
+- invite.html:162 — `<div class="actions" style="justify-content:center">`
+- police-check.html:117 — `<div id="userChip" style="margin-left:8px"></div>`
+- police-check.html:127 — `<div class="wrap" id="view" style="display:none">`
+- police-check.html:162 — `<div style="font-size:14px;color:var(--muted);margin-bottom:8px" id="submitHelp">Once you've handed in the consent form to the police, enter the date you submitted it below. The Coordinator will mark it cleared when the results come back.</…`
+- profile-setup.html:122 — `<div id="userChip" style="margin-left:8px"></div>`
+- profile-setup.html:134 — `<div class="wrap" id="formWrap" style="display:none">`
+- profile-setup.html:232 — `<div class="field" style="margin-top:20px">`
+- profile-setup.html:242 — `<div class="field" style="margin-top:20px">`
+- profile-setup.html:267 — `<footer>Safeguard Framework · Bethany Chapel · <a href="privacy.html" style="color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">Privacy</a></footer>`
+- references.html:118 — `<div id="userChip" style="margin-left:8px"></div>`
+- references.html:128 — `<div class="wrap" id="view" style="display:none">`
+- references.html:158 — `<div><label for="ref0Rel">Relationship <span style="font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0">— e.g. "Pastor at my previous church, 5 years"</span></label><input id="ref0Rel" class="fi"></div>`
+- references.html:159 — `<div class="received-note" id="ref0Received" style="display:none">—</div>`
+- references.html:171 — `<div class="received-note" id="ref1Received" style="display:none">—</div>`
+- sign-in.html:129 — `<footer>Safeguard Framework · Bethany Chapel · <a href="privacy.html" style="color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">Privacy</a></footer>`
+- sign-up.html:121 — `<footer>Safeguard Framework · Bethany Chapel · <a href="privacy.html" style="color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">Privacy</a></footer>`
+- training.html:110 — `<div id="userChip" style="margin-left:8px"></div>`
+- training.html:120 — `<div class="wrap" id="view" style="display:none">`
+- training.html:126 — `<div class="progress"><div id="progressBar" style="width:0%"></div></div>`
+- training.html:134 — `<div class="track-head" id="leaderTrackHead" style="display:none;margin-top:22px">Leader track (required for Leaders &amp; Coordinators)</div>`
+- verify-email.html:117 — `<div class="card" id="verified" style="display:none">`

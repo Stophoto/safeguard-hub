@@ -55,15 +55,18 @@ This is the consolidated security backlog from the Codex review and Claude PII a
 
 13. **F-13: Mailto workflows may leave PII in sent folders.**
     Keep email bodies minimal and document that coordinator email accounts become part of the records surface.
+    Resolved 2026-05-04 in PR https://github.com/Stophoto/safeguard-hub/pull/9: mailto pre-fills no longer include volunteer names, reference names, ministry details, or onboarding status details.
 
 14. **F-14: Privacy notice is missing.**
     Add a plain-language privacy page covering Firebase, retention, who can access records, and future AI/third-party processing.
+    Resolved 2026-05-04 in PR https://github.com/Stophoto/safeguard-hub/pull/9: added `privacy.html` and linked it from the shared footer plus the main dashboard, landing, sign-in, sign-up, and profile setup entry points.
 
 15. **F-15: Retention/legal hold policy is missing.**
     Define retention and deletion/hold rules before production incident data accumulates.
 
 16. **F-16: Browser hardening is limited on GitHub Pages.**
     Add CSP/referrer policy meta tags and avoid introducing new CDN scripts without SRI.
+    Partially resolved 2026-05-04 in PR https://github.com/Stophoto/safeguard-hub/pull/9: CSP meta tags were added to every HTML page, React was vendored locally, SRI was added to Google Fonts stylesheet loads, and the inline cleanup inventory is documented in `docs/F-16-inline-audit.md`. Open follow-up: `unsafe-inline` remains until inline scripts/styles are extracted, and `frame-ancestors` needs real HTTP headers because browsers ignore it when delivered in a meta tag.
 
 ## Recommended Sequence
 
