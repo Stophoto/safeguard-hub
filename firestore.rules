@@ -46,7 +46,7 @@ service cloud.firestore {
     function isBootstrapSafeguardLeadAdmin(uid) {
       return request.auth != null
         && request.auth.uid == uid
-        && request.auth.uid == 'CHRIS_FIREBASE_UID_TO_FILL_BEFORE_RUNNING';
+        && request.auth.uid == 'jsDZZRTQxIaJpe8Sy2LHOgvCpw22';
     }
 
     function hasProfile() {

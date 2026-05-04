@@ -13,9 +13,9 @@
 // be run during review. It updates only /users/{CHRIS_FIREBASE_UID}.
 
 const PROJECT_ID = "safeguard-hub-71292";
-const CHRIS_FIREBASE_UID = "CHRIS_FIREBASE_UID_TO_FILL_BEFORE_RUNNING";
+const CHRIS_FIREBASE_UID = "jsDZZRTQxIaJpe8Sy2LHOgvCpw22";
 
-if (CHRIS_FIREBASE_UID === "CHRIS_FIREBASE_UID_TO_FILL_BEFORE_RUNNING") {
+if (!CHRIS_FIREBASE_UID || CHRIS_FIREBASE_UID === "CHRIS_FIREBASE_UID_TO_FILL_BEFORE_RUNNING") {
   throw new Error("Fill CHRIS_FIREBASE_UID before running this one-time bootstrap.");
 }
 
