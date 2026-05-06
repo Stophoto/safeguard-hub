@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SG-SOP-004 · Reporting Flowchart Poster — Bethany Chapel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" integrity="sha384-vgShQ9Bb4Isz2F8Qf3+aWfIoJoy2/bxw70cs2y9+u6VZ4iV1oADTTlm5iFqI3jFr" crossorigin="anonymous">
+<style>
+  :root{--navy:#1B3A4B;--navy-ink:#142A37;--teal:#2E6B7F;--gold:#B09055;--gold-warm:#C4A46A;--cream:#FAF8F3;--cream-2:#F3EFE4;--body:#3D3835;--red:#C0392B}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#E7E1D0;font-family:'DM Sans',system-ui,-apple-system,Segoe UI,sans-serif;color:var(--body);-webkit-font-smoothing:antialiased}
+  .banner{max-width:8.5in;margin:24px auto 8px;padding:14px 20px;background:var(--cream);border:1px solid #D9D2BF;border-radius:6px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+  .banner .txt{font-size:13px;color:#6A635C;line-height:1.5}.banner .txt b{color:var(--navy)}
+  .banner button{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border:1px solid var(--navy);background:var(--navy);color:var(--cream);border-radius:4px;cursor:pointer;flex:0 0 auto}.banner button:hover{background:var(--navy-ink)}
+  .sheets{display:flex;flex-direction:column;align-items:center;gap:28px;padding:12px 20px 60px}
+  .poster{width:8.5in;height:11in;background:var(--cream);position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.03),0 24px 60px -20px rgba(20,42,55,.22),0 8px 22px -10px rgba(20,42,55,.12)}
+  .topbar{height:.85in;background:var(--navy);color:var(--cream);padding:0 .55in;display:flex;align-items:center;justify-content:space-between;gap:.3in;flex:0 0 auto}
+  .brand{display:flex;align-items:center;gap:14px}.shield{width:36px;height:40px;flex:0 0 auto}.brand-txt{line-height:1}.fw{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.26em;color:var(--gold-warm);text-transform:uppercase;margin-bottom:5px}.org{font-family:'DM Serif Display',Georgia,serif;font-size:18px}
+  .doc{text-align:right;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-warm);line-height:1.6}.doc .code{color:var(--cream);font-weight:500}
+  .body{flex:1;padding:.32in .58in .28in;display:flex;flex-direction:column;min-height:0}
+  .kicker{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}.title{font-family:'DM Serif Display',Georgia,serif;font-size:42px;line-height:.96;color:var(--navy);font-weight:400;letter-spacing:-.015em}.title em{font-style:italic;color:var(--teal)}
+  .title-row{border-bottom:2px solid var(--navy);padding-bottom:.13in;margin-bottom:.17in}
+  .duty{background:var(--navy);color:var(--cream);margin:0 -.58in .18in;padding:.16in .58in;border-top:4px solid var(--gold)}.duty .label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-warm);margin-bottom:8px}.duty .text{font-family:'DM Serif Display',Georgia,serif;font-size:21px;line-height:1.15}.duty em{font-style:italic;color:var(--gold-warm)}
+  .flow{display:grid;grid-template-columns:1fr;gap:.085in;margin-bottom:.16in}
+  .step{display:grid;grid-template-columns:.48in 1fr;gap:.16in;align-items:start;background:var(--cream-2);border:1.5px solid rgba(27,58,75,.18);border-left:5px solid var(--gold);padding:.11in .16in .12in}
+  .num{font-family:'DM Serif Display',Georgia,serif;font-size:34px;line-height:.9;color:var(--navy);text-align:right}.step-title{font-family:'DM Serif Display',Georgia,serif;font-size:18px;line-height:1.1;color:var(--navy);margin-bottom:4px}.step-text{font-size:12.5px;line-height:1.35}.step-text strong{color:var(--navy)}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:.12in;margin-top:.04in}
+  .decision{border:2px solid var(--navy);background:#fff;padding:.12in .14in}.decision .head{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}.decision .big{font-family:'DM Serif Display',Georgia,serif;font-size:20px;line-height:1.12;color:var(--navy);margin-bottom:5px}.decision .small{font-size:12px;line-height:1.35}
+  .alert{margin-top:auto;border:2px dashed var(--red);background:rgba(192,57,43,.045);padding:.13in .18in}.alert .head{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--red);margin-bottom:7px}.alert .txt{font-size:12.3px;line-height:1.4}.alert strong{color:var(--navy)}
+  .footer{display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:#8A837B;padding:0 .58in .55in}.footer .code{color:var(--navy);font-weight:500}
+  @page{size:letter portrait;margin:0}@media print{html,body{background:#fff!important}.banner{display:none!important}.sheets{padding:0!important;gap:0!important}.poster{box-shadow:none!important;margin:0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body data-doc-code="SG-SOP-004" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+<style id="sg-guard-style">body{visibility:hidden}</style>
+<script type="module">import { requireAuth } from "./sg-guard.js"; requireAuth();</script>
+
+<div class="banner"><div class="txt"><b>Reporting Flowchart Poster</b> — one US Letter portrait poster. Print at 100%, laminate, post near each classroom binder.</div><button onclick="window.print()">Print poster</button></div>
+
+<div class="sheets">
+  <article class="poster">
+    <header class="topbar">
+      <div class="brand">
+        <svg class="shield" viewBox="0 0 34 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17 1.5 L32.5 6.2 V18 C32.5 27.3 25.5 33.8 17 36.5 C8.5 33.8 1.5 27.3 1.5 18 V6.2 Z" fill="#1B3A4B" stroke="#C4A46A" stroke-width="1.6" stroke-linejoin="round"/><path d="M10.2 18.3 L15.2 23.3 L24 14.2" stroke="#C4A46A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="brand-txt"><div class="fw">Safeguard Framework</div><div class="org">Bethany Chapel · Calgary</div></div>
+      </div>
+      <div class="doc"><div class="code">SG-SOP-004 · v2.0</div><div>Post in classroom</div></div>
+    </header>
+    <div class="body">
+      <div class="title-row"><div class="kicker">Safeguard · Standard Operating Procedure</div><div class="title">Reporting<br/><em>Flowchart</em></div></div>
+      <div class="duty"><div class="label">Every incident · Every time</div><div class="text"><em>Ensure safety first.</em> Then report, document, and hand off. Do not investigate suspected abuse.</div></div>
+      <div class="flow">
+        <div class="step"><div class="num">1</div><div><div class="step-title">Make the child safe.</div><div class="step-text">Remove immediate danger if possible. Provide first aid or call <strong>911</strong> when urgent help is needed.</div></div></div>
+        <div class="step"><div class="num">2</div><div><div class="step-title">Decide what happened.</div><div class="step-text"><strong>Incident or injury:</strong> use SG-FRM-006. <strong>Suspected abuse or neglect:</strong> use SG-FRM-007 and report externally.</div></div></div>
+        <div class="step"><div class="num">3</div><div><div class="step-title">Notify ministry leadership.</div><div class="step-text">Tell the ministry leader or Safeguard Coordinator immediately. Do not confront the alleged abuser.</div></div></div>
+        <div class="step"><div class="num">4</div><div><div class="step-title">Make required external reports.</div><div class="step-text">For suspected abuse, report directly to Child &amp; Family Services or Police. Do not notify parents if a parent is the suspected abuser.</div></div></div>
+        <div class="step"><div class="num">5</div><div><div class="step-title">Document the same day.</div><div class="step-text">Complete the correct form before you leave. Report facts only. Include exact words where possible.</div></div></div>
+      </div>
+      <div class="split">
+        <div class="decision"><div class="head">Incident / injury</div><div class="big">Use SG-FRM-006</div><div class="small">Notify parent/guardian promptly. Coordinator reviews and follows up.</div></div>
+        <div class="decision"><div class="head">Suspected abuse</div><div class="big">Use SG-FRM-007</div><div class="small">Report to authorities. Do not investigate. Do not promise secrecy.</div></div>
+      </div>
+      <div class="alert"><div class="head">Legal duty in Alberta</div><div class="txt">You are never in trouble for reporting in good faith. If you are unsure whether something is reportable, <strong>report upward immediately and seek direction from the Safeguard Lead.</strong></div></div>
+    </div>
+    <div class="footer"><div class="code">SG-SOP-004 · v2.0</div><div>Linked: SG-POL-004 · SG-FRM-006 · SG-FRM-007</div></div>
+  </article>
+</div>
+<script src="sg-nav.js"></script>
+</body>
+</html>
