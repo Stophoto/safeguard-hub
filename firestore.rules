@@ -116,7 +116,9 @@ service cloud.firestore {
           'testimony',
           'attendingSince',
           'profileComplete',
+          'application',
           'covenant',
+          'covenantHistory',
           'policeCheck',
           'references',
           'training',
@@ -132,6 +134,9 @@ service cloud.firestore {
         && unchanged('activatedAt')
         && unchanged('activatedBy')
         && unchanged('updatedBy')
+        && validSelfApplication()
+        && validSelfCovenant()
+        && validSelfCovenantHistory()
         && validSelfPoliceCheck()
         && validSelfReferences()
         && (!request.resource.data.keys().hasAny(['email']) || request.resource.data.email == request.auth.token.email)
@@ -222,6 +227,67 @@ service cloud.firestore {
         && request.resource.data.updatedBy == request.auth.uid;
     }
 
+    function validSelfApplication() {
+      let app = request.resource.data.get('application', {});
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['application'])
+        || (
+          app is map
+          && app.keys().hasOnly(['submittedAt', 'recordId', 'isYouth'])
+          && app.keys().hasAll(['submittedAt', 'recordId', 'isYouth'])
+          && app.submittedAt is string
+          && app.submittedAt.size() > 0
+          && app.submittedAt.size() <= 40
+          && app.recordId is string
+          && app.recordId.size() > 0
+          && app.recordId.size() <= 80
+          && app.isYouth is bool
+        );
+    }
+
+    function validSelfCovenant() {
+      let cov = request.resource.data.get('covenant', {});
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['covenant'])
+        || (
+          cov is map
+          && cov.keys().hasOnly(['signed', 'signedAt', 'signatureName', 'expiresAt'])
+          && cov.keys().hasAll(['signed', 'signedAt', 'signatureName', 'expiresAt'])
+          && cov.signed == true
+          && cov.signedAt is string
+          && cov.signedAt.size() > 0
+          && cov.signedAt.size() <= 40
+          && cov.signatureName is string
+          && cov.signatureName.size() > 0
+          && cov.signatureName.size() <= 150
+          && cov.expiresAt is string
+          && cov.expiresAt.size() > 0
+          && cov.expiresAt.size() <= 40
+        );
+    }
+
+    function validCovenantArchive(archive) {
+      return archive is map
+        && archive.keys().hasOnly(['signedAt', 'signatureName', 'expiresAt'])
+        && archive.get('signedAt', null) == resource.data.get('covenant', {}).get('signedAt', null)
+        && archive.get('signatureName', '') == resource.data.get('covenant', {}).get('signatureName', '')
+        && archive.get('expiresAt', null) == resource.data.get('covenant', {}).get('expiresAt', null);
+    }
+
+    function validSelfCovenantHistory() {
+      let history = request.resource.data.get('covenantHistory', []);
+      let oldHistory = resource.data.get('covenantHistory', []);
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['covenantHistory'])
+        || (
+          history is list
+          && oldHistory is list
+          && oldHistory.size() < 50
+          && history.size() == oldHistory.size() + 1
+          && history.hasAll(oldHistory)
+          && request.resource.data.diff(resource.data).affectedKeys().hasAny(['covenant'])
+          && resource.data.get('covenant', {}).get('signed', false) == true
+          && validCovenantArchive(history[history.size() - 1])
+        );
+    }
+
     function validSelfPoliceCheck() {
       let pc = request.resource.data.get('policeCheck', {});
       return pc is map
@@ -267,7 +333,6 @@ service cloud.firestore {
         || (request.resource.data.formCode == 'SG-FRM-004' && request.resource.data.tabName == 'Acknowledgements')
         || (request.resource.data.formCode == 'SG-FRM-005' && request.resource.data.tabName == 'Registrations')
         || (request.resource.data.formCode == 'SG-FRM-006' && request.resource.data.tabName == 'Incidents')
-        || (request.resource.data.formCode == 'SG-FRM-007' && request.resource.data.tabName == 'Abuse Reports')
         || (request.resource.data.formCode == 'SG-FRM-012' && request.resource.data.tabName == 'Training Log');
     }
 
@@ -296,7 +361,6 @@ service cloud.firestore {
           'SG-FRM-004',
           'SG-FRM-005',
           'SG-FRM-006',
-          'SG-FRM-007',
           'SG-FRM-012'
         ]
         && request.resource.data.tabName in [
@@ -305,7 +369,6 @@ service cloud.firestore {
           'Acknowledgements',
           'Registrations',
           'Incidents',
-          'Abuse Reports',
           'Training Log'
         ]
         && validSubmissionFormPair()

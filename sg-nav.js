@@ -85,7 +85,7 @@
       { label: 'Core Policies', items: ['SG-POL-001','SG-POL-002','SG-POL-003','SG-POL-004'] }
     ]},
     { label: 'Forms', groups: [
-      { label: 'Fillable · opens inline', items: ['SG-FRM-001','SG-FRM-006','SG-FRM-007','SG-FRM-012'] },
+      { label: 'Fillable forms', items: ['SG-FRM-001','SG-FRM-006','SG-FRM-007','SG-FRM-012'] },
       { label: 'Printable', items: ['SG-FRM-002','SG-FRM-003','SG-FRM-004','SG-FRM-005','SG-FRM-008','SG-FRM-009','SG-FRM-010','SG-FRM-011'] }
     ]},
     { label: 'SOPs', groups: [

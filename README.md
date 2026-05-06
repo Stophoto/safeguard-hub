@@ -4,35 +4,25 @@ The operational interface for the Safeguard Framework — a child and vulnerable
 
 ## What This Is
 
-A single-page web application that serves as the admin dashboard for the Safeguard Framework. It provides:
+A static GitHub Pages app backed by Firebase Auth and Firestore. It serves as the operational workspace for the Safeguard Framework:
 
-- **Document Map** — Every policy, SOP, form, and training module in the framework, organized by layer
-- **Admin Tasks** — The Safeguard Coordinator's weekly, monthly, quarterly, and annual rhythm
-- **Fillable Forms** — Digital forms that submit directly to Google Sheets:
-  - SG-FRM-001 — Ministry Application (→ People tab)
-  - SG-FRM-006 — Incident / Accident Report (→ Incidents tab)
-  - SG-FRM-012 — Training Completion Record (→ Training Log tab)
+- **Volunteer dashboard** — shows each volunteer their onboarding status and next required steps
+- **Document map** — policies, SOPs, forms, and training modules organized by framework layer
+- **Coordinator admin** — people roster, screening tracker, form submissions, task rhythm, and classroom print kit
+- **Fillable workflows** — applications, incidents, abuse reports, references, covenant signing, police-check status, and training progress
+- **Safeguard Lead area** — suspected abuse reports are separated from ordinary coordinator submissions
 
 ## Setup
 
-### 1. Google Cloud (one-time, ~15 minutes)
+### 1. Firebase
 
-1. Create a Google Cloud project
-2. Enable the Google Sheets API
-3. Create a service account and download the JSON key file
-4. Create a Google Sheets workbook with three tabs: **People**, **Incidents**, **Training Log**
-5. Share the workbook with the service account email (Editor access)
+1. Create or use the Firebase project for the Hub.
+2. Enable Firebase Authentication with email/password sign-in.
+3. Enable Firestore.
+4. Review and publish `firestore.rules` only after explicit approval.
+5. Bootstrap the first Coordinator/Safeguard Lead Admin using the approved project-owner process.
 
-### 2. Hub Configuration (one-time per browser)
-
-Open the Hub in your browser. On first load, you'll see a setup screen. Paste:
-
-- Your **Workbook ID** (the long string from the Google Sheets URL, between `/d/` and `/edit`)
-- The **full contents** of your downloaded JSON key file
-
-Your credentials are stored in your browser's localStorage. They never leave your device and are not included in this repository.
-
-### 3. Hosting
+### 2. Hosting
 
 This Hub is designed to be hosted on GitHub Pages:
 
@@ -40,32 +30,32 @@ This Hub is designed to be hosted on GitHub Pages:
 2. In repository Settings → Pages, set source to "Deploy from a branch" → `main` → `/ (root)`
 3. Your Hub will be available at `https://yourusername.github.io/safeguard-hub/`
 
-It also works opened directly as a local file.
+Some static document pages can be opened locally, but authenticated workflows expect the GitHub Pages origin and configured Firebase project.
 
 ## For Other Churches
 
 To adopt this Hub for your own church:
 
-1. Clone this repository
-2. Complete the Google Cloud setup (step 1 above)
-3. Open the Hub and enter your own credentials
-4. Optionally edit the church name in `index.html`
+1. Clone this repository.
+2. Create your own Firebase project and update `sg-firebase.js`.
+3. Review policies, privacy wording, retention rules, and contact details for your jurisdiction/church.
+4. Publish the static site to your chosen hosting provider.
 
 The framework documents themselves are maintained separately. This Hub is the operational interface.
 
 ## Architecture
 
-- **Zero infrastructure.** No server, no database, no backend. Everything runs in the browser.
-- **Google Sheets as database.** Form submissions write directly to Sheets via the Google Sheets API using service account JWT authentication.
-- **Single file.** The entire application is one `index.html` file — React, the Sheets integration, and all three forms.
-- **Credentials in localStorage.** Private keys never touch the repository.
+- **Static frontend.** The app is served as HTML/CSS/JS from GitHub Pages.
+- **Firebase Auth.** Users sign in with email/password and must verify email before using protected workflows.
+- **Firestore records.** Profiles, invites, submissions, abuse reports, and compliance state are stored in Firestore.
+- **Flat page structure.** The project currently uses standalone HTML pages plus shared helper modules such as `sg-auth.js`, `sg-profile.js`, `sg-admin.js`, and `sg-submissions.js`.
 
 ## Security Notes
 
-- The service account only has access to the specific spreadsheet you share it with
-- Credentials stored in localStorage are scoped to the browser and origin
-- This is designed for a small admin tool with a handful of trusted users, not a public-facing application
-- To reset credentials: click "Reset Credentials" in the Hub footer, or run `localStorage.removeItem('sg_hub_config')` in the browser console
+- Do not deploy rules, modify Firebase data, or change production configuration without explicit approval.
+- Suspected abuse reports are intentionally more sensitive than ordinary submissions.
+- Phase A does not yet provide durable server-backed read audit logs for abuse reports.
+- Before real volunteer launch, complete the remaining security backlog in `SECURITY_REVIEW.md`, especially audit logging, idle timeout/shared-device cleanup, and stronger role enforcement.
 
 ## Document Map
 

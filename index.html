@@ -1071,8 +1071,9 @@ body.sg-ready #sg-auth-overlay { display: none; }
     useEffect(function(){
       function handleHash(){
         var hash=(window.location.hash||"").replace("#","").toLowerCase();
-        var valid=["frm001","frm002","frm005","frm006","frm007","frm012"];
+        var valid=["frm001","frm002","frm005","frm006","frm012"];
         if(valid.indexOf(hash)>=0){ setView(hash); setTab("forms"); window.scrollTo({top:0}); }
+        else if(hash==="frm007"){ location.replace("SG-FRM-007.html"); }
         else if(hash==="admin"){ setView("dashboard"); setTab("tasks"); }
         else if(hash==="documents"||hash==="docs"){ setView("dashboard"); setTab("documents"); }
         else if(hash==="forms"){ setView("dashboard"); setTab("forms"); }
@@ -1090,7 +1091,6 @@ body.sg-ready #sg-auth-overlay { display: none; }
     if(view==="frm002") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM002,{onBack:goHome}));
     if(view==="frm005") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM005,{onBack:goHome}));
     if(view==="frm006") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM006,{onBack:goHome}));
-    if(view==="frm007") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM007,{onBack:goHome}));
     if(view==="frm012") return h("div",{style:{minHeight:"100vh",background:"var(--cream)",padding:"32px 20px"}},h(FormFRM012,{onBack:goHome}));
 
     // ── Dashboard ──

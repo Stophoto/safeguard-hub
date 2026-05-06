@@ -186,15 +186,17 @@ export async function signCovenant(signatureName) {
       }]
     : priorHistory;
 
-  await saveProfile({
+  const updates = {
     covenant: {
       signed: true,
       signedAt: now.toISOString(),
       signatureName: (signatureName || "").trim(),
       expiresAt: expires.toISOString(),
     },
-    covenantHistory: newHistory,
-  });
+  };
+  if (priorCovenant.signed) updates.covenantHistory = newHistory;
+
+  await saveProfile(updates);
 }
 
 // ── Compute current covenant status from a profile ───────────
@@ -233,12 +235,22 @@ export function covenantStatus(profile) {
 // `submittedOn` is a YYYY-MM-DD string the volunteer picked.
 // Clearance and expiry are filled in later by the Coordinator.
 export async function submitPoliceCheck(submittedOn) {
-  await saveProfile({
-    policeCheck: {
-      submittedAt: submittedOn || new Date().toISOString().slice(0, 10),
-      // Preserve any existing clearedAt/expiresOn if re-submitting early
-    },
-  });
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not signed in.");
+
+  const snap = await getDoc(doc(db, "users", user.uid));
+  const existing = (snap.exists() && snap.data().policeCheck) || {};
+  const policeCheck = {
+    submittedAt: submittedOn || new Date().toISOString().slice(0, 10),
+  };
+  if (Object.prototype.hasOwnProperty.call(existing, "clearedAt")) {
+    policeCheck.clearedAt = existing.clearedAt;
+  }
+  if (Object.prototype.hasOwnProperty.call(existing, "expiresOn")) {
+    policeCheck.expiresOn = existing.expiresOn;
+  }
+
+  await saveProfile({ policeCheck });
 }
 
 // ── Record two references (volunteer side) ───────────────────
