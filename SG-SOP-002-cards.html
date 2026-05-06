@@ -316,19 +316,54 @@
     flex: 0 0 auto;
   }
   .doc-footer .code { color: var(--navy); font-weight: 500; }
+  .doc-link {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
 
   /* ─── Print ─── */
   @page { size: letter portrait; margin: 0; }
   @media print {
-    html, body { background: #fff !important; }
+    html, body { background: #fff !important; color: #000 !important; }
     .banner { display: none !important; }
     .sheets { padding: 0 !important; gap: 0 !important; }
     .card {
       box-shadow: none !important;
       margin: 0 !important;
+      background: #fff !important;
+      color: #000 !important;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
+    .topbar, .core-rule {
+      background: #fff !important;
+      color: #000 !important;
+      border: 2px solid #000 !important;
+    }
+    .topbar .brand-txt .fw,
+    .topbar .brand-txt .org,
+    .topbar .doc,
+    .topbar .doc .code,
+    .title-row .kicker,
+    .title-row .title,
+    .core-rule .tag,
+    .core-rule .rule-text,
+    .core-rule .rule-text em,
+    .steps-head,
+    .never .head,
+    .escalation .label,
+    .doc-footer,
+    .doc-footer .code {
+      color: #000 !important;
+    }
+    .never, .escalation {
+      background: #fff !important;
+      border-color: #000 !important;
+    }
+    .doc-link { color: #000 !important; text-decoration: underline; }
   }
 </style>
 </head>
@@ -336,9 +371,9 @@
 
 <div class="banner">
   <div class="txt">
-    <b>Washroom Escort Protocol · Quick-Reference Card</b> — one card per US Letter portrait sheet. Print at 100%, laminate, clip to binder.
+    <b>Washroom Escort Protocol · Quick-Reference Card</b> — one card per US Letter portrait sheet. Print at 100%, or choose Save as PDF in the print dialog.
   </div>
-  <button onclick="window.print()">Print card</button>
+  <button type="button" data-print>Print / save PDF</button>
 </div>
 
 <div class="sheets">
@@ -356,7 +391,7 @@
         </div>
       </div>
       <div class="doc">
-        <div class="code">SG-SOP-002 · v1.0</div>
+        <div class="code"><a class="doc-link" href="SG-SOP-002.html">SG-SOP-002</a> · v1.0</div>
         <div>Desk Binder</div>
       </div>
     </header>
@@ -398,7 +433,7 @@
         </li>
         <li>
           <div class="num">6</div>
-          <div class="txt"><span class="lead">Return &amp; log.</span>Walk the child back to the classroom. Note the escort on the <strong>session check-sheet</strong>.</div>
+          <div class="txt"><span class="lead">Return &amp; log.</span>Walk the child back to the classroom. Note the escort on the <a class="doc-link" href="SG-FRM-008-session-check-sheet.html">session check sheet</a>.</div>
         </li>
       </ol>
 
@@ -423,12 +458,13 @@
     </div>
 
     <div class="doc-footer">
-      <div class="code">SG-SOP-002 · v1.0</div>
-      <div>Bethany Chapel · Calgary</div>
+      <div class="code"><a class="doc-link" href="SG-SOP-002.html">SG-SOP-002</a> · v1.0</div>
+      <div>Linked: <a class="doc-link" href="SG-FRM-008-session-check-sheet.html">SG-FRM-008</a></div>
     </div>
   </article>
 </div>
 
+<script src="sg-print.js"></script>
 <script src="sg-nav.js"></script>
 </body>
 </html>

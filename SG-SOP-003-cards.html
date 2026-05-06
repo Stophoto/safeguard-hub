@@ -470,22 +470,63 @@
     flex: 0 0 auto;
   }
   .doc-footer .code { color: var(--navy); font-weight: 500; margin-bottom: 2px; }
+  .doc-link {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
 
   /* ─── Print ─── */
   @page { size: letter landscape; margin: 0; }
   @media print {
-    html, body { background: #fff !important; }
+    html, body { background: #fff !important; color: #000 !important; }
     .banner { display: none !important; }
     .sheets { padding: 0 !important; gap: 0 !important; }
     .sheet {
       box-shadow: none !important;
       margin: 0 !important;
+      background: #fff !important;
+      color: #000 !important;
       page-break-after: always;
       break-after: page;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
     .sheet:last-child { page-break-after: auto; break-after: auto; }
+    .topbar, .rule-banner {
+      background: #fff !important;
+      color: #000 !important;
+      border: 2px solid #000 !important;
+    }
+    .topbar .brand-txt .fw,
+    .topbar .brand-txt .org,
+    .topbar .doc,
+    .topbar .doc .code,
+    .kicker,
+    .title,
+    .title em,
+    .right .lbl,
+    .room,
+    .age,
+    .label,
+    .big,
+    .sub,
+    .math .lbl,
+    .rule-banner .tag,
+    .rule-banner .rule-text,
+    .rule-banner em,
+    .escalation .txt .label,
+    .doc-footer,
+    .doc-footer .code {
+      color: #000 !important;
+    }
+    .hero, .math, .escalation, .ratio-cell {
+      background: #fff !important;
+      border-color: #000 !important;
+    }
+    .doc-link { color: #000 !important; text-decoration: underline; }
   }
 </style>
 </head>
@@ -498,9 +539,9 @@
 
 <div class="banner">
   <div class="txt">
-    <b>Ratio &amp; Room Capacity Cards</b> — five posters in one file, one per room. Print on US Letter, <b>landscape</b>, at 100% scale. Laminate &amp; mount in each classroom.
+    <b>Ratio &amp; Room Capacity Cards</b> — five posters in one file, one per room. Print on US Letter, <b>landscape</b>, at 100% scale, or choose Save as PDF in the print dialog.
   </div>
-  <button onclick="window.print()">Print all 5 cards</button>
+  <button type="button" data-print>Print / save PDF</button>
 </div>
 
 <div class="sheets" id="sheets"></div>
@@ -616,7 +657,7 @@
             </div>
           </div>
           <div class="doc">
-            <div class="code">SG-SOP-003 · v2.0</div>
+            <div class="code"><a class="doc-link" href="SG-SOP-003.html">SG-SOP-003</a> · v2.0</div>
             <div>Post in classroom</div>
           </div>
         </header>
@@ -676,12 +717,12 @@
               <div class="bar"></div>
               <div class="txt">
                 <span class="label">Over capacity or short of adults?</span>
-                Post the <strong>Room Full</strong> sign, redirect children to another class, and <strong>call the Safeguard Coordinator.</strong>
+                Post the <a class="doc-link" href="SG-SOP-003-room-full-sign.html">Room Full</a> sign, redirect children to another class, and <strong>call the Safeguard Coordinator.</strong>
               </div>
             </div>
             <div class="doc-footer">
-              <div class="code">SG-SOP-003 · v2.0</div>
-              <div>Linked: SG-POL-002</div>
+              <div class="code"><a class="doc-link" href="SG-SOP-003.html">SG-SOP-003</a> · v2.0</div>
+              <div>Linked: <a class="doc-link" href="SG-POL-002.html">SG-POL-002</a></div>
             </div>
           </div>
 
@@ -693,6 +734,7 @@
   document.getElementById('sheets').innerHTML = ROOMS.map(renderSheet).join('');
 </script>
 
+<script src="sg-print.js"></script>
 <script src="sg-nav.js"></script>
 </body>
 </html>
