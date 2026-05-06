@@ -18,8 +18,9 @@
   .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.15in;margin-bottom:.16in}.panel{background:#fff;border:1.5px solid rgba(27,58,75,.18);border-top:5px solid var(--gold);padding:.14in .16in;min-height:2.55in}.panel.lock{border-top-color:var(--teal)}.panel.injury{border-top-color:var(--red)}.head{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:7px}.big{font-family:'DM Serif Display',Georgia,serif;font-size:23px;line-height:1.05;color:var(--navy);margin-bottom:8px}ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}li{position:relative;padding-left:.17in;font-size:12.1px;line-height:1.32}li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:50%;background:var(--gold)}.injury li::before{background:var(--red)}strong{color:var(--navy)}
   .lower{display:grid;grid-template-columns:1.2fr .8fr;gap:.16in;margin-top:auto}.minor,.serious{border:1.5px solid rgba(27,58,75,.18);background:var(--cream-2);padding:.13in .16in}.minor .big,.serious .big{font-size:20px}.serious{border-color:rgba(192,57,43,.35);background:rgba(192,57,43,.045)}.serious .head{color:var(--red)}
   .rule-banner{margin:.17in -.5in 0;background:var(--navy);color:var(--cream);padding:.15in .5in;display:flex;align-items:center;gap:.25in;border-top:3px solid var(--gold)}.rule-banner .tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-warm);flex:0 0 auto}.rule-banner .text{font-family:'DM Serif Display',Georgia,serif;font-size:22px;line-height:1.12}.rule-banner em{font-style:italic;color:var(--gold-warm)}
+  .doc-link{color:inherit;text-decoration:none;border-bottom:1px solid rgba(27,58,75,.35);font-weight:700}.footer .doc-link{border-bottom-color:currentColor}
   .footer{display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:#8A837B;padding-top:.13in}.footer .code{color:var(--navy);font-weight:500}
-  @page{size:letter landscape;margin:0}@media print{html,body{background:#fff!important}.banner{display:none!important}.sheets{padding:0!important;gap:0!important}.sheet{box-shadow:none!important;margin:0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  @page{size:letter landscape;margin:0}@media print{html,body{background:#fff!important}.banner{display:none!important}.sheets{padding:0!important;gap:0!important}.sheet{box-shadow:none!important;margin:0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.doc-link{border-bottom:none}}
 </style>
 </head>
 <body data-doc-code="SG-SOP-006" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
@@ -32,14 +33,14 @@
     <div class="grid">
       <section class="panel"><div class="head">Evacuation</div><div class="big">Fire · gas · unsafe building</div><ul><li>Line children up at the door.</li><li>Take attendance clipboard or class list.</li><li>Exit by posted route to muster point.</li><li>Take attendance again.</li><li>Report missing persons immediately.</li></ul></section>
       <section class="panel lock"><div class="head">Lockdown</div><div class="big">Intruder · external threat</div><ul><li>Secure children inside the room.</li><li>Lock doors, turn off lights.</li><li>Silence devices; keep children quiet.</li><li>Stay away from windows.</li><li>Open only after official all-clear.</li></ul></section>
-      <section class="panel injury"><div class="head">Serious injury</div><div class="big">Head injury · fracture · unconscious</div><ul><li>Do not move child unless danger remains.</li><li>Call <strong>911</strong> if needed.</li><li>Notify elder or senior staff.</li><li>Complete <strong>SG-FRM-006</strong> within 24 hours.</li></ul></section>
+      <section class="panel injury"><div class="head">Serious injury</div><div class="big">Head injury · fracture · unconscious</div><ul><li>Do not move child unless danger remains.</li><li>Call <strong>911</strong> if needed.</li><li>Notify elder or senior staff.</li><li>Complete <a class="doc-link" href="SG-FRM-006.html">SG-FRM-006</a> within 24 hours.</li></ul></section>
     </div>
     <div class="lower">
-      <section class="minor"><div class="head">Minor injury</div><div class="big">Scrape · bruise · small cut · nosebleed</div><ul><li>Provide basic first aid.</li><li>Notify ministry leader.</li><li>Complete SG-FRM-006.</li><li>Inform parent/guardian at pickup.</li></ul></section>
+      <section class="minor"><div class="head">Minor injury</div><div class="big">Scrape · bruise · small cut · nosebleed</div><ul><li>Provide basic first aid.</li><li>Notify ministry leader.</li><li>Complete <a class="doc-link" href="SG-FRM-006.html">SG-FRM-006</a>.</li><li>Inform parent/guardian at pickup.</li></ul></section>
       <section class="serious"><div class="head">Coordinator review</div><div class="big">After emergency or serious injury</div><ul><li>Safeguard Coordinator reviews incident.</li><li>Document lessons learned.</li><li>Update procedures if needed.</li></ul></section>
     </div>
     <div class="rule-banner"><div class="tag">In a crisis</div><div class="text"><em>Do not improvise alone.</em> Keep children supervised, call for help, document before you leave.</div></div>
-    <div class="footer"><div class="code">SG-SOP-006 · v2.0</div><div>Linked: SG-POL-004 · SG-FRM-006</div></div>
+    <div class="footer"><div class="code">SG-SOP-006 · v2.0</div><div>Linked: <a class="doc-link" href="SG-POL-004.html">SG-POL-004</a> · <a class="doc-link" href="SG-FRM-006.html">SG-FRM-006</a></div></div>
   </div>
 </article></div>
 <script src="sg-nav.js"></script>
