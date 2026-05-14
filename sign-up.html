@@ -129,6 +129,12 @@
   const confirm = document.getElementById("confirm");
   const msg     = document.getElementById("msg");
   const submit  = document.getElementById("submit");
+  const params  = new URLSearchParams(location.search);
+  const invitedEmail = (params.get("email") || "").trim();
+
+  if (invitedEmail) {
+    email.value = invitedEmail;
+  }
 
   // If someone signed in lands here, bounce them forward.
   // Verified users → hub. Unverified users → verify-email page.

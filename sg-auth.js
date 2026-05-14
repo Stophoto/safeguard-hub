@@ -108,6 +108,9 @@ export function friendlyError(err) {
       return "This account has been disabled. Contact the Safeguard Coordinator.";
     case "auth/missing-password":
       return "Please enter your password.";
+    case "auth/admin-restricted-operation":
+    case "auth/operation-not-allowed":
+      return "Account creation is currently blocked by Firebase. Ask the Safeguard Coordinator to enable Email/Password sign-in in Firebase Authentication, then try again.";
     default:
       return (err && err.message) || "Something went wrong. Please try again.";
   }

@@ -192,10 +192,8 @@
   const submit       = document.getElementById("submit");
   const msg          = document.getElementById("msg");
 
-  // URL the invitee visits to create their account. This is the live
-  // site's sign-up page. (It's fine for now that the invitee email
-  // isn't pre-filled — they just type the same address they were
-  // invited at. Phase 4+ could add an ?email= pre-fill.)
+  // URL the invitee visits to create their account. Include the invited
+  // email as a prefill so the volunteer does not mistype it.
   const SIGNUP_URL = "https://stophoto.github.io/safeguard-hub/sign-up.html";
 
   let lastMailto = "";
@@ -218,6 +216,10 @@
   });
 
   // ── Build the invitation email body ─────────────────────
+  function signupUrlFor(email) {
+    return SIGNUP_URL + "?email=" + encodeURIComponent(email);
+  }
+
   function buildEmail({ email, ministryText }) {
     const lines = [];
     lines.push("Hi,");
@@ -229,7 +231,7 @@
     }
     lines.push("");
     lines.push("To get started, create your account here:");
-    lines.push(SIGNUP_URL);
+    lines.push(signupUrlFor(email));
     lines.push("");
     lines.push("You'll use the email address this invite was sent to, pick a password, and complete a short profile.");
     lines.push("");
