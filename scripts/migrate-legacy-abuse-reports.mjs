@@ -9,7 +9,7 @@
 //
 //   Coordinators can list/read /submissions (see firestore.rules), so a
 //   COPY-ONLY migration does NOT close the exposure. The legacy document
-//   must also be removed (or tombstoned) once the copy is verified.
+//   must also be removed once the copy is verified.
 //
 // Behavior is controlled by env vars (safe by default):
 //
@@ -21,28 +21,27 @@
 //   RUN_MIGRATION=true         Perform writes. Without it, nothing is written
 //                              (pure dry run: prints what WOULD happen).
 //
-//   LEGACY_ACTION=none|delete|tombstone   (default: none)
-//       none      Copy to /abuseReports only. Leaves legacy docs in place.
-//                 (Does NOT close the exposure — kept for staged rollout.)
-//       delete    APPROVED PRODUCTION BEHAVIOR. After verified copy, delete
-//                 the legacy /submissions/{id} document.
-//       tombstone After verified copy, delete the legacy doc and recreate it
-//                 with ONLY non-sensitive audit metadata (no rowData, no
-//                 submitter PII, no SG-FRM-007 formCode).
+//   LEGACY_ACTION=none|delete  (default: none)
+//       none    Copy to /abuseReports only; leaves legacy docs in place.
+//               (Does NOT close the exposure — kept for staged rollout.)
+//       delete  APPROVED PRODUCTION BEHAVIOR. After a verified copy, delete
+//               the legacy /submissions/{id} document.
 //
-//   CONFIRM_BACKUP=true        Required for any destructive LEGACY_ACTION.
-//                              Asserts you have already run a Firestore export
-//                              (see runbook Step 2). The script cannot verify
-//                              the backup itself — this is your acknowledgment.
+//   CONFIRM_BACKUP=true        Required for LEGACY_ACTION=delete. Asserts you
+//                              have already run a Firestore export (runbook
+//                              Step 2). The script cannot verify the backup
+//                              itself — this is your acknowledgment.
 //
-// Per-document order is always: COPY -> VERIFY read-back -> (delete|tombstone).
-// A document is never destroyed unless its copy verified successfully.
+// Per-document order is always: (check existing) -> CREATE -> VERIFY full
+// read-back -> delete. A legacy doc is never deleted unless its copy is
+// present in /abuseReports AND its content fully matches the source.
 //
-// Safety summary:
-//   - Dry run by default.
-//   - Destructive steps require RUN_MIGRATION=true AND LEGACY_ACTION!=none
-//     AND CONFIRM_BACKUP=true AND a passing per-document verification.
-//   - Never deletes a legacy doc whose copy did not verify.
+// Rerun safety:
+//   - Writes use Firestore createDocument, which FAILS if the doc exists
+//     (never a blind overwrite).
+//   - If /abuseReports/{id} already exists and MATCHES the source, the copy
+//     step is skipped and the legacy doc may still be deleted.
+//   - If it exists and DIFFERS, that document is aborted (left untouched).
 //
 // DO NOT RUN until Chris explicitly approves the migration window.
 // Run only from a trusted local machine. Never paste the token into chat.
@@ -60,18 +59,18 @@ if (!token) {
   throw new Error("Set GOOGLE_OAUTH_ACCESS_TOKEN to an admin OAuth access token before running.");
 }
 
-const VALID_ACTIONS = new Set(["none", "delete", "tombstone"]);
+const VALID_ACTIONS = new Set(["none", "delete"]);
 if (!VALID_ACTIONS.has(legacyAction)) {
-  throw new Error(`LEGACY_ACTION must be one of: none, delete, tombstone (got "${legacyAction}").`);
+  throw new Error(`LEGACY_ACTION must be one of: none, delete (got "${legacyAction}").`);
 }
 
-const destructive = legacyAction === "delete" || legacyAction === "tombstone";
+const destructive = legacyAction === "delete";
 
-// Hard gate: never touch legacy /submissions docs without an explicit,
-// acknowledged backup. This enforces "do not delete unless backup exists".
+// Hard gate: never delete a legacy /submissions doc without an explicit,
+// acknowledged backup.
 if (runMigration && destructive && !backupConfirmed) {
   throw new Error(
-    `LEGACY_ACTION=${legacyAction} requires CONFIRM_BACKUP=true. ` +
+    `LEGACY_ACTION=delete requires CONFIRM_BACKUP=true. ` +
       `Run a Firestore export first (see runbook Step 2), then set CONFIRM_BACKUP=true.`,
   );
 }
@@ -97,6 +96,23 @@ function timestampValue(fields, key) {
 
 function docIdFromName(name) {
   return String(name || "").split("/").pop();
+}
+
+// Canonical signature of the immutable source report content. Excludes
+// migration bookkeeping (migratedAt) and mutable workflow fields a Lead may
+// edit later (status, notes, review/closure, assignedLeadUid) so that reruns
+// and post-migration edits don't cause false mismatches. Compares the FULL
+// rowData payload, not just its length.
+function identitySig(fields) {
+  return JSON.stringify({
+    formCode: fields.formCode?.stringValue ?? null,
+    recordId: fields.recordId?.stringValue ?? null,
+    legacySubmissionId: fields.legacySubmissionId?.stringValue ?? null,
+    submittedBy: fields.submittedBy?.stringValue ?? null,
+    submittedByEmail: fields.submittedByEmail?.stringValue ?? null,
+    submittedAt: fields.submittedAt?.timestampValue ?? null,
+    rowData: fields.rowData?.arrayValue?.values ?? [],
+  });
 }
 
 async function fetchLegacyReports() {
@@ -138,8 +154,6 @@ function mapLegacySubmission(doc) {
 
   return {
     id: legacyId,
-    recordId,
-    rowDataCount: arrayValue(fields, "rowData").length,
     fields: {
       schemaVersion: { integerValue: 1 },
       formCode: { stringValue: "SG-FRM-007" },
@@ -169,56 +183,32 @@ function mapLegacySubmission(doc) {
   };
 }
 
-async function writeReport(mapped) {
-  const url = `${API_ROOT}/abuseReports/${encodeURIComponent(mapped.id)}`;
+// Returns { exists: false } or { exists: true, fields }.
+async function getAbuseReport(id) {
+  const url = `${API_ROOT}/abuseReports/${encodeURIComponent(id)}`;
+  const res = await fetch(url, { method: "GET", headers: headers() });
+  if (res.status === 404) return { exists: false };
+  if (!res.ok) throw new Error(`Read failed for abuseReports/${id}: ${res.status} ${await res.text()}`);
+  const doc = await res.json();
+  return { exists: true, fields: doc.fields || {} };
+}
+
+// createDocument fails with 409 if the doc already exists — never overwrites.
+async function createReport(mapped) {
+  const url = `${API_ROOT}/abuseReports?documentId=${encodeURIComponent(mapped.id)}`;
   const res = await fetch(url, {
-    method: "PATCH",
+    method: "POST",
     headers: headers(),
     body: JSON.stringify({ fields: mapped.fields }),
   });
-  if (!res.ok) throw new Error(`Write failed for ${mapped.id}: ${res.status} ${await res.text()}`);
-}
-
-// Read the freshly written abuseReports doc back and confirm the key fields
-// match the source. A legacy doc is only destroyed after this passes.
-async function verifyCopy(mapped) {
-  const url = `${API_ROOT}/abuseReports/${encodeURIComponent(mapped.id)}`;
-  const res = await fetch(url, { method: "GET", headers: headers() });
-  if (!res.ok) return { ok: false, reason: `read-back failed: ${res.status}` };
-  const doc = await res.json();
-  const f = doc.fields || {};
-  const gotRecordId = f.recordId?.stringValue;
-  const gotLegacyId = f.legacySubmissionId?.stringValue;
-  const gotRowCount = (f.rowData?.arrayValue?.values ?? []).length;
-  if (gotLegacyId !== mapped.id) return { ok: false, reason: `legacySubmissionId mismatch (${gotLegacyId})` };
-  if (gotRecordId !== mapped.recordId) return { ok: false, reason: `recordId mismatch (${gotRecordId})` };
-  if (gotRowCount !== mapped.rowDataCount)
-    return { ok: false, reason: `rowData count mismatch (${gotRowCount} vs ${mapped.rowDataCount})` };
-  return { ok: true };
+  if (res.status === 409) throw new Error(`abuseReports/${mapped.id} already exists (concurrent run?) — aborted.`);
+  if (!res.ok) throw new Error(`Create failed for ${mapped.id}: ${res.status} ${await res.text()}`);
 }
 
 async function deleteLegacy(id) {
   const url = `${API_ROOT}/submissions/${encodeURIComponent(id)}`;
   const res = await fetch(url, { method: "DELETE", headers: headers() });
   if (!res.ok) throw new Error(`Delete failed for submissions/${id}: ${res.status} ${await res.text()}`);
-}
-
-// Tombstone = delete then recreate with ONLY non-sensitive audit metadata.
-// Deliberately omits formCode SG-FRM-007, rowData, and submitter PII so the
-// record reveals nothing and won't match the SG-FRM-007 verification query.
-async function tombstoneLegacy(mapped) {
-  await deleteLegacy(mapped.id);
-  const url = `${API_ROOT}/submissions/${encodeURIComponent(mapped.id)}`;
-  const fields = {
-    status: { stringValue: "migrated" },
-    migratedTo: { stringValue: `abuseReports/${mapped.id}` },
-    legacySubmissionId: { stringValue: mapped.id },
-    recordId: { stringValue: mapped.recordId },
-    migratedAt: { timestampValue: new Date().toISOString() },
-    note: { stringValue: "Sensitive SG-FRM-007 content moved to restricted abuseReports." },
-  };
-  const res = await fetch(url, { method: "PATCH", headers: headers(), body: JSON.stringify({ fields }) });
-  if (!res.ok) throw new Error(`Tombstone write failed for submissions/${mapped.id}: ${res.status} ${await res.text()}`);
 }
 
 // ── main ────────────────────────────────────────────────────────────────
@@ -229,42 +219,70 @@ const mode = !runMigration ? "DRY RUN" : "LIVE";
 console.log(`Mode: ${mode} | LEGACY_ACTION=${legacyAction} | backupConfirmed=${backupConfirmed}`);
 console.log(`Found ${mappedReports.length} legacy SG-FRM-007 submission(s).`);
 
-let copied = 0;
-let destroyed = 0;
+let created = 0;
+let skipped = 0;
+let deleted = 0;
 const failures = [];
 
 for (const report of mappedReports) {
-  if (!runMigration) {
-    const wouldDestroy = destructive ? ` -> then ${legacyAction} submissions/${report.id}` : "";
-    console.log(`DRY RUN ${report.id} -> abuseReports/${report.id} (verify)${wouldDestroy}`);
-    continue;
-  }
-
+  const expected = identitySig(report.fields);
+  let existing;
   try {
-    await writeReport(report);
-    copied++;
-
-    const v = await verifyCopy(report);
-    if (!v.ok) {
-      failures.push(`${report.id}: copy NOT verified (${v.reason}); legacy doc left untouched`);
-      console.log(`COPIED ${report.id} -> abuseReports/${report.id} | VERIFY FAILED (${v.reason}) | legacy kept`);
-      continue;
-    }
-
-    if (legacyAction === "delete") {
-      await deleteLegacy(report.id);
-      destroyed++;
-      console.log(`COPIED+VERIFIED ${report.id} | DELETED submissions/${report.id}`);
-    } else if (legacyAction === "tombstone") {
-      await tombstoneLegacy(report);
-      destroyed++;
-      console.log(`COPIED+VERIFIED ${report.id} | TOMBSTONED submissions/${report.id}`);
-    } else {
-      console.log(`COPIED+VERIFIED ${report.id} | legacy kept (LEGACY_ACTION=none)`);
-    }
+    existing = await getAbuseReport(report.id);
   } catch (err) {
     failures.push(`${report.id}: ${err.message}`);
     console.log(`ERROR on ${report.id}: ${err.message}`);
+    continue;
+  }
+
+  // Decide the copy disposition (and detect mismatches) before any write.
+  let copyOk = false;
+  if (existing.exists) {
+    if (identitySig(existing.fields) === expected) {
+      copyOk = true;
+      if (!runMigration) {
+        console.log(`DRY RUN ${report.id} | already in abuseReports and MATCHES (would skip copy)`);
+      } else {
+        skipped++;
+        console.log(`SKIP COPY ${report.id} | already in abuseReports and matches`);
+      }
+    } else {
+      failures.push(`${report.id}: abuseReports/${report.id} exists but DIFFERS from source — left untouched`);
+      console.log(`CONFLICT ${report.id} | abuseReports doc differs from source | legacy kept`);
+      continue;
+    }
+  } else if (!runMigration) {
+    console.log(`DRY RUN ${report.id} -> would create abuseReports/${report.id}, verify, then ${destructive ? "delete" : "keep"} legacy`);
+  } else {
+    try {
+      await createReport(report);
+      created++;
+      const remote = await getAbuseReport(report.id);
+      if (remote.exists && identitySig(remote.fields) === expected) {
+        copyOk = true;
+        console.log(`CREATED+VERIFIED ${report.id} -> abuseReports/${report.id}`);
+      } else {
+        failures.push(`${report.id}: read-back verify failed — legacy doc left untouched`);
+        console.log(`VERIFY FAILED ${report.id} | legacy kept`);
+        continue;
+      }
+    } catch (err) {
+      failures.push(`${report.id}: ${err.message}`);
+      console.log(`ERROR on ${report.id}: ${err.message}`);
+      continue;
+    }
+  }
+
+  // Destroy the legacy doc only after a verified/matching copy.
+  if (runMigration && destructive && copyOk) {
+    try {
+      await deleteLegacy(report.id);
+      deleted++;
+      console.log(`DELETED submissions/${report.id}`);
+    } catch (err) {
+      failures.push(`${report.id}: ${err.message}`);
+      console.log(`ERROR deleting ${report.id}: ${err.message}`);
+    }
   }
 }
 
@@ -281,7 +299,7 @@ if (!runMigration) {
   console.log("\nDry run only. To write: RUN_MIGRATION=true.");
   console.log("Approved production run: RUN_MIGRATION=true LEGACY_ACTION=delete CONFIRM_BACKUP=true (after Chris approves + backup done).");
 } else {
-  console.log(`\nDone. copied=${copied} destroyed=${destroyed} failures=${failures.length}`);
+  console.log(`\nDone. created=${created} skipped=${skipped} deleted=${deleted} failures=${failures.length}`);
 }
 
 if (failures.length > 0) {
