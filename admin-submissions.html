@@ -219,7 +219,15 @@
 
   async function loadAndRender() {
     try {
-      allSubs = await listSubmissions({ count: 500 });
+      // Suspected-abuse reports (SG-FRM-007) belong to the restricted
+      // Safeguard-Lead workflow only. New ones write to the abuseReports
+      // collection, but legacy records created by the old in-Hub form may
+      // still sit in `submissions`. Exclude them here so they never appear
+      // in the ordinary submissions view. (Full separation also requires
+      // migrating those legacy records out of `submissions` — see
+      // scripts/migrate-legacy-abuse-reports.mjs.)
+      const raw = await listSubmissions({ count: 500 });
+      allSubs = raw.filter(s => s.formCode !== "SG-FRM-007");
     } catch (err) {
       showErr("Couldn't load submissions. " + (err.message || ""));
       return;

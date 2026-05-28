@@ -143,7 +143,16 @@
   // that bounce anonymous users here). Otherwise we route based
   // on profile state: incomplete → profile-setup, complete → dashboard.
   const params = new URLSearchParams(location.search);
-  const NEXT = params.get("next");
+  // Only accept same-origin relative page targets (e.g. "SG-SOP-003.html",
+  // "admin.html?id=x#frag"). Reject absolute URLs, protocol-relative "//evil",
+  // and anything with a scheme — otherwise ?next= is an open redirect that can
+  // bounce a just-authenticated user to a phishing site.
+  function safeNext(raw) {
+    if (!raw) return null;
+    if (/^[\w.~%+-]+\.html(?:[?#].*)?$/.test(raw)) return raw;
+    return null;
+  }
+  const NEXT = safeNext(params.get("next"));
 
   onUserChange(async user => {
     if (!user) return;

@@ -344,9 +344,12 @@ export function mountUserChip(container) {
     chipBtn.setAttribute("aria-expanded", open ? "true" : "false");
   }
   chipBtn.addEventListener("click", (e) => { e.stopPropagation(); setOpen(!open); });
-  // Keep the menu aligned if the viewport changes while it's open.
+  // Keep the menu aligned if the viewport changes while it's open. The header
+  // is static (not fixed) on most pages, so scrolling moves the chip — without
+  // this the fixed-position menu would detach and could slide off-screen.
   window.addEventListener("resize", () => { if (open) positionMenu(); });
   window.addEventListener("orientationchange", () => { if (open) positionMenu(); });
+  window.addEventListener("scroll", () => { if (open) positionMenu(); }, { passive: true });
   // Close when any menu item (except disabled) is clicked
   menu.querySelectorAll(".sg-uc-menu-btn:not(.disabled)").forEach(btn => {
     btn.addEventListener("click", () => setOpen(false));

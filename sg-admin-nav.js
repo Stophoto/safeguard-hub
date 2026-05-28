@@ -156,6 +156,9 @@
     });
     window.addEventListener('resize', () => { if (open) positionMenu(); });
     window.addEventListener('orientationchange', () => { if (open) positionMenu(); });
+    // Header is static, so scrolling moves the trigger — reposition the
+    // fixed menu (whose CSS default is top:0) to stay attached to the button.
+    window.addEventListener('scroll', () => { if (open) positionMenu(); }, { passive: true });
     menu.querySelectorAll('.sg-anv-item').forEach(i => {
       i.addEventListener('click', () => setOpen(false));
     });

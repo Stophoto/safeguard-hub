@@ -90,7 +90,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--teal); width: 
   }
   .sg-doc-row .sg-doc-badge {
     align-self: flex-end;
-    margin-top: -18px;
+    margin-top: 0;
   }
   .sg-form-card {
     padding: 20px 18px !important;
@@ -1144,7 +1144,8 @@ body.sg-ready #sg-auth-overlay { display: none; }
           h("div",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",letterSpacing:"0.02em"}},"Safeguard Framework \u2014 Bethany Chapel \u2014 v2.0 \u2014 March 2026"),
           h("div",{style:{display:"flex",alignItems:"center",gap:16}},
             h("a",{href:"privacy.html",style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",textDecoration:"underline"}},"Privacy"),
-            h("button",{onClick:function(){if(confirm("This will log you out. You\u2019ll need to re-enter the password next time.")){window.SG_Hub.clear();setConfigured(false);}},style:{background:"none",border:"none",fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",cursor:"pointer",textDecoration:"underline",padding:0}},"Sign Out"),
+            // Sign-out lives in the account menu (top-right user chip). The old
+            // footer button cleared the retired Sheets password and is removed.
             h("span",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--muted)",letterSpacing:"0.02em"}},"SG-HUB-001"))))
     );
   }
