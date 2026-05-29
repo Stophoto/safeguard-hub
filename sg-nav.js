@@ -104,6 +104,17 @@
     { label: 'Admin', href: 'index.html#admin' }
   ];
 
+  // Coordinator-only admin destinations. The Admin nav item is upgraded into
+  // a dropdown of these once we know the signed-in user is a coordinator
+  // (see setAdminAccess + the auth block below).
+  var ADMIN_LINKS = [
+    { label: 'People',      href: 'admin.html' },
+    { label: 'Screening',   href: 'admin-screening.html' },
+    { label: 'Submissions', href: 'admin-submissions.html' },
+    { label: 'Tasks',       href: 'admin-tasks.html' },
+    { label: 'Room Kit',    href: 'admin-room-kit.html' }
+  ];
+
   // ── Styles ──
   var css = [
     '#sg-nav-header { position: fixed; top: 0; left: 0; right: 0; z-index: 9999;',
@@ -115,12 +126,12 @@
     '#sg-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 28px;',
     '  display: flex; align-items: center; height: 60px; gap: 2px; }',
     '#sg-nav-brand { display: flex; align-items: center; gap: 12px;',
-    '  margin-right: auto; text-decoration: none; }',
+    '  margin-right: auto; text-decoration: none; flex-shrink: 0; }',
     '#sg-nav-brand .sg-brand-text { display: flex; flex-direction: column; line-height: 1.05; }',
     '#sg-nav-brand small { font-size: 9px; font-weight: 700; letter-spacing: 0.22em;',
-    '  color: '+GOLD+'; text-transform: uppercase; }',
+    '  color: '+GOLD+'; text-transform: uppercase; white-space: nowrap; }',
     '#sg-nav-brand .sg-brand-name { font-family: '+SERIF+'; font-size: 19px;',
-    '  color: '+WHITE+'; margin-top: 2px; }',
+    '  color: '+WHITE+'; margin-top: 2px; white-space: nowrap; }',
     '#sg-nav-brand:hover .sg-brand-name { color: '+GOLD_WARM+'; }',
     '.sg-nav-item { position: relative; }',
     '.sg-nav-link { padding: 9px 16px; font-size: 13px; font-weight: 600;',
@@ -148,6 +159,7 @@
     '  color: '+BODY+'; text-decoration: none; line-height: 1.4;',
     '  transition: all 0.1s; cursor: pointer; }',
     '.sg-dd-item:hover { background: '+CREAM+'; color: '+TEAL+'; }',
+    '.sg-dd-item.sg-dd-active { color: '+TEAL+'; font-weight: 600; background: '+CREAM+'; }',
     '.sg-dd-item .sg-dd-code { font-size: 11px; font-weight: 700; color: '+TEAL+';',
     '  min-width: 84px; flex-shrink: 0; }',
     '.sg-dd-item.disabled { opacity: 0.45; cursor: default; }',
@@ -155,9 +167,10 @@
     '.sg-nav-action { padding: 8px 16px; font-size: 12px; font-weight: 700;',
     '  color: '+GOLD_WARM+'; background: rgba(176,144,85,0.12);',
     '  border: 1px solid rgba(176,144,85,0.25); border-radius: 6px;',
-    '  cursor: pointer; transition: all 0.15s; margin-left: 8px;',
-    '  font-family: '+SANS+'; letter-spacing: 0.02em; }',
+    '  cursor: pointer; transition: all 0.15s; margin-left: 8px; flex-shrink: 0;',
+    '  white-space: nowrap; font-family: '+SANS+'; letter-spacing: 0.02em; }',
     '.sg-nav-action:hover { background: rgba(176,144,85,0.22); }',
+    '#sg-nav-user-chip { flex-shrink: 0; }',
     // Phase 4: user pill + sign-out (injected when Firebase user is signed in)
     '.sg-user-pill { background: rgba(255,255,255,0.08); color: '+WHITE+';',
     '  padding: 5px 12px; border-radius: 16px; font-size: 11px; font-weight: 500;',
@@ -265,7 +278,10 @@
 
   NAV.forEach(function (item) {
     if (!item.groups) {
-      html += '<div class="sg-nav-item"><a class="sg-nav-link" href="'+item.href+'">'+item.label+'</a></div>';
+      // Tag the Admin item so the auth block can find it and (for
+      // coordinators) upgrade it into a dropdown of admin destinations.
+      var idAttr = item.label === 'Admin' ? ' id="sg-nav-admin"' : '';
+      html += '<div class="sg-nav-item"'+idAttr+'><a class="sg-nav-link" href="'+item.href+'">'+item.label+'</a></div>';
       return;
     }
     html += '<div class="sg-nav-item">';
@@ -286,9 +302,12 @@
     html += '</div></div>';
   });
 
-  // Save PDF only on non-Hub pages
+  // Save PDF only on printable document pages (those carrying a doc code).
+  // App pages (admin, dashboard, onboarding flows) have no data-doc-code and
+  // shouldn't show a Save PDF button.
   var onHub = /(?:^|\/)index\.html?$/i.test(location.pathname) || location.pathname.endsWith('/');
-  if (!onHub) {
+  var isDocPage = !!document.body.getAttribute('data-doc-code');
+  if (!onHub && isDocPage) {
     html += '<button class="sg-nav-action" onclick="window.print()" title="Save as PDF or print">Save PDF</button>';
   }
   html += '</div>';
@@ -398,9 +417,34 @@
     }
   }
 
+  // Show/hide + shape the Admin nav item based on coordinator access.
+  // Coordinators get a dropdown of admin destinations; everyone else has the
+  // item hidden. Idempotent — safe to call on every auth-state change.
+  function setAdminAccess(isCoordinator) {
+    var adminItem = document.getElementById('sg-nav-admin');
+    if (!adminItem) return;
+    if (!isCoordinator) {
+      adminItem.style.display = 'none';
+      adminItem.setAttribute('data-sg-hidden', 'admin');
+      return;
+    }
+    adminItem.style.display = '';
+    adminItem.removeAttribute('data-sg-hidden');
+    var current = (location.pathname.split('/').pop() || '').toLowerCase();
+    var inner = '<button class="sg-nav-link" type="button">Admin '+chev+'</button>';
+    inner += '<div class="sg-nav-dropdown"><div class="sg-dd-group">Administration</div>';
+    ADMIN_LINKS.forEach(function (l) {
+      var active = l.href.toLowerCase() === current ? ' sg-dd-active' : '';
+      inner += '<a class="sg-dd-item'+active+'" href="'+l.href+'"><span>'+l.label+'</span></a>';
+    });
+    inner += '</div>';
+    adminItem.innerHTML = inner;
+  }
+
   // Public API for hand-linking codes in page content
   window.SG_Nav = {
     DOCS: DOCS,
+    setAdminAccess: setAdminAccess,
     link: function (code, label) {
       var d = DOCS[code];
       if (!d) return code;
@@ -432,35 +476,22 @@
       // Clean up legacy Phase 4 injections if any are still lingering
       navInner.querySelectorAll('.sg-user-pill, .sg-signout-btn, #sg-dash-link')
         .forEach(function (el) { el.remove(); });
-      // Restore any Admin nav item we hid on a prior render
-      navInner.querySelectorAll('.sg-nav-item[data-sg-hidden="admin"]').forEach(function (el) {
-        el.style.display = '';
-        el.removeAttribute('data-sg-hidden');
-      });
 
       // Remove any previously mounted chip container so we can re-mount on auth change
       var existingChip = document.getElementById('sg-nav-user-chip');
       if (existingChip) existingChip.remove();
 
-      if (!user) return;
+      if (!user) {
+        // Signed out — hide Admin (anonymous visitors have no admin access).
+        if (window.SG_Nav) window.SG_Nav.setAdminAccess(false);
+        return;
+      }
 
       var profile = null;
       try { profile = await profileMod.getOrCreateProfile(); } catch (_) { return; }
 
-      // Retarget the Admin nav item based on role
-      navInner.querySelectorAll('.sg-nav-link').forEach(function (a) {
-        if ((a.textContent || '').trim() === 'Admin') {
-          if (profile.role === 'coordinator') {
-            a.setAttribute('href', 'admin.html');
-          } else {
-            var parent = a.closest('.sg-nav-item');
-            if (parent) {
-              parent.setAttribute('data-sg-hidden', 'admin');
-              parent.style.display = 'none';
-            }
-          }
-        }
-      });
+      // Coordinators get an Admin dropdown; everyone else keeps it hidden.
+      if (window.SG_Nav) window.SG_Nav.setAdminAccess(profile.role === 'coordinator');
 
       // Mount the user chip as the last item in the nav row
       // (brand has margin-right:auto which already floats nav items right)
