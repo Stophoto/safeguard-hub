@@ -154,7 +154,7 @@ export function usersToCsv(users) {
     "Date of birth","Phone",
     "Street","City","Province","Postal",
     "Emergency contact name","Emergency contact phone","Emergency contact relationship",
-    "Age groups","Service times",
+    "Programs","Sunday children areas","Service times",
     "Attending since","Testimony",
     "Created at","Updated at",
   ];
@@ -177,7 +177,8 @@ export function usersToCsv(users) {
     u.emergencyContact && u.emergencyContact.name,
     u.emergencyContact && u.emergencyContact.phone,
     u.emergencyContact && u.emergencyContact.relationship,
-    (u.ageGroups || []).join("; "),
+    (u.programs || []).join("; "),
+    (u.childrenAreas || []).join("; "),
     (u.serviceTimes || []).join("; "),
     u.attendingSince, u.testimony,
     tsToIso(u.createdAt),

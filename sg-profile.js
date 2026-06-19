@@ -43,8 +43,10 @@ function newProfile() {
     emergencyContact: { name: "", phone: "", relationship: "" },
 
     // Ministry preferences
-    ageGroups: [],          // subset of ["nursery","preschool","elementary","preteen","youth"]
+    ageGroups: [],          // legacy (still used by SG-FRM-001); profile-setup now uses `programs`
     serviceTimes: [],       // subset of ["9am","11am","wed-pm","special"]
+    programs: [],           // ["sunday-children","awana","youth","weekday-childcare","camp"]
+    childrenAreas: [],      // ["preschool","grade-school","floating"] — only if "sunday-children" chosen
     testimony: "",
     attendingSince: "",
 

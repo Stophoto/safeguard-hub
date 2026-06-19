@@ -219,13 +219,22 @@
         <div class="section-title">Where you'd like to help</div>
 
         <div class="field">
-          <label>Which age groups are you open to serving?</label>
-          <div class="pills" role="group" aria-label="Age groups">
-            <label class="pill"><input type="checkbox" value="nursery"    name="ageGroups"><span>Nursery (0–2)</span></label>
-            <label class="pill"><input type="checkbox" value="preschool"  name="ageGroups"><span>Preschool (3–5)</span></label>
-            <label class="pill"><input type="checkbox" value="elementary" name="ageGroups"><span>Elementary (K–5)</span></label>
-            <label class="pill"><input type="checkbox" value="preteen"    name="ageGroups"><span>Preteen (6–8)</span></label>
-            <label class="pill"><input type="checkbox" value="youth"      name="ageGroups"><span>Youth (9–12)</span></label>
+          <label>Are you interested in serving with?</label>
+          <div class="pills" role="group" aria-label="Programs">
+            <label class="pill"><input type="checkbox" value="sunday-children"   name="programs" id="prog-sunday"><span>Sunday Children's program</span></label>
+            <label class="pill"><input type="checkbox" value="awana"             name="programs"><span>Friday night Awana</span></label>
+            <label class="pill"><input type="checkbox" value="youth"             name="programs"><span>Youth</span></label>
+            <label class="pill"><input type="checkbox" value="weekday-childcare" name="programs"><span>Week day childcare</span></label>
+            <label class="pill"><input type="checkbox" value="camp"              name="programs"><span>Camp</span></label>
+          </div>
+        </div>
+
+        <div class="field" id="childrenAreasField" style="margin-top:20px; display:none">
+          <label>Within the Sunday Children's program, where would you like to serve?</label>
+          <div class="pills" role="group" aria-label="Sunday Children's program areas">
+            <label class="pill"><input type="checkbox" value="preschool"    name="childrenAreas"><span>Preschool</span></label>
+            <label class="pill"><input type="checkbox" value="grade-school" name="childrenAreas"><span>Grade School</span></label>
+            <label class="pill"><input type="checkbox" value="floating"     name="childrenAreas"><span>Floating Volunteer</span></label>
           </div>
         </div>
 
@@ -307,8 +316,9 @@
 
   // ── Read form values into a plain profile object ──
   function readForm() {
-    const ageGroups    = [...document.querySelectorAll('input[name="ageGroups"]:checked')].map(i => i.value);
-    const serviceTimes = [...document.querySelectorAll('input[name="serviceTimes"]:checked')].map(i => i.value);
+    const programs      = [...document.querySelectorAll('input[name="programs"]:checked')].map(i => i.value);
+    const childrenAreas = [...document.querySelectorAll('input[name="childrenAreas"]:checked')].map(i => i.value);
+    const serviceTimes  = [...document.querySelectorAll('input[name="serviceTimes"]:checked')].map(i => i.value);
     return {
       firstName:      v("firstName"),
       lastName:       v("lastName"),
@@ -317,7 +327,8 @@
       phone:          v("phone"),
       address: { street: v("street"), city: v("city"), province: v("province"), postal: v("postal") },
       emergencyContact: { name: v("ecName"), phone: v("ecPhone"), relationship: v("ecRel") },
-      ageGroups,
+      programs,
+      childrenAreas,
       serviceTimes,
       testimony:      v("testimony"),
       attendingSince: v("attendingSince"),
@@ -344,10 +355,15 @@
       setv("ecPhone", p.emergencyContact.phone);
       setv("ecRel",   p.emergencyContact.relationship);
     }
-    (p.ageGroups || []).forEach(val => {
-      const cb = document.querySelector('input[name="ageGroups"][value="' + val + '"]');
+    (p.programs || []).forEach(val => {
+      const cb = document.querySelector('input[name="programs"][value="' + val + '"]');
       if (cb) cb.checked = true;
     });
+    (p.childrenAreas || []).forEach(val => {
+      const cb = document.querySelector('input[name="childrenAreas"][value="' + val + '"]');
+      if (cb) cb.checked = true;
+    });
+    syncChildrenAreas();
     (p.serviceTimes || []).forEach(val => {
       const cb = document.querySelector('input[name="serviceTimes"][value="' + val + '"]');
       if (cb) cb.checked = true;
@@ -356,6 +372,15 @@
     setv("attendingSince", p.attendingSince);
   }
   function setv(id, val) { if (val) document.getElementById(id).value = val; }
+
+  // Show the Sunday Children's follow-up only when that program is selected.
+  function syncChildrenAreas() {
+    const sunday = document.getElementById("prog-sunday");
+    const field  = document.getElementById("childrenAreasField");
+    if (sunday && field) field.style.display = sunday.checked ? "" : "none";
+  }
+  const _progSunday = document.getElementById("prog-sunday");
+  if (_progSunday) _progSunday.addEventListener("change", syncChildrenAreas);
 
   // ── Messages ──
   function showMsg(text, kind) {
