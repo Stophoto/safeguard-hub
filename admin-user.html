@@ -274,8 +274,11 @@
           <textarea id="testimony" class="fi"></textarea>
         </div>
         <div class="field">
-          <label for="attendingSince">Attending since</label>
-          <input type="month" id="attendingSince" class="fi">
+          <label>Attending since</label>
+          <div style="display:flex;gap:12px">
+            <select id="attendingMonth" class="fi"><option value="">Month</option><option value="01">January</option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>
+            <select id="attendingYear" class="fi"><option value="">Year</option></select>
+          </div>
         </div>
       </div>
 
@@ -535,7 +538,10 @@
     (u.childrenAreas || []).forEach(v => check("childrenAreas", v));
     syncChildrenAreas();
     setv("testimony",      u.testimony);
-    setv("attendingSince", u.attendingSince);
+    if (u.attendingSince && /^\d{4}-\d{2}$/.test(u.attendingSince)) {
+      document.getElementById("attendingYear").value  = u.attendingSince.slice(0, 4);
+      document.getElementById("attendingMonth").value = u.attendingSince.slice(5, 7);
+    }
 
     metaComplete.textContent = u.profileComplete ? "Yes" : "No";
     metaCreated.textContent  = fmt(u.createdAt);
@@ -957,6 +963,16 @@
     if (sunday && field) field.style.display = sunday.checked ? "" : "none";
   }
   (function () { const ps = document.getElementById("prog-sunday"); if (ps) ps.addEventListener("change", syncChildrenAreas); })();
+  (function () {
+    const ys = document.getElementById("attendingYear");
+    if (!ys) return;
+    const now = new Date().getFullYear();
+    for (let y = now; y >= now - 60; y--) {
+      const o = document.createElement("option");
+      o.value = String(y); o.textContent = String(y);
+      ys.appendChild(o);
+    }
+  })();
 
   function readForm() {
     const programs      = [...document.querySelectorAll('input[name="programs"]:checked')].map(i=>i.value);
@@ -973,7 +989,7 @@
       emergencyContact: { name: v("ecName"), phone: v("ecPhone"), relationship: v("ecRel") },
       programs, childrenAreas,
       testimony:      v("testimony"),
-      attendingSince: v("attendingSince"),
+      attendingSince: (function(){ const m=document.getElementById("attendingMonth").value, y=document.getElementById("attendingYear").value; return (m&&y)?y+"-"+m:""; })(),
     };
   }
   function v(id) { return document.getElementById(id).value.trim ? document.getElementById(id).value.trim() : document.getElementById(id).value; }

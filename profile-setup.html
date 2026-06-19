@@ -245,8 +245,11 @@
         </div>
 
         <div class="field">
-          <label for="attendingSince">When did you start attending Bethany Chapel? <span class="opt">— pick the month</span></label>
-          <input type="month" id="attendingSince" class="fi" required>
+          <label>When did you start attending Bethany Chapel?</label>
+          <div style="display:flex;gap:12px">
+            <select id="attendingMonth" class="fi"><option value="">Month</option><option value="01">January</option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>
+            <select id="attendingYear" class="fi"><option value="">Year</option></select>
+          </div>
         </div>
       </div>
 
@@ -284,8 +287,20 @@
   const REQUIRED = [
     "firstName","lastName","dob","phone",
     "street","city","province","postal",
-    "ecName","ecPhone","ecRel","attendingSince"
+    "ecName","ecPhone","ecRel","attendingMonth","attendingYear"
   ];
+
+  // Populate the attending-since year dropdown (this year back 60 years).
+  (function () {
+    const ys = document.getElementById("attendingYear");
+    if (!ys) return;
+    const now = new Date().getFullYear();
+    for (let y = now; y >= now - 60; y--) {
+      const o = document.createElement("option");
+      o.value = String(y); o.textContent = String(y);
+      ys.appendChild(o);
+    }
+  })();
 
   // ── Gate: need a verified, signed-in user ──
   onUserChange(async user => {
@@ -320,7 +335,7 @@
       programs,
       childrenAreas,
       testimony:      v("testimony"),
-      attendingSince: v("attendingSince"),
+      attendingSince: (function(){ const m=document.getElementById("attendingMonth").value, y=document.getElementById("attendingYear").value; return (m&&y)?y+"-"+m:""; })(),
     };
   }
   function v(id) { return document.getElementById(id).value.trim(); }
@@ -354,7 +369,10 @@
     });
     syncChildrenAreas();
     setv("testimony",      p.testimony);
-    setv("attendingSince", p.attendingSince);
+    if (p.attendingSince && /^\d{4}-\d{2}$/.test(p.attendingSince)) {
+      document.getElementById("attendingYear").value  = p.attendingSince.slice(0, 4);
+      document.getElementById("attendingMonth").value = p.attendingSince.slice(5, 7);
+    }
   }
   function setv(id, val) { if (val) document.getElementById(id).value = val; }
 
