@@ -29,6 +29,7 @@
   var BODY = '#3D3835';
   var SANS = "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif";
   var SERIF = "'DM Serif Display', Georgia, serif";
+  var LOGO_FONT = "'Archivo', " + SANS;  // bold geometric sans, matched to the Bethany Chapel logo
 
   // ── Inject Google Fonts if not already loaded ──
   if (!document.querySelector('link[href*="DM+Serif+Display"]')) {
@@ -38,6 +39,14 @@
     fontLink.integrity = 'sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ';
     fontLink.crossOrigin = 'anonymous';
     document.head.appendChild(fontLink);
+  }
+  // Logo-matching font for the brand name (separate link; CSP allows fonts.googleapis.com)
+  if (!document.querySelector('link[href*="family=Archivo"]')) {
+    var logoFont = document.createElement('link');
+    logoFont.rel = 'stylesheet';
+    logoFont.href = 'https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&display=swap';
+    logoFont.crossOrigin = 'anonymous';
+    document.head.appendChild(logoFont);
   }
 
   // ── Document registry — every linkable doc ──
@@ -129,8 +138,8 @@
     '#sg-nav-brand .sg-brand-text { display: flex; flex-direction: column; line-height: 1.05; }',
     '#sg-nav-brand small { font-size: 9px; font-weight: 700; letter-spacing: 0.22em;',
     '  color: '+GOLD+'; text-transform: uppercase; white-space: nowrap; }',
-    '#sg-nav-brand .sg-brand-name { font-family: '+SERIF+'; font-size: 19px;',
-    '  color: '+WHITE+'; margin-top: 2px; white-space: nowrap; }',
+    '#sg-nav-brand .sg-brand-name { font-family: '+LOGO_FONT+'; font-size: 18px; font-weight: 700;',
+    '  letter-spacing: 0.01em; text-transform: uppercase; color: '+WHITE+'; margin-top: 2px; white-space: nowrap; }',
     '#sg-nav-brand:hover .sg-brand-name { color: '+GOLD_WARM+'; }',
     '.sg-nav-item { position: relative; }',
     '.sg-nav-link { padding: 9px 16px; font-size: 13px; font-weight: 600;',
@@ -284,7 +293,7 @@
   var html = '<div id="sg-nav-inner">';
   html += '<a id="sg-nav-brand" href="index.html">'
         + shieldSvg
-        + '<div class="sg-brand-text"><small>Safeguard Framework</small>'
+        + '<div class="sg-brand-text"><small>Safeguard Hub</small>'
         + '<span class="sg-brand-name">'+CHURCH+'</span></div></a>';
 
   NAV.forEach(function (item) {
