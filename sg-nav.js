@@ -221,6 +221,18 @@
     '  align-items: center; flex-wrap: wrap; gap: 8px; }',
     '#sg-nav-footer a { color: '+TEAL+'; text-decoration: none; border: none; }',
     '#sg-nav-footer a:hover { text-decoration: underline; }',
+    // Reading actions (Back / Mark complete) on document pages
+    '#sg-reading-actions { max-width: 720px; margin: 0 auto;',
+    '  padding: 1.75rem 1.5rem 0; display: flex; gap: 12px; flex-wrap: wrap; }',
+    '#sg-reading-actions button { font-family: '+SANS+'; font-size: 14px;',
+    '  font-weight: 600; padding: 11px 20px; border-radius: 8px; cursor: pointer;',
+    '  border: 1.5px solid transparent; transition: all 0.2s; }',
+    '#sg-reading-actions .sg-ra-back { background: transparent; color: '+TEAL+'; border-color: '+BORDER+'; }',
+    '#sg-reading-actions .sg-ra-back:hover { border-color: '+TEAL+'; }',
+    '#sg-reading-actions .sg-ra-complete { background: '+NAVY+'; color: '+WHITE+'; }',
+    '#sg-reading-actions .sg-ra-complete:hover { background: '+TEAL+'; }',
+    '#sg-reading-actions .sg-ra-complete.done { background: #2E7D5B; }',
+    '@media print { #sg-reading-actions { display: none !important; } }',
     // Mobile
     '@media (max-width: 760px) {',
     // Nav row scrolls horizontally so all items stay reachable with a swipe.
@@ -413,6 +425,29 @@
       wrapper.parentNode.insertBefore(footer, wrapper.nextSibling);
     } else {
       document.body.appendChild(footer);
+    }
+
+    // ── Reading actions: Back + Mark complete (reading docs only — not forms or print sheets) ──
+    if (!document.querySelector('.sheet') && docCode.indexOf('SG-FRM') !== 0) {
+      var ra = document.createElement('div');
+      ra.id = 'sg-reading-actions';
+      var raKey = 'sg-read-complete:' + docCode;
+      var raDone = false;
+      try { raDone = localStorage.getItem(raKey) === '1'; } catch (e) {}
+      ra.innerHTML = '<button type="button" class="sg-ra-back">&#8592; Back</button>'
+        + '<button type="button" class="sg-ra-complete' + (raDone ? ' done' : '') + '">'
+        + (raDone ? '&#10003; Completed' : 'Mark as complete') + '</button>';
+      footer.parentNode.insertBefore(ra, footer);
+      ra.querySelector('.sg-ra-back').addEventListener('click', function () {
+        if (window.history.length > 1) { window.history.back(); }
+        else { window.location.href = 'dashboard.html'; }
+      });
+      var raBtn = ra.querySelector('.sg-ra-complete');
+      raBtn.addEventListener('click', function () {
+        var done = raBtn.classList.toggle('done');
+        try { if (done) { localStorage.setItem(raKey, '1'); } else { localStorage.removeItem(raKey); } } catch (e) {}
+        raBtn.innerHTML = done ? '&#10003; Completed' : 'Mark as complete';
+      });
     }
   }
 
