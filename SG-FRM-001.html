@@ -191,7 +191,7 @@
       <div class="section-head">Instructions</div>
       <div class="section-title">Before you begin</div>
       <p class="section-intro">Complete all sections. Print clearly or type directly into the fillable form. Return the completed form to the Safeguard Lead. A background screening and reference check will follow.</p>
-      <p class="section-intro">If you are under 18, complete Sections 1, 4, and 8 (Youth Applicants) plus the parent/guardian consent in Section 9.</p>
+      <p class="section-intro">If you are under 16, complete Sections 1, 4, and 8 (Junior Volunteers) plus the parent/guardian consent in Section 9.</p>
     </div>
 
     <div class="card">
@@ -340,13 +340,13 @@
 
     <div class="card youth">
       <div class="section-head">Section 8</div>
-      <div class="section-title">Youth Applicants (Under 18)</div>
+      <div class="section-title">Junior Volunteers (Under 16)</div>
       <div class="youth-callout">
         <div class="ico">!</div>
         <div>
-          <span class="who">Youth Applicants Only</span>
-          <span class="head">Skip this section if you are 18 or older.</span>
-          <span class="sub">Sections 8 and 9 are required <strong>only</strong> for applicants under 18. If you're an adult applicant, go straight to the Submit button &mdash; do not fill anything here.</span>
+          <span class="who">Junior Volunteers Only</span>
+          <span class="head">Skip this section if you are 16 or older.</span>
+          <span class="sub">Sections 8 and 9 are required <strong>only</strong> for applicants under 16. If you're an adult applicant, go straight to the Submit button &mdash; do not fill anything here.</span>
         </div>
       </div>
 
@@ -366,7 +366,7 @@
       <div class="sub-title">Volunteer Experience</div>
       <div class="field"><label for="f_yExp">List any volunteer experience, part-time jobs, or babysitting</label><textarea id="f_yExp" class="fi"></textarea></div>
 
-      <div class="sub-title">Youth References</div>
+      <div class="sub-title">Junior Volunteer References</div>
       <p class="section-intro"><em>Provide two adults who know you well. At least one must be a pastor, teacher, or employer. One relative is allowed.</em></p>
 
       <div style="font-weight:600;color:var(--navy);margin:14px 0 8px 0">Reference #1</div>
@@ -380,29 +380,29 @@
 
     <div class="card youth">
       <div class="section-head">Section 9</div>
-      <div class="section-title">Youth Declaration &amp; Parent/Guardian Consent</div>
+      <div class="section-title">Junior Volunteer Declaration &amp; Parent/Guardian Consent</div>
       <div class="youth-callout">
         <div class="ico">!</div>
         <div>
-          <span class="who">Youth Applicants Only</span>
-          <span class="head">Skip this section if you are 18 or older.</span>
-          <span class="sub">This section pairs with Section 8. Parent or guardian consent is required for all applicants under 18.</span>
+          <span class="who">Junior Volunteers Only</span>
+          <span class="head">Skip this section if you are 16 or older.</span>
+          <span class="sub">This section pairs with Section 8. Parent or guardian consent is required for all applicants under 16.</span>
         </div>
       </div>
 
-      <div class="sub-title">Youth Declaration</div>
+      <div class="sub-title">Junior Volunteer Declaration</div>
       <label class="attest"><input type="checkbox" id="f_yd1"><span>I affirm that the information above is true.</span></label>
       <label class="attest"><input type="checkbox" id="f_yd2"><span>I commit to serving under the Safeguard Framework and its core protection policies (<a class="inline-link" href="SG-POL-001.html">SG-POL-001</a> through <a class="inline-link" href="SG-POL-004.html">SG-POL-004</a>).</span></label>
       <label class="attest"><input type="checkbox" id="f_yd3"><span>I understand that my ministry involvement will be supervised by two approved adults at all times.</span></label>
 
       <div class="row-sig" style="margin-top:14px">
-        <div class="field"><label for="f_youthSig">Youth Applicant &mdash; Signature</label><input type="text" id="f_youthSig" class="fi"></div>
+        <div class="field"><label for="f_youthSig">Junior Volunteer &mdash; Signature</label><input type="text" id="f_youthSig" class="fi"></div>
         <div class="field"><label for="f_youthSigDate">Date</label><input type="date" id="f_youthSigDate" class="fi"></div>
       </div>
       <label class="attest"><input type="checkbox" id="f_youthConsent"><span>I intend my typed name above to serve as my signature on this declaration.</span></label>
 
       <div class="sub-title">Parent / Guardian Consent</div>
-      <label class="attest"><input type="checkbox" id="f_pc1"><span>I give permission for my child to serve as a youth volunteer under the Safeguard Framework. I understand they will be supervised by two approved adults at all times and agree to support their participation.</span></label>
+      <label class="attest"><input type="checkbox" id="f_pc1"><span>I give permission for my child to serve as a Junior Volunteer under the Safeguard Framework. I understand they will be supervised by two approved adults at all times and agree to support their participation.</span></label>
 
       <div class="row-sig">
         <div class="field"><label for="f_pgSig">Parent / Guardian &mdash; Signature</label><input type="text" id="f_pgSig" class="fi"></div>
@@ -674,7 +674,7 @@
     return arr;
   }
   function isYouth(){
-    // Treat as youth if any Section 8/9 field is filled OR if DOB < 18 years ago.
+    // Treat as youth if any Section 8/9 field is filled OR if DOB < 16 years ago.
     const ids = ["f_grade","f_parentName","f_parentPhone","f_yFaith","f_yWhy","f_yGifts","f_yConcerns","f_yExp","f_youthSig","f_pgSig"];
     if (ids.some(id => val(id).trim())) return true;
     const dob = val("f_dob");
@@ -682,7 +682,7 @@
       const birth = new Date(dob);
       if (!isNaN(birth.getTime())) {
         const ageYears = (Date.now() - birth.getTime()) / (1000*60*60*24*365.25);
-        if (ageYears < 18) return true;
+        if (ageYears < 16) return true;
       }
     }
     return false;

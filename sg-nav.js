@@ -54,7 +54,6 @@
     'SG-FRM-005':  { title: 'Child Registration & Medical Release', href: 'SG-FRM-005.html' },
     'SG-FRM-006':  { title: 'Incident / Accident Report',       href: 'SG-FRM-006.html', fillable: true },
     'SG-FRM-007':  { title: 'Suspected Abuse Report',           href: 'SG-FRM-007.html', fillable: true },
-    'SG-FRM-008':  { title: 'Sign-In / Sign-Out & Attendance',  href: 'SG-FRM-008.html' },
     'SG-FRM-008-session': { title: 'Session Check Sheet (printable)', href: 'SG-FRM-008-session-check-sheet.html' },
     'SG-FRM-009':  { title: 'Event Permission & Waiver',        href: 'SG-FRM-009.html' },
     'SG-FRM-010':  { title: 'Driver Application',               href: 'SG-FRM-010.html' },
@@ -91,7 +90,7 @@
     ]},
     { label: 'Forms', groups: [
       { label: 'Fillable forms', items: ['SG-FRM-001','SG-FRM-006','SG-FRM-007','SG-FRM-012'] },
-      { label: 'Printable', items: ['SG-FRM-002','SG-FRM-003','SG-FRM-004','SG-FRM-005','SG-FRM-008','SG-FRM-009','SG-FRM-010','SG-FRM-011'] }
+      { label: 'Printable', items: ['SG-FRM-002','SG-FRM-003','SG-FRM-004','SG-FRM-005','SG-FRM-009','SG-FRM-010','SG-FRM-011'] }
     ]},
     { label: 'SOPs', groups: [
       { label: 'Standard Operating Procedures', items: ['SG-SOP-001','SG-SOP-002','SG-SOP-003','SG-SOP-004','SG-SOP-005','SG-SOP-006','SG-SOP-007'] }
