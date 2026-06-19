@@ -270,15 +270,6 @@
           </div>
         </div>
         <div class="field" style="margin-top:14px">
-          <label>Service times</label>
-          <div class="pills">
-            <label class="pill"><input type="checkbox" value="9am"     name="serviceTimes"><span>Sunday 9am</span></label>
-            <label class="pill"><input type="checkbox" value="11am"    name="serviceTimes"><span>Sunday 11am</span></label>
-            <label class="pill"><input type="checkbox" value="wed-pm"  name="serviceTimes"><span>Wednesday PM</span></label>
-            <label class="pill"><input type="checkbox" value="special" name="serviceTimes"><span>Special events</span></label>
-          </div>
-        </div>
-        <div class="field" style="margin-top:14px">
           <label for="testimony">Faith story</label>
           <textarea id="testimony" class="fi"></textarea>
         </div>
@@ -543,7 +534,6 @@
     (u.programs || []).forEach(v => check("programs", v));
     (u.childrenAreas || []).forEach(v => check("childrenAreas", v));
     syncChildrenAreas();
-    (u.serviceTimes || []).forEach(v => check("serviceTimes", v));
     setv("testimony",      u.testimony);
     setv("attendingSince", u.attendingSince);
 
@@ -971,7 +961,6 @@
   function readForm() {
     const programs      = [...document.querySelectorAll('input[name="programs"]:checked')].map(i=>i.value);
     const childrenAreas = [...document.querySelectorAll('input[name="childrenAreas"]:checked')].map(i=>i.value);
-    const serviceTimes  = [...document.querySelectorAll('input[name="serviceTimes"]:checked')].map(i=>i.value);
     return {
       role:   v("role"),
       status: v("status"),
@@ -982,7 +971,7 @@
       phone:         v("phone"),
       address: { street: v("street"), city: v("city"), province: v("province"), postal: v("postal") },
       emergencyContact: { name: v("ecName"), phone: v("ecPhone"), relationship: v("ecRel") },
-      programs, childrenAreas, serviceTimes,
+      programs, childrenAreas,
       testimony:      v("testimony"),
       attendingSince: v("attendingSince"),
     };

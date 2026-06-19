@@ -239,16 +239,6 @@
         </div>
 
         <div class="field" style="margin-top:20px">
-          <label>Which service times work for you?</label>
-          <div class="pills" role="group" aria-label="Service times">
-            <label class="pill"><input type="checkbox" value="9am"      name="serviceTimes"><span>Sunday 9am</span></label>
-            <label class="pill"><input type="checkbox" value="11am"     name="serviceTimes"><span>Sunday 11am</span></label>
-            <label class="pill"><input type="checkbox" value="wed-pm"   name="serviceTimes"><span>Wednesday PM</span></label>
-            <label class="pill"><input type="checkbox" value="special"  name="serviceTimes"><span>Special events</span></label>
-          </div>
-        </div>
-
-        <div class="field" style="margin-top:20px">
           <label for="testimony">Your faith story <span class="opt">— just 2–3 sentences</span></label>
           <div style="font-size:13px;color:var(--muted);margin-bottom:6px;line-height:1.5">No essay needed. A few sentences answering any of these is perfect: How did you come to follow Jesus? What does your faith look like day to day? Why do you want to serve?</div>
           <textarea id="testimony" class="fi" placeholder="e.g., I grew up in church, but my faith became my own in my twenties. Serving kids is how I want to give back."></textarea>
@@ -319,7 +309,6 @@
   function readForm() {
     const programs      = [...document.querySelectorAll('input[name="programs"]:checked')].map(i => i.value);
     const childrenAreas = [...document.querySelectorAll('input[name="childrenAreas"]:checked')].map(i => i.value);
-    const serviceTimes  = [...document.querySelectorAll('input[name="serviceTimes"]:checked')].map(i => i.value);
     return {
       firstName:      v("firstName"),
       lastName:       v("lastName"),
@@ -330,7 +319,6 @@
       emergencyContact: { name: v("ecName"), phone: v("ecPhone"), relationship: v("ecRel") },
       programs,
       childrenAreas,
-      serviceTimes,
       testimony:      v("testimony"),
       attendingSince: v("attendingSince"),
     };
@@ -365,10 +353,6 @@
       if (cb) cb.checked = true;
     });
     syncChildrenAreas();
-    (p.serviceTimes || []).forEach(val => {
-      const cb = document.querySelector('input[name="serviceTimes"][value="' + val + '"]');
-      if (cb) cb.checked = true;
-    });
     setv("testimony",      p.testimony);
     setv("attendingSince", p.attendingSince);
   }
