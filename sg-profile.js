@@ -203,34 +203,15 @@ export async function signCovenant(signatureName) {
 
 // ── Compute current covenant status from a profile ───────────
 // Returns: { state, daysUntilRenewal, expiresAt, signedAt }
-//   state ∈ "not-signed" | "signed" | "due-soon" | "expired"
-// Older signatures missing expiresAt are treated as expiring 365
-// days after signedAt so legacy records still render correctly.
+//   state ∈ "not-signed" | "signed"
+// Sign-once: the Worker's Covenant is a one-time acknowledgement and does
+// not expire or renew annually (per the 2026 renewal decision).
 export function covenantStatus(profile) {
   const cov = (profile && profile.covenant) || {};
   if (!cov.signed) {
     return { state: "not-signed", daysUntilRenewal: null, expiresAt: null, signedAt: null };
   }
-  let expiresAt = cov.expiresAt ? new Date(cov.expiresAt) : null;
-  if (!expiresAt && cov.signedAt) {
-    expiresAt = new Date(cov.signedAt);
-    expiresAt.setDate(expiresAt.getDate() + COVENANT_VALIDITY_DAYS);
-  }
-  if (!expiresAt) {
-    return { state: "signed", daysUntilRenewal: null, expiresAt: null, signedAt: cov.signedAt || null };
-  }
-  const msPerDay = 86400000;
-  const daysUntilRenewal = Math.ceil((expiresAt.getTime() - Date.now()) / msPerDay);
-  let state;
-  if (daysUntilRenewal < 0) state = "expired";
-  else if (daysUntilRenewal <= COVENANT_DUE_SOON_DAYS) state = "due-soon";
-  else state = "signed";
-  return {
-    state,
-    daysUntilRenewal,
-    expiresAt: expiresAt.toISOString(),
-    signedAt: cov.signedAt || null,
-  };
+  return { state: "signed", daysUntilRenewal: null, expiresAt: null, signedAt: cov.signedAt || null };
 }
 
 // ── Record a police-check submission (volunteer side) ────────

@@ -389,6 +389,10 @@
             <div><label for="aDate">Date</label><input id="aDate" type="date" class="fi" style="font-size:13px;padding:9px 11px"></div>
           </div>
           <div><label for="aNotes">Notes</label><textarea id="aNotes" class="fi" style="font-size:13px;padding:9px 11px;min-height:60px"></textarea></div>
+          <div id="aBypassWrap" style="display:none;margin-top:8px;padding:10px 12px;background:#FBF3E3;border-left:3px solid #B07A1E;border-radius:0 6px 6px 0">
+            <label for="aBypassReason" style="color:#B07A1E;font-weight:700">No interview on file &mdash; reason for approving without one <span style="font-weight:400">(required)</span></label>
+            <textarea id="aBypassReason" class="fi" style="font-size:13px;padding:9px 11px;min-height:50px" placeholder="An interview is required before approval. If approving without one, explain why."></textarea>
+          </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
             <button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="aSaveBtn">Record decision</button>
             <button type="button" class="btn btn-secondary" style="font-size:12px;padding:7px 14px" id="aClearBtn">Undo</button>
@@ -562,6 +566,15 @@
   }
 
   // ── Screening panel (SG-SOP-001 tracker) ──────────────────
+  // #16 — interviews are mandatory; approving without one requires a logged reason.
+  let interviewOnFile = false;
+  function syncApprovalBypass() {
+    const wrap = document.getElementById("aBypassWrap");
+    const dec  = document.getElementById("aDecision");
+    if (wrap && dec) wrap.style.display = (dec.value === "approved" && !interviewOnFile) ? "block" : "none";
+  }
+  (function () { const d = document.getElementById("aDecision"); if (d) d.addEventListener("change", syncApprovalBypass); })();
+
   function renderScreening(u) {
     const s = u.screening || {};
     const iv = s.interview || {};
@@ -580,6 +593,7 @@
       document.getElementById("interviewState").textContent = "Not yet recorded";
       setBadge("interviewBadge", "required", "Not started");
     }
+    interviewOnFile = !!iv.date;
 
     // Approval
     document.getElementById("aDecision").value    = ap.decision || "approved";
@@ -588,7 +602,8 @@
     document.getElementById("aNotes").value       = ap.notes || "";
     if (ap.decision === "approved") {
       document.getElementById("approvalState").textContent =
-        "Approved by " + (ap.approvedBy || "—") + " on " + fmtDate(ap.date);
+        "Approved by " + (ap.approvedBy || "—") + " on " + fmtDate(ap.date)
+        + (ap.interviewBypassReason ? " · approved without interview (reason on file)" : "");
       setBadge("approvalBadge", "done", "Approved");
     } else if (ap.decision === "declined") {
       document.getElementById("approvalState").textContent =
@@ -614,6 +629,7 @@
       document.getElementById("ministryState").textContent = "Not yet assigned";
       setBadge("ministryBadge", "required", "Not started");
     }
+    syncApprovalBypass();
   }
   function fmtDate(d) {
     if (!d) return "—";
@@ -655,7 +671,6 @@
       document.getElementById("covState").textContent =
         "Signed " + formatDate(covSt.signedAt)
         + (cov.signatureName ? " by " + cov.signatureName : "")
-        + " · renews " + formatDate(covSt.expiresAt)
         + priorSuffix;
       setBadge("covBadge", "done", "Done");
     } else if (covSt.state === "due-soon") {
@@ -851,8 +866,17 @@
     const notes      = document.getElementById("aNotes").value.trim();
     if (!approvedBy) { showMsg("Enter who made the decision.", "err"); return; }
     if (!date)       { showMsg("Pick the decision date.",      "err"); return; }
+    let interviewBypassReason = "";
+    if (decision === "approved" && !interviewOnFile) {
+      interviewBypassReason = document.getElementById("aBypassReason").value.trim();
+      if (!interviewBypassReason) {
+        document.getElementById("aBypassWrap").style.display = "block";
+        showMsg("An interview is required before approval. To approve without one, enter a reason below.", "err");
+        return;
+      }
+    }
     try {
-      await setScreeningApproval(TARGET_UID, { decision, approvedBy, date, notes });
+      await setScreeningApproval(TARGET_UID, { decision, approvedBy, date, notes, interviewBypassReason });
       showMsg(decision === "approved" ? "Approval recorded." : "Decline recorded.", "ok");
       const updated = await loadUser(TARGET_UID);
       if (updated) renderScreening(updated);

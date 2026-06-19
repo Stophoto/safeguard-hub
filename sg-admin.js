@@ -336,7 +336,7 @@ export async function clearScreeningInterview(uid) {
 
 // ── Record approval decision ───────────────────────────────
 // decision: "approved" | "declined"
-export async function setScreeningApproval(uid, { decision, approvedBy, date, notes }) {
+export async function setScreeningApproval(uid, { decision, approvedBy, date, notes, interviewBypassReason }) {
   if (!["approved", "declined"].includes(decision)) {
     throw new Error("Invalid decision: " + decision);
   }
@@ -347,6 +347,7 @@ export async function setScreeningApproval(uid, { decision, approvedBy, date, no
     approvedBy: (approvedBy || "").trim(),
     date: (date || new Date().toISOString().slice(0, 10)),
     notes: (notes || "").trim(),
+    interviewBypassReason: (interviewBypassReason || "").trim(),
     recordedBy: auth.currentUser ? auth.currentUser.uid : null,
     recordedByEmail: auth.currentUser ? auth.currentUser.email : null,
     recordedAt: new Date().toISOString(),
