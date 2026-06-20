@@ -123,7 +123,7 @@
         <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="#C4A46A" stroke-width="1.5"/>
         <path d="M12 1 L22 5 V14 C22 20 17 25 12 27 Z" fill="#C4A46A" fill-opacity="0.12"/>
       </svg>
-      <div class="brand-text"><small>Safeguard Framework</small><span class="brand-name">Bethany Chapel</span></div>
+      <div class="brand-text"><small>Safeguard Hub</small><span class="brand-name">Bethany Chapel</span></div>
     </a>
     <a class="nav-link" href="dashboard.html">← Dashboard</a>
     <div id="userChip" style="margin-left:8px"></div>
@@ -142,7 +142,7 @@
     <h1 id="pageTitle">The commitment we make to the people we serve.</h1>
     <div class="lede" id="pageLede">Read the covenant below. When you're ready, sign at the bottom. This is a serious commitment and the foundation of your role at Bethany Chapel.</div>
 
-    <!-- Status banner — green (current), yellow (due soon), red (expired) -->
+    <!-- Status banner — green (covenant on file); shown only once signed -->
     <div id="signedBanner" class="signed-banner" style="display:none">
       <div class="ico">
         <svg id="bannerIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -155,13 +155,13 @@
 
     <!-- ── Covenant text (from SG-FRM-004 v2.0, March 2026) ── -->
     <div class="covenant-card">
-      <div class="covenant-title">Worker's Covenant &amp; Annual Acknowledgement</div>
+      <div class="covenant-title">Worker's Covenant &amp; Acknowledgement</div>
       <div class="covenant-ref">SG-FRM-004 · Version 2.0 · March 2026 · Bethany Chapel</div>
 
       <div class="covenant-body">
 
         <p style="font-style:italic;color:var(--muted);border-left:3px solid var(--gold);padding-left:12px;margin-bottom:22px">
-          This is your initial covenant as a ministry worker at Bethany Chapel. Each year, you'll renew this commitment on your dashboard.
+          This is your covenant as a ministry worker at Bethany Chapel. You sign it once, and it remains on file for the duration of your service.
         </p>
 
         <h3>Section 2 · Commitment to Child Protection</h3>
@@ -178,18 +178,18 @@
           <li>Live in a way that reflects the character of Christ, showing integrity, humility, and respect for others.</li>
           <li>Abstain from any behavior that could reasonably be seen as abusive, exploitative, or inappropriate toward children, youth, or vulnerable persons.</li>
           <li>Report any suspected abuse, neglect, or misconduct immediately, in accordance with <a href="SG-POL-004.html">SG-POL-004 — Reporting &amp; Response</a>.</li>
-          <li>Participate in required training, renewals, and refresher sessions as outlined in <a href="SG-G-001.html">SG-G-001</a>.</li>
+          <li>Participate in required training and keep my police check current (renewed every three years) as outlined in <a href="SG-G-001.html">SG-G-001</a>.</li>
         </ul>
 
         <h3>Section 4 · Confidentiality</h3>
         <p>I understand that in serving I may learn personal information about children, youth, families, or ministry workers. I commit to keeping all such information confidential, except where reporting obligations require disclosure.</p>
 
-        <h3>Section 5 · Initial Covenant</h3>
+        <h3>Section 5 · Acknowledgement &amp; Agreement</h3>
         <p>I affirm my agreement with this covenant and commit myself to serving faithfully and responsibly.</p>
       </div>
     </div>
 
-    <!-- ── Sign card (shown when not signed, due soon, or expired) ── -->
+    <!-- ── Sign card (shown only when the covenant has not yet been signed) ── -->
     <div class="sign-card" id="signCard">
       <h2 id="signCardTitle" style="font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;margin-bottom:14px">Sign the covenant</h2>
 
@@ -219,7 +219,7 @@
 
 </main>
 
-<footer>Safeguard Framework · Bethany Chapel</footer>
+<footer>Safeguard Hub · Bethany Chapel</footer>
 
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
@@ -279,38 +279,12 @@
       // Current — green banner, hide sign card
       signedBanner.className = "signed-banner";
       signedBanner.style.display = "flex";
-      signedTitle.textContent = "Your covenant is current";
+      signedTitle.textContent = "Your covenant is on file";
       signedMeta.textContent = "Signed " + formatDate(st.signedAt)
-        + (cov.signatureName ? " by " + cov.signatureName : "")
-        + " · renews " + formatDate(st.expiresAt);
+        + (cov.signatureName ? " by " + cov.signatureName : "");
       pageTitle.textContent = "The commitment we make to the people we serve.";
-      pageLede.textContent  = "Your covenant is on file. You'll be prompted to renew it each year.";
+      pageLede.textContent  = "Your covenant is on file. The Worker's Covenant is signed once and does not need to be renewed.";
       signCard.style.display = "none";
-    } else if (st.state === "due-soon") {
-      // Within 30 days of expiry — yellow nudge, show sign card as renewal
-      signedBanner.className = "signed-banner warn";
-      signedBanner.style.display = "flex";
-      signedTitle.textContent = "Time to renew your covenant";
-      signedMeta.textContent = "Your current signature expires "
-        + formatDate(st.expiresAt) + " (in " + st.daysUntilRenewal
-        + " day" + (st.daysUntilRenewal === 1 ? "" : "s") + "). Re-sign below to renew for another year.";
-      pageTitle.textContent = "Renew your annual acknowledgement";
-      pageLede.textContent  = "Each year you reaffirm the Worker's Covenant. Read it again and re-sign below.";
-      signCardTitle.textContent = "Renew your covenant";
-      agreeText.textContent = "I have re-read the Worker's Covenant above and renew my commitment to serve under these standards.";
-      signCard.style.display = "block";
-    } else if (st.state === "expired") {
-      // Past expiry — red banner, show sign card as required renewal
-      signedBanner.className = "signed-banner expired";
-      signedBanner.style.display = "flex";
-      signedTitle.textContent = "Your covenant has expired";
-      signedMeta.textContent = "Your previous signature expired " + formatDate(st.expiresAt)
-        + ". Please re-sign below to continue serving.";
-      pageTitle.textContent = "Re-sign your covenant";
-      pageLede.textContent  = "Your annual acknowledgement is overdue. Please read the covenant again and re-sign to remain active.";
-      signCardTitle.textContent = "Re-sign your covenant";
-      agreeText.textContent = "I have re-read the Worker's Covenant above and renew my commitment to serve under these standards.";
-      signCard.style.display = "block";
     } else {
       // Never signed — original first-time sign flow
       signedBanner.style.display = "none";
@@ -329,7 +303,6 @@
       entries.push({
         signedAt: cov.signedAt,
         signatureName: cov.signatureName,
-        expiresAt: cov.expiresAt || st.expiresAt,
         current: true,
       });
     }
@@ -339,7 +312,7 @@
       historyList.innerHTML = entries.map(e => {
         const name = (e.signatureName || "—") + (e.current ? " · current" : "");
         const when = e.signedAt
-          ? "Signed " + formatDate(e.signedAt) + (e.expiresAt ? " · expires " + formatDate(e.expiresAt) : "")
+          ? "Signed " + formatDate(e.signedAt)
           : "—";
         return '<div class="history-row"><span class="name">' + escapeHtml(name)
              + '</span><span class="when">' + escapeHtml(when) + '</span></div>';

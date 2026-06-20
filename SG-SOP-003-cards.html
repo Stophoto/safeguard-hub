@@ -185,10 +185,21 @@
     letter-spacing: 0.04em;
   }
 
-  /* ─── Numbers row: 2 adults  →  max N kids ─── */
+  /* ─── Monitoring Ratios heading ─── */
+  .ratios-heading {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.1in;
+    flex: 0 0 auto;
+  }
+
+  /* ─── Ratio row: Adult ratio  +  Jr. Volunteer ratio ─── */
   .hero {
     display: grid;
-    grid-template-columns: 1fr auto 1fr auto 1fr;
+    grid-template-columns: 1fr auto 1fr;
     align-items: stretch;
     gap: 0;
     background: var(--cream-2);
@@ -557,92 +568,54 @@
 
 <script>
   // ──────── Room definitions (from SG-SOP-003 v2.0) ────────
-  // ratio: children per 1 adult (base ratio); max2: capacity with the required 2 adults
+  // Monitoring Ratios — single max, no ranges. Two ratio columns:
+  //   adultRatio   = one supervising adult to N children
+  //   jrRatio      = one Junior Volunteer to N children ("—" = not counted in this room)
   const ROOMS = [
     {
       room: "Nursery",
       age: "Infants · 0–12 months",
-      ratio: "1 : 3",
-      perAdult: 3,
-      max2: 6,
-      tiers: [
-        { adults: 2, kids: 6, note: "standard — two-adult minimum" },
-        { adults: 3, kids: 9 },
-        { adults: 4, kids: 12, note: "room ceiling" },
-      ],
-      hardCap: 12,
+      adultRatio: "1 : 3",
+      jrRatio: "—",
       note: "Highest care intensity."
     },
     {
       room: "Toddlers",
       age: "Ages 13–35 months",
-      ratio: "1 : 5",
-      perAdult: 5,
-      max2: 10,
-      tiers: [
-        { adults: 2, kids: 10, note: "standard — two-adult minimum" },
-        { adults: 3, kids: 15 },
-        { adults: 4, kids: 20, note: "room ceiling" },
-      ],
-      hardCap: 20,
-      note: "Ratio bracket 1:4–5; card uses the upper bound."
+      adultRatio: "1 : 4",
+      jrRatio: "1 : 1",
+      note: ""
     },
     {
       room: "Preschool",
       age: "Ages 3 yr – Kindergarten",
-      ratio: "1 : 8",
-      perAdult: 8,
-      max2: 16,
-      tiers: [
-        { adults: 2, kids: 16, note: "standard — two-adult minimum" },
-        { adults: 3, kids: 24 },
-        { adults: 4, kids: 32, note: "room ceiling" },
-      ],
-      hardCap: 32,
-      note: "Ratio bracket 1:6–8; card uses the upper bound."
+      adultRatio: "1 : 8",
+      jrRatio: "1 : 2",
+      note: ""
     },
     {
       room: "Elementary",
       age: "Grades 1 – 6",
-      ratio: "1 : 12",
-      perAdult: 12,
-      max2: 24,
-      tiers: [
-        { adults: 2, kids: 24, note: "standard — two-adult minimum" },
-        { adults: 3, kids: 36 },
-        { adults: 4, kids: 48, note: "room ceiling" },
-      ],
-      hardCap: 48,
-      note: "Ratio bracket 1:7–12; card uses the upper bound."
+      adultRatio: "1 : 15",
+      jrRatio: "1 : 3",
+      note: ""
     },
     {
       room: "Youth",
       age: "Grades 7 – 12",
-      ratio: "1 : 12",
-      perAdult: 12,
-      max2: 24,
-      tiers: [
-        { adults: 2, kids: 24, note: "standard — two-adult minimum" },
-        { adults: 3, kids: 36 },
-        { adults: 4, kids: 48, note: "room ceiling" },
-      ],
-      hardCap: 48,
-      note: "Ratio bracket 1:10–12; card uses the upper bound."
+      adultRatio: "1 : 15",
+      jrRatio: "—",
+      note: ""
     },
   ];
 
   const shieldTpl = document.getElementById('shield');
 
-  function buildTierRows(tiers) {
-    // Skip the baseline 2-adult row — it's already shown in the hero equation.
-    return tiers.filter(t => t.adults > 2).map(t => `
-      <tr>
-        <td class="adults">${t.adults} adults</td>
-        <td class="eq">→</td>
-        <td class="kids">up to ${t.kids} kids</td>
-        <td class="note">${t.note ? t.note : ""}</td>
-      </tr>
-    `).join('');
+  function ratioMarkup(val) {
+    // Render "1 : 3" with a gold colon, or just an em-dash for "not counted".
+    return val.includes(':')
+      ? val.replace(':', '<span class="colon">:</span>')
+      : val;
   }
 
   function renderSheet(r) {
@@ -652,7 +625,7 @@
           <div class="brand">
             ${shieldTpl.innerHTML}
             <div class="brand-txt">
-              <div class="fw">Safeguard Framework</div>
+              <div class="fw">Safeguard Hub</div>
               <div class="org">Bethany Chapel · Calgary</div>
             </div>
           </div>
@@ -676,34 +649,19 @@
             </div>
           </div>
 
-          <div class="hero">
-            <div class="cell adults">
-              <div class="label"><span class="pre">On the floor</span>Adults</div>
-              <div class="big">2</div>
-              <div class="sub"><strong>Minimum</strong> at all times — two-adult rule</div>
-            </div>
-            <div class="op"><span class="sym">×</span></div>
-            <div class="cell ratio">
-              <div class="label"><span class="pre">Per adult</span>Ratio</div>
-              <div class="big">${r.ratio.replace(':', '<span class="colon">:</span>')}</div>
-              <div class="sub">Children <strong>per adult</strong> for this age group</div>
-            </div>
-            <div class="op equals"><span class="sym">=</span></div>
-            <div class="cell result">
-              <div class="label"><span class="pre">In this room</span>Max Kids</div>
-              <div class="big">${r.max2}</div>
-              <div class="sub">with 2 adults — <strong>never exceed</strong></div>
-            </div>
-          </div>
+          <div class="ratios-heading">Monitoring Ratios</div>
 
-          <div class="math">
-            <div class="ratio-cell">
-              <div class="lbl">Base Ratio</div>
-              <div class="val">${r.ratio.replace(':', '<span class="colon">:</span>')}<span class="per">per adult</span></div>
+          <div class="hero">
+            <div class="cell ratio">
+              <div class="label"><span class="pre">Maximum</span>Adult to Children</div>
+              <div class="big">${ratioMarkup(r.adultRatio)}</div>
+              <div class="sub">One supervising <strong>adult</strong> per this many children</div>
             </div>
-            <div class="more">
-              <div class="lbl">If you have extra adults, capacity scales:</div>
-              <table>${buildTierRows(r.tiers)}</table>
+            <div class="op equals"><span class="sym">+</span></div>
+            <div class="cell ratio">
+              <div class="label"><span class="pre">Maximum</span>Jr. Volunteer to Children</div>
+              <div class="big">${ratioMarkup(r.jrRatio)}</div>
+              <div class="sub">One <strong>Junior Volunteer</strong> per this many children${r.jrRatio.includes(':') ? '' : ' — not counted in this room'}</div>
             </div>
           </div>
 
