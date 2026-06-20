@@ -738,18 +738,12 @@ function saveLater(wiz) {
 // profile slice. `complete` flips profileComplete on final submit.
 function profilePayload(wiz, complete, extra) {
   const m = wiz.model;
-  const application = {};
-  Object.keys(emptyApplication()).forEach(k => { application[k] = m[k]; });
-  application.isAdult = m.isAdult;
-  Object.assign(application, extra || {});
-
-  return {
+  const payload = {
     firstName: m.firstName || "",
     lastName: m.lastName || "",
     preferredName: m.preferredName || "",
     dob: m.dob || "",
     phone: m.phoneCell || "",
-    email: m.email || "",
     address: { street: m.address || "", city: m.city || "", province: m.province || "", postal: m.postal || "" },
     emergencyContact: {
       name: (m.emergencyContact && m.emergencyContact.name) || "",
@@ -762,9 +756,20 @@ function profilePayload(wiz, complete, extra) {
     serviceTimes: gatherServiceTimes(m),
     testimony: m.testimony || "",
     attendingSince: m.attendingSince || "",
-    application,
     profileComplete: !!complete,
   };
+  // The profile stores only the application MARKER. Firestore rules require
+  // `application` to be EXACTLY { submittedAt, recordId, isYouth }; the full
+  // application data lives in the People submission, not the profile. Only the
+  // final submit supplies these, so autosave never writes `application`.
+  if (extra && extra.submittedAt) {
+    payload.application = {
+      submittedAt: extra.submittedAt,
+      recordId: extra.recordId || "",
+      isYouth: !!extra.isYouth,
+    };
+  }
+  return payload;
 }
 
 function persist(wiz, complete, extra) {
