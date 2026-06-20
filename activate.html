@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activate your account — Safeguard Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B3A4B;--navy-deep:#0F2530;--teal:#2E6B7F;--gold:#B09055;
+    --cream:#FAF8F3;--sand:#F2EFE8;--body:#3D3835;--muted:#9A958F;
+    --border:#E4E0DA;--white:#FFF;--error:#C0392B;--error-bg:#FFF0EE;
+    --serif:'DM Serif Display',Georgia,serif;
+    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--body);background:var(--cream);
+       min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
+        padding:36px;max-width:440px;width:100%;box-shadow:0 4px 24px rgba(0,0,0,.05)}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.22em;color:var(--gold);
+           text-transform:uppercase;margin-bottom:8px}
+  h1{font-family:var(--serif);font-size:28px;color:var(--navy);font-weight:400;margin-bottom:6px}
+  .lede{font-size:14px;color:var(--muted);margin-bottom:20px}
+  label{display:block;font-size:11px;font-weight:700;color:var(--navy);
+        letter-spacing:.04em;text-transform:uppercase;margin:14px 0 6px}
+  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
+      font-family:var(--sans);font-size:15px}
+  .fi:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 4px rgba(46,107,127,.1)}
+  .fi[readonly]{background:var(--sand);color:var(--muted)}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+       padding:12px 18px;border:none;border-radius:8px;font-weight:700;font-size:14px;
+       cursor:pointer;margin-top:16px;font-family:var(--sans)}
+  .btn-primary{background:var(--navy);color:#fff}
+  .btn-primary:hover:not(:disabled){background:var(--teal)}
+  .btn-primary:disabled{background:var(--muted);cursor:not-allowed}
+  .btn-sso{background:#fff;color:var(--body);border:1.5px solid var(--border);margin-top:10px}
+  .btn-sso:hover:not(:disabled){background:var(--sand)}
+  .btn-sso:disabled{opacity:.5;cursor:not-allowed}
+  .sep{display:flex;align-items:center;gap:10px;margin:22px 0;color:var(--muted);font-size:12px}
+  .sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--border)}
+  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:14px;display:none}
+  .msg.err{background:var(--error-bg);color:var(--error);display:block}
+  .loading{text-align:center;color:var(--muted);padding:40px 0}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div id="loading" class="loading">Checking your invitation…</div>
+
+    <div id="form" style="display:none">
+      <div class="eyebrow">Welcome to the Safeguard Hub</div>
+      <h1>Let's get you in</h1>
+      <div class="lede">Set a password, or continue with a Google / Microsoft account.</div>
+
+      <label for="email">Your email</label>
+      <input id="email" class="fi" type="email" readonly>
+
+      <label for="pw">Create a password</label>
+      <input id="pw" class="fi" type="password" autocomplete="new-password" placeholder="At least 8 characters">
+
+      <label for="pw2">Confirm password</label>
+      <input id="pw2" class="fi" type="password" autocomplete="new-password">
+
+      <button id="setPw" class="btn btn-primary">Activate &amp; continue</button>
+
+      <div class="sep">or</div>
+
+      <button id="google" class="btn btn-sso">Continue with Google</button>
+      <button id="microsoft" class="btn btn-sso" disabled title="Coming soon">Continue with Microsoft</button>
+
+      <div id="msg" class="msg"></div>
+    </div>
+
+    <div id="badlink" class="loading" style="display:none">
+      This activation link is invalid or has expired.<br>
+      Ask the Safeguard Coordinator to send a fresh invite.
+    </div>
+  </div>
+
+<script type="module">
+  import {
+    verifyPasswordResetCode, confirmPasswordReset,
+    signInWithEmailAndPassword, signInWithPopup,
+    GoogleAuthProvider, OAuthProvider,
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { auth } from "./sg-firebase.js";
+  import { saveProfile, routeAfterLogin, loadProfile } from "./sg-profile.js";
+
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  const oobCode = params.get("oobCode");
+  const mode = params.get("mode"); // "resetPassword" for our links
+
+  function showErr(t){ $("msg").textContent = t; $("msg").className = "msg err"; }
+
+  // After any successful sign-in: flip status invited→activated, then route.
+  async function finishActivation() {
+    // Force a token refresh so the {role} custom claim is present.
+    await auth.currentUser.getIdToken(true);
+    const profile = await loadProfile();
+    if (profile && profile.status === "invited") {
+      await saveProfile({ status: "activated", activatedAt: new Date().toISOString() });
+    }
+    const fresh = await loadProfile();
+    location.replace(routeAfterLogin(fresh));   // → dashboard, which auto-launches the wizard
+  }
+
+  // ── Validate the action code on load ────────────────────────
+  (async () => {
+    if (!oobCode || mode !== "resetPassword") { $("loading").style.display="none"; $("badlink").style.display="block"; return; }
+    try {
+      const email = await verifyPasswordResetCode(auth, oobCode);
+      $("email").value = email;
+      $("loading").style.display = "none";
+      $("form").style.display = "block";
+    } catch {
+      $("loading").style.display = "none";
+      $("badlink").style.display = "block";
+    }
+  })();
+
+  // ── Door 1: set a password ──────────────────────────────────
+  $("setPw").addEventListener("click", async () => {
+    const pw = $("pw").value, pw2 = $("pw2").value, email = $("email").value;
+    $("msg").className = "msg";
+    if (pw.length < 8) return showErr("Password must be at least 8 characters.");
+    if (pw !== pw2)    return showErr("Passwords don't match.");
+    $("setPw").disabled = true;
+    try {
+      await confirmPasswordReset(auth, oobCode, pw);   // also marks email verified
+      await signInWithEmailAndPassword(auth, email, pw);
+      await finishActivation();
+    } catch (err) {
+      $("setPw").disabled = false;
+      showErr("Couldn't activate. " + (err.message || "Try again."));
+    }
+  });
+
+  // ── Door 2: Google SSO ──────────────────────────────────────
+  $("google").addEventListener("click", async () => {
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+      await finishActivation();
+    } catch (err) { showErr("Google sign-in failed. " + (err.message || "")); }
+  });
+
+  // ── Door 3: Microsoft SSO (enabled once Entra registration exists) ──
+  $("microsoft").addEventListener("click", async () => {
+    try {
+      const provider = new OAuthProvider("microsoft.com");
+      await signInWithPopup(auth, provider);
+      await finishActivation();
+    } catch (err) { showErr("Microsoft sign-in failed. " + (err.message || "")); }
+  });
+</script>
+</body>
+</html>
