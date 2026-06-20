@@ -220,7 +220,7 @@ export function validateExperience() { return []; }
 export function validatePreferences(a) {
   const e = [];
   const ages = gatherAgeGroups(a);
-  if (ages.length === 0) e.push("At least one age group");
+  if (ages.length === 0) e.push("Pick at least one program you'd like to serve with");
   return e;
 }
 

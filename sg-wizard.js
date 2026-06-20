@@ -32,9 +32,27 @@ const esc = (s) => String(s == null ? "" : s)
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
   .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
+// Christin's "Are you interested in serving with?" vocabulary. The
+// volunteer answers serving preferences ONCE via these programs; the
+// application's ageGroups/serviceTimes are DERIVED from them so the
+// People submission (buildRowData) keeps working without asking twice.
+const PROGRAM_OPTIONS = [
+  ["sunday-children",  "Sunday Children's program"],
+  ["awana",            "Friday Night Awana"],
+  ["youth",            "Youth"],
+  ["weekday-childcare","Week Day Childcare"],
+  ["camp",             "Camp"],
+];
+const CHILDREN_AREA_OPTIONS = [
+  ["preschool",   "Preschool"],
+  ["grade-school","Grade School"],
+  ["floating",    "Floating Volunteer"],
+];
+
 // programs (profile vocabulary) → ageGroups (application vocabulary)
 // Loose mapping so a returning profile-setup user arrives with their
-// preferences reflected on the application's age-group step.
+// preferences reflected on the application's age-group step, and so the
+// People submission row gets sensible age-group columns.
 const PROGRAM_TO_AGE = {
   "sunday-children": ["preschool", "elementary"],
   "awana": ["elementary"],
@@ -42,6 +60,30 @@ const PROGRAM_TO_AGE = {
   "weekday-childcare": ["nursery", "preschool"],
   "camp": ["elementary", "youth"],
 };
+
+// programs (profile vocabulary) → serviceTimes (application vocabulary).
+// gatherServiceTimes() expands "sunday" → 9am+11am; the others map 1:1.
+const PROGRAM_TO_TIMES = {
+  "sunday-children": ["sunday"],
+  "awana": ["special"],          // Friday night — not a regular Sun/Wed slot
+  "youth": ["wed-pm"],
+  "weekday-childcare": ["special"],
+  "camp": ["special"],
+};
+
+// Derive the application's ageGroups (canonical order) from programs.
+function deriveAgeGroups(programs) {
+  const set = new Set();
+  (programs || []).forEach(p => (PROGRAM_TO_AGE[p] || []).forEach(g => set.add(g)));
+  return ["nursery", "preschool", "elementary", "youth"].filter(g => set.has(g));
+}
+
+// Derive the application's serviceTimes from programs.
+function deriveServiceTimes(programs) {
+  const set = new Set();
+  (programs || []).forEach(p => (PROGRAM_TO_TIMES[p] || []).forEach(t => set.add(t)));
+  return ["sunday", "wed-pm", "special"].filter(t => set.has(t));
+}
 
 // ── Step registry ───────────────────────────────────────────
 // Each step: id, title, eyebrow, whether it's youth-only, a render(),
@@ -207,16 +249,17 @@ function hydrate(wiz, profile) {
   m.attendingSince = profile.attendingSince || "";
   if (!m.attendLength && profile.attendingSince) m.attendLength = friendlyAttending(profile.attendingSince);
 
-  // Age groups: prefer the application's own set; else derive from programs.
+  // Age groups / service times: prefer the application's own stored set;
+  // else derive from the programs answer (the single source of truth now).
   if (Array.isArray(profile.ageGroups) && profile.ageGroups.length) {
     m.ageGroups = [...profile.ageGroups];
   } else if (m.programs.length) {
-    const derived = new Set();
-    m.programs.forEach(p => (PROGRAM_TO_AGE[p] || []).forEach(g => derived.add(g)));
-    m.ageGroups = [...derived];
+    m.ageGroups = deriveAgeGroups(m.programs);
   }
   if (Array.isArray(profile.serviceTimes) && profile.serviceTimes.length) {
     m.serviceTimes = normalizeServiceTimes(profile.serviceTimes);
+  } else if (m.programs.length) {
+    m.serviceTimes = deriveServiceTimes(m.programs);
   }
 
   // Restore a previously-saved application snapshot (resume).
@@ -404,7 +447,12 @@ function renderSpiritual(wiz) {
     '<div class="prompt">Are you a member of this church?</div>' + yesNo("wz_member", m.member) +
     '<div class="prompt">Have you been baptized?</div>' + yesNo("wz_baptized", m.baptized) +
     '<div class="prompt"><em>If not baptized, are you open to discussing baptism with a pastor?</em></div>' + yesNo("wz_baptismOpen", m.baptismOpen) +
-    textarea("journey", "Briefly describe your spiritual journey and faith in Christ", m.journey, { minHeight: 140 });
+    textarea("journey", "Briefly describe your spiritual journey and faith in Christ", m.journey, { minHeight: 140 }) +
+    textarea("testimony", "Your faith story", m.testimony, {
+      minHeight: 120,
+      optional: true,
+      hint: "We'd love to know your story — how you came to follow Jesus and why you want to serve here. Just a few sentences in your own words; this isn't a test.",
+    });
 }
 function readSpiritual(wiz) {
   return {
@@ -414,6 +462,7 @@ function readSpiritual(wiz) {
     baptized: radio(wiz, "wz_baptized"),
     baptismOpen: radio(wiz, "wz_baptismOpen"),
     journey: val(wiz, "journey"),
+    testimony: val(wiz, "testimony"),
   };
 }
 
@@ -435,30 +484,47 @@ function renderExperience(wiz) {
 }
 
 // Preferences ---------------------------------------------------------------
+// Mirrors Christin's profile-setup "Are you interested in serving with?"
+// question. The volunteer picks programs ONCE here; ageGroups/serviceTimes
+// (needed by the People submission row) are derived from the programs in
+// readPreferences(), so we never ask those a second time.
 function renderPreferences(wiz) {
   const m = wiz.model;
-  const ag = gatherAgeGroups(m);
-  const st = m.serviceTimes || [];
-  const sundayOn = st.includes("sunday") || st.includes("9am") || st.includes("11am");
-  return '<div class="prompt">Which age groups are you interested in serving?</div>' +
+  const programs = Array.isArray(m.programs) ? m.programs : [];
+  const areas = Array.isArray(m.childrenAreas) ? m.childrenAreas : [];
+  const sundayOn = programs.includes("sunday-children");
+  return '<div class="prompt">Are you interested in serving with?</div>' +
     '<div class="pills">' +
-      checkPill("wz_age", "nursery", "Nursery (0–2)", ag.includes("nursery")) +
-      checkPill("wz_age", "preschool", "Preschool (3–5)", ag.includes("preschool")) +
-      checkPill("wz_age", "elementary", "Elementary (6–11)", ag.includes("elementary")) +
-      checkPill("wz_age", "youth", "Youth (12–17)", ag.includes("youth")) +
+      PROGRAM_OPTIONS.map(([v, label]) =>
+        checkPill("wz_program", v, esc(label), programs.includes(v))
+      ).join("") +
     '</div>' +
-    '<div class="prompt" style="margin-top:18px">Which service times are you available?</div>' +
-    '<div class="pills">' +
-      checkPill("wz_time", "sunday", "Sunday Morning", sundayOn) +
-      checkPill("wz_time", "wed-pm", "Wednesday Evening", st.includes("wed-pm")) +
-      checkPill("wz_time", "special", "Special Events", st.includes("special")) +
+    '<div class="field" id="wz-children-areas" style="margin-top:18px;display:' + (sundayOn ? "block" : "none") + '">' +
+      '<div class="prompt">Within the Sunday Children\'s program, where would you like to serve?</div>' +
+      '<div class="pills">' +
+        CHILDREN_AREA_OPTIONS.map(([v, label]) =>
+          checkPill("wz_childArea", v, esc(label), areas.includes(v))
+        ).join("") +
+      '</div>' +
     '</div>' +
     textarea("skills", "Any training, experience, skills, or interests relevant to children/youth ministry", m.skills, { minHeight: 120, optional: true });
 }
 function readPreferences(wiz) {
-  const ages = [...wiz.host.querySelectorAll('input[name="wz_age"]:checked')].map(i => i.value);
-  const times = [...wiz.host.querySelectorAll('input[name="wz_time"]:checked')].map(i => i.value);
-  return { ageGroups: ages, serviceTimes: times, skills: val(wiz, "skills") };
+  const programs = [...wiz.host.querySelectorAll('input[name="wz_program"]:checked')].map(i => i.value);
+  // childrenAreas only count when the Sunday Children's program is selected.
+  const areas = programs.includes("sunday-children")
+    ? [...wiz.host.querySelectorAll('input[name="wz_childArea"]:checked')].map(i => i.value)
+    : [];
+  // Derive the application vocabulary from the single programs answer so the
+  // People submission row (buildRowData → gatherAgeGroups/gatherServiceTimes)
+  // still has sensible age-group / service-time columns.
+  return {
+    programs,
+    childrenAreas: areas,
+    ageGroups: deriveAgeGroups(programs),
+    serviceTimes: deriveServiceTimes(programs),
+    skills: val(wiz, "skills"),
+  };
 }
 
 // Screening -----------------------------------------------------------------
@@ -620,9 +686,14 @@ function renderReview(wiz) {
   out += sec("spiritual", "Spiritual background",
     row("Attending since", m.attendLength) + row("2+ services/month", ynLabel(m.services)) +
     row("Member", ynLabel(m.member)) + row("Baptized", ynLabel(m.baptized)) + row("Journey", m.journey));
+  const programLabels = (m.programs || [])
+    .map(p => (PROGRAM_OPTIONS.find(o => o[0] === p) || [, p])[1]).join(", ");
+  const areaLabels = (m.childrenAreas || [])
+    .map(a => (CHILDREN_AREA_OPTIONS.find(o => o[0] === a) || [, a])[1]).join(", ");
   out += sec("preferences", "Serving preferences",
-    row("Age groups", gatherAgeGroups(m).join(", ")) +
-    row("Service times", gatherServiceTimes(m).join(", ")) + row("Skills", m.skills));
+    row("Interested in serving with", programLabels) +
+    (m.programs && m.programs.includes("sunday-children") ? row("Sunday Children's areas", areaLabels) : "") +
+    row("Skills", m.skills));
   out += sec("screening", "Safety screening",
     row("Criminal offense", ynLabel(m.ss1)) + row("Child welfare investigation", ynLabel(m.ss2)) +
     row("Misconduct termination", ynLabel(m.ss3)) + row("Personal circumstances", ynLabel(m.ss4)) +
@@ -662,6 +733,15 @@ function renderDone(wiz) {
 
 // ── Dynamic wiring (conditional UI inside a step) ───────────
 function wireDynamic(wiz, step) {
+  if (step.id === "preferences") {
+    const areas = wiz.host.querySelector("#wz-children-areas");
+    wiz.host.querySelectorAll('input[name="wz_program"]').forEach(el => {
+      el.addEventListener("change", () => {
+        const sundayOn = !!wiz.host.querySelector('input[name="wz_program"][value="sunday-children"]:checked');
+        if (areas) areas.style.display = sundayOn ? "block" : "none";
+      });
+    });
+  }
   if (step.id === "screening") {
     const note = wiz.host.querySelector("#wz-explain-note");
     const sync = () => {
