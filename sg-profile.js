@@ -119,7 +119,7 @@ export function subscribeProfile(callback) {
 // after signing in. New users → profile setup.
 // Returning users with a complete profile → dashboard.
 export function routeAfterLogin(profile) {
-  if (!profile || !profile.profileComplete) return "profile-setup.html";
+  if (!profile || !profile.profileComplete) return "onboarding.html";
   return "dashboard.html";
 }
 
