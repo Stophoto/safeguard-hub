@@ -5,7 +5,7 @@
  * since Hub already renders its own copy inside its React tree).
  *
  * Provides:
- *  - Sticky navy header with shield + eyebrow "Safeguard Framework" + church name
+ *  - Sticky navy header with shield + eyebrow "Safeguard Hub" + church name
  *  - Full-coverage dropdowns: Hub · Documents · Forms · SOPs · Training · Admin
  *  - Breadcrumb back-trail row (derived from document.referrer)
  *  - "Save PDF" button (calls window.print())

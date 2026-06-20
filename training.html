@@ -169,8 +169,8 @@
   <div class="wrap" id="view" style="display:none">
     <div class="crumb"><a href="dashboard.html">Dashboard</a> &rsaquo; Training</div>
     <div class="eyebrow">Safeguard training</div>
-    <h1>Four short modules before you serve.</h1>
-    <div class="lede">Read each module, then click "I've completed this" to mark it done. It's on the honor system — we trust you to read carefully.</div>
+    <h1>Your safeguard training.</h1>
+    <div class="lede">Work through each module, then pass the short quiz at the end — 80% or higher. Pass it and the module checks itself off automatically; there's nothing to mark by hand.</div>
 
     <div class="progress"><div id="progressBar" style="width:0%"></div></div>
     <div class="progress-label" id="progressLabel">—</div>
@@ -179,14 +179,13 @@
 
     <div class="core-banner">
       <div class="cb-eyebrow">New volunteer? Start here</div>
-      <h2>These four modules are all you need.</h2>
-      <p>Complete the <b>four modules below</b> and your safeguard training is done. That's it — there's nothing else required to start serving.</p>
+      <h2>Four modules and you're ready.</h2>
+      <p>Finish the <b>four core modules below</b> and your training is complete — that's everything you need to start serving.</p>
     </div>
 
     <div class="section-head">
       <span class="sh-badge">Required for everyone</span>
-      <h3>Your core training</h3>
-      <span class="sh-note">4 modules</span>
+      <h3>The four core modules</h3>
     </div>
     <div id="volunteerTrack"></div>
 
@@ -205,7 +204,7 @@
         </span>
       </summary>
       <div class="leader-inner">
-        <p class="li-lede">These modules are required <b>in addition</b> to the four core modules above, for those in a Leader or Coordinator role.</p>
+        <p class="li-lede">Three more modules, required <b>in addition</b> to the four core modules above, for anyone in a Leader or Coordinator role. <b id="leaderCount" style="color:var(--teal)"></b></p>
         <div id="leaderTrack"></div>
       </div>
     </details>
@@ -219,7 +218,7 @@
 
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
-  import { getOrCreateProfile, markTrainingComplete, unmarkTrainingComplete, formatDate } from "./sg-profile.js";
+  import { getOrCreateProfile, formatDate } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
 
   mountUserChip(document.getElementById("userChip"));
@@ -265,39 +264,37 @@
     const training = (currentProfile && currentProfile.training) || {};
     const role = currentProfile && currentProfile.role;
     const showLeader = role === "leader" || role === "coordinator";
+    const isComplete = (m) => training[m.code] && training[m.code].completedAt;
 
-    // Which modules count toward progress?
-    const requiredModules = showLeader
-      ? [...VOLUNTEER_MODULES, ...LEADER_MODULES]
-      : VOLUNTEER_MODULES;
-
-    const doneCount = requiredModules.filter(m => training[m.code] && training[m.code].completedAt).length;
-    const totalCount = requiredModules.length;
-    const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
-    progressBar.style.width = pct + "%";
-    progressLabel.innerHTML = "You've completed <b>" + doneCount + " of " + totalCount + "</b> required module" + (totalCount === 1 ? "" : "s") + ".";
+    // The main progress bar tracks the four core modules — the baseline
+    // everyone needs to serve. Leader modules are counted separately below.
+    const coreDone = VOLUNTEER_MODULES.filter(isComplete).length;
+    const coreTotal = VOLUNTEER_MODULES.length;
+    const corePct = coreTotal > 0 ? Math.round((coreDone / coreTotal) * 100) : 0;
+    progressBar.style.width = corePct + "%";
+    progressLabel.innerHTML = coreDone === coreTotal
+      ? "<b>All " + coreTotal + " core modules complete.</b> Nice work."
+      : "You've completed <b>" + coreDone + " of " + coreTotal + "</b> core modules.";
 
     // Render the volunteer track
     volunteerTrack.innerHTML = VOLUNTEER_MODULES.map((m, i) => renderModule(m, i + 1, training)).join("");
     if (showLeader) {
       leaderDisclosure.style.display = "block";
       leaderTrack.innerHTML = LEADER_MODULES.map((m, i) => renderModule(m, i + 1, training)).join("");
+      const leaderDone = LEADER_MODULES.filter(isComplete).length;
+      const leaderCountEl = document.getElementById("leaderCount");
+      if (leaderCountEl) {
+        leaderCountEl.textContent = leaderDone === LEADER_MODULES.length
+          ? "All " + LEADER_MODULES.length + " complete."
+          : leaderDone + " of " + LEADER_MODULES.length + " done.";
+      }
       // Auto-open for leaders who still have outstanding leader modules,
       // so they aren't surprised by hidden required work.
-      const leaderDone = LEADER_MODULES.every(m => training[m.code] && training[m.code].completedAt);
-      if (!leaderDone) leaderDisclosure.open = true;
+      if (leaderDone < LEADER_MODULES.length) leaderDisclosure.open = true;
     } else {
       leaderDisclosure.style.display = "none";
       leaderTrack.innerHTML = "";
     }
-
-    // Wire up buttons
-    document.querySelectorAll("[data-complete]").forEach(btn => {
-      btn.addEventListener("click", () => onComplete(btn.dataset.complete));
-    });
-    document.querySelectorAll("[data-undo]").forEach(btn => {
-      btn.addEventListener("click", () => onUndo(btn.dataset.undo));
-    });
   }
 
   function renderModule(m, index, training) {
@@ -306,13 +303,11 @@
     const doneIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
     const iconInner = isDone ? doneIco : String(index);
     const subText = isDone
-      ? "Completed " + formatDate(record.completedAt)
+      ? "Passed " + formatDate(record.completedAt)
       : m.sub;
     const actions = isDone
-      ? '<a class="btn btn-secondary" href="' + m.code + '.html">Re-read</a>'
-        + '<button type="button" class="btn-undo" data-undo="' + m.code + '">Undo</button>'
-      : '<a class="btn btn-primary" href="' + m.code + '.html">View module →</a>'
-        + '<button type="button" class="btn btn-secondary" data-complete="' + m.code + '">I\u2019ve completed this</button>';
+      ? '<a class="btn btn-secondary" href="' + m.code + '.html">Re-read module</a>'
+      : '<a class="btn btn-primary" href="' + m.code + '.html">View module →</a>';
 
     return ''
       + '<div class="module' + (isDone ? ' done' : '') + '">'
@@ -326,32 +321,6 @@
       + '</div>';
   }
 
-  async function onComplete(code) {
-    clearMsg();
-    try {
-      await markTrainingComplete(code);
-      currentProfile = await import("./sg-profile.js").then(m => m.getOrCreateProfile());
-      render();
-      showMsg("Marked " + code + " complete.", "ok");
-    } catch (err) {
-      showMsg("Couldn't save. " + (err.message || "Please try again."), "err");
-    }
-  }
-
-  async function onUndo(code) {
-    clearMsg();
-    try {
-      await unmarkTrainingComplete(code);
-      currentProfile = await import("./sg-profile.js").then(m => m.getOrCreateProfile());
-      render();
-      showMsg("Marked " + code + " not complete.", "ok");
-    } catch (err) {
-      showMsg("Couldn't save. " + (err.message || "Please try again."), "err");
-    }
-  }
-
-  function showMsg(text, kind) { msg.textContent = text; msg.className = "msg " + kind; setTimeout(clearMsg, 3500); }
-  function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
 </script>
 
 <script src="sg-nav.js"></script>

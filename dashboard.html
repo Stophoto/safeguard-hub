@@ -163,7 +163,6 @@
 
     <!-- ── Welcome note + inline help ── -->
     <div class="welcome">
-      <h2 class="welcome-title" id="welcomeTitle">Welcome</h2>
       <div class="welcome-note" id="welcomeNote"></div>
       <button type="button" class="help-btn" id="inlineHelpBtn">Have a question?</button>
     </div>
@@ -318,7 +317,6 @@
   // model; we keep its voice but fill the lists dynamically.
   function renderWelcome(profile, steps, name) {
     const first = (name || "friend").trim().split(/\s+/)[0];
-    welcomeTitle.textContent = "Welcome, " + first;
 
     // Short, friendly labels for the note (distinct from the card titles).
     const LABEL = {
