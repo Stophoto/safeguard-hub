@@ -549,3 +549,406 @@
     if (window.console) console.warn('sg-nav: auth enhancements skipped:', err && err.message);
   }
 })();
+
+// ─────────────────────────────────────────────────────────────
+// Shared "Have a question?" help component
+// ─────────────────────────────────────────────────────────────
+// Adds (1) a persistent, fixed bottom-right "Have a question?" button on
+// every page and (2) a shared modal question form. The dashboard's own
+// inline button opens the SAME modal by calling window.SGHelp.open().
+//
+// On submit it POSTs { type:"help_question", name, email, topic, message }
+// to the existing Apps Script web app — same URL + Content-Type:text/plain +
+// redirect:"follow" transport the rest of the Hub uses (see the archived
+// Hub backend client). The Apps Script side emails the Safeguard
+// administrator; NO administrator name or email lives in this file.
+// ─────────────────────────────────────────────────────────────
+(function () {
+  'use strict';
+  if (window.SGHelp) return; // already mounted (idempotent)
+
+  // Same endpoint + transport the Hub already uses for Sheets writes.
+  var BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzaPYsIj00ztt2la7cVrJyxm4OYl3EFS_t-I9u0bXpZV0CeaYvko23OLYYjcYFS4qoxpg/exec';
+
+  // ── Design tokens (match the nav above / existing site) ──
+  var NAVY = '#1B3A4B';
+  var NAVY_DEEP = '#0F2530';
+  var TEAL = '#2E6B7F';
+  var GOLD = '#B09055';
+  var GOLD_WARM = '#C4A46A';
+  var CREAM = '#FAF8F3';
+  var WHITE = '#FFFFFF';
+  var MUTED = '#6E6862';
+  var BORDER = '#E4E0DA';
+  var BODY = '#2E2A27';
+  var SANS = "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif";
+  var SERIF = "'DM Serif Display', Georgia, serif";
+
+  var TOPICS = ['Getting started', 'A specific step', 'Police check', 'Training', 'Something else'];
+
+  // ── Styles ──
+  var css = [
+    // Persistent launcher button (fixed, bottom-right). Sits to the LEFT of the
+    // back-to-top button (#sg-nav-top-btn, right:28px ~44px wide) so neither
+    // blocks the other or primary actions.
+    '#sg-help-fab { position: fixed; bottom: 28px; right: 84px; z-index: 9996;',
+    '  display: inline-flex; align-items: center; gap: 8px;',
+    '  padding: 11px 18px; border-radius: 999px; cursor: pointer;',
+    '  background: '+NAVY+'; color: '+WHITE+'; border: 1.5px solid '+GOLD+'66;',
+    '  font-family: '+SANS+'; font-size: 14px; font-weight: 700; letter-spacing: 0.01em;',
+    '  box-shadow: 0 6px 20px rgba(27,58,75,0.34);',
+    '  transition: all 0.2s cubic-bezier(0.4,0,0.2,1); }',
+    '#sg-help-fab:hover { background: '+TEAL+'; transform: translateY(-2px);',
+    '  box-shadow: 0 8px 26px rgba(27,58,75,0.40); }',
+    '#sg-help-fab svg { width: 16px; height: 16px; flex-shrink: 0; }',
+    '@media (max-width: 760px) {',
+    '  #sg-help-fab { bottom: 20px; right: 72px; padding: 10px 15px; font-size: 13px; }',
+    '  #sg-help-fab .sg-help-fab-label { display: inline; }',
+    '}',
+    '@media print { #sg-help-fab, #sg-help-overlay { display: none !important; } }',
+
+    // Overlay / backdrop
+    '#sg-help-overlay { position: fixed; inset: 0; z-index: 10001;',
+    '  display: none; align-items: center; justify-content: center;',
+    '  padding: 20px; background: rgba(15,37,48,0.55);',
+    '  font-family: '+SANS+'; -webkit-overflow-scrolling: touch; overflow-y: auto; }',
+    '#sg-help-overlay.open { display: flex; }',
+
+    // Modal card
+    '.sg-help-modal { background: '+WHITE+'; width: 100%; max-width: 480px;',
+    '  border-radius: 16px; border: 1px solid '+BORDER+'; overflow: hidden;',
+    '  box-shadow: 0 24px 70px rgba(0,0,0,0.30); position: relative;',
+    '  max-height: calc(100vh - 40px); display: flex; flex-direction: column; }',
+    '.sg-help-head { background: linear-gradient(180deg, '+NAVY_DEEP+' 0%, '+NAVY+' 100%);',
+    '  padding: 22px 26px; border-bottom: 2px solid '+GOLD+'40; flex-shrink: 0; }',
+    '.sg-help-head h2 { font-family: '+SERIF+'; color: '+WHITE+'; margin: 0;',
+    '  font-size: 24px; font-weight: 400; line-height: 1.15; }',
+    '.sg-help-head p { color: rgba(255,255,255,0.86); margin: 8px 0 0;',
+    '  font-size: 14px; font-weight: 500; line-height: 1.5; }',
+    '.sg-help-close { position: absolute; top: 14px; right: 14px;',
+    '  width: 34px; height: 34px; border-radius: 50%; cursor: pointer;',
+    '  background: rgba(255,255,255,0.12); border: none; color: '+WHITE+';',
+    '  font-size: 20px; line-height: 1; display: flex; align-items: center;',
+    '  justify-content: center; transition: background 0.15s; }',
+    '.sg-help-close:hover { background: rgba(255,255,255,0.24); }',
+
+    '.sg-help-body { padding: 22px 26px 26px; overflow-y: auto; }',
+    '.sg-help-field { margin-bottom: 16px; }',
+    '.sg-help-field label { display: block; font-size: 13px; font-weight: 700;',
+    '  color: '+NAVY+'; margin-bottom: 6px; letter-spacing: 0.01em; }',
+    '.sg-help-field .sg-help-req { color: '+GOLD+'; font-weight: 700; }',
+    '.sg-help-field input, .sg-help-field select, .sg-help-field textarea {',
+    '  width: 100%; box-sizing: border-box; font-family: '+SANS+';',
+    '  font-size: 15px; color: '+BODY+'; background: '+WHITE+';',
+    '  border: 1.5px solid '+BORDER+'; border-radius: 9px; padding: 11px 13px;',
+    '  transition: border-color 0.15s, box-shadow 0.15s; }',
+    '.sg-help-field textarea { min-height: 116px; resize: vertical; line-height: 1.5; }',
+    '.sg-help-field input:focus, .sg-help-field select:focus, .sg-help-field textarea:focus {',
+    '  outline: none; border-color: '+TEAL+'; box-shadow: 0 0 0 3px '+TEAL+'22; }',
+    '.sg-help-field.sg-help-invalid input, .sg-help-field.sg-help-invalid textarea {',
+    '  border-color: #C0392B; box-shadow: 0 0 0 3px rgba(192,57,43,0.14); }',
+    '.sg-help-error-msg { color: #C0392B; font-size: 12.5px; font-weight: 600;',
+    '  margin: 6px 0 0; }',
+
+    '.sg-help-actions { display: flex; gap: 10px; align-items: center;',
+    '  margin-top: 6px; }',
+    '.sg-help-send { background: '+NAVY+'; color: '+WHITE+'; border: none;',
+    '  font-family: '+SANS+'; font-size: 15px; font-weight: 700; letter-spacing: 0.01em;',
+    '  padding: 12px 26px; border-radius: 9px; cursor: pointer;',
+    '  transition: background 0.18s; }',
+    '.sg-help-send:hover:not(:disabled) { background: '+TEAL+'; }',
+    '.sg-help-send:disabled { opacity: 0.6; cursor: default; }',
+    '.sg-help-cancel { background: none; border: none; color: '+MUTED+';',
+    '  font-family: '+SANS+'; font-size: 14px; font-weight: 600; cursor: pointer;',
+    '  padding: 12px 8px; }',
+    '.sg-help-cancel:hover { color: '+NAVY+'; }',
+    '.sg-help-formerr { color: #C0392B; font-size: 13.5px; font-weight: 600;',
+    '  margin: 14px 0 0; line-height: 1.5; }',
+
+    // Success / result panel (replaces the form body)
+    '.sg-help-result { text-align: center; padding: 14px 6px 8px; }',
+    '.sg-help-result .sg-help-check { width: 56px; height: 56px; border-radius: 50%;',
+    '  margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;',
+    '  background: rgba(46,107,127,0.12); color: '+TEAL+'; font-size: 28px; }',
+    '.sg-help-result h3 { font-family: '+SERIF+'; color: '+NAVY+'; margin: 0 0 8px;',
+    '  font-size: 22px; font-weight: 400; }',
+    '.sg-help-result p { color: '+BODY+'; font-size: 15px; font-weight: 500;',
+    '  line-height: 1.55; margin: 0 0 20px; }',
+    '.sg-help-result button { background: '+NAVY+'; color: '+WHITE+'; border: none;',
+    '  font-family: '+SANS+'; font-size: 15px; font-weight: 700; padding: 11px 26px;',
+    '  border-radius: 9px; cursor: pointer; transition: background 0.18s; }',
+    '.sg-help-result button:hover { background: '+TEAL+'; }'
+  ].join('\n');
+
+  var style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  // ── Persistent launcher button ──
+  var helpIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
+
+  var fab = document.createElement('button');
+  fab.id = 'sg-help-fab';
+  fab.className = 'no-print';
+  fab.type = 'button';
+  fab.setAttribute('aria-label', 'Have a question?');
+  fab.innerHTML = helpIcon + '<span class="sg-help-fab-label">Have a question?</span>';
+  document.body.appendChild(fab);
+
+  // ── Modal scaffolding ──
+  var overlay = document.createElement('div');
+  overlay.id = 'sg-help-overlay';
+  overlay.className = 'no-print';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Ask the Safeguard administrator a question');
+  document.body.appendChild(overlay);
+
+  var sending = false;            // in-flight guard (no double-submit)
+  var prefill = { name: '', email: '' };
+  var lastFocused = null;
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function topicOptions() {
+    var out = '<option value="">Choose one (optional)</option>';
+    TOPICS.forEach(function (t) { out += '<option value="' + esc(t) + '">' + esc(t) + '</option>'; });
+    return out;
+  }
+
+  // Render the form (initial state)
+  function renderForm() {
+    overlay.innerHTML =
+      '<div class="sg-help-modal">'
+      + '<div class="sg-help-head">'
+      +   '<button type="button" class="sg-help-close" aria-label="Close">&times;</button>'
+      +   '<h2>Have a question?</h2>'
+      +   '<p>Ask away — your question goes straight to our Safeguard administrator. No question is too small.</p>'
+      + '</div>'
+      + '<div class="sg-help-body">'
+      +   '<div class="sg-help-field" data-field="name">'
+      +     '<label for="sg-help-name">Your name <span class="sg-help-req">*</span></label>'
+      +     '<input id="sg-help-name" type="text" autocomplete="name" value="' + esc(prefill.name) + '">'
+      +   '</div>'
+      +   '<div class="sg-help-field" data-field="email">'
+      +     '<label for="sg-help-email">Your email <span class="sg-help-req">*</span></label>'
+      +     '<input id="sg-help-email" type="email" autocomplete="email" value="' + esc(prefill.email) + '">'
+      +   '</div>'
+      +   '<div class="sg-help-field" data-field="topic">'
+      +     '<label for="sg-help-topic">What&rsquo;s this about?</label>'
+      +     '<select id="sg-help-topic">' + topicOptions() + '</select>'
+      +   '</div>'
+      +   '<div class="sg-help-field" data-field="message">'
+      +     '<label for="sg-help-message">Your question <span class="sg-help-req">*</span></label>'
+      +     '<textarea id="sg-help-message" placeholder="Type your question here…"></textarea>'
+      +   '</div>'
+      +   '<div class="sg-help-actions">'
+      +     '<button type="button" class="sg-help-send">Send</button>'
+      +     '<button type="button" class="sg-help-cancel">Cancel</button>'
+      +   '</div>'
+      +   '<p class="sg-help-formerr" style="display:none"></p>'
+      + '</div>'
+      + '</div>';
+
+    overlay.querySelector('.sg-help-close').addEventListener('click', close);
+    overlay.querySelector('.sg-help-cancel').addEventListener('click', close);
+    overlay.querySelector('.sg-help-send').addEventListener('click', submit);
+
+    // Clear a field's invalid state as the user edits it.
+    ['name', 'email', 'message'].forEach(function (f) {
+      var el = overlay.querySelector('#sg-help-' + f);
+      if (el) el.addEventListener('input', function () {
+        var wrap = overlay.querySelector('[data-field="' + f + '"]');
+        if (wrap) wrap.classList.remove('sg-help-invalid');
+        var em = wrap && wrap.querySelector('.sg-help-error-msg');
+        if (em) em.remove();
+      });
+    });
+
+    // Focus the first empty required field (message if name/email pre-filled).
+    var focusTarget = !prefill.name ? '#sg-help-name'
+      : (!prefill.email ? '#sg-help-email' : '#sg-help-message');
+    var ft = overlay.querySelector(focusTarget);
+    if (ft) ft.focus();
+  }
+
+  function fieldError(field, msg) {
+    var wrap = overlay.querySelector('[data-field="' + field + '"]');
+    if (!wrap) return;
+    wrap.classList.add('sg-help-invalid');
+    if (!wrap.querySelector('.sg-help-error-msg')) {
+      var p = document.createElement('p');
+      p.className = 'sg-help-error-msg';
+      p.textContent = msg;
+      wrap.appendChild(p);
+    }
+  }
+
+  function submit() {
+    if (sending) return;
+    var formErr = overlay.querySelector('.sg-help-formerr');
+    if (formErr) { formErr.style.display = 'none'; formErr.textContent = ''; }
+
+    var name = (overlay.querySelector('#sg-help-name').value || '').trim();
+    var email = (overlay.querySelector('#sg-help-email').value || '').trim();
+    var topic = (overlay.querySelector('#sg-help-topic').value || '').trim();
+    var message = (overlay.querySelector('#sg-help-message').value || '').trim();
+
+    // Validation — message is the one field the user must actively complete,
+    // but name + email are required too (used as reply-to).
+    var ok = true;
+    if (!name) { fieldError('name', 'Please add your name.'); ok = false; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      fieldError('email', 'Please add a valid email so we can reply.'); ok = false;
+    }
+    if (!message) { fieldError('message', 'Please type your question.'); ok = false; }
+    if (!ok) return;
+
+    sending = true;
+    var sendBtn = overlay.querySelector('.sg-help-send');
+    var cancelBtn = overlay.querySelector('.sg-help-cancel');
+    if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = 'Sending…'; }
+    if (cancelBtn) cancelBtn.disabled = true;
+
+    var payload = { type: 'help_question', name: name, email: email, topic: topic, message: message };
+
+    fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload),
+      redirect: 'follow'
+    })
+      .then(function (res) { return res.json().catch(function () { return {}; }); })
+      .then(function (result) {
+        sending = false;
+        if (result && result.success) {
+          renderSuccess();
+        } else {
+          showSendError(sendBtn, cancelBtn);
+        }
+      })
+      .catch(function () {
+        sending = false;
+        showSendError(sendBtn, cancelBtn);
+      });
+  }
+
+  function showSendError(sendBtn, cancelBtn) {
+    if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send'; }
+    if (cancelBtn) cancelBtn.disabled = false;
+    var formErr = overlay.querySelector('.sg-help-formerr');
+    if (formErr) {
+      formErr.textContent = 'Something went wrong sending that. Give it another try, or refresh and resubmit.';
+      formErr.style.display = '';
+    }
+  }
+
+  function renderSuccess() {
+    var modal = overlay.querySelector('.sg-help-modal');
+    if (!modal) return;
+    modal.innerHTML =
+      '<div class="sg-help-head">'
+      +   '<button type="button" class="sg-help-close" aria-label="Close">&times;</button>'
+      +   '<h2>Thank you</h2>'
+      + '</div>'
+      + '<div class="sg-help-body">'
+      +   '<div class="sg-help-result">'
+      +     '<div class="sg-help-check" aria-hidden="true">&#10003;</div>'
+      +     '<h3>Got it — your question&rsquo;s on its way.</h3>'
+      +     '<p>Watch your inbox for a reply.</p>'
+      +     '<button type="button" class="sg-help-done">Close</button>'
+      +   '</div>'
+      + '</div>';
+    modal.querySelector('.sg-help-close').addEventListener('click', close);
+    modal.querySelector('.sg-help-done').addEventListener('click', close);
+    var done = modal.querySelector('.sg-help-done');
+    if (done) done.focus();
+  }
+
+  // ── Open / close ──
+  function open() {
+    if (overlay.classList.contains('open')) return;
+    lastFocused = document.activeElement;
+    sending = false;
+    // Pre-fill name/email from the logged-in profile (best effort, async).
+    prefill = { name: '', email: '' };
+    renderForm();
+    overlay.classList.add('open');
+    document.addEventListener('keydown', onKey);
+    loadPrefill();
+  }
+
+  function close() {
+    if (sending) return; // don't yank the modal mid-send
+    overlay.classList.remove('open');
+    document.removeEventListener('keydown', onKey);
+    overlay.innerHTML = '';
+    if (lastFocused && lastFocused.focus) { try { lastFocused.focus(); } catch (e) {} }
+  }
+
+  function onKey(e) {
+    if (e.key === 'Escape') { e.preventDefault(); close(); }
+  }
+
+  // Backdrop click closes (clicks on the modal itself do not bubble to here).
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) close();
+  });
+
+  fab.addEventListener('click', open);
+
+  // ── Pre-fill name/email from the signed-in profile ──
+  // Best-effort: if Firebase/profile modules aren't present (e.g. a static doc
+  // page), the fields simply stay blank and editable.
+  function loadPrefill() {
+    Promise.all([
+      import('./sg-auth.js').catch(function () { return null; }),
+      import('./sg-profile.js').catch(function () { return null; })
+    ]).then(function (mods) {
+      var authMod = mods[0], profileMod = mods[1];
+      if (!profileMod) return;
+
+      function apply(profile, authEmail) {
+        if (!overlay.classList.contains('open')) return;
+        var nameEl = overlay.querySelector('#sg-help-name');
+        var emailEl = overlay.querySelector('#sg-help-email');
+        var nm = '';
+        if (profile) {
+          nm = (profileMod.displayName && profileMod.displayName(profile)) || '';
+          if (!nm) {
+            nm = [profile.firstName, profile.lastName].filter(Boolean).join(' ').trim();
+          }
+        }
+        var em = (profile && profile.email) || authEmail || '';
+        // Only fill empty fields — never clobber what the user has typed.
+        if (nameEl && !nameEl.value && nm) { nameEl.value = nm; prefill.name = nm; }
+        if (emailEl && !emailEl.value && em) { emailEl.value = em; prefill.email = em; }
+      }
+
+      var run = function () {
+        profileMod.getOrCreateProfile()
+          .then(function (p) {
+            var u = authMod && authMod.currentUser ? authMod.currentUser() : null;
+            apply(p, u ? u.email : '');
+          })
+          .catch(function () {});
+      };
+
+      // If we know auth state, wait for a signed-in user; otherwise just try.
+      if (authMod && authMod.onUserChange) {
+        authMod.onUserChange(function (user) { if (user) run(); });
+      } else {
+        run();
+      }
+    });
+  }
+
+  // Public opener so other pages (e.g. the dashboard's inline button) open
+  // the exact same modal.
+  window.SGHelp = { open: open, close: close };
+})();

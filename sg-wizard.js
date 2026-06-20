@@ -442,27 +442,45 @@ function readEmergency(wiz) {
 // Spiritual -----------------------------------------------------------------
 function renderSpiritual(wiz) {
   const m = wiz.model;
+  // One merged faith-story question (replaces the old "spiritual journey" +
+  // "faith story" pair). The single field feeds BOTH model.journey (People
+  // submission column) and model.testimony (profile) — see readSpiritual.
+  // Pre-fill prefers journey but falls back to a previously saved profile
+  // testimony so returning volunteers still see their own words.
+  const faithStory = m.journey || m.testimony || "";
   return field("attendLength", "How long have you regularly attended Bethany Chapel?", m.attendLength, { placeholder: "e.g., 3 years" }) +
     '<div class="prompt" style="margin-top:14px">Do you attend two or more services per month?</div>' + yesNo("wz_services", m.services) +
     '<div class="prompt">Are you a member of this church?</div>' + yesNo("wz_member", m.member) +
     '<div class="prompt">Have you been baptized?</div>' + yesNo("wz_baptized", m.baptized) +
     '<div class="prompt"><em>If not baptized, are you open to discussing baptism with a pastor?</em></div>' + yesNo("wz_baptismOpen", m.baptismOpen) +
-    textarea("journey", "Briefly describe your spiritual journey and faith in Christ", m.journey, { minHeight: 140 }) +
-    textarea("testimony", "Your faith story", m.testimony, {
-      minHeight: 120,
-      optional: true,
-      hint: "We'd love to know your story — how you came to follow Jesus and why you want to serve here. Just a few sentences in your own words; this isn't a test.",
-    });
+    faithStoryField(faithStory);
+}
+// Christin's prompt, rendered with a slightly bolder/clearer label and helper
+// than the shared textarea() default — the muted 13px hint was easy to miss.
+// Styles use the page's existing tokens (Navy label, Teal accent, DM Sans).
+function faithStoryField(value) {
+  return '<div class="field" style="margin-top:18px">' +
+    '<label for="wz_journey" style="font-size:13px;letter-spacing:0.04em">Your faith story</label>' +
+    '<div class="wz-hint" style="font-size:13.5px;color:var(--body);font-weight:500;margin-bottom:9px">' +
+    esc("We'd love to know your story — how you came to follow Jesus and why you want to serve here. Just a few sentences in your own words; this isn’t a test.") +
+    '</div>' +
+    '<textarea id="wz_journey" class="fi" style="min-height:150px">' + esc(value) + '</textarea>' +
+    '</div>';
 }
 function readSpiritual(wiz) {
+  // The single faith-story textarea (id "journey") populates BOTH the People
+  // submission field (model.journey, read by buildRowData) and the profile
+  // field (model.testimony, written by profilePayload). validateSpiritual
+  // checks model.journey, so requiring this field keeps validation working.
+  const faithStory = val(wiz, "journey");
   return {
     attendLength: val(wiz, "attendLength"),
     services: radio(wiz, "wz_services"),
     member: radio(wiz, "wz_member"),
     baptized: radio(wiz, "wz_baptized"),
     baptismOpen: radio(wiz, "wz_baptismOpen"),
-    journey: val(wiz, "journey"),
-    testimony: val(wiz, "testimony"),
+    journey: faithStory,
+    testimony: faithStory,
   };
 }
 

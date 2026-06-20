@@ -42,17 +42,42 @@
            text-transform:uppercase;margin-bottom:10px}
   h1{font-family:var(--serif);font-size:36px;color:var(--navy);font-weight:400;
      line-height:1.1;margin-bottom:10px}
-  .lede{font-size:15px;color:var(--muted);margin-bottom:24px;max-width:620px}
+  .lede{font-size:15.5px;color:var(--body);margin-bottom:24px;max-width:620px;line-height:1.6}
+  .lede strong{color:var(--navy);font-weight:700}
 
-  /* ── Status card ── */
-  .status-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
-               padding:24px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px;
-               display:flex;gap:16px;align-items:flex-start}
+  /* ── Do-this-next hero (numbered steps, front and centre) ── */
+  .steps-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
+              padding:26px 30px;box-shadow:0 6px 28px rgba(27,58,75,0.08);margin-bottom:18px;
+              border-top:4px solid var(--gold)}
+  .steps-card .kicker{font-size:11px;font-weight:700;letter-spacing:0.2em;color:var(--gold);
+                      text-transform:uppercase;margin-bottom:6px}
+  .steps-card h2{font-family:var(--serif);font-size:26px;color:var(--navy);font-weight:400;
+                 line-height:1.12;margin-bottom:18px}
+  .steps{list-style:none;margin:0;padding:0;counter-reset:step}
+  .steps li{position:relative;padding:0 0 16px 50px;counter-increment:step}
+  .steps li:last-child{padding-bottom:0}
+  .steps li::before{content:counter(step);position:absolute;left:0;top:-2px;width:34px;height:34px;
+                    border-radius:50%;background:var(--navy);color:var(--white);font-weight:700;
+                    font-size:15px;display:flex;align-items:center;justify-content:center}
+  .steps li:not(:last-child)::after{content:"";position:absolute;left:16.5px;top:36px;bottom:6px;
+                    width:2px;background:var(--border)}
+  .steps .step-t{font-size:16px;font-weight:700;color:var(--navy);line-height:1.35;margin-bottom:2px}
+  .steps .step-d{font-size:14px;color:var(--body);line-height:1.55}
+  .info-card .note{font-size:13.5px}
+  .info-card .note strong{color:var(--navy);font-weight:700}
+
+  /* ── Status card (secondary — lighter than the steps hero) ── */
+  .status-label{font-size:11px;font-weight:700;letter-spacing:0.14em;color:var(--muted);
+                text-transform:uppercase;margin-bottom:8px}
+  .status-card{background:var(--sand);border:1.5px solid var(--border);border-radius:14px;
+               padding:18px 22px;margin-bottom:18px;
+               display:flex;gap:14px;align-items:flex-start}
   .status-card.cleared{background:var(--success-bg);border-color:rgba(39,174,96,0.3)}
   .status-card.pending{background:var(--warn-bg);border-color:rgba(176,122,30,0.3)}
   .status-card.expiring{background:var(--warn-bg);border-color:rgba(176,122,30,0.3)}
   .status-card.expired{background:var(--error-bg);border-color:rgba(192,57,43,0.3)}
-  .status-ico{width:40px;height:40px;border-radius:50%;background:var(--sand);flex-shrink:0;
+  .status-ico{width:34px;height:34px;border-radius:50%;background:var(--white);flex-shrink:0;
+              border:1.5px solid var(--border);
               display:flex;align-items:center;justify-content:center}
   .status-ico svg{width:20px;height:20px;color:var(--muted)}
   .status-card.cleared .status-ico{background:var(--success)}
@@ -62,16 +87,17 @@
   .status-card.expired .status-ico{background:var(--error)}
   .status-card.expired .status-ico svg{color:var(--white)}
   .status-body{flex:1}
-  .status-body .title{font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;margin-bottom:4px}
-  .status-body .sub{font-size:14px;color:var(--body);line-height:1.5}
-  .status-body .sub strong{color:var(--navy)}
+  .status-body .title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:2px}
+  .status-body .sub{font-size:13.5px;color:var(--body);line-height:1.5}
+  .status-body .sub strong{color:var(--navy);font-weight:700}
 
   /* ── Info / next steps ── */
   .info-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
              padding:24px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
-  .info-card h2{font-family:var(--serif);font-size:19px;color:var(--navy);font-weight:400;margin-bottom:10px}
+  .info-card h2{font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;margin-bottom:10px}
   .info-card ol{margin:0 0 12px 22px;font-size:14px;color:var(--body);line-height:1.65}
   .info-card li{margin-bottom:6px}
+  .info-card li strong{color:var(--navy);font-weight:700}
   .info-card .note{background:var(--sand);border-left:4px solid var(--gold);border-radius:6px;
                    padding:10px 14px;font-size:13px;color:var(--body);margin-top:14px}
 
@@ -127,10 +153,42 @@
   <div class="wrap" id="view" style="display:none">
     <div class="crumb"><a href="dashboard.html">Dashboard</a> &rsaquo; Police Information Check</div>
     <div class="eyebrow">SG-FRM-003 · Police Check</div>
-    <h1>Your Police Information Check.</h1>
-    <div class="lede">A Police Information Check (PIC) is required before you serve with children, youth, or vulnerable adults. Valid for <strong>3 years</strong>. Volunteers cover the cost of their own check; if that is a barrier, the church can help.</div>
+    <h1>Get your Police Check done.</h1>
+    <div class="lede">You need a <strong>Police Information Check</strong> before you can serve with children, youth, or vulnerable adults. It's valid for <strong>3 years</strong>. You cover the cost of your own check — and if that's a barrier, the church can help. The steps below show exactly what to do.</div>
 
-    <!-- ── Status card ── -->
+    <!-- ── Do this next: numbered steps, front and centre ── -->
+    <div class="steps-card" id="howCard">
+      <div class="kicker">Here's what to do</div>
+      <h2 id="stepsHeading">Follow these 5 steps to get cleared</h2>
+      <ol class="steps">
+        <li>
+          <div class="step-t">Pick up the consent form</div>
+          <div class="step-d">Ask the Safeguard Coordinator for the Police Check consent form (SG-FRM-003).</div>
+        </li>
+        <li>
+          <div class="step-t">Take it to a police detachment</div>
+          <div class="step-d">Bring the form and two pieces of ID to your local RCMP or police detachment.</div>
+        </li>
+        <li>
+          <div class="step-t">Pay for and submit your check</div>
+          <div class="step-d">You cover the cost of your own check. If the fee is a barrier, ask the Coordinator — the church can help.</div>
+        </li>
+        <li>
+          <div class="step-t">Results go to the Coordinator</div>
+          <div class="step-d">The police send results directly to the Coordinator, who reviews them and updates your record.</div>
+        </li>
+        <li>
+          <div class="step-t">Record your submission date below</div>
+          <div class="step-d">Enter the date you submitted your check so your dashboard shows you're waiting on results.</div>
+        </li>
+      </ol>
+      <div class="note">
+        <strong>Already have a recent check?</strong> If you have a Police Check from the last 3 years on file with another organization, the Coordinator may be able to accept it. Talk to them directly.
+      </div>
+    </div>
+
+    <!-- ── Status (secondary) ── -->
+    <div class="status-label">Your current status</div>
     <div class="status-card" id="statusCard">
       <div class="status-ico" id="statusIco">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -141,25 +199,10 @@
       </div>
     </div>
 
-    <!-- ── Next steps (visible when not yet cleared) ── -->
-    <div class="info-card" id="howCard">
-      <h2>How the Police Check works</h2>
-      <ol>
-        <li><strong>Pick up the consent form</strong> (SG-FRM-003) from the Safeguard Coordinator.</li>
-        <li><strong>Take it to a local RCMP / police detachment</strong> along with two pieces of ID.</li>
-        <li><strong>Submit the check</strong> — Bethany Chapel covers the fee; bring the church letter included with the form.</li>
-        <li><strong>Results are sent directly to the Coordinator</strong>, who reviews them and updates your record.</li>
-        <li><strong>Record your submission below</strong> so your dashboard reflects that you're waiting on results.</li>
-      </ol>
-      <div class="note">
-        <strong>Already submitted elsewhere?</strong> If you have a recent Police Check (within the last 3 years) on file with another organization, the Coordinator may be able to accept it. Talk to them directly.
-      </div>
-    </div>
-
     <!-- ── Submit form ── -->
     <div class="info-card" id="submitCard">
-      <h2 id="submitHeading">Record your submission</h2>
-      <div style="font-size:14px;color:var(--muted);margin-bottom:8px" id="submitHelp">Once you've handed in the consent form to the police, enter the date you submitted it below. The Coordinator will mark it cleared when the results come back.</div>
+      <h2 id="submitHeading">Step 5 · Record your submission</h2>
+      <div style="font-size:14px;color:var(--body);margin-bottom:8px" id="submitHelp">Once you've handed your check in to the police, enter the date below. The Coordinator will mark it cleared when the results come back.</div>
       <label for="submitDate">Date submitted to police</label>
       <input type="date" id="submitDate" class="fi">
       <div id="msg" class="msg"></div>
@@ -189,6 +232,7 @@
   const statusTitle  = document.getElementById("statusTitle");
   const statusSub    = document.getElementById("statusSub");
   const howCard      = document.getElementById("howCard");
+  const stepsHeading = document.getElementById("stepsHeading");
   const submitCard   = document.getElementById("submitCard");
   const submitHeading= document.getElementById("submitHeading");
   const submitHelp   = document.getElementById("submitHelp");
@@ -249,8 +293,19 @@
       statusSub.innerHTML = "Submitted on <strong>" + formatDate(pc.submittedAt) + "</strong>. The Coordinator will mark it cleared when results come back.";
     } else {
       statusIco.innerHTML = ICONS.notStarted;
-      statusTitle.textContent = "Not started";
-      statusSub.textContent = "You haven't submitted a police check yet. Follow the steps below.";
+      statusTitle.textContent = "Not started yet";
+      statusSub.textContent = "Start with Step 1 above. Once you've submitted your check, record the date below.";
+    }
+
+    // Steps heading — keep it action-oriented, but soften once under way
+    if (isExpired) {
+      stepsHeading.textContent = "Renew your check in 5 steps";
+    } else if (hasCleared) {
+      stepsHeading.textContent = "How the Police Check works";
+    } else if (hasSubmitted) {
+      stepsHeading.textContent = "What happens next";
+    } else {
+      stepsHeading.textContent = "Follow these 5 steps to get cleared";
     }
 
     // Submit form — adjust heading/help based on current state
@@ -263,8 +318,8 @@
       submitHelp.textContent = "You've handed in a new consent form — enter the date below.";
       submitDate.value = "";
     } else {
-      submitHeading.textContent = "Record your submission";
-      submitHelp.textContent = "Once you've handed in the consent form to the police, enter the date you submitted it below.";
+      submitHeading.textContent = "Step 5 · Record your submission";
+      submitHelp.textContent = "Once you've handed your check in to the police, enter the date you submitted it below.";
       submitDate.value = "";
     }
 

@@ -56,8 +56,27 @@
   .progress > div{height:100%;background:linear-gradient(to right,var(--teal),var(--gold));
                   border-radius:4px;transition:width 0.4s ease}
 
+  /* ── Welcome note + inline help ── */
+  .welcome{max-width:640px;margin-bottom:34px}
+  .welcome-title{font-family:var(--serif);font-size:26px;color:var(--navy);font-weight:400;
+                 line-height:1.15;margin-bottom:12px}
+  .welcome-note{font-size:15.5px;color:var(--body);line-height:1.65}
+  .welcome-note p{margin-bottom:12px}
+  .welcome-note p:last-child{margin-bottom:0}
+  .welcome-note strong{color:var(--navy);font-weight:700}
+  .help-btn{display:inline-flex;align-items:center;gap:8px;margin-top:18px;
+            background:var(--teal);color:var(--white);border:none;cursor:pointer;
+            font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:0.01em;
+            padding:12px 24px;border-radius:8px;box-shadow:0 2px 8px rgba(46,107,127,0.25);
+            transition:all var(--transition)}
+  .help-btn:hover{background:var(--navy);box-shadow:0 4px 14px rgba(27,58,75,0.3);
+                  transform:translateY(-1px)}
+  .help-btn::before{content:"?";display:inline-flex;align-items:center;justify-content:center;
+                    width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.18);
+                    font-weight:700;font-size:13px;line-height:1}
+
   /* ── Stat cards ── */
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:36px}
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:36px;max-width:560px}
   @media (max-width:640px){.stats{grid-template-columns:1fr}}
   .stat{background:var(--white);border:1.5px solid var(--border);border-radius:10px;
         padding:18px 20px;display:flex;flex-direction:column;gap:4px}
@@ -71,8 +90,10 @@
   /* ── Step cards (next / completed) ── */
   .step{background:var(--white);border:1.5px solid var(--border);border-radius:10px;
         padding:18px 22px;margin-bottom:10px;display:flex;gap:16px;align-items:flex-start;
-        transition:all var(--transition)}
-  .step:hover{border-color:var(--gold-warm);box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+        transition:all var(--transition);cursor:pointer}
+  .step:hover{border-color:var(--gold-warm);box-shadow:0 4px 16px rgba(27,58,75,0.08);
+              transform:translateY(-2px)}
+  .step:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
   .step.muted{opacity:0.7}
   .step-icon{width:36px;height:36px;border-radius:50%;background:var(--sand);
              display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -81,8 +102,8 @@
   .step-icon.done svg{color:var(--success)}
   .step-body{flex:1;min-width:0}
   .step-head{display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:4px}
-  .step-title{font-family:var(--serif);font-size:18px;color:var(--navy);font-weight:400;line-height:1.25}
-  .step-sub{font-size:13px;color:var(--muted);line-height:1.5}
+  .step-title{font-family:var(--serif);font-size:19px;color:var(--navy);font-weight:400;line-height:1.25}
+  .step-sub{font-size:13.5px;color:var(--body);opacity:0.82;line-height:1.5;font-weight:500}
   .badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:0.06em;
          text-transform:uppercase;white-space:nowrap;flex-shrink:0}
   .badge.done{background:var(--success-bg);color:var(--success)}
@@ -140,10 +161,16 @@
 
     <div class="progress"><div id="progressBar" style="width:0%"></div></div>
 
+    <!-- ── Welcome note + inline help ── -->
+    <div class="welcome">
+      <h2 class="welcome-title" id="welcomeTitle">Welcome</h2>
+      <div class="welcome-note" id="welcomeNote"></div>
+      <button type="button" class="help-btn" id="inlineHelpBtn">Have a question?</button>
+    </div>
+
     <div class="stats">
       <div class="stat"><b id="statSteps">0/5</b><span>Onboarding steps</span></div>
       <div class="stat"><b id="statTraining">0/4</b><span>Training modules</span></div>
-      <div class="stat"><b id="statRenewal">—</b><span>Renewal due</span></div>
     </div>
 
     <!-- ── Next steps ── -->
@@ -192,10 +219,21 @@
   const progressBar  = document.getElementById("progressBar");
   const statSteps    = document.getElementById("statSteps");
   const statTraining = document.getElementById("statTraining");
-  const statRenewal  = document.getElementById("statRenewal");
   const nextSteps    = document.getElementById("nextSteps");
   const completedSteps = document.getElementById("completedSteps");
   const completedHead  = document.getElementById("completedHead");
+  const welcomeTitle = document.getElementById("welcomeTitle");
+  const welcomeNote  = document.getElementById("welcomeNote");
+  const inlineHelpBtn = document.getElementById("inlineHelpBtn");
+
+  // ── Inline "Have a question?" button ──
+  // Opens the shared help modal defined in sg-nav.js. If that global isn't
+  // available yet (or the script failed to load), fail gracefully — no-op.
+  inlineHelpBtn.addEventListener("click", () => {
+    if (window.SGHelp && typeof window.SGHelp.open === "function") {
+      window.SGHelp.open();
+    }
+  });
 
   // ── Icons for step cards ──
   const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -237,6 +275,9 @@
     const doneCount = steps.filter(s => s.state === "done").length;
     const totalCount = steps.length;
 
+    // Welcome note (reflects the user's actual progress)
+    renderWelcome(profile, steps, name);
+
     // Progress bar + summary copy
     const pct = Math.round((doneCount / totalCount) * 100);
     progressBar.style.width = pct + "%";
@@ -259,17 +300,6 @@
     const trainingDone = allModules.filter(m => training[m] && training[m].completedAt).length;
     statTraining.textContent = trainingDone + "/" + allModules.length;
 
-    // Renewal — police-check expiry (3-year). The covenant is sign-once and
-    // does not renew, so it no longer contributes a renewal date.
-    const pcExpiresOn = (profile.policeCheck && profile.policeCheck.expiresOn) || null;
-    const renewalDates = [];
-    if (pcExpiresOn)     renewalDates.push(new Date(pcExpiresOn));
-    if (profile.renewalDueOn) renewalDates.push(new Date(profile.renewalDueOn));
-    const soonest = renewalDates.length
-      ? new Date(Math.min(...renewalDates.map(d => d.getTime())))
-      : null;
-    statRenewal.textContent  = soonest ? formatDate(soonest.toISOString()) : "—";
-
     // Split into next / completed
     nextSteps.innerHTML = "";
     completedSteps.innerHTML = "";
@@ -282,13 +312,66 @@
     completedHead.style.display = completedSteps.children.length ? "block" : "none";
   }
 
+  // ── Welcome note ──
+  // Bold "Welcome, <first name>" heading plus a warm note whose "what's done /
+  // what's left" reflects the user's actual progress. The handoff copy is the
+  // model; we keep its voice but fill the lists dynamically.
+  function renderWelcome(profile, steps, name) {
+    const first = (name || "friend").trim().split(/\s+/)[0];
+    welcomeTitle.textContent = "Welcome, " + first;
+
+    // Short, friendly labels for the note (distinct from the card titles).
+    const LABEL = {
+      profile:    "your profile",
+      covenant:   "signed the Worker's Covenant",
+      references: "your references",
+      police:     "your Police Information Check",
+      training:   "your Safeguard training",
+    };
+    const done = steps.filter(s => s.state === "done").map(s => LABEL[s.id] || s.title);
+    const left = steps.filter(s => s.state !== "done").map(s => LABEL[s.id] || s.title);
+
+    // Join a list naturally: "a", "a and b", "a, b, and c".
+    const join = (arr) => {
+      if (arr.length === 0) return "";
+      if (arr.length === 1) return arr[0];
+      if (arr.length === 2) return arr[0] + " and " + arr[1];
+      return arr.slice(0, -1).join(", ") + ", and " + arr[arr.length - 1];
+    };
+
+    const para1 = "This is your home base. Everything you need to start serving "
+      + "lives here, and we'll walk you through it one step at a time.";
+
+    let para2;
+    if (left.length === 0) {
+      para2 = "You've worked through every step — " + join(done)
+        + ". That's everything. Nice work, and thank you for serving.";
+    } else if (done.length === 0) {
+      para2 = "Here's what's ahead: " + join(left) + ". Work through "
+        + (left.length === 1 ? "it" : "them")
+        + " whenever you've got a few minutes — no need to finish it all today.";
+    } else {
+      para2 = "You've already finished " + join(done) + " — nice work. "
+        + (left.length === 1 ? "One thing" : (left.length + " things")) + " left: "
+        + join(left) + ". Work through "
+        + (left.length === 1 ? "it" : "them")
+        + " whenever you've got a few minutes — no need to finish it all today.";
+    }
+
+    const para3 = "Not sure where to start, or what a step means?";
+
+    welcomeNote.innerHTML =
+        "<p>" + para1 + "</p>"
+      + "<p>" + para2 + "</p>"
+      + "<p>" + para3 + "</p>";
+  }
+
   // ── Build the list of onboarding steps for this profile ──
   // Each step: { id, title, sub, state, badge, icon, action }
   function buildSteps(p) {
     p = p || {};
     const pc  = p.policeCheck || {};
     const refs = (p.references && p.references.items) || [];
-    const refsReceived = refs.filter(r => r.receivedAt).length;
     const training = p.training || {};
     const trainModules = ["SG-T-001","SG-T-002","SG-T-003","SG-T-004"];
     const leaderModules = (p.role === "leader" || p.role === "coordinator")
@@ -345,16 +428,18 @@
         action: { href: "police-check.html", label: (pc.clearedAt || pc.submittedAt) ? "View →" : "Start →" },
       },
       {
+        // From the volunteer's perspective, their job is done once they've
+        // submitted their references. Tracking whether the references have
+        // actually been *received* is the coordinator's task — never surface
+        // it here as the volunteer's incomplete work.
         id: "references",
         title: "Two references",
-        sub:   refsReceived >= 2
-          ? "Both references received."
-          : refs.length > 0
-            ? refsReceived + " of 2 received · awaiting the rest"
-            : '<a href="references.html" style="color:var(--teal);font-weight:600">SG-FRM-002</a> · Two written references required.',
+        sub:   refs.length > 0
+          ? "You've provided yours — the coordinator will follow up."
+          : '<a href="references.html" style="color:var(--teal);font-weight:600">SG-FRM-002</a> · Two written references required.',
         icon:  ICON_DOC,
-        state: refsReceived >= 2 ? "done" : (refs.length > 0 ? "pending" : "next"),
-        badge: refsReceived >= 2 ? "Done" : (refs.length > 0 ? "Pending" : "Required"),
+        state: refs.length > 0 ? "done" : "next",
+        badge: refs.length > 0 ? "Done" : "Required",
         action: { href: "references.html", label: refs.length > 0 ? "View →" : "Start →" },
       },
       {
@@ -372,9 +457,13 @@
   }
 
   // ── Render a single step card ──
+  // The whole card is clickable — clicking anywhere navigates to the step's
+  // page. The inner "Start/View/Edit" link is kept for clarity, and any links
+  // inside the sub copy (e.g. SG-FRM references) still work on their own.
   function renderStep(s) {
     const el = document.createElement("div");
     el.className = "step";
+    const href = s.action ? s.action.href : null;
     const iconCls = s.state === "done" ? "step-icon done" : "step-icon";
     const icon = s.state === "done" ? ICON_CHECK : s.icon;
     const badgeCls = s.state === "done"    ? "badge done"
@@ -393,6 +482,22 @@
       +   '<div class="step-sub">' + s.sub + '</div>'
       +   actionHtml
       + '</div>';
+
+    if (href) {
+      // Make the entire card a navigation target.
+      el.setAttribute("role", "link");
+      el.setAttribute("tabindex", "0");
+      el.setAttribute("aria-label", s.title);
+      const go = () => { location.href = href; };
+      el.addEventListener("click", (e) => {
+        // Let real links inside the card (action link, sub-copy links) win.
+        if (e.target.closest("a")) return;
+        go();
+      });
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+      });
+    }
     return el;
   }
 
