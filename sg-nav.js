@@ -271,7 +271,7 @@
     '  border: none; color: '+WHITE+'; font-size: 22px; line-height: 1; cursor: pointer; }',
     '.sg-mn-user { display: none; padding: 16px 20px; background: '+CREAM+'; border-bottom: 1px solid '+BORDER+'; }',
     '.sg-mn-user.show { display: block; }',
-    '.sg-mn-user .sg-mn-uname { font-family: '+SERIF+'; font-size: 17px; color: '+NAVY+'; word-break: break-word; }',
+    '.sg-mn-user .sg-mn-uname { font-family: Archivo, '+SANS+'; font-weight: 700; font-size: 17px; color: '+NAVY+'; word-break: break-word; }',
     '.sg-mn-user .sg-mn-urole { font-size: 10px; font-weight: 700; letter-spacing: 0.1em;',
     '  text-transform: uppercase; color: '+GOLD+'; margin-top: 3px; }',
     '.sg-mn-link { display: block; padding: 13px 20px; font-size: 15px; font-weight: 600; color: '+NAVY+';',
@@ -296,6 +296,11 @@
     '.sg-mn-sub .sg-mn-code { color: '+TEAL+'; font-weight: 700; font-size: 11px; min-width: 76px; flex-shrink: 0; }',
     '.sg-mn-sec { display: none; }',
     '.sg-mn-sec.show { display: block; }',
+    /* Personal cluster (name + My dashboard + Edit profile) reads as one unit, distinct from the doc nav. */
+    '#sg-mn-userlinks.show { background: '+CREAM+'; border-bottom: 1px solid '+BORDER+'; padding: 2px 0 6px; }',
+    '#sg-mn-userlinks .sg-mn-link { font-weight: 700; }',
+    /* Admin sits apart as its own collapsible section. */
+    '#sg-mn-admin.show { border-top: 1px solid '+BORDER+'; margin-top: 4px; }',
     '@media (max-width: 860px) {',
     '  #sg-nav-inner { padding: 0 14px; height: 54px; gap: 0; }',
     '  .sg-nav-item, .sg-nav-action, #sg-nav-user-chip { display: none !important; }',
@@ -416,9 +421,13 @@
         + '<a class="sg-mn-link" href="profile-setup.html">Edit profile</a></div>';
     NAV.forEach(function (item) {
       if (item.label === 'Admin') {
-        var ad = '<div class="sg-mn-sec" id="sg-mn-admin"><div class="sg-mn-grouplabel">Admin</div>';
+        // Collapsed accordion (same behaviour as Hub→Training); revealed for
+        // coordinators via .show, then drops open only when tapped.
+        var ad = '<div class="sg-mn-sec sg-mn-acc" id="sg-mn-admin">'
+               + '<button class="sg-mn-acc-btn" type="button">Admin<span class="sg-mn-chev">'+chev+'</span></button>'
+               + '<div class="sg-mn-acc-body">';
         ADMIN_LINKS.forEach(function (l) { ad += '<a class="sg-mn-sub" href="'+l.href+'"><span>'+l.label+'</span></a>'; });
-        mh += ad + '</div>';
+        mh += ad + '</div></div>';
         return;
       }
       if (!item.groups) { mh += '<a class="sg-mn-link" href="'+item.href+'">'+item.label+'</a>'; return; }

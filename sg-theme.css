@@ -75,6 +75,15 @@ h1, .sg-h1 { letter-spacing: -0.02em; }
 .sg-uc-caret { border-color:var(--muted) !important; }
 .sg-uc-avatar { background:var(--navy) !important; color:#FFFFFF !important; }
 
+/* User-chip DROPDOWN panel — was gold gradient + DM Serif; bring it into the new look. */
+.sg-uc-avatar-lg { background:var(--navy) !important; color:#FFFFFF !important; font-family:var(--serif) !important; }
+.sg-uc-menu-name { font-family:var(--serif) !important; font-weight:700 !important; color:var(--navy) !important; }
+.sg-uc-menu-email { color:var(--muted) !important; }
+.sg-uc-menu-role { color:var(--teal) !important; background:rgba(21,155,212,0.12) !important; }
+.sg-uc-menu-btn:hover { background:#F1F5F8 !important; color:var(--navy) !important; }
+.sg-uc-menu-btn.danger { color:var(--error) !important; }
+.sg-uc-menu-head { border-bottom-color:var(--border) !important; }
+
 /* ── 4. Light component nudges (safe, global) ───────────────── */
 a { color: var(--teal); }
 ::selection { background: rgba(21,155,212,0.18); }

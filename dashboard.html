@@ -197,6 +197,12 @@
       </a>
     </div>
 
+    <div class="section-head">Your privacy</div>
+    <a href="privacy.html" class="quick-card" style="display:block;border-style:dashed">
+      <div class="quick-title">How we protect &amp; use your information →</div>
+      <div class="quick-sub">What Safeguard Hub collects, who can see it, and how long we keep it.</div>
+    </a>
+
   </div>
 
 </main>
@@ -359,9 +365,9 @@
     const para3 = "Not sure where to start, or what a step means?";
 
     welcomeNote.innerHTML =
-        "<p>" + para1 + "</p>"
-      + "<p>" + para2 + "</p>"
-      + "<p>" + para3 + "</p>";
+        "<p>This is your home base. Everything you need to serve well is here — your steps, your documents, and your training, all in one place.</p>"
+      + "<p>Take it at your own pace. Your progress saves as you go, so you can stop and pick up whenever it suits you.</p>"
+      + "<p>Not sure where to start? Tap below and we'll point you the right way.</p>";
   }
 
   // ── Build the list of onboarding steps for this profile ──
@@ -394,12 +400,12 @@
         const st = covenantStatus(p);
         let sub, state, badge, label;
         if (st.state === "signed") {
-          sub   = "Signed " + formatDate(st.signedAt) + " · one-time, no renewal required";
+          sub   = "Signed " + formatDate(st.signedAt);
           state = "done";
           badge = "Done";
           label = "View →";
         } else {
-          sub   = '<a href="covenant.html" style="color:var(--teal);font-weight:600">SG-FRM-004</a> · A written commitment to the Safeguard standards.';
+          sub   = "A written commitment to the Safeguard standards.";
           state = "next";
           badge = "Required";
           label = "Start →";
@@ -419,7 +425,7 @@
           ? "Cleared " + formatDate(pc.clearedAt) + (pc.expiresOn ? " · expires " + formatDate(pc.expiresOn) : "")
           : pc.submittedAt
             ? "Submitted " + formatDate(pc.submittedAt) + " · awaiting clearance"
-            : '<a href="police-check.html" style="color:var(--teal);font-weight:600">SG-FRM-003</a> · You cover the cost (the church can help). Valid 3 years.',
+            : "We'll walk you through it — start whenever you're ready.",
         icon:  ICON_SHIELD,
         state: pc.clearedAt ? "done" : pc.submittedAt ? "pending" : "next",
         badge: pc.clearedAt ? "Done" : pc.submittedAt ? "Pending" : "Required",

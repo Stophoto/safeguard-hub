@@ -57,6 +57,12 @@ textarea.fi { resize: none; overflow: hidden; min-height: 80px; }
 .btn-danger:hover { background: #A93226; transform: translateY(-1px); }
 .btn-ghost { background: none; color: var(--teal); padding: 8px 16px; }
 .btn-ghost:hover { background: rgba(46,107,127,0.06); }
+/* Tighter Hub on phones — less hero whitespace, denser content. */
+@media (max-width:640px){
+  .sg-hub-header-inner{ padding:30px 18px 18px !important; }
+  .sg-hub-header-inner h1{ font-size:30px !important; }
+  .sg-hub-content{ padding:18px 16px 56px !important; }
+}
 .btn-sm { padding: 10px 20px; font-size: 14px; border-radius: 6px; font-weight: 700; }
 
 /* Cards */
