@@ -116,7 +116,7 @@
   <div class="wrap" id="formWrap" style="display:none">
     <div class="eyebrow">Coordinator · Invite volunteer</div>
     <h1>Invite a new volunteer</h1>
-    <div class="lede">Fill this in and we'll write the invitation for you — then open your email app ready to send, or let you copy it to send however you like.</div>
+    <div class="lede">Just their email — we'll write the invitation and open your email app ready to send. Add a personal touch right in your email before you hit send.</div>
 
     <div class="card">
       <form id="form" novalidate>
@@ -125,12 +125,6 @@
 
         <label for="email">Volunteer's email</label>
         <input type="email" id="email" class="fi" required autocomplete="off" placeholder="name@example.com">
-
-        <label for="ministry">Where they'd help <span class="opt">— optional</span></label>
-        <input type="text" id="ministry" class="fi" placeholder="e.g., Kids Church — Elementary · Sunday 9am">
-
-        <label for="note">Personal note <span class="opt">— optional, added to the email</span></label>
-        <textarea id="note" class="fi" placeholder="So glad you want to serve with us — this'll get you started."></textarea>
 
         <div id="msg" class="msg"></div>
 
@@ -191,8 +185,6 @@
   const form         = document.getElementById("form");
   const nameInput    = document.getElementById("name");
   const emailInput   = document.getElementById("email");
-  const ministry     = document.getElementById("ministry");
-  const note         = document.getElementById("note");
   const msg          = document.getElementById("msg");
 
   let lastMailto = "", lastText = "", lastLink = "";
@@ -216,21 +208,18 @@
 
   // The invitee visits the site's OWN sign-up page. The link is built from
   // the current address, so it keeps working if the site later moves to the
-  // church's own domain. Their email is prefilled so they can't mistype it.
-  function signupUrlFor(email) {
-    const base = new URL("sign-up.html", location.href).href;
-    return base + "?email=" + encodeURIComponent(email);
+  // church's own domain. Kept clean — no email/name in the URL.
+  function signupUrl() {
+    return new URL("sign-up.html", location.href).href;
   }
 
   // ── Build the invitation email ──────────────────────────
-  function buildEmail({ name, email, ministryText, noteText }) {
-    const link = signupUrlFor(email);
+  function buildEmail({ name, email }) {
+    const link = signupUrl();
     const lines = [];
     lines.push(name ? ("Hi " + name + ",") : "Hi,");
     lines.push("");
     lines.push("You're invited to get set up to serve with children and youth at Bethany Chapel. We're so glad you're here.");
-    if (noteText) { lines.push(""); lines.push(noteText); }
-    if (ministryText) { lines.push(""); lines.push("Where you'd help to start: " + ministryText); }
     lines.push("");
     lines.push("To begin, create your account here:");
     lines.push(link);
@@ -286,8 +275,6 @@
     const m = buildEmail({
       name: nameInput.value.trim(),
       email,
-      ministryText: ministry.value.trim(),
-      noteText: note.value.trim(),
     });
 
     doneEmail.textContent = email;
@@ -305,7 +292,7 @@
 
     // Best-effort: log the invite to the admin record. Never blocks the
     // email — if this fails (offline/permissions), the invitation still sends.
-    createInvite({ email, suggestedMinistry: ministry.value, note: note.value }).catch(() => {});
+    createInvite({ email }).catch(() => {});
   });
 
   reopen.addEventListener("click", () => { if (lastMailto) window.location.href = lastMailto; });
