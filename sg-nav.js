@@ -318,6 +318,15 @@
   style.textContent = css;
   document.head.appendChild(style);
 
+  // Load the visual-refresh theme LAST so its token + chrome overrides win.
+  if (!document.querySelector('link[data-sg-theme]')) {
+    var themeLink = document.createElement('link');
+    themeLink.rel = 'stylesheet';
+    themeLink.href = 'sg-theme.css';
+    themeLink.setAttribute('data-sg-theme', '');
+    document.head.appendChild(themeLink);
+  }
+
   // ── Shield SVG ──
   var shieldSvg = '<svg viewBox="0 0 24 28" width="22" height="26" fill="none" aria-hidden="true">'
     + '<path d="M12 1 L22 5 V14 C22 20 17 25 12 27 C7 25 2 20 2 14 V5 Z" stroke="'+GOLD_WARM+'" stroke-width="1.5"/>'
@@ -335,9 +344,10 @@
 
   var html = '<div id="sg-nav-inner">';
   html += '<a id="sg-nav-brand" href="index.html">'
-        + shieldSvg
-        + '<div class="sg-brand-text"><small>Safeguard Hub</small>'
-        + '<span class="sg-brand-name">'+CHURCH+'</span></div></a>';
+        + '<img src="bethany-logo.png" alt="Bethany Chapel" style="height:30px;width:auto">'
+        + '<span style="width:1px;height:26px;background:#E4E9ED;display:inline-block;flex-shrink:0"></span>'
+        + '<div class="sg-brand-text"><small>SAFEGUARD</small>'
+        + '<span class="sg-brand-name">HUB</span></div></a>';
 
   NAV.forEach(function (item) {
     if (!item.groups) {

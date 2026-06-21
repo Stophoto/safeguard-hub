@@ -1,0 +1,80 @@
+/* ─────────────────────────────────────────────────────────────
+   sg-theme.css — Safeguard Hub visual refresh (Bethany blues)
+
+   The site-wide design refresh. Loaded on EVERY page (injected by
+   sg-nav.js after its own styles; linked directly on the few pages
+   that don't carry the nav). It re-themes the shared design TOKENS
+   and the shared header CHROME to the new design system — without
+   touching a single line of page logic. Because every page reads the
+   same CSS variables, re-pointing them here recolours + refonts the
+   whole Hub at once.
+
+   Page bodies and bespoke layouts (dashboard, police, wizard, admin,
+   document hub) get their pixel-level treatment per-page; this file is
+   the foundation everything sits on.
+   ───────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+/* ── 1. Token remap ──────────────────────────────────────────
+   Loaded after each page's own :root, so these values win. Every
+   `var(--navy)`, `var(--cream)`, `var(--serif)` etc. across all 60
+   pages now resolves to the new system. */
+:root {
+  --navy:#0E4D70;            /* primary */
+  --navy-deep:#0B3A56;       /* darker navy */
+  --teal:#159BD4;            /* accent / links / eyebrows → bright blue */
+  --gold:#159BD4;            /* old gold accents → blue */
+  --gold-warm:#159BD4;
+  --cream:#EEF2F5;           /* page canvas → cool light grey */
+  --sand:#E9EEF1;            /* subtle fills / hovers */
+  --body:#56646E;            /* body copy */
+  --muted:#8A97A0;           /* secondary / meta text */
+  --border:#E4E9ED;          /* card borders / hairlines */
+  --white:#FFFFFF;
+  --error:#BC4035; --error-bg:#FDF3F2;
+  --success:#2E9E6A; --success-bg:#E5F4EC;
+  --warn:#B07D2A; --warn-bg:#FFF8EC; --warn-border:#F2E3C4; --warn-icon-bg:#F4E6C6;
+  --serif:'Archivo', system-ui, -apple-system, sans-serif;       /* headlines → bold geometric sans */
+  --sans:'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ── 2. Headlines ────────────────────────────────────────────
+   The old serif was weight 400; Archivo headlines want weight + tight
+   tracking. Bolden the common heading classes used across the Hub. */
+h1, h2, h3,
+.title, h1.title, .brand-name, .sg-brand-name, .wz-title, .section-title,
+.module-title, .quick-title, .need-count, .stat b, .sh3 {
+  font-weight: 700;
+}
+h1, .sg-h1 { letter-spacing: -0.02em; }
+
+/* ── 3. Shared header chrome → white ─────────────────────────
+   sg-theme.css is injected AFTER sg-nav.js's own <style>, so these
+   override the legacy navy-gradient header to the new white bar. */
+#sg-nav-header { background:#FFFFFF !important; border-bottom:1px solid var(--border) !important; }
+#sg-nav-brand small { color:var(--navy) !important; }                 /* "SAFEGUARD" → ink */
+#sg-nav-brand .sg-brand-name { color:var(--teal) !important; }        /* "HUB" → blue */
+.sg-nav-link { color:var(--body) !important; }
+.sg-nav-link:hover, .sg-nav-item:hover .sg-nav-link { color:var(--navy) !important; background:#F1F5F8 !important; }
+.sg-nav-link.active { color:var(--navy) !important; background:transparent !important; position:relative; }
+.sg-nav-link.active::after { content:""; position:absolute; left:16px; right:16px; bottom:5px; height:2px; background:var(--teal); border-radius:2px; }
+.sg-nav-link svg { opacity:0.7; }
+.sg-nav-action { background:var(--navy) !important; color:#FFFFFF !important; border:1px solid var(--navy) !important; }
+.sg-nav-action:hover { background:#0B3A56 !important; }
+#sg-nav-burger { background:#F1F5F8 !important; border-color:var(--border) !important; }
+#sg-nav-burger:hover { background:#E7EEF2 !important; }
+#sg-nav-burger i, #sg-nav-burger i::before, #sg-nav-burger i::after { background:var(--navy) !important; }
+
+/* The user chip was styled for a navy header (white text). Recolour
+   it for the white bar. */
+.sg-uc-chip { background:#F4F7F9 !important; color:var(--navy) !important; border-color:var(--border) !important; }
+.sg-uc-chip:hover, .sg-uc-chip[aria-expanded="true"] { background:#EAF0F4 !important; border-color:#D9E0E5 !important; }
+.sg-uc-name { color:var(--navy) !important; }
+.sg-uc-role { color:var(--teal) !important; }
+.sg-uc-caret { border-color:var(--muted) !important; }
+.sg-uc-avatar { background:var(--navy) !important; color:#FFFFFF !important; }
+
+/* ── 4. Light component nudges (safe, global) ───────────────── */
+a { color: var(--teal); }
+::selection { background: rgba(21,155,212,0.18); }
