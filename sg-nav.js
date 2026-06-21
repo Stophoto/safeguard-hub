@@ -548,22 +548,11 @@
     if (!document.querySelector('.sheet') && docCode.indexOf('SG-FRM') !== 0) {
       var ra = document.createElement('div');
       ra.id = 'sg-reading-actions';
-      var raKey = 'sg-read-complete:' + docCode;
-      var raDone = false;
-      try { raDone = localStorage.getItem(raKey) === '1'; } catch (e) {}
-      ra.innerHTML = '<button type="button" class="sg-ra-back">&#8592; Back</button>'
-        + '<button type="button" class="sg-ra-complete' + (raDone ? ' done' : '') + '">'
-        + (raDone ? '&#10003; Completed' : 'Mark as complete') + '</button>';
+      ra.innerHTML = '<button type="button" class="sg-ra-back">&#8592; Back</button>';
       footer.parentNode.insertBefore(ra, footer);
       ra.querySelector('.sg-ra-back').addEventListener('click', function () {
         if (window.history.length > 1) { window.history.back(); }
         else { window.location.href = 'dashboard.html'; }
-      });
-      var raBtn = ra.querySelector('.sg-ra-complete');
-      raBtn.addEventListener('click', function () {
-        var done = raBtn.classList.toggle('done');
-        try { if (done) { localStorage.setItem(raKey, '1'); } else { localStorage.removeItem(raKey); } } catch (e) {}
-        raBtn.innerHTML = done ? '&#10003; Completed' : 'Mark as complete';
       });
     }
   }
