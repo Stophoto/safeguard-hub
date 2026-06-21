@@ -242,29 +242,70 @@
     '#sg-reading-actions .sg-ra-complete:hover { background: '+TEAL+'; }',
     '#sg-reading-actions .sg-ra-complete.done { background: #2E7D5B; }',
     '@media print { #sg-reading-actions { display: none !important; } }',
-    // Mobile
-    '@media (max-width: 760px) {',
-    // Nav row scrolls horizontally so all items stay reachable with a swipe.
-    '  #sg-nav-inner { padding: 0 16px; height: 54px; gap: 0;',
-    '    overflow-x: auto; overflow-y: hidden;',
-    '    -webkit-overflow-scrolling: touch; scrollbar-width: none; }',
-    '  #sg-nav-inner::-webkit-scrollbar { display: none; height: 0; }',
-    '  #sg-nav-brand, .sg-nav-item, .sg-nav-action { flex-shrink: 0; }',
+    // ── Hamburger button (mobile only) ──
+    '#sg-nav-burger { display: none; align-items: center; justify-content: center;',
+    '  width: 42px; height: 42px; padding: 0; margin-left: auto; flex-shrink: 0;',
+    '  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.16);',
+    '  border-radius: 8px; cursor: pointer; }',
+    '#sg-nav-burger:hover { background: rgba(255,255,255,0.12); }',
+    '#sg-nav-burger i { display: block; width: 20px; height: 2px; background: '+GOLD_WARM+';',
+    '  border-radius: 2px; position: relative; }',
+    '#sg-nav-burger i::before, #sg-nav-burger i::after { content: ""; position: absolute; left: 0;',
+    '  width: 20px; height: 2px; background: '+GOLD_WARM+'; border-radius: 2px; }',
+    '#sg-nav-burger i::before { top: -6px; } #sg-nav-burger i::after { top: 6px; }',
+    // ── Mobile drawer — lives on <body>, OUTSIDE the transformed header,
+    //    so it is never clipped and always renders on top. ──
+    '#sg-mobile-nav { position: fixed; inset: 0; z-index: 10005; display: none; }',
+    '#sg-mobile-nav.open { display: block; }',
+    '#sg-mobile-nav .sg-mn-backdrop { position: absolute; inset: 0; background: rgba(15,37,48,0.5); }',
+    '.sg-mn-panel { position: absolute; top: 0; right: 0; bottom: 0; width: 87vw; max-width: 360px;',
+    '  background: '+WHITE+'; box-shadow: -8px 0 40px rgba(0,0,0,0.28); overflow-y: auto;',
+    '  -webkit-overflow-scrolling: touch; }',
+    '.sg-mn-head { position: sticky; top: 0; z-index: 1; padding: 15px 18px;',
+    '  background: linear-gradient(180deg, '+NAVY_DEEP+' 0%, '+NAVY+' 100%);',
+    '  border-bottom: 2px solid '+GOLD+'40; display: flex; align-items: center; justify-content: space-between; }',
+    '.sg-mn-head .sg-mn-title { color: '+WHITE+'; font-family: '+SERIF+'; font-size: 17px; }',
+    '.sg-mn-close { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.12);',
+    '  border: none; color: '+WHITE+'; font-size: 22px; line-height: 1; cursor: pointer; }',
+    '.sg-mn-user { display: none; padding: 16px 20px; background: '+CREAM+'; border-bottom: 1px solid '+BORDER+'; }',
+    '.sg-mn-user.show { display: block; }',
+    '.sg-mn-user .sg-mn-uname { font-family: '+SERIF+'; font-size: 17px; color: '+NAVY+'; word-break: break-word; }',
+    '.sg-mn-user .sg-mn-urole { font-size: 10px; font-weight: 700; letter-spacing: 0.1em;',
+    '  text-transform: uppercase; color: '+GOLD+'; margin-top: 3px; }',
+    '.sg-mn-link { display: block; padding: 13px 20px; font-size: 15px; font-weight: 600; color: '+NAVY+';',
+    '  text-decoration: none; border-bottom: 1px solid '+BORDER+'; font-family: '+SANS+'; }',
+    '.sg-mn-link:hover, .sg-mn-link:active { background: '+CREAM+'; color: '+TEAL+'; }',
+    '.sg-mn-link.sg-mn-signout { color: #C0392B; }',
+    '.sg-mn-acc { border-bottom: 1px solid '+BORDER+'; }',
+    '.sg-mn-acc-btn { display: flex; align-items: center; justify-content: space-between; width: 100%;',
+    '  padding: 13px 20px; font-size: 15px; font-weight: 600; color: '+NAVY+'; background: none;',
+    '  border: none; cursor: pointer; font-family: '+SANS+'; text-align: left; }',
+    '.sg-mn-acc-btn:hover { background: '+CREAM+'; }',
+    '.sg-mn-acc-btn .sg-mn-chev { color: '+MUTED+'; transition: transform 0.2s; display: inline-flex; }',
+    '.sg-mn-acc-btn .sg-mn-chev svg { width: 12px; height: 8px; }',
+    '.sg-mn-acc.open .sg-mn-acc-btn .sg-mn-chev { transform: rotate(180deg); }',
+    '.sg-mn-acc-body { display: none; padding-bottom: 8px; }',
+    '.sg-mn-acc.open .sg-mn-acc-body { display: block; }',
+    '.sg-mn-grouplabel { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;',
+    '  color: '+GOLD+'; padding: 8px 20px 3px; }',
+    '.sg-mn-sub { display: flex; gap: 8px; padding: 8px 20px 8px 30px; font-size: 13.5px; color: '+BODY+';',
+    '  text-decoration: none; line-height: 1.35; font-family: '+SANS+'; }',
+    '.sg-mn-sub:hover, .sg-mn-sub:active { background: '+CREAM+'; color: '+TEAL+'; }',
+    '.sg-mn-sub .sg-mn-code { color: '+TEAL+'; font-weight: 700; font-size: 11px; min-width: 76px; flex-shrink: 0; }',
+    '.sg-mn-sec { display: none; }',
+    '.sg-mn-sec.show { display: block; }',
+    '@media (max-width: 860px) {',
+    '  #sg-nav-inner { padding: 0 14px; height: 54px; gap: 0; }',
+    '  .sg-nav-item, .sg-nav-action, #sg-nav-user-chip { display: none !important; }',
+    '  #sg-nav-burger { display: flex; }',
     '  #sg-nav-brand small { font-size: 11px; letter-spacing: 0.16em; }',
     '  #sg-nav-brand .sg-brand-name { font-size: 15px; }',
-    '  .sg-nav-link { padding: 6px 10px; font-size: 12px; }',
-    '  .sg-nav-link .sg-nav-label-long { display: none; }',
-    // Dropdowns anchor to the viewport (position: fixed) so they escape the
-    // horizontally-scrolling nav container and stay reachable on a phone.
-    '  .sg-nav-dropdown { min-width: 260px; left: auto; right: 8px;',
-    '    transform: none; position: fixed; top: 54px;',
-    '    max-width: calc(100vw - 16px); }',
-    '  .sg-nav-action { padding: 6px 10px; font-size: 11px; }',
     '  body.sg-nav-active { padding-top: 54px; }',
     '  #sg-breadcrumb { top: 54px; }',
     '  #sg-breadcrumb-inner { padding: 8px 16px; font-size: 11px; flex-wrap: wrap; }',
     '  body.sg-nav-active.sg-has-crumb { padding-top: 88px; }',
     '}',
+    '@media print { #sg-mobile-nav, #sg-nav-burger { display: none !important; } }',
     '@media print {',
     '  #sg-nav-header, #sg-breadcrumb, #sg-nav-top-btn { display: none !important; }',
     '  body.sg-nav-active { padding-top: 0 !important; }',
@@ -332,11 +373,76 @@
   if (!onHub && isDocPage) {
     html += '<button class="sg-nav-action" onclick="window.print()" title="Save as PDF or print">Save PDF</button>';
   }
+  html += '<button id="sg-nav-burger" type="button" aria-label="Open menu"><i></i></button>';
   html += '</div>';
 
   header.innerHTML = html;
   document.body.insertBefore(header, document.body.firstChild);
   document.body.classList.add('sg-nav-active');
+
+  // ── Mobile drawer (the hamburger menu). Built once, appended to <body>
+  //    so it lives outside the transformed/clipped header and always layers
+  //    on top. Mirrors the desktop nav: tap-to-expand sections + user links. ──
+  (function buildMobileNav() {
+    var mob = document.createElement('div');
+    mob.id = 'sg-mobile-nav';
+    mob.className = 'no-print';
+    var mh = '<div class="sg-mn-backdrop"></div><nav class="sg-mn-panel" aria-label="Menu">';
+    mh += '<div class="sg-mn-head"><span class="sg-mn-title">Menu</span>'
+        + '<button class="sg-mn-close" type="button" aria-label="Close menu">&times;</button></div>';
+    // User identity + quick links (revealed by the auth block once signed in)
+    mh += '<div class="sg-mn-user" id="sg-mn-user"><div class="sg-mn-uname" id="sg-mn-uname"></div>'
+        + '<div class="sg-mn-urole" id="sg-mn-urole"></div></div>';
+    mh += '<div class="sg-mn-sec" id="sg-mn-userlinks">'
+        + '<a class="sg-mn-link" href="dashboard.html">My dashboard</a>'
+        + '<a class="sg-mn-link" href="profile-setup.html">Edit profile</a></div>';
+    NAV.forEach(function (item) {
+      if (item.label === 'Admin') {
+        var ad = '<div class="sg-mn-sec" id="sg-mn-admin"><div class="sg-mn-grouplabel">Admin</div>';
+        ADMIN_LINKS.forEach(function (l) { ad += '<a class="sg-mn-sub" href="'+l.href+'"><span>'+l.label+'</span></a>'; });
+        mh += ad + '</div>';
+        return;
+      }
+      if (!item.groups) { mh += '<a class="sg-mn-link" href="'+item.href+'">'+item.label+'</a>'; return; }
+      mh += '<div class="sg-mn-acc"><button class="sg-mn-acc-btn" type="button">'+item.label
+          + '<span class="sg-mn-chev">'+chev+'</span></button><div class="sg-mn-acc-body">';
+      item.groups.forEach(function (g) {
+        mh += '<div class="sg-mn-grouplabel">'+g.label+'</div>';
+        g.items.forEach(function (code) {
+          var d = DOCS[code];
+          if (!d) return;
+          if (d.href) {
+            mh += '<a class="sg-mn-sub" href="'+d.href+'"><span class="sg-mn-code">'+code+'</span><span>'+d.title+'</span></a>';
+          } else {
+            mh += '<span class="sg-mn-sub" style="opacity:.5"><span class="sg-mn-code">'+code+'</span><span>'+d.title+'</span></span>';
+          }
+        });
+      });
+      mh += '</div></div>';
+    });
+    mh += '<div class="sg-mn-sec" id="sg-mn-signout-wrap"><a class="sg-mn-link sg-mn-signout" id="sg-mn-signout" href="#">Sign out</a></div>';
+    mh += '</nav>';
+    mob.innerHTML = mh;
+    document.body.appendChild(mob);
+
+    var burger = document.getElementById('sg-nav-burger');
+    function openMob() { mob.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeMob() { mob.classList.remove('open'); document.body.style.overflow = ''; }
+    if (burger) burger.addEventListener('click', openMob);
+    mob.querySelector('.sg-mn-close').addEventListener('click', closeMob);
+    mob.querySelector('.sg-mn-backdrop').addEventListener('click', closeMob);
+    mob.querySelectorAll('.sg-mn-acc-btn').forEach(function (b) {
+      b.addEventListener('click', function () { b.parentNode.classList.toggle('open'); });
+    });
+    // Close when a real navigation link is tapped (sign-out handled separately)
+    mob.querySelectorAll('a.sg-mn-link[href], a.sg-mn-sub[href]').forEach(function (a) {
+      if (a.id === 'sg-mn-signout') return;
+      a.addEventListener('click', closeMob);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && mob.classList.contains('open')) closeMob();
+    });
+  })();
 
   // ── Breadcrumb back-trail (built from sessionStorage trail) ──
   // We maintain a trail of {code,title,href} in sessionStorage as the user
@@ -466,6 +572,8 @@
   // Coordinators get a dropdown of admin destinations; everyone else has the
   // item hidden. Idempotent — safe to call on every auth-state change.
   function setAdminAccess(isCoordinator) {
+    var mobAdmin = document.getElementById('sg-mn-admin');
+    if (mobAdmin) mobAdmin.classList.toggle('show', !!isCoordinator);
     var adminItem = document.getElementById('sg-nav-admin');
     if (!adminItem) return;
     if (!isCoordinator) {
@@ -527,8 +635,11 @@
       if (existingChip) existingChip.remove();
 
       if (!user) {
-        // Signed out — hide Admin (anonymous visitors have no admin access).
+        // Signed out — hide Admin + the drawer's user section.
         if (window.SG_Nav) window.SG_Nav.setAdminAccess(false);
+        ['sg-mn-user', 'sg-mn-userlinks', 'sg-mn-signout-wrap'].forEach(function (id) {
+          var el = document.getElementById(id); if (el) el.classList.remove('show');
+        });
         return;
       }
 
@@ -537,6 +648,36 @@
 
       // Coordinators get an Admin dropdown; everyone else keeps it hidden.
       if (window.SG_Nav) window.SG_Nav.setAdminAccess(profile.role === 'coordinator');
+
+      // Fill the mobile drawer's user section + reveal the user links / sign out.
+      (function () {
+        function mobRole(p) {
+          if (!p) return '';
+          if (p.role === 'coordinator') return 'Coordinator';
+          if (p.role === 'leader') return 'Leader';
+          if (p.role === 'volunteer') return p.profileComplete ? 'Volunteer' : 'In-process';
+          return '';
+        }
+        var nm = (profileMod.displayName && profileMod.displayName(profile))
+          || [profile.firstName, profile.lastName].filter(Boolean).join(' ')
+          || ((user.email || '').split('@')[0]);
+        var nameEl = document.getElementById('sg-mn-uname');
+        var roleEl = document.getElementById('sg-mn-urole');
+        if (nameEl) nameEl.textContent = nm;
+        if (roleEl) roleEl.textContent = mobRole(profile);
+        ['sg-mn-user', 'sg-mn-userlinks', 'sg-mn-signout-wrap'].forEach(function (id) {
+          var el = document.getElementById(id); if (el) el.classList.add('show');
+        });
+        var soBtn = document.getElementById('sg-mn-signout');
+        if (soBtn && !soBtn.__wired) {
+          soBtn.__wired = true;
+          soBtn.addEventListener('click', async function (e) {
+            e.preventDefault();
+            try { await authMod.signOutUser(); } catch (_) {}
+            location.replace('sign-in.html');
+          });
+        }
+      })();
 
       // Mount the user chip as the last item in the nav row
       // (brand has margin-right:auto which already floats nav items right)
