@@ -98,17 +98,7 @@
 
     <div class="letter" id="letter">
       <div class="letterhead">
-        <svg class="bc-logo" viewBox="0 0 470 124" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bethany Chapel">
-          <g fill="none" stroke="#2E97C0" stroke-width="6" stroke-linecap="butt">
-            <circle cx="62" cy="62" r="55"/>
-            <line x1="53" y1="11" x2="53" y2="121"/>
-            <line x1="71" y1="11" x2="71" y2="121"/>
-            <line x1="14" y1="53" x2="110" y2="53"/>
-            <line x1="14" y1="71" x2="110" y2="71"/>
-          </g>
-          <text x="150" y="56" font-family="'DM Sans',Arial,sans-serif" font-size="46" font-weight="700" fill="#134E68" letter-spacing="1">BETHANY</text>
-          <text x="150" y="106" font-family="'DM Sans',Arial,sans-serif" font-size="46" font-weight="500" fill="#134E68" letter-spacing="5">CHAPEL</text>
-        </svg>
+        <img class="bc-logo" src="bethany-logo.png" alt="Bethany Chapel">
         <div class="lh-contact" id="lhContact"></div>
       </div>
 
@@ -158,11 +148,12 @@
   // These are the only church-specific facts the letter needs; everything
   // else fills in automatically from the volunteer's profile.
   const CHURCH = {
-    addressLines: ["[Church street address]", "Calgary, AB  [Postal code]"],
-    phone: "[Church phone]",
-    email: "[Church email]",
-    signatoryName: "[Authorizing name]",      // who signs volunteer letters
-    signatoryTitle: "Safeguard Coordinator",
+    addressLines: ["3333 Richardson Way SW", "Calgary, AB  T3E 7B6"],
+    phone: "(403) 249-8605",
+    email: "christin@bethanychapel.com",
+    website: "bethanychapel.com",
+    signatoryName: "Christin Friesen",
+    signatoryTitle: "Children's Ministry Director",
   };
 
   const loadingState = document.getElementById("loadingState");
@@ -196,7 +187,8 @@
       "<b>Bethany Chapel</b>" +
       CHURCH.addressLines.map(l => esc(l)).join("<br>") +
       (CHURCH.phone ? "<br>" + esc(CHURCH.phone) : "") +
-      (CHURCH.email ? "<br>" + esc(CHURCH.email) : "");
+      (CHURCH.email ? "<br>" + esc(CHURCH.email) : "") +
+      (CHURCH.website ? "<br>" + esc(CHURCH.website) : "");
 
     // Applicant — pulled from the profile, with a write-in line if missing.
     const name = [p.firstName, p.lastName].filter(Boolean).join(" ") || p.fullName || p.preferredName || "";
@@ -214,6 +206,7 @@
     document.getElementById("sigMeta").innerHTML =
       "<b>" + esc(CHURCH.signatoryName) + "</b><br>" +
       esc(CHURCH.signatoryTitle) + ", Bethany Chapel" +
+      (CHURCH.email ? "<br>" + esc(CHURCH.email) : "") +
       (CHURCH.phone ? "<br>" + esc(CHURCH.phone) : "");
   }
 </script>
