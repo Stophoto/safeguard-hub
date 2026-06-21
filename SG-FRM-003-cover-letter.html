@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
-<title>Police Check — Consent Form · Safeguard Hub</title>
+<title>Police Check — Cover Letter (Coordinators) · Safeguard Hub</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" integrity="sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ" crossorigin="anonymous">
 <style>
-  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --success:#27AE60; --warn:#B07A1E; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
+  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --success:#27AE60; --warn:#B07A1E; --warn-bg:#FFF5E6; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
   .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
@@ -22,23 +22,23 @@
   .page{flex:1;padding:36px 24px 80px}
   .wrap{max-width:720px;margin:0 auto}
   .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
-  h1.title{font-family:var(--serif);font-size:34px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
-  .intro{color:var(--body);font-size:15px;margin-bottom:18px;line-height:1.6}
-  .intro em{color:var(--muted);font-style:italic}
+  h1.title{font-family:var(--serif);font-size:32px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
+  .role-note{background:var(--warn-bg);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13.5px;line-height:1.55;color:var(--body);margin-bottom:18px}
+  .role-note strong{color:var(--navy);font-weight:700}
   .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
   @media(max-width:620px){.card{padding:22px 20px}}
-  p{margin-bottom:12px;line-height:1.6}
-  .bullets{list-style:none;margin:8px 0 16px 0;padding:0}
-  .bullets li{position:relative;padding:6px 0 6px 20px;line-height:1.6;color:var(--body)}
-  .bullets li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .letter{background:#FCFAF5;border:1.5px solid var(--border);border-radius:10px;padding:26px 30px}
+  .letter p{margin-bottom:12px;line-height:1.65}
+  .letter p:last-child{margin-bottom:0}
   label{display:block;font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
   .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:16px;color:var(--body);background:var(--white);transition:border-color var(--transition),box-shadow var(--transition)}
   .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
   .field{margin-bottom:14px}
-  .field:last-child{margin-bottom:0}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
   .row-sig{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
-  @media(max-width:620px){.row-sig{grid-template-columns:1fr}}
-  .attest{display:flex;align-items:flex-start;gap:10px;margin:4px 0 16px 0;padding:10px 14px;background:var(--sand);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color var(--transition)}
+  @media(max-width:620px){.row,.row-sig{grid-template-columns:1fr}}
+  a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
+  .attest{display:flex;align-items:flex-start;gap:10px;margin:4px 0 0 0;padding:10px 14px;background:var(--sand);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color var(--transition)}
   .attest:hover{border-color:var(--gold-warm)}
   .attest input{margin-top:2px;width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
   .attest span{font-size:13px;color:var(--body);line-height:1.45;font-weight:500}
@@ -53,12 +53,13 @@
   footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
   @media print{
     body{background:#fff}
-    .hdr,.actions,footer,.save-hint,.nav-link{display:none !important}
+    .hdr,.actions,footer,.save-hint,.role-note,.nav-link{display:none !important}
     .page{padding:0}
     .wrap{max-width:100%}
-    .card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;margin-bottom:12px}
+    .card{box-shadow:none;border:none;padding:0;margin:0}
+    .letter{border:none;background:transparent;padding:0}
     .fi{border:none;border-bottom:1px solid #999;border-radius:0;padding:4px 0;background:transparent}
-    .attest{background:transparent;border:none;padding:0}
+    .attest{display:none !important}
   }
 </style>
 </head>
@@ -78,7 +79,7 @@
       </svg>
       <div class="brand-text"><small>Safeguard Hub</small><span class="brand-name">Bethany Chapel</span></div>
     </a>
-    <a class="nav-link" href="police-check.html">&larr; Police Check steps</a>
+    <a class="nav-link" href="dashboard.html">&larr; Dashboard</a>
     <div id="userChip" style="margin-left:8px"></div>
   </div>
 </header>
@@ -86,48 +87,44 @@
 <main class="page">
   <div class="wrap">
 
-    <div class="eyebrow">Safeguard Hub &middot; Consent</div>
-    <h1 class="title">Police Check — Consent Form</h1>
-    <p class="intro"><em>Sign this and return it to your coordinator. Do not upload this to the police.</em></p>
+    <div class="eyebrow">Safeguard Hub &middot; Coordinators</div>
+    <h1 class="title">Police Check — Cover Letter</h1>
+    <div class="role-note"><strong>For coordinators only.</strong> The volunteer never fills this in — they only receive it. Print it on church letterhead, fill in the applicant's details, sign it, and give the signed letter to the applicant so they can upload it during their online application (it unlocks the reduced volunteer fee).</div>
 
     <div class="card">
-      <div class="field"><label for="f_consentName">I, (print full legal name)</label><input type="text" id="f_consentName" class="fi"></div>
+      <div class="letter">
+        <p><strong>To:</strong> Calgary Police Service — Police Information Check Unit</p>
+        <p><strong>Re:</strong> Volunteer Police Information Check — Vulnerable Sector Screening</p>
 
-      <p style="margin-top:6px">authorize:</p>
-      <ul class="bullets">
-        <li>The local police service to conduct a Police Information Check, including a Vulnerable Sector Search.</li>
-        <li>The release of the results of this check directly to Bethany Chapel.</li>
-        <li>Bethany Chapel to store this record in my confidential ministry file.</li>
-      </ul>
+        <p>This letter confirms that the following individual has applied to serve as a volunteer with our church, in a role involving children, youth, or vulnerable persons. We request that this applicant be processed under the reduced volunteer fee category.</p>
 
-      <p>I understand that:</p>
-      <ul class="bullets">
-        <li>Any information obtained will be kept strictly confidential and used only for volunteer screening.</li>
-        <li>This check must be renewed every 3 years.</li>
-        <li>I may be required to provide fingerprints if requested by the police service.</li>
-      </ul>
+        <div class="field"><label for="f_appName">Applicant Name</label><input type="text" id="f_appName" class="fi"></div>
+        <div class="field"><label for="f_appDob">Date of Birth</label><input type="date" id="f_appDob" class="fi"></div>
+        <div class="field"><label for="f_appAddr">Address</label><input type="text" id="f_appAddr" class="fi"></div>
 
-      <div class="row-sig" style="margin-top:16px">
-        <div class="field"><label for="f_applicantSig">Applicant signature</label><input type="text" id="f_applicantSig" class="fi" placeholder="Type your full legal name"></div>
-        <div class="field"><label for="f_applicantSigDate">Date</label><input type="date" id="f_applicantSigDate" class="fi"></div>
+        <p>We understand that all records provided are confidential and will be used solely for volunteer screening, in accordance with our Safeguard Framework (<a class="inline-link" href="SG-POL-001.html">SG-POL-001</a> — Screening &amp; Approval).</p>
+
+        <p>Sincerely,</p>
+
+        <div class="row-sig" style="margin-top:14px">
+          <div class="field"><label for="f_epSig">Executive Pastor or Ministry Lead — Signature</label><input type="text" id="f_epSig" class="fi"></div>
+          <div class="field"><label for="f_epSigDate">Date</label><input type="date" id="f_epSigDate" class="fi"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="f_churchName">Church Name</label><input type="text" id="f_churchName" class="fi" value="Bethany Chapel"></div>
+          <div class="field"><label for="f_churchPhone">Phone</label><input type="tel" id="f_churchPhone" class="fi"></div>
+        </div>
+        <label class="attest"><input type="checkbox" id="f_epConsent"><span>I intend my typed name above to serve as my signature on this cover letter.</span></label>
       </div>
-      <label class="attest"><input type="checkbox" id="f_applicantConsent"><span>I intend my typed name above to serve as my legal signature authorizing this consent.</span></label>
-
-      <div class="row-sig">
-        <div class="field"><label for="f_wSig">Witness — church staff / leader (signature)</label><input type="text" id="f_wSig" class="fi"></div>
-        <div class="field"><label for="f_wSigDate">Date</label><input type="date" id="f_wSigDate" class="fi"></div>
-      </div>
-      <label class="attest"><input type="checkbox" id="f_wConsent"><span>I intend my typed name above to serve as my signature witnessing this consent.</span></label>
     </div>
 
     <div class="actions">
       <button type="button" class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
-      <a class="btn btn-secondary" href="police-check.html">Back to the steps</a>
       <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
       <span class="save-hint" id="saveHint">Your entries save automatically on this device.</span>
     </div>
 
-    <p class="docnote">SG-FRM-003 (Consent) · v2.0 · Confidential — screening purposes only.</p>
+    <p class="docnote">SG-FRM-003 (Cover Letter) · v2.0 · Confidential — screening purposes only.</p>
 
   </div>
 </main>
@@ -141,7 +138,7 @@
 
 <script>
   (function(){
-    const KEY = "sg-form-SG-FRM-003";
+    const KEY = "sg-form-SG-FRM-003-cover";
     const HINT = document.getElementById("saveHint");
     const fields = () => document.querySelectorAll('.wrap input, .wrap textarea, .wrap select');
     function snapshot(){
@@ -175,6 +172,7 @@
         localStorage.removeItem(KEY);
         fields().forEach(el => {
           if (el.type === 'checkbox') el.checked = false;
+          else if (el.id === 'f_churchName') el.value = 'Bethany Chapel';
           else el.value = '';
         });
         HINT.textContent = "Cleared";

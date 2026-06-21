@@ -42,18 +42,33 @@
            text-transform:uppercase;margin-bottom:10px}
   h1{font-family:var(--serif);font-size:36px;color:var(--navy);font-weight:400;
      line-height:1.1;margin-bottom:10px}
-  .lede{font-size:15.5px;color:var(--body);margin-bottom:24px;max-width:620px;line-height:1.6}
+  .lede{font-size:15.5px;color:var(--body);margin-bottom:22px;max-width:640px;line-height:1.6}
   .lede strong{color:var(--navy);font-weight:700}
+
+  /* ── Two documents, two destinations (the key clarification) ── */
+  .two-docs{background:var(--white);border:1.5px solid var(--gold-warm);border-left:5px solid var(--gold);
+            border-radius:12px;padding:18px 22px;margin-bottom:18px;box-shadow:0 2px 14px rgba(176,144,85,0.10)}
+  .two-docs .td-lead{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px;line-height:1.4}
+  .two-docs .td-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;font-size:14px;line-height:1.55}
+  .two-docs .td-item:not(:last-child){border-bottom:1px solid var(--sand)}
+  .two-docs .td-tag{flex-shrink:0;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;
+                    padding:4px 9px;border-radius:5px;margin-top:1px}
+  .two-docs .td-tag.up{background:rgba(46,107,127,0.10);color:var(--teal)}
+  .two-docs .td-tag.church{background:rgba(176,144,85,0.16);color:var(--gold)}
+  .two-docs .td-item b{color:var(--navy);font-weight:700}
 
   /* ── Do-this-next hero (numbered steps, front and centre) ── */
   .steps-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
               padding:26px 30px;box-shadow:0 6px 28px rgba(27,58,75,0.08);margin-bottom:18px;
-              border-top:4px solid var(--gold)}
+              border-top:4px solid var(--gold);counter-reset:step}
   .steps-card .kicker{font-size:11px;font-weight:700;letter-spacing:0.2em;color:var(--gold);
                       text-transform:uppercase;margin-bottom:6px}
   .steps-card h2{font-family:var(--serif);font-size:26px;color:var(--navy);font-weight:400;
-                 line-height:1.12;margin-bottom:18px}
-  .steps{list-style:none;margin:0;padding:0;counter-reset:step}
+                 line-height:1.12;margin-bottom:14px}
+  .step-group{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+              color:var(--teal);margin:22px 0 14px}
+  .steps-card .step-group:first-of-type{margin-top:6px}
+  .steps{list-style:none;margin:0;padding:0}
   .steps li{position:relative;padding:0 0 16px 50px;counter-increment:step}
   .steps li:last-child{padding-bottom:0}
   .steps li::before{content:counter(step);position:absolute;left:0;top:-2px;width:34px;height:34px;
@@ -61,10 +76,14 @@
                     font-size:15px;display:flex;align-items:center;justify-content:center}
   .steps li:not(:last-child)::after{content:"";position:absolute;left:16.5px;top:36px;bottom:6px;
                     width:2px;background:var(--border)}
-  .steps .step-t{font-size:16px;font-weight:700;color:var(--navy);line-height:1.35;margin-bottom:2px}
+  .steps .step-t{font-size:16px;font-weight:700;color:var(--navy);line-height:1.35;margin-bottom:3px}
   .steps .step-d{font-size:14px;color:var(--body);line-height:1.55}
-  .info-card .note{font-size:13.5px}
-  .info-card .note strong{color:var(--navy);font-weight:700}
+  .steps .step-d a{color:var(--teal);font-weight:700;border-bottom:1px solid rgba(46,107,127,0.35);text-decoration:none}
+  .steps .ready-item{position:relative;padding:4px 0 4px 16px;font-size:14px;line-height:1.5;color:var(--body)}
+  .steps .ready-item::before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;border-radius:50%;background:var(--gold)}
+  .steps-card .note{margin-top:20px;padding:12px 16px;background:var(--sand);border-left:3px solid var(--gold);
+                    border-radius:0 8px 8px 0;font-size:13.5px;line-height:1.55}
+  .steps-card .note strong{color:var(--navy);font-weight:700}
 
   /* ── Status card (secondary — lighter than the steps hero) ── */
   .status-label{font-size:11px;font-weight:700;letter-spacing:0.14em;color:var(--muted);
@@ -95,18 +114,12 @@
   .info-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
              padding:24px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
   .info-card h2{font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;margin-bottom:10px}
-  .info-card ol{margin:0 0 12px 22px;font-size:14px;color:var(--body);line-height:1.65}
-  .info-card li{margin-bottom:6px}
-  .info-card li strong{color:var(--navy);font-weight:700}
-  .info-card .note{background:var(--sand);border-left:4px solid var(--gold);border-radius:6px;
-                   padding:10px 14px;font-size:13px;color:var(--body);margin-top:14px}
 
-  /* ── Form ── */
   label{display:block;font-size:11px;font-weight:700;color:var(--navy);
         letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px;margin-top:14px}
   label:first-child{margin-top:0}
   .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
-      font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);
+      font-family:var(--sans);font-size:16px;color:var(--body);background:var(--white);
       transition:border-color var(--transition)}
   .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
 
@@ -123,6 +136,9 @@
   .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:14px;display:none}
   .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
   .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+
+  .docnote{font-size:12px;color:var(--muted);line-height:1.6;margin-top:24px;text-align:center}
+  .docnote a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
 
   .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
   footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
@@ -154,36 +170,65 @@
     <div class="crumb"><a href="dashboard.html">Dashboard</a> &rsaquo; Police Information Check</div>
     <div class="eyebrow">SG-FRM-003 · Police Check</div>
     <h1>Get your Police Check done.</h1>
-    <div class="lede">You need a <strong>Police Information Check</strong> before you can serve with children, youth, or vulnerable adults. It's valid for <strong>3 years</strong>. The steps below show exactly what to do.</div>
+    <div class="lede">You need a <strong>Police Information Check</strong> (with Vulnerable Sector Search) before you can serve with children, youth, or vulnerable adults. It's done <strong>online</strong>, it's valid for <strong>3 years</strong>, and it usually takes about 15 minutes once your two documents are ready.</div>
+
+    <!-- ── Two documents, two destinations: the key clarification ── -->
+    <div class="two-docs">
+      <div class="td-lead">Two documents, two destinations — keep these straight and the rest is easy.</div>
+      <div class="td-item">
+        <span class="td-tag up">To police</span>
+        <div><b>Cover letter</b> — you <b>upload it to the police.</b> It gets you the lower volunteer fee, so don't apply without it.</div>
+      </div>
+      <div class="td-item">
+        <span class="td-tag church">To church</span>
+        <div><b>Consent form</b> — you <b>sign it and give it back to the church</b> (not the police). It lets the church receive your results.</div>
+      </div>
+    </div>
 
     <!-- ── Do this next: numbered steps, front and centre ── -->
     <div class="steps-card" id="howCard">
       <div class="kicker">Here's what to do</div>
       <h2 id="stepsHeading">Follow these 5 steps to get cleared</h2>
+
+      <div class="step-group">Before you apply — get your two documents</div>
       <ol class="steps">
         <li>
-          <div class="step-t">Open and print the consent form</div>
-          <div class="step-d">Open the <a href="SG-FRM-003.html" style="color:var(--teal);font-weight:700;border-bottom:1px solid rgba(46,107,127,0.35)">Police Check consent form (SG-FRM-003)</a>, fill in your details, and print it to take with you. Bethany Chapel's Safeguard Coordinator will give you a signed church cover letter to bring along.</div>
+          <div class="step-t">Get your cover letter</div>
+          <div class="step-d">Your coordinator prepares this for you on church letterhead. If you don't have it yet, ask — you'll need it before you apply.</div>
         </li>
         <li>
-          <div class="step-t">Take it to a police detachment</div>
-          <div class="step-d">Bring the form and two pieces of ID to your local RCMP or police detachment.</div>
-        </li>
-        <li>
-          <div class="step-t">Pay for and submit your check</div>
-          <div class="step-d">You cover the cost of your own check. If the fee is a barrier, ask the Coordinator — the church can help.</div>
-        </li>
-        <li>
-          <div class="step-t">Results go to Bethany's Coordinator</div>
-          <div class="step-d">The police send your results directly to <strong>Bethany Chapel's Safeguard Coordinator</strong>, who reviews them and updates your record.</div>
-        </li>
-        <li>
-          <div class="step-t">Record your submission date below</div>
-          <div class="step-d">Enter the date you submitted your check so your dashboard shows you're waiting on results.</div>
+          <div class="step-t">Sign your consent form and return it</div>
+          <div class="step-d"><a href="SG-FRM-003.html">Open your consent form →</a><br>Sign it and hand it back to your coordinator. This is the church's copy — don't upload it to the police.</div>
         </li>
       </ol>
+
+      <div class="step-group">Apply online</div>
+      <ol class="steps">
+        <li>
+          <div class="step-t">Go to the Calgary Police portal</div>
+          <div class="step-d">Visit <a href="https://policeinformationcheck.calgarypolice.ca" target="_blank" rel="noopener noreferrer">policeinformationcheck.calgarypolice.ca</a> (type it in exactly if it isn't clickable) and choose <strong>"Police Information Check with Vulnerable Sector Search — Volunteer."</strong></div>
+        </li>
+        <li>
+          <div class="step-t">Have these ready</div>
+          <div class="step-d">
+            <div class="ready-item">Two pieces of government-issued ID (at least one with a photo)</div>
+            <div class="ready-item">Your cover letter, to upload</div>
+            <div class="ready-item">Enter <strong>Bethany Chapel</strong> as the organization</div>
+            <div class="ready-item">Pay the reduced volunteer fee</div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="step-group">After you apply</div>
+      <ol class="steps">
+        <li>
+          <div class="step-t">That's it — results come straight to the church</div>
+          <div class="step-d">You don't need to chase anything down. Come back here and record the date you applied so your dashboard shows you're waiting on results.</div>
+        </li>
+      </ol>
+
       <div class="note">
-        <strong>Already have a recent check?</strong> If you have a Police Check from the last 3 years on file with another organization, the Coordinator may be able to accept it. Talk to them directly.
+        <strong>Already have a recent check?</strong> If you've had a Police Information Check with Vulnerable Sector Search in the last 3 years, your coordinator may be able to accept it. Just ask before applying again.
       </div>
     </div>
 
@@ -199,18 +244,20 @@
       </div>
     </div>
 
-    <!-- ── Submit form ── -->
+    <!-- ── Record date applied ── -->
     <div class="info-card" id="submitCard">
-      <h2 id="submitHeading">Step 5 · Record your submission</h2>
-      <div style="font-size:14px;color:var(--body);margin-bottom:8px" id="submitHelp">Once you've handed your check in to the police, enter the date below. The Coordinator will mark it cleared when the results come back.</div>
-      <label for="submitDate">Date submitted to police</label>
+      <h2 id="submitHeading">Record the date you applied</h2>
+      <div style="font-size:14px;color:var(--body);margin-bottom:8px" id="submitHelp">Once you've applied online, enter the date below. The Coordinator will mark it cleared when your results come back.</div>
+      <label for="submitDate">Date applied</label>
       <input type="date" id="submitDate" class="fi">
       <div id="msg" class="msg"></div>
       <div class="actions">
-        <button type="button" class="btn btn-primary" id="submitBtn">Save submission date</button>
+        <button type="button" class="btn btn-primary" id="submitBtn">Save date</button>
         <a class="btn btn-secondary" href="dashboard.html">Back to dashboard</a>
       </div>
     </div>
+
+    <p class="docnote">SG-FRM-003 · v2.0 · March 2026. Confidential — screening purposes only. See <a href="SG-POL-001.html">Volunteer Screening &amp; Approval (SG-POL-001)</a>.</p>
 
   </div>
 
@@ -278,7 +325,7 @@
       statusCard.classList.add("expired");
       statusIco.innerHTML = ICONS.expired;
       statusTitle.textContent = "Expired — needs renewal";
-      statusSub.innerHTML = "Your police check expired on <strong>" + formatDate(pc.expiresOn) + "</strong>. Please submit a new one.";
+      statusSub.innerHTML = "Your police check expired on <strong>" + formatDate(pc.expiresOn) + "</strong>. Please apply for a new one.";
     } else if (hasCleared) {
       statusCard.classList.add(isExpiring ? "expiring" : "cleared");
       statusIco.innerHTML = ICONS.cleared;
@@ -289,12 +336,12 @@
     } else if (hasSubmitted) {
       statusCard.classList.add("pending");
       statusIco.innerHTML = ICONS.pending;
-      statusTitle.textContent = "Submitted — awaiting clearance";
-      statusSub.innerHTML = "Submitted on <strong>" + formatDate(pc.submittedAt) + "</strong>. The Coordinator will mark it cleared when results come back.";
+      statusTitle.textContent = "Applied — awaiting clearance";
+      statusSub.innerHTML = "Applied on <strong>" + formatDate(pc.submittedAt) + "</strong>. The Coordinator will mark it cleared when your results come back.";
     } else {
       statusIco.innerHTML = ICONS.notStarted;
       statusTitle.textContent = "Not started yet";
-      statusSub.textContent = "Start with Step 1 above. Once you've submitted your check, record the date below.";
+      statusSub.textContent = "Start with Step 1 above. Once you've applied online, record the date below.";
     }
 
     // Steps heading — keep it action-oriented, but soften once under way
@@ -308,18 +355,18 @@
       stepsHeading.textContent = "Follow these 5 steps to get cleared";
     }
 
-    // Submit form — adjust heading/help based on current state
+    // Record-date form — adjust heading/help based on current state
     if (hasSubmitted && !isExpired) {
-      submitHeading.textContent = "Update your submission date";
-      submitHelp.textContent = "If the date you submitted was different, you can correct it here.";
+      submitHeading.textContent = "Update the date you applied";
+      submitHelp.textContent = "If the date you applied was different, you can correct it here.";
       submitDate.value = pc.submittedAt || "";
     } else if (isExpired) {
-      submitHeading.textContent = "Record your renewal submission";
-      submitHelp.textContent = "You've handed in a new consent form — enter the date below.";
+      submitHeading.textContent = "Record your renewal";
+      submitHelp.textContent = "You've applied again — enter the date below.";
       submitDate.value = "";
     } else {
-      submitHeading.textContent = "Step 5 · Record your submission";
-      submitHelp.textContent = "Once you've handed your check in to the police, enter the date you submitted it below.";
+      submitHeading.textContent = "Record the date you applied";
+      submitHelp.textContent = "Once you've applied online, enter the date you applied below.";
       submitDate.value = "";
     }
 
@@ -330,7 +377,7 @@
   submitBtn.addEventListener("click", async () => {
     clearMsg();
     const date = submitDate.value;
-    if (!date) { showMsg("Pick a submission date first.", "err"); return; }
+    if (!date) { showMsg("Pick the date you applied first.", "err"); return; }
     submitBtn.disabled = true;
     try {
       await submitPoliceCheck(date);
