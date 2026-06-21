@@ -86,6 +86,13 @@
   .badge.inprocess{background:var(--warn-bg);color:var(--warn)}
   .badge.paused{background:var(--sand);color:var(--muted)}
   .badge.inactive{background:var(--error-bg);color:var(--error)}
+  .flag-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;margin-top:5px}
+  .flag-badge.red{background:#FBEAE8;color:#B0271C}
+  .flag-badge.amber{background:var(--warn-bg);color:var(--warn)}
+  tr.flagged-red > td:first-child{box-shadow:inset 4px 0 0 #C0392B}
+  tr.flagged-red{background:#FCF7F6}
+  tr.flagged-amber > td:first-child{box-shadow:inset 4px 0 0 var(--warn)}
+  tr.flagged-amber{background:#FFFBF4}
   .access-flags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
   .access-flag{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;
                letter-spacing:0.05em;text-transform:uppercase;background:var(--sand);color:var(--muted)}
@@ -268,6 +275,25 @@
     });
   }
 
+  // What needs attention for this person — drives the row highlight + badge.
+  function userFlags(u) {
+    const out = [];
+    const pc = u.policeCheck || {};
+    const now = Date.now();
+    const expired = pc.expiresOn && new Date(pc.expiresOn).getTime() < now;
+    if (u.status === "active" && (!pc.clearedAt || expired)) {
+      out.push({ cls:"red", label:"⚠ Police check lapsed" });
+    } else if (pc.expiresOn) {
+      const days = (new Date(pc.expiresOn).getTime() - now) / 86400000;
+      if (days >= 0 && days <= 60) out.push({ cls:"amber", label:"Police check expiring soon" });
+    }
+    const refs = (u.references && u.references.items) || [];
+    if (refs.length > 0 && refs.some(r => r && !r.receivedAt)) {
+      out.push({ cls:"amber", label:"Reference pending" });
+    }
+    return out;
+  }
+
   function renderRow(u) {
     const fullName = [u.firstName, u.lastName].filter(Boolean).join(" ") || "(no name yet)";
     const email = u.email || u.invitedEmail || "—"; // we don't store email in profile; show placeholder
@@ -300,11 +326,15 @@
     const roleDisabled = isMe ? " disabled title=\"You can't change your own role\"" : "";
 
     const emailLabel = u.email || u.preferredName || "";
+    const flags = userFlags(u);
+    const flagHtml = flags.map(f => '<div class="flag-badge ' + f.cls + '">' + f.label + '</div>').join("");
+    const rowCls = flags.some(f => f.cls === "red") ? "flagged-red" : (flags.length ? "flagged-amber" : "");
 
-    return '<tr data-uid="' + u.id + '">'
+    return '<tr data-uid="' + u.id + '"' + (rowCls ? ' class="' + rowCls + '"' : '') + '>'
       + '<td>'
       +   '<div class="name">' + escapeHtml(fullName) + (isMe ? ' <small style="color:var(--muted);font-weight:500">(you)</small>' : '') + '</div>'
       +   '<span class="email">' + escapeHtml(emailLabel) + '</span>'
+      +   flagHtml
       + '</td>'
       + '<td><select class="role-picker"' + roleDisabled + ' data-uid="' + u.id + '">' + roleOptions + '</select>'
       +   (accessFlags ? '<div class="access-flags">' + accessFlags + '</div>' : '')

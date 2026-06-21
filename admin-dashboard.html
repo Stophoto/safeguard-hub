@@ -13,7 +13,7 @@
     --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
     --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
     --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
-    --error:#C0392B; --error-bg:#FFF0EE; --red-bright:#E53935; --success:#27AE60; --success-bg:#EEFBF3;
+    --error:#C0392B; --error-bg:#FFF0EE; --red-bright:#C0392B; --success:#27AE60; --success-bg:#EEFBF3;
     --warn:#B07A1E; --warn-bg:#FFF5E6;
     --serif:'DM Serif Display',Georgia,serif;
     --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
@@ -60,7 +60,7 @@
   .tile-txt i{font-style:normal;font-size:11.5px;color:var(--muted);font-weight:500}
 
   /* Priority — incident + abuse reports. Loud, together, only shown when present. */
-  .pri-item{display:flex;align-items:center;gap:14px;background:#FDECEA;border:1.5px solid var(--red-bright);
+  .pri-item{display:flex;align-items:center;gap:14px;background:#FBF4F3;border:1.5px solid var(--red-bright);
             border-left:6px solid var(--red-bright);border-radius:12px;padding:15px 18px;margin-bottom:10px}
   .pri-ico{width:42px;height:42px;border-radius:11px;background:var(--red-bright);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;font-weight:800}
   .pri-body{flex:1;min-width:0}
@@ -79,7 +79,7 @@
   .needs-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:30px 0 12px}
   .needs-head .sec-label{margin:0}
   .needs-head .meta{font-size:12px;color:var(--muted)}
-  .banner{display:flex;align-items:center;gap:16px;background:#FDECEA;border:1.5px solid var(--red-bright);
+  .banner{display:flex;align-items:center;gap:16px;background:#FBF4F3;border:1.5px solid var(--red-bright);
           border-left:6px solid var(--red-bright);border-radius:12px;padding:16px 20px;text-decoration:none;margin-bottom:10px;transition:all var(--transition)}
   .banner:hover{box-shadow:0 6px 20px rgba(229,57,53,0.20);transform:translateY(-1px)}
   .banner-ico{width:44px;height:44px;border-radius:11px;background:var(--red-bright);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px;font-weight:800}
@@ -370,7 +370,7 @@
       tag:"Safeguarding",
       title: plural(n.lapsed.length,"serving volunteer","serving volunteers")+" with a lapsed police check",
       sub:"Active and serving without a current check. Resolve this before anything else.",
-      href:"admin.html"
+      href: n.lapsed.length === 1 ? ("admin-user.html?uid=" + n.lapsed[0].id) : "admin.html"
     });
 
     const list = [
