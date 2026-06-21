@@ -268,7 +268,9 @@
     '@media print {',
     '  #sg-nav-header, #sg-breadcrumb, #sg-nav-top-btn { display: none !important; }',
     '  body.sg-nav-active { padding-top: 0 !important; }',
-    '}'
+    '}',
+    '/* iOS zoom-on-focus fix: any text field under 16px makes Safari zoom in. */',
+    '.fi, input:not([type=checkbox]):not([type=radio]):not([type=range]), select, textarea { font-size: 16px; }'
   ].join('\n');
 
   var style = document.createElement('style');
