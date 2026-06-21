@@ -6,122 +6,118 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
 <title>SG-SOP-001 — Screening &amp; Onboarding Checklist</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" integrity="sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link rel="stylesheet" href="sg-redesign.css">
 <style>
-  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --success:#27AE60; --warn:#B07A1E; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.65;min-height:100vh;display:flex;flex-direction:column}
-
-  /* Header (standard) */
-  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  /* Legacy header (hidden by sg-nav.js; kept for ids/markup) */
+  .hdr{background:var(--sg-navy);border-bottom:1px solid var(--sg-border);padding:14px 28px}
   .hdr-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
   .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
   .brand-text{display:flex;flex-direction:column;line-height:1.05}
-  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
-  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
-  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
-  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--sg-blue);text-transform:uppercase}
+  .brand-name{font-family:var(--sg-head);font-weight:800;font-size:16px;color:#fff;margin-top:2px}
+  .nav-link{color:rgba(255,255,255,0.78);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px}
+  .nav-link:hover{color:#fff;background:rgba(255,255,255,0.08)}
 
-  .page{flex:1;padding:36px 24px 80px}
-  .wrap{max-width:880px;margin:0 auto}
+  .page{flex:1}
+  .wrap{max-width:780px;margin:0 auto;padding:34px 40px 0}
+  @media(max-width:860px){.wrap{padding:34px 18px 0}}
 
-  /* Title */
-  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
-  h1.title{font-family:var(--serif);font-size:40px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px;letter-spacing:-0.01em}
-  .subtitle{font-family:var(--serif);font-size:19px;color:var(--teal);font-weight:400;font-style:italic;margin-bottom:16px}
-  .meta{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding-top:14px;margin-top:14px;border-top:2px solid rgba(176,144,85,0.3);font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.02em}
-  .lede{font-size:16px;color:var(--body);margin:24px 0 28px 0;line-height:1.7;max-width:720px}
+  /* Title block */
+  .sg-eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--sg-muted)}
+  .sg-eyebrow .sg-doctag{width:auto;padding:5px 12px}
+  h1.title{font-family:var(--sg-head);font-weight:800;font-size:46px;line-height:1.03;letter-spacing:-.02em;color:var(--sg-ink);margin:14px 0 0}
+  @media(max-width:860px){h1.title{font-size:30px}}
+  .subtitle{font-family:var(--sg-head);font-weight:600;font-size:18px;color:var(--sg-blue);margin:10px 0 0}
+  .meta{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;padding-top:14px;margin-top:16px;border-top:1px solid var(--sg-rule);font-size:13px;color:var(--sg-muted)}
+  .meta strong{color:var(--sg-muted);font-weight:700}
+  .lede{font-size:17px;color:var(--sg-body);margin:18px 0 28px;line-height:1.55;max-width:680px}
+  .lede strong{color:var(--sg-ink);font-weight:600}
 
   /* Generic card */
-  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
-  @media(max-width:620px){.card{padding:22px 20px}}
-  .section-head{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
-  .section-title{font-family:var(--serif);font-size:26px;color:var(--navy);font-weight:400;line-height:1.2;margin-bottom:14px}
+  .card{margin-bottom:18px}
+  .section-head{font-family:var(--sg-sans);font-weight:700;font-size:12px;letter-spacing:.15em;color:var(--sg-blue);text-transform:uppercase;margin-bottom:6px}
+  .section-title{font-family:var(--sg-head);font-weight:700;font-size:22px;color:var(--sg-ink);line-height:1.2;margin-bottom:14px}
 
-  /* Live Tracking callout */
-  .tracking-card{background:linear-gradient(135deg,rgba(46,107,127,0.06),rgba(176,144,85,0.06));border:1.5px solid var(--gold-warm);border-radius:14px;padding:26px 30px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:36px}
-  @media(max-width:620px){.tracking-card{padding:22px 20px}}
-  .tracking-card .section-head{color:var(--teal)}
-  .tracking-card .tracking-title{font-family:var(--serif);font-size:22px;color:var(--navy);font-weight:400;line-height:1.25;margin-bottom:10px}
-  .tracking-card p{margin-bottom:12px;line-height:1.65;color:var(--body)}
+  /* Live Tracking callout (amber attention palette) */
+  .tracking-card{background:var(--sg-warn-bg);border:1px solid var(--sg-warn-border);border-radius:var(--sg-r-card);padding:24px;margin-bottom:36px}
+  .tracking-card .section-head{color:var(--sg-warn-text)}
+  .tracking-card .tracking-title{font-family:var(--sg-head);font-weight:700;font-size:20px;color:var(--sg-ink);line-height:1.25;margin-bottom:10px}
+  .tracking-card p{margin-bottom:12px;line-height:1.6;color:var(--sg-body)}
   .tracking-card ul{list-style:none;padding:0;margin:0 0 14px 0}
-  .tracking-card li{padding:7px 0;font-size:14.5px;line-height:1.6;display:flex;gap:10px;align-items:flex-start}
-  .tracking-card li::before{content:"\2192";color:var(--gold-warm);font-weight:700;flex-shrink:0}
-  .tracking-card .footnote{font-size:12px;color:var(--muted);font-style:italic;margin:0;line-height:1.6}
-  .tracking-card code{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:var(--white);padding:1px 7px;border-radius:3px;border:1px solid var(--border);color:var(--teal);font-style:normal}
+  .tracking-card li{padding:7px 0;font-size:14.5px;line-height:1.6;display:flex;gap:10px;align-items:flex-start;color:var(--sg-body)}
+  .tracking-card li::before{content:"\2192";color:var(--sg-warn-text);font-weight:700;flex-shrink:0}
+  .tracking-card .footnote{font-size:12.5px;color:var(--sg-muted);margin:0;line-height:1.6}
+  .tracking-card code{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:#fff;padding:1px 7px;border-radius:3px;border:1px solid var(--sg-border);color:var(--sg-navy);font-style:normal}
 
-  /* Workflow section header */
-  .workflow-intro{display:flex;align-items:center;gap:14px;margin:8px 0 12px 0}
-  .workflow-intro .label{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
-  .workflow-intro .rule{flex:1;height:1px;background:rgba(176,144,85,0.3)}
-  .workflow-title{font-family:var(--serif);font-size:30px;color:var(--navy);font-weight:400;line-height:1.15;margin-bottom:4px}
-  .workflow-sub{font-size:14px;color:var(--muted);margin-bottom:26px;font-style:italic}
+  /* Workflow section header (uses sg-divider pattern) */
+  .workflow-intro{display:flex;align-items:center;gap:16px;margin:40px 0 16px}
+  .workflow-intro .label{font-family:var(--sg-sans);font-weight:700;font-size:12px;letter-spacing:.15em;color:var(--sg-navy);text-transform:uppercase;white-space:nowrap}
+  .workflow-intro .rule{flex:1;height:1px;background:var(--sg-rule)}
+  .workflow-title{font-family:var(--sg-head);font-weight:700;font-size:26px;color:var(--sg-ink);line-height:1.15;margin-bottom:4px}
+  .workflow-sub{font-size:14px;color:var(--sg-muted);margin-bottom:26px}
 
-  /* Step cards — the visual redesign */
-  .step{display:flex;gap:20px;align-items:flex-start;margin-bottom:14px;position:relative}
-  .step::before{content:"";position:absolute;left:21px;top:52px;bottom:-14px;width:2px;background:linear-gradient(180deg,var(--gold-warm),transparent);opacity:0.35}
+  /* Step cards — vertical stepper */
+  .step{display:flex;gap:18px;align-items:flex-start;margin-bottom:14px;position:relative}
+  .step::before{content:"";position:absolute;left:21px;top:48px;bottom:-14px;width:2px;background:var(--sg-rule)}
   .step:last-child::before{display:none}
-  .step-num{width:44px;height:44px;border-radius:50%;background:var(--navy);color:var(--white);font-family:var(--serif);font-size:20px;font-weight:400;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(27,58,75,0.18);z-index:1}
-  .step-body{flex:1;background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.03);transition:border-color var(--transition),box-shadow var(--transition)}
-  .step-body:hover{border-color:var(--gold-warm);box-shadow:0 4px 20px rgba(0,0,0,0.05)}
+  .step-num{width:44px;height:44px;border-radius:var(--sg-r-pill);background:var(--sg-navy);color:#fff;font-family:var(--sg-head);font-weight:700;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1}
+  .step-body{flex:1;background:var(--sg-card);border:1px solid var(--sg-border);border-radius:var(--sg-r-card-sm);padding:20px 24px;transition:border-color var(--sg-t),box-shadow var(--sg-t)}
+  .step-body:hover{border-color:var(--sg-blue);box-shadow:var(--sg-shadow-hover)}
   .step-header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-  .step-name{font-family:var(--serif);font-size:21px;color:var(--navy);font-weight:400;line-height:1.2}
-  .step-doc{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.06em;color:var(--teal);background:rgba(46,107,127,0.08);padding:3px 10px;border-radius:4px;text-decoration:none;text-transform:uppercase;border:none;transition:all var(--transition)}
-  .step-doc:hover{background:rgba(46,107,127,0.15);color:var(--navy)}
+  .step-name{font-family:var(--sg-head);font-weight:700;font-size:18px;color:var(--sg-ink);line-height:1.2}
+  .step-doc{font-family:var(--sg-head);font-weight:700;font-size:12px;letter-spacing:.02em;color:var(--sg-type-sop);background:var(--sg-type-sop-bg);padding:4px 10px;border-radius:7px;text-decoration:none;transition:background var(--sg-t)}
+  .step-doc:hover{background:#efe2c8}
   .step-reqs{list-style:none;padding:0;margin:0 0 12px 0}
-  .step-reqs li{position:relative;padding:7px 0 7px 22px;line-height:1.6;color:var(--body);font-size:14.5px;border-bottom:1px solid var(--sand)}
+  .step-reqs li{position:relative;padding:7px 0 7px 22px;line-height:1.6;color:var(--sg-body);font-size:14.5px;border-bottom:1px solid var(--sg-rule-2)}
   .step-reqs li:last-child{border-bottom:none}
-  .step-reqs li::before{content:"";position:absolute;left:4px;top:15px;width:8px;height:8px;border-radius:50%;background:var(--gold-warm)}
-  .step-reqs li strong{color:var(--navy);font-weight:700}
-  .step-tracked{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--muted);padding:10px 14px;background:var(--sand);border-radius:6px;margin-top:14px;line-height:1.55}
-  .step-tracked strong{color:var(--navy);font-weight:700;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0}
-  .step-tracked a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)}
-  .step-tracked a:hover{color:var(--navy)}
-  @media(max-width:620px){.step{gap:14px}.step-body{padding:16px 18px}.step-num{width:38px;height:38px;font-size:17px}.step::before{left:18px}}
+  .step-reqs li::before{content:"";position:absolute;left:4px;top:15px;width:7px;height:7px;border-radius:50%;background:var(--sg-blue)}
+  .step-reqs li strong{color:var(--sg-ink);font-weight:600}
+  .step-tracked{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--sg-muted);padding:10px 14px;background:var(--sg-field-bg);border:1px solid var(--sg-border);border-radius:8px;margin-top:14px;line-height:1.55}
+  .step-tracked strong{color:var(--sg-navy);font-weight:700;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0}
+  .step-tracked a{color:var(--sg-blue)}
+  @media(max-width:860px){.step{gap:14px}.step-body{padding:16px 18px}}
 
   /* Interview Guide (appendix) */
-  .guide-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:32px 36px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px;margin-top:36px}
-  @media(max-width:620px){.guide-card{padding:24px 22px}}
-  .guide-card .section-title{font-size:28px;margin-bottom:8px}
-  .guide-intro{color:var(--muted);font-size:14.5px;font-style:italic;line-height:1.75;margin-bottom:26px;padding-left:14px;border-left:3px solid var(--gold-warm)}
-  .guide-block{margin-bottom:24px;padding-bottom:22px;border-bottom:1px solid var(--sand)}
+  .guide-card{background:var(--sg-card);border:1px solid var(--sg-border);border-radius:var(--sg-r-card);padding:32px 36px;margin:36px 0 18px}
+  @media(max-width:860px){.guide-card{padding:24px 20px}}
+  .guide-card .section-title{font-size:26px;margin-bottom:8px}
+  .guide-intro{color:var(--sg-body);font-size:14.5px;line-height:1.7;margin-bottom:26px;padding-left:14px;border-left:3px solid var(--sg-blue)}
+  .guide-block{margin-bottom:24px;padding-bottom:22px;border-bottom:1px solid var(--sg-rule-2)}
   .guide-block:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0}
   .guide-block-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-  .guide-block-num{font-family:var(--serif);font-size:17px;color:var(--gold-warm);font-weight:400;min-width:24px;font-style:italic}
-  .guide-block-title{font-family:var(--serif);font-size:19px;color:var(--navy);font-weight:400}
+  .guide-block-num{font-family:var(--sg-head);font-weight:700;font-size:15px;color:var(--sg-blue);min-width:24px}
+  .guide-block-title{font-family:var(--sg-head);font-weight:700;font-size:17px;color:var(--sg-ink)}
   .guide-qs{list-style:none;padding:0;margin:0}
-  .guide-qs li{position:relative;padding:8px 0 8px 22px;line-height:1.65;color:var(--body);font-size:14.5px}
-  .guide-qs li::before{content:"\201C";position:absolute;left:0;top:2px;color:var(--teal);font-family:var(--serif);font-weight:400;font-size:26px;line-height:1}
+  .guide-qs li{position:relative;padding:8px 0 8px 22px;line-height:1.6;color:var(--sg-body);font-size:14.5px}
+  .guide-qs li::before{content:"\201C";position:absolute;left:0;top:4px;color:var(--sg-blue);font-family:var(--sg-head);font-weight:700;font-size:24px;line-height:1}
 
   /* Cross-refs */
   .xref{list-style:none;padding:0;margin:0}
-  .xref li{padding:8px 0;font-size:14px;line-height:1.5;color:var(--body);border-bottom:1px solid var(--sand)}
+  .xref li{padding:8px 0;font-size:14px;line-height:1.5;color:var(--sg-body);border-bottom:1px solid var(--sg-rule-2)}
   .xref li:last-child{border-bottom:none}
+  .xref li strong{color:var(--sg-ink);font-weight:600}
 
   /* Link style */
-  a.inline-link{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3);transition:border-color var(--transition),color var(--transition)}
-  a.inline-link:hover{color:var(--navy);border-bottom-color:var(--navy)}
+  a.inline-link{color:var(--sg-blue);text-decoration:none}
+  a.inline-link:hover{text-decoration:underline}
 
   /* Actions */
-  .actions{display:flex;gap:10px;margin:36px 0 0 0;flex-wrap:wrap;align-items:center}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
-  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
-  .btn-primary:hover{background:var(--teal)}
+  .actions{display:flex;gap:10px;margin:36px 0 0;flex-wrap:wrap;align-items:center}
 
-  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--sg-muted)}
 
   @media print{
     body{background:#fff}
     .hdr,.actions,footer{display:none !important}
-    .page{padding:0}
-    .wrap{max-width:100%}
+    .wrap{max-width:100%;padding:0}
     .card,.tracking-card,.guide-card,.step-body{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}
     .step-num{background:#000 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .step::before{display:none}
   }
 </style>
 </head>
-<body data-doc-code="SG-SOP-001" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+<body class="sg-redesign" data-doc-code="SG-SOP-001" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
 <style id="sg-guard-style">body{visibility:hidden}</style>
 <script type="module">
   import { requireAuth } from "./sg-guard.js";
@@ -145,7 +141,7 @@
 <main class="page">
   <div class="wrap">
 
-    <div class="eyebrow">Safeguard Hub &middot; Standard Operating Procedure</div>
+    <div class="sg-eyebrow"><span class="sg-doctag sg-doctag--sop">SG-SOP-001</span> &nbsp;Standard Operating Procedure</div>
     <h1 class="title">Screening &amp; Onboarding Checklist</h1>
     <div class="subtitle">Every step, every time &mdash; from application to approval</div>
     <div class="meta">
