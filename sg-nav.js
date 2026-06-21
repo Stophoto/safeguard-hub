@@ -341,7 +341,7 @@
   document.head.appendChild(style);
 
   // ── Brand lockup (logo + divider + two-line Archivo lockup) ──
-  var brandSvg = '<img class="sg-brand-logo" src="assets/bethany-logo.png" alt="Bethany Chapel" />'
+  var brandSvg = '<img class="sg-brand-logo" src="bethany-logo.png" alt="Bethany Chapel" />'
     + '<span class="sg-brand-rule" aria-hidden="true"></span>'
     + '<span class="sg-brand-lock">SAFEGUARD<br><span class="hub">HUB</span></span>';
   var chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
