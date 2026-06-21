@@ -73,6 +73,16 @@ Safeguard Lead, and Lead Admin.
 - [ ] Someone owns **backups** (a periodic Firestore export).
 - [ ] Sanity-check access with the rules tests: `npm run test:rules`
       (65 tests confirm who can and cannot see what).
+- [ ] **Close the security-hardening backlog** in `SECURITY_REVIEW.md` — most
+      notably: no audit log of who-viewed-what, no idle timeout / shared-device
+      cleanup, and the CSP still uses `unsafe-inline`. None are emergencies, but
+      worth closing before real children's data and abuse reports are in the
+      system.
+- [ ] **Security review / pen test before go-live.** Highest-value version is a
+      focused review of (1) the Firestore rules, (2) the auth/invite flow, and
+      (3) the `SECURITY_REVIEW.md` backlog — not a generic web scan. Plan: a
+      structured self-audit pass first (catches the obvious issues), then a paid
+      pentester for final sign-off before real families use the site.
 
 ---
 
