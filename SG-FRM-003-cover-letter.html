@@ -6,9 +6,10 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
 <title>Your Police Check Cover Letter · Safeguard Hub</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" integrity="sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link rel="stylesheet" href="sg-redesign.css">
 <style>
-  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --teal-brand:#2E97C0; --navy-brand:#134E68; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
+  :root { --navy:#0E4D70; --navy-deep:#0c4262; --teal:#159BD4; --gold:#159BD4; --gold-warm:#159BD4; --cream:#EEF2F5; --sand:#F4F7F9; --body:#56646E; --muted:#8A97A0; --border:#E4E9ED; --white:#FFFFFF; --teal-brand:#159BD4; --navy-brand:#0E4D70; --ink:#16242E; --serif:'Archivo',sans-serif; --sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.15s ease; }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
   .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
@@ -21,14 +22,14 @@
   .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
   .page{flex:1;padding:36px 24px 80px}
   .wrap{max-width:720px;margin:0 auto}
-  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
-  h1.title{font-family:var(--serif);font-size:32px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
-  .intro{font-size:15px;color:var(--body);margin-bottom:18px;line-height:1.6;max-width:620px}
-  .intro strong{color:var(--navy);font-weight:700}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1.title{font-family:var(--serif);font-size:40px;color:var(--ink);font-weight:800;letter-spacing:-0.02em;line-height:1.05;margin-bottom:8px}
+  .intro{font-size:17px;color:var(--body);margin-bottom:18px;line-height:1.6;max-width:620px}
+  .intro strong{color:var(--ink);font-weight:600}
 
   /* ── The letter (this is what prints) ── */
-  .letter{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
-          padding:40px 44px;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+  .letter{background:var(--white);border:1px solid var(--border);border-radius:16px;
+          padding:40px 44px}
   @media(max-width:560px){.letter{padding:28px 22px}}
   .letterhead{border-bottom:2px solid var(--teal-brand);padding-bottom:16px;margin-bottom:22px;
               display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
@@ -50,11 +51,11 @@
   .sigblock .sig-meta b{color:var(--navy);font-weight:700}
 
   .actions{display:flex;gap:10px;margin:22px 0 0 0;flex-wrap:wrap;align-items:center}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
-  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
-  .btn-primary:hover{background:var(--teal)}
-  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
-  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border:1px solid transparent;border-radius:9px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;transition:all var(--transition);text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 6px 16px rgba(14,77,112,.18)}
+  .btn-primary:hover{background:#0c4262}
+  .btn-secondary{background:var(--white);color:var(--body);border:1px solid #D9E0E5}
+  .btn-secondary:hover{border-color:var(--gold);color:var(--ink)}
   .tip{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.55}
   .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
   footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
@@ -69,7 +70,7 @@
   }
 </style>
 </head>
-<body>
+<body class="sg-redesign">
 
 <header class="hdr">
   <div class="hdr-inner">

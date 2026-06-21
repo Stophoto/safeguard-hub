@@ -6,9 +6,10 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
 <title>Police Check — Consent Form · Safeguard Hub</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" integrity="sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link rel="stylesheet" href="sg-redesign.css">
 <style>
-  :root { --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055; --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835; --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF; --error:#C0392B; --success:#27AE60; --warn:#B07A1E; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.2s cubic-bezier(0.4,0,0.2,1); }
+  :root { --navy:#0E4D70; --navy-deep:#0c4262; --teal:#159BD4; --gold:#159BD4; --gold-warm:#159BD4; --cream:#EEF2F5; --sand:#F4F7F9; --body:#56646E; --muted:#8A97A0; --border:#E4E9ED; --white:#FFFFFF; --error:#BC4035; --success:#2E9E6A; --warn:#B07D2A; --ink:#16242E; --serif:'Archivo',sans-serif; --sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,sans-serif; --transition:0.15s ease; }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
   .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
@@ -21,19 +22,19 @@
   .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
   .page{flex:1;padding:36px 24px 80px}
   .wrap{max-width:720px;margin:0 auto}
-  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
-  h1.title{font-family:var(--serif);font-size:34px;color:var(--navy);font-weight:400;line-height:1.1;margin-bottom:8px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  h1.title{font-family:var(--serif);font-size:40px;color:var(--ink);font-weight:800;letter-spacing:-0.02em;line-height:1.05;margin-bottom:8px}
   .intro{color:var(--body);font-size:15px;margin-bottom:18px;line-height:1.6}
   .intro em{color:var(--muted);font-style:italic}
-  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-bottom:18px}
+  .card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:18px}
   @media(max-width:620px){.card{padding:22px 20px}}
   p{margin-bottom:12px;line-height:1.6}
   .bullets{list-style:none;margin:8px 0 16px 0;padding:0}
   .bullets li{position:relative;padding:6px 0 6px 20px;line-height:1.6;color:var(--body)}
   .bullets li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
-  label{display:block;font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
-  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:16px;color:var(--body);background:var(--white);transition:border-color var(--transition),box-shadow var(--transition)}
-  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
+  label{display:block;font-size:11.5px;font-weight:700;color:var(--body);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:7px}
+  .fi{width:100%;padding:13px 15px;border:1px solid #D9E0E5;border-radius:10px;font-family:var(--sans);font-size:16px;color:var(--ink);background:#FAFCFD;transition:border-color var(--transition),box-shadow var(--transition),background var(--transition)}
+  .fi:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(21,155,212,.15);outline:none}
   .field{margin-bottom:14px}
   .field:last-child{margin-bottom:0}
   .row-sig{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
@@ -43,11 +44,11 @@
   .attest input{margin-top:2px;width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
   .attest span{font-size:13px;color:var(--body);line-height:1.45;font-weight:500}
   .actions{display:flex;gap:10px;margin:24px 0 0 0;flex-wrap:wrap;align-items:center}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none}
-  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.2)}
-  .btn-primary:hover{background:var(--teal)}
-  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
-  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border:1px solid transparent;border-radius:9px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;transition:all var(--transition);text-decoration:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 6px 16px rgba(14,77,112,.18)}
+  .btn-primary:hover{background:#0c4262}
+  .btn-secondary{background:var(--white);color:var(--body);border:1px solid #D9E0E5}
+  .btn-secondary:hover{border-color:var(--gold);color:var(--ink)}
   .save-hint{font-size:12px;color:var(--muted);margin-left:auto}
   .docnote{font-size:12px;color:var(--muted);line-height:1.6;margin-top:18px;text-align:center}
   footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
@@ -62,7 +63,7 @@
   }
 </style>
 </head>
-<body data-doc-code="SG-FRM-003" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
+<body class="sg-redesign" data-doc-code="SG-FRM-003" data-doc-version="2.0" data-doc-date="March 2026" data-church="Bethany Chapel">
 <style id="sg-guard-style">body{visibility:hidden}</style>
 <script type="module">
   import { requireAuth } from "./sg-guard.js";
