@@ -110,7 +110,12 @@ export function friendlyError(err) {
       return "Please enter your password.";
     case "auth/admin-restricted-operation":
     case "auth/operation-not-allowed":
-      return "Account creation is currently blocked by Firebase. Ask the Safeguard Coordinator to enable Email/Password sign-in in Firebase Authentication, then try again.";
+      return "This sign-in method isn't switched on yet. A coordinator needs to enable it in Firebase → Authentication → Sign-in method (turn on Email/Password and Google), then try again.";
+    case "auth/unauthorized-domain":
+      return "This web address isn't approved for sign-in yet. A coordinator needs to add it under Firebase → Authentication → Settings → Authorized domains.";
+    case "auth/popup-blocked":
+    case "auth/popup-closed-by-user":
+      return "The sign-in pop-up didn't finish. Allow pop-ups for this site, then try again.";
     default:
       return (err && err.message) || "Something went wrong. Please try again.";
   }
