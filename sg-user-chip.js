@@ -29,58 +29,58 @@ function injectStylesOnce() {
     .sg-uc-wrap { position: relative; display: inline-flex; }
 
     .sg-uc-chip {
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-      padding: 5px 14px 5px 5px;
-      border-radius: 22px;
-      font-size: 12px;
+      background: #F4F7F9;
+      color: #16242E;
+      padding: 5px 12px 5px 5px;
+      border-radius: 999px;
+      font-size: 13px;
       font-weight: 500;
       display: flex;
       gap: 10px;
       align-items: center;
       cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid #E4E9ED;
       transition: all 0.15s;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'IBM Plex Sans', sans-serif;
     }
     .sg-uc-chip:hover,
     .sg-uc-chip[aria-expanded="true"] {
-      background: rgba(255,255,255,0.12);
-      border-color: rgba(255,255,255,0.24);
+      background: #EEF2F5;
+      border-color: #D9E0E5;
     }
     .sg-uc-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #B09055 0%, #C4A46A 100%);
-      color: #0F2530;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: #0E4D70;
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'DM Serif Display', serif;
-      font-size: 14px;
-      font-weight: 400;
+      font-family: 'Archivo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
       flex-shrink: 0;
     }
     .sg-uc-stack {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      line-height: 1.1;
+      line-height: 1.25;
     }
-    .sg-uc-name { font-weight: 600; color: #fff; }
+    .sg-uc-name { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 13.5px; color: #16242E; }
     .sg-uc-role {
-      color: #C4A46A;
-      font-size: 10px;
-      letter-spacing: 0.08em;
+      color: #159BD4;
+      font-size: 9.5px;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      font-weight: 700;
+      font-weight: 600;
     }
     .sg-uc-caret {
       width: 8px;
       height: 8px;
-      border-right: 1.5px solid rgba(255,255,255,0.5);
-      border-bottom: 1.5px solid rgba(255,255,255,0.5);
+      border-right: 2px solid #8A97A0;
+      border-bottom: 2px solid #8A97A0;
       transform: rotate(45deg);
       margin: -3px 2px 0 -2px;
     }
@@ -97,17 +97,17 @@ function injectStylesOnce() {
       top: calc(100% + 8px);
       right: 0;
       background: #fff;
-      border: 1px solid #E4E0DA;
-      border-radius: 12px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid #E4E9ED;
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(14,77,112,0.14), 0 2px 8px rgba(14,77,112,0.06);
       min-width: 280px;
       padding: 18px;
-      z-index: 10001;
+      z-index: 60;
       opacity: 0;
       transform: translateY(-6px);
       pointer-events: none;
       transition: opacity 0.15s, transform 0.15s;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'IBM Plex Sans', sans-serif;
     }
     /* When the chip opens the menu we switch to viewport-anchored
        (position: fixed) positioning — set via JS in setOpen() — so the
@@ -122,44 +122,46 @@ function injectStylesOnce() {
     .sg-uc-menu-head {
       text-align: center;
       padding: 6px 0 16px;
-      border-bottom: 1px solid #E4E0DA;
+      border-bottom: 1px solid #E4E9ED;
       margin-bottom: 14px;
     }
     .sg-uc-avatar-lg {
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #B09055 0%, #C4A46A 100%);
-      color: #0F2530;
+      background: #0E4D70;
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'DM Serif Display', serif;
+      font-family: 'Archivo', sans-serif;
+      font-weight: 700;
       font-size: 24px;
       margin: 0 auto 10px;
     }
     .sg-uc-menu-name {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'Archivo', sans-serif;
+      font-weight: 700;
       font-size: 18px;
-      color: #1B3A4B;
+      color: #16242E;
       word-break: break-word;
     }
     .sg-uc-menu-email {
       font-size: 12px;
-      color: #8A8480;
+      color: #8A97A0;
       margin-top: 2px;
       word-break: break-all;
     }
     .sg-uc-menu-role {
       display: inline-block;
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #B09055;
-      background: rgba(176,144,85,0.12);
+      color: #159BD4;
+      background: #E3F0F7;
       padding: 3px 9px;
-      border-radius: 12px;
+      border-radius: 999px;
       margin-top: 8px;
     }
 
@@ -171,10 +173,10 @@ function injectStylesOnce() {
       padding: 10px 12px;
       background: none;
       border: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 14px;
       font-weight: 500;
-      color: #3D3835;
+      color: #56646E;
       text-align: left;
       border-radius: 8px;
       cursor: pointer;
@@ -182,8 +184,8 @@ function injectStylesOnce() {
       text-decoration: none;
     }
     .sg-uc-menu-btn:hover {
-      background: #F2EFE8;
-      color: #1B3A4B;
+      background: #EEF2F5;
+      color: #16242E;
     }
     .sg-uc-menu-btn svg {
       width: 16px;
@@ -197,14 +199,14 @@ function injectStylesOnce() {
     }
     .sg-uc-menu-btn.disabled:hover {
       background: none;
-      color: #3D3835;
+      color: #56646E;
     }
-    .sg-uc-menu-btn.danger { color: #C0392B; }
-    .sg-uc-menu-btn.danger:hover { background: rgba(192,57,43,0.06); }
+    .sg-uc-menu-btn.danger { color: #BC4035; }
+    .sg-uc-menu-btn.danger:hover { background: #FDF3F2; }
 
     .sg-uc-menu-divider {
       height: 1px;
-      background: #E4E0DA;
+      background: #E4E9ED;
       margin: 8px 0;
     }
   `;

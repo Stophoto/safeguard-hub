@@ -5,23 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
 <title>SG-T-002 — Supervision: Two-Adult Rule, Ratios & High-Risk Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link rel="stylesheet" href="sg-redesign.css">
 <style>
   :root {
-    --navy: #1B3A4B;
-    --teal: #2E6B7F;
-    --gold: #B09055;
-    --gold-light: #C8AD78;
-    --charcoal: #2C2825;
-    --body-color: #3D3835;
-    --secondary: #5C5550;
-    --muted: #8A8480;
-    --cream: #FAF8F3;
-    --sand: #F5F2ED;
+    --navy: #0E4D70;
+    --teal: #159BD4;
+    --gold: #2E9E6A;
+    --gold-light: #2E9E6A;
+    --charcoal: #16242E;
+    --body-color: #56646E;
+    --secondary: #56646E;
+    --muted: #8A97A0;
+    --cream: #EEF2F5;
+    --sand: #FAFCFD;
     --white: #FFFFFF;
-    --alert-red: #C0392B;
-    --safe-green: #27AE60;
-    --safe-green-bg: #E8F8EF;
-    --alert-red-bg: #FDEDEC;
+    --alert-red: #BC4035;
+    --safe-green: #2E9E6A;
+    --safe-green-bg: #E5F4EC;
+    --alert-red-bg: #FDF3F2;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { font-size: 17px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -129,25 +131,139 @@
   .doc-reference td:last-child { color: var(--body-color); }
   .page-footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #E5E2DD; text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 0.7rem; color: var(--muted); }
 
-  /* ─── Design-system font overrides (DM Serif Display + DM Sans) ─── */
-  body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif !important; }
-  h1, h2, h3, .cover-title, .section-title, .subsection-title { font-family: 'DM Serif Display', Georgia, serif !important; font-weight: 400 !important; }
-  .section-label, .cover-framework, .cover-meta, .callout-label, .reading-time { font-family: 'DM Sans', sans-serif !important; }
+    /* ════════════════════════════════════════════════════════════════
+     REDESIGN OVERRIDES — navy + bright-blue system, Training green accent.
+     Repoints the legacy cream/gold/serif vocabulary onto sg-redesign.css
+     tokens. Page markup, ids, copy and JS hooks are unchanged.
+     ════════════════════════════════════════════════════════════════ */
+  html { font-size: 16px; }
+  body { font-family: var(--sg-sans) !important; color: var(--sg-body); background: var(--sg-canvas); line-height: 1.6; }
+  h1, h2, h3, .cover-title, .section-title, .subsection-title { font-family: var(--sg-head) !important; }
+  .section-label, .cover-framework, .cover-meta, .callout-label, .reading-time { font-family: var(--sg-sans) !important; }
+  strong { color: var(--sg-ink); }
+  a { color: var(--sg-blue); }
 
-  /* ─── Unified site header ─── */
-  .sg-hdr { background: linear-gradient(180deg, #0F2530 0%, #1B3A4B 100%); border-bottom: 2px solid rgba(176,144,85,0.25); padding: 14px 28px; }
-  .sg-hdr-inner { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap: 14px; font-family: 'DM Sans', sans-serif; }
+  /* Reading column → kit width */
+  .page-wrapper { max-width: 780px; padding: 34px 40px 56px; }
+  @media (min-width: 800px) { .page-wrapper { padding: 40px 40px 64px; } }
+
+  /* Page-header pattern: eyebrow (green doctag) + Archivo H1 + lede */
+  .cover { border-bottom: none; padding-bottom: 0; margin-bottom: 32px; }
+  .cover-framework { color: var(--sg-muted); font-weight: 700; letter-spacing: .15em; font-size: 12px; margin-bottom: 14px; }
+  .cover-title { font-family: var(--sg-head) !important; font-weight: 800; font-size: 40px; line-height: 1.04; letter-spacing: -.02em; color: var(--sg-ink); margin-bottom: 14px; }
+  .cover-subtitle { color: var(--sg-body); font-style: normal; font-size: 17px; line-height: 1.55; margin-bottom: 16px; }
+  .cover-meta { color: var(--sg-muted); font-size: 12.5px; gap: .35rem 1.4rem; padding-top: 16px; border-top: 1px solid var(--sg-rule); }
+  .cover-meta span span[style] { color: var(--sg-green) !important; }
+  /* the module-code chip in the cover meta reads as a green doctag */
+  .reading-time { display: inline-flex; align-items: center; color: var(--sg-green); background: var(--sg-green-bg); font-weight: 700; font-size: 12px; letter-spacing: .04em; padding: 5px 11px; border-radius: var(--sg-r-pill); margin-top: 16px; }
+
+  /* Lede / purpose block */
+  .purpose { background: var(--sg-card); border: 1px solid var(--sg-border); border-left: 4px solid var(--sg-green); border-radius: var(--sg-r-card); color: var(--sg-body); font-size: 15px; line-height: 1.6; padding: 16px 18px; margin-bottom: 36px; }
+
+  /* Section rhythm */
+  .section { margin-bottom: 36px; }
+  .section-label { color: var(--sg-green); font-weight: 700; letter-spacing: .15em; font-size: 12px; }
+  .section-title { font-family: var(--sg-head) !important; font-weight: 800; font-size: 27px; line-height: 1.15; color: var(--sg-ink); }
+  .subsection-title { font-family: var(--sg-head) !important; font-weight: 700; font-size: 19px; color: var(--sg-ink); font-style: normal; margin-top: 1.6rem; }
+
+  /* Section divider hairline */
+  .section-divider { border-top: 1px solid var(--sg-rule); margin: 36px 0; }
+
+  /* Callouts → flat cards */
+  .callout { background: var(--sg-card); border: 1px solid var(--sg-border); border-radius: var(--sg-r-card); padding: 18px 20px; }
+  .callout-label { font-weight: 700; letter-spacing: .12em; font-size: 11px; }
+  .callout-scenario { border-left: 4px solid var(--sg-blue); background: var(--sg-card); }
+  .callout-scenario .callout-label { color: var(--sg-blue); }
+  .callout-principle { border-left: 4px solid var(--sg-green); }
+  .callout-principle .callout-label { color: var(--sg-green); }
+  .callout-critical { background: var(--sg-navy); color: #fff; border: none; }
+  .callout-critical strong { color: #fff; }
+  .callout-critical .callout-label { color: #BFE0F0; }
+
+  /* Scripture / quotes */
+  .scripture { background: var(--sg-field-bg); border: 1px solid var(--sg-border); border-radius: var(--sg-r-card-sm); color: var(--sg-body); padding: 14px 18px; }
+  .scripture-ref { color: var(--sg-muted); }
+
+  /* Numbered role list */
+  .role-list li::before { background: var(--sg-navy); font-family: var(--sg-sans); }
+
+  /* Protection / info grids → flat cards */
+  .protection-card, .system-box { background: var(--sg-card); border: 1px solid var(--sg-border); border-radius: var(--sg-r-card-sm); }
+  .protection-card-num { color: var(--sg-green); }
+  .protection-card-title { color: var(--sg-ink); }
+  .protection-card-desc { color: var(--sg-body); }
+  .protection-card-ref { color: var(--sg-muted); }
+  .protection-card-ref a, .doc-reference a, .system-box a, .scripture a, .callout a { color: var(--sg-blue) !important; border-bottom: none !important; }
+
+  /* Lookup / retention tables */
+  .sit-table th, .ret-table th { background: var(--sg-field-bg); color: var(--sg-ink); border-bottom: 1px solid var(--sg-border-strong); }
+  .sit-table td, .ret-table td { border-bottom: 1px solid var(--sg-rule-2); }
+  .sit-table .sit-urgent td { background: var(--sg-red-bg); }
+  .sit-table .sit-urgent td:first-child { color: var(--sg-red); }
+  .sit-table td:first-child, .ret-table td:nth-child(3) { color: var(--sg-ink); }
+  .sit-table td:nth-child(2), .ret-table td:first-child { color: var(--sg-blue); }
+  .urgent-note { color: var(--sg-red); }
+
+  /* Quiz → kit surfaces */
+  .quiz-section { background: var(--sg-card); border: 1px solid var(--sg-border); border-radius: var(--sg-r-card); padding: 26px; margin-top: 40px; }
+  .quiz-section .section-label { color: var(--sg-green); }
+  .quiz-instructions { color: var(--sg-body); }
+  .quiz-question { background: var(--sg-field-bg); border: 1px solid var(--sg-border); border-radius: var(--sg-r-card-sm); }
+  .quiz-question-text { color: var(--sg-ink); }
+  .quiz-question-text .q-num { color: var(--sg-green); font-family: var(--sg-head); }
+  .quiz-options label { color: var(--sg-body); border: 1px solid transparent; }
+  .quiz-options label:hover { background: #fff; border-color: var(--sg-border); }
+  .quiz-options input[type="radio"] { accent-color: var(--sg-blue); }
+  .quiz-question.answered .quiz-options label.selected-correct { background: var(--sg-green-bg); border-color: rgba(46,158,106,.4); }
+  .quiz-question.answered .quiz-options label.selected-incorrect { background: var(--sg-red-bg); border-color: var(--sg-red-border); }
+  .quiz-feedback.correct { background: var(--sg-green-bg); color: var(--sg-green); border-left: 3px solid var(--sg-green); }
+  .quiz-feedback.incorrect { background: var(--sg-red-bg); color: var(--sg-red); border-left: 3px solid var(--sg-red); }
+  .quiz-results.pass { background: var(--sg-green-bg); border: 1px solid var(--sg-green); }
+  .quiz-results.fail { background: var(--sg-red-bg); border: 1px solid var(--sg-red-border); }
+  .quiz-results.pass .quiz-results-score { color: var(--sg-green); }
+  .quiz-results.fail .quiz-results-score { color: var(--sg-red); }
+  .quiz-results-message { color: var(--sg-body); }
+  .quiz-submit-btn { font-family: var(--sg-sans); font-weight: 600; font-size: 14px; color: #fff; background: var(--sg-navy); border-radius: var(--sg-r-btn); padding: 12px 24px; box-shadow: var(--sg-shadow-btn); }
+  .quiz-submit-btn:hover { background: #0c4262; }
+  .quiz-submit-btn:disabled { background: var(--sg-muted); box-shadow: none; }
+
+  /* Complete-module affordance */
+  .complete-btn { font-family: var(--sg-sans); font-weight: 600; font-size: 14px; color: #fff; background: var(--sg-green); border-radius: var(--sg-r-btn); padding: 13px 28px; box-shadow: 0 6px 16px rgba(46,158,106,.22); }
+  .complete-btn:hover { background: #268a5c; }
+  .complete-btn:disabled { background: var(--sg-muted); box-shadow: none; }
+  .complete-confirmation, .complete-confirmation.visible { color: var(--sg-green); font-family: var(--sg-sans); }
+
+  /* Doc reference + footer */
+  .doc-reference { border-top: 1px solid var(--sg-rule); }
+  .doc-reference td:first-child { color: var(--sg-muted); }
+  .doc-reference td:last-child { color: var(--sg-body); }
+  .page-footer { border-top: 1px solid var(--sg-rule); color: var(--sg-muted); }
+
+  /* ─── Legacy header (sg-nav.js injects real header + hides this) ─── */
+  .sg-hdr { background: var(--sg-card); border-bottom: 1px solid var(--sg-border); padding: 13px 28px; }
+  .sg-hdr-inner { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap: 14px; font-family: var(--sg-sans); }
   .sg-hdr .sg-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; border-bottom: none; }
   .sg-hdr .sg-brand-text { display: flex; flex-direction: column; line-height: 1.05; }
-  .sg-hdr .sg-brand-text small { font-size: 9px; font-weight: 700; letter-spacing: 0.22em; color: #B09055; text-transform: uppercase; }
-  .sg-hdr .sg-brand-name { font-family: 'DM Serif Display', Georgia, serif; font-size: 19px; color: #FFFFFF; margin-top: 2px; font-weight: 400; }
-  .sg-hdr .sg-nav-link { color: rgba(255,255,255,0.72); font-size: 13px; font-weight: 600; text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: all 0.2s; border-bottom: none; }
-  .sg-hdr .sg-nav-link:hover { color: #FFFFFF; background: rgba(255,255,255,0.06); }
+  .sg-hdr .sg-brand-text small { font-size: 9px; font-weight: 700; letter-spacing: 0.22em; color: var(--sg-blue); text-transform: uppercase; }
+  .sg-hdr .sg-brand-name { font-family: var(--sg-head); font-weight: 800; font-size: 18px; color: var(--sg-ink); margin-top: 2px; }
+  .sg-hdr .sg-nav-link { color: var(--sg-body); font-size: 13px; font-weight: 600; text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: all var(--sg-t); border-bottom: none; }
+  .sg-hdr .sg-nav-link:hover { color: var(--sg-ink); background: var(--sg-canvas); }
   @media print { .sg-hdr { display: none; } }
+
+  @media (max-width: 860px) {
+    .page-wrapper { padding-left: 18px; padding-right: 18px; }
+    .cover-title { font-size: 30px; }
+    .section-title { font-size: 23px; }
+    .quiz-submit-btn, .complete-btn { min-height: 44px; }
+    .sit-table, .ret-table, .sit-table thead, .sit-table tbody, .sit-table tr, .sit-table th, .sit-table td, .ret-table thead, .ret-table tbody, .ret-table tr, .ret-table th, .ret-table td { display: block; width: auto; }
+    .sit-table thead, .ret-table thead { display: none; }
+    .sit-table tr, .ret-table tr { background: var(--sg-card); border: 1px solid var(--sg-border); border-radius: var(--sg-r-card-sm); padding: 10px 12px; margin-bottom: 12px; }
+    .sit-table td, .ret-table td { border: none !important; width: auto !important; padding: 3px 0; }
+  }
+
 </style>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" integrity="sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ" crossorigin="anonymous">
 </head>
-<body data-doc-code="SG-T-002" data-doc-version="3.0" data-doc-date="March 2026" data-doc-status="Approved">
+<body class="sg-redesign" data-doc-code="SG-T-002" data-doc-version="3.0" data-doc-date="March 2026" data-doc-status="Approved">
 <style id="sg-guard-style">body{visibility:hidden}</style>
 <script type="module">
   import { requireAuth } from "./sg-guard.js";
@@ -171,11 +287,12 @@
 <div class="page-wrapper">
 
   <header class="cover">
+    <div class="sg-doctag sg-doctag--train" style="margin-bottom:14px;width:auto;padding:5px 12px">SG-T-002</div>
     <div class="cover-framework">Safeguard Hub &bull; Volunteer Training</div>
     <h1 class="cover-title">Supervision: Two-Adult Rule, Ratios &amp; High-Risk Settings</h1>
     <div class="cover-subtitle">Module 2 &mdash; Required for All Volunteers, Staff, and Leaders</div>
     <div class="cover-meta">
-      <span><span style="color:#2E6B7F;font-weight:600">SG-T-002</span></span>
+      <span><span style="color:#2E9E6A;font-weight:700">SG-T-002</span></span>
       <span>Version 3.0</span>
       <span>March 2026</span>
       <span>Bethany Chapel</span>
@@ -301,7 +418,7 @@
 
     <h3 class="subsection-title">Room Capacity Cards</h3>
 
-    <p>Every room has a Room Capacity Card (<span style="color:#2E6B7F;font-weight:600" title="Ratio / Room Capacity Card">SG-SOP-003</span>) posted near the door. It shows the maximum number of children your room can hold based on how many leaders are present. Check it at the start of every shift.</p>
+    <p>Every room has a Room Capacity Card (<span style="color:#2E9E6A;font-weight:700" title="Ratio / Room Capacity Card">SG-SOP-003</span>) posted near the door. It shows the maximum number of children your room can hold based on how many leaders are present. Check it at the start of every shift.</p>
 
     <h3 class="subsection-title">When the Room Is Full</h3>
 
@@ -325,7 +442,7 @@
       <p><strong><em>What do you do? The answer depends on knowing the protocol&mdash;not making it up in the moment.</em></strong></p>
     </div>
 
-    <p>Bathrooms involve privacy, physical vulnerability, and the potential for isolation. Every bathroom interaction must follow a clear protocol. The Washroom Escort Protocol (<span style="color:#2E6B7F;font-weight:600" title="Washroom Escort Protocol">SG-SOP-002</span>) is posted near every bathroom as your quick reference.</p>
+    <p>Bathrooms involve privacy, physical vulnerability, and the potential for isolation. Every bathroom interaction must follow a clear protocol. The Washroom Escort Protocol (<span style="color:#2E9E6A;font-weight:700" title="Washroom Escort Protocol">SG-SOP-002</span>) is posted near every bathroom as your quick reference.</p>
 
     <div class="callout callout-principle">
       <div class="callout-label">Core Principles &mdash; All Ages</div>
@@ -435,13 +552,13 @@
 
   <div class="doc-reference">
     <table>
-      <tr><td>Module Code</td><td><span style="color:#2E6B7F;font-weight:600">SG-T-002</span></td></tr>
+      <tr><td>Module Code</td><td><span style="color:#2E9E6A;font-weight:700">SG-T-002</span></td></tr>
       <tr><td>Series</td><td>Volunteer Training &mdash; Supervision</td></tr>
       <tr><td>Version</td><td>3.0 &mdash; March 2026</td></tr>
-      <tr><td>Parent Policies</td><td><a href="SG-POL-002.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-POL-002</a> &mdash; Supervision Standards &bull; <a href="SG-POL-003.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-POL-003</a> &mdash; Bathroom &amp; Diapering</td></tr>
-      <tr><td>Related SOPs</td><td><span style="color:#2E6B7F;font-weight:600" title="Washroom Escort Protocol">SG-SOP-002</span> (Washroom Escort) &bull; <span style="color:#2E6B7F;font-weight:600" title="Ratio / Room Capacity Card">SG-SOP-003</span> (Room Capacity Card)</td></tr>
-      <tr><td>Previous Module</td><td><a href="SG-T-001.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-001</a> &mdash; Why We Protect &amp; How It Works</td></tr>
-      <tr><td>Next Module</td><td><a href="SG-T-003.html" style="color:#2E6B7F;text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">SG-T-003</a> &mdash; Recognizing Abuse &amp; Reporting It</td></tr>
+      <tr><td>Parent Policies</td><td><a href="SG-POL-002.html" style="color:#159BD4;text-decoration:none">SG-POL-002</a> &mdash; Supervision Standards &bull; <a href="SG-POL-003.html" style="color:#159BD4;text-decoration:none">SG-POL-003</a> &mdash; Bathroom &amp; Diapering</td></tr>
+      <tr><td>Related SOPs</td><td><span style="color:#2E9E6A;font-weight:700" title="Washroom Escort Protocol">SG-SOP-002</span> (Washroom Escort) &bull; <span style="color:#2E9E6A;font-weight:700" title="Ratio / Room Capacity Card">SG-SOP-003</span> (Room Capacity Card)</td></tr>
+      <tr><td>Previous Module</td><td><a href="SG-T-001.html" style="color:#159BD4;text-decoration:none">SG-T-001</a> &mdash; Why We Protect &amp; How It Works</td></tr>
+      <tr><td>Next Module</td><td><a href="SG-T-003.html" style="color:#159BD4;text-decoration:none">SG-T-003</a> &mdash; Recognizing Abuse &amp; Reporting It</td></tr>
       <tr><td>Pass Threshold</td><td>80% (4 of 5 correct)</td></tr>
       <tr><td>Required For</td><td>All Volunteers, Staff, and Leaders</td></tr>
     </table>

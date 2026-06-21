@@ -6,62 +6,49 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
 <title>Your profile — Safeguard Hub</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" integrity="sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link rel="stylesheet" href="sg-redesign.css">
 <style>
-  :root {
-    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
-    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
-    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
-    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
-    --serif:'DM Serif Display',Georgia,serif;
-    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:var(--sans);color:var(--body);background:var(--cream);
-       -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.55;
-       min-height:100vh;display:flex;flex-direction:column}
+  body{min-height:100vh;display:flex;flex-direction:column}
 
-  /* ── Header with user pill ── */
-  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
-       border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
+  /* ── Legacy header — hidden by sg-nav.js, kept for ids/markup ── */
+  .hdr{background:var(--sg-card);border-bottom:1px solid var(--sg-border);padding:13px 28px}
   .hdr-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px}
   .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
-  .brand-text{display:flex;flex-direction:column;line-height:1.05}
-  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
-  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
-  .user-pill{background:rgba(255,255,255,0.08);color:var(--white);padding:6px 14px;
-             border-radius:16px;font-size:12px;font-weight:500;display:flex;gap:10px;align-items:center}
-  .user-pill .dot{width:4px;height:4px;border-radius:50%;background:var(--gold-warm)}
+  .brand-text{display:flex;flex-direction:column;line-height:1.1}
+  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--sg-blue);text-transform:uppercase}
+  .brand-name{font-family:var(--sg-head);font-weight:800;font-size:19px;color:var(--sg-ink);margin-top:2px}
+  .user-pill{background:var(--sg-field-bg);color:var(--sg-body);padding:6px 14px;border:1px solid var(--sg-border);
+             border-radius:var(--sg-r-pill);font-size:12px;font-weight:500;display:flex;gap:10px;align-items:center}
+  .user-pill .dot{width:4px;height:4px;border-radius:50%;background:var(--sg-blue)}
 
   /* ── Page layout ── */
   .page{flex:1;padding:40px 24px 80px}
   .wrap{max-width:720px;margin:0 auto}
-  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);
-           text-transform:uppercase;margin-bottom:10px}
-  h1{font-family:var(--serif);font-size:36px;color:var(--navy);font-weight:400;
-     line-height:1.1;margin-bottom:10px}
-  .lede{font-size:15px;color:var(--muted);margin-bottom:28px;max-width:560px}
+  .eyebrow{font-family:var(--sg-sans);font-weight:700;font-size:12px;letter-spacing:0.15em;
+           color:var(--sg-blue);text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--sg-head);font-weight:800;font-size:38px;color:var(--sg-ink);
+     line-height:1.05;letter-spacing:-0.02em;margin-bottom:10px}
+  .lede{font-size:17px;color:var(--sg-body);margin-bottom:28px;max-width:560px}
 
-  /* ── Card ── */
-  .card{background:var(--white);border:1.5px solid var(--border);
-        border-radius:14px;padding:32px 36px;box-shadow:0 4px 24px rgba(0,0,0,0.04);
-        margin-bottom:18px}
-  .section-head{font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--gold);
+  /* ── Card / section ── */
+  .card{background:var(--sg-card);border:1px solid var(--sg-border);
+        border-radius:var(--sg-r-card);padding:24px;margin-bottom:18px}
+  .section-head{font-family:var(--sg-sans);font-weight:700;font-size:12px;letter-spacing:0.15em;color:var(--sg-blue);
                 text-transform:uppercase;margin-bottom:4px}
-  .section-title{font-family:var(--serif);font-size:22px;color:var(--navy);font-weight:400;
+  .section-title{font-family:var(--sg-head);font-weight:700;font-size:22px;color:var(--sg-ink);
                  margin-bottom:18px}
 
   /* ── Form ── */
-  label{display:block;font-size:11px;font-weight:700;color:var(--navy);
-        letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
-  .opt{font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0;margin-left:6px}
-  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
-      font-family:var(--sans);font-size:15px;color:var(--body);background:var(--white);
-      transition:border-color var(--transition),box-shadow var(--transition)}
-  .fi:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(46,107,127,0.10);outline:none}
-  .fi[aria-invalid="true"]{border-color:var(--error)}
-  textarea.fi{min-height:100px;resize:vertical;font-family:var(--sans)}
+  label{display:block;font-family:var(--sg-sans);font-weight:700;font-size:11.5px;color:var(--sg-body);
+        letter-spacing:0.08em;text-transform:uppercase;margin-bottom:7px}
+  .opt{font-weight:500;color:var(--sg-muted);text-transform:none;letter-spacing:0;margin-left:6px}
+  .fi{width:100%;padding:13px 15px;border:1px solid var(--sg-border-strong);border-radius:var(--sg-r-input);
+      font-family:var(--sg-sans);font-size:15px;color:var(--sg-ink);background:var(--sg-field-bg);
+      transition:border-color var(--sg-t),box-shadow var(--sg-t),background var(--sg-t)}
+  .fi:focus{border-color:var(--sg-blue);background:#fff;box-shadow:var(--sg-focus-ring);outline:none}
+  .fi[aria-invalid="true"]{border-color:var(--sg-red)}
+  textarea.fi{min-height:100px;resize:vertical;font-family:var(--sg-sans)}
   .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
   .row-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;margin-bottom:14px}
   .row-addr{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;margin-bottom:14px}
@@ -69,33 +56,33 @@
   .field:last-child{margin-bottom:0}
   @media (max-width:600px){.row,.row-3,.row-addr{grid-template-columns:1fr}}
 
-  /* ── Checkbox pills (for age groups / service times) ── */
+  /* ── Checkbox pills (age groups / service times) ── */
   .pills{display:flex;flex-wrap:wrap;gap:10px}
   .pill{position:relative;cursor:pointer}
   .pill input{position:absolute;opacity:0;pointer-events:none}
-  .pill span{display:inline-flex;padding:10px 16px;border:1.5px solid var(--border);
-             border-radius:24px;font-size:13px;font-weight:600;background:var(--white);
-             color:var(--body);transition:all var(--transition);user-select:none}
-  .pill:hover span{border-color:var(--gold-warm)}
-  .pill input:checked + span{background:var(--teal);border-color:var(--teal);color:var(--white)}
-  .pill input:focus-visible + span{box-shadow:0 0 0 3px rgba(46,107,127,0.2)}
+  .pill span{display:inline-flex;padding:10px 16px;border:1px solid var(--sg-border-strong);
+             border-radius:var(--sg-r-pill);font-size:13px;font-weight:600;background:#fff;
+             color:var(--sg-body);transition:all var(--sg-t);user-select:none}
+  .pill:hover span{border-color:var(--sg-blue)}
+  .pill input:checked + span{background:var(--sg-navy);border-color:var(--sg-navy);color:#fff}
+  .pill input:focus-visible + span{box-shadow:var(--sg-focus-ring)}
 
   /* ── Buttons ── */
   .actions{display:flex;gap:12px;align-items:center;margin-top:24px;flex-wrap:wrap}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-       padding:13px 26px;border:none;border-radius:8px;font-family:var(--sans);
-       font-size:15px;font-weight:700;cursor:pointer;transition:all var(--transition)}
-  .btn-primary{background:var(--navy);color:var(--white);
-               box-shadow:0 2px 8px rgba(27,58,75,0.25)}
-  .btn-primary:hover:not(:disabled){background:var(--teal)}
-  .btn-primary:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
-  .btn-secondary{background:var(--white);color:var(--body);border:1.5px solid var(--border)}
-  .btn-secondary:hover{background:var(--sand);border-color:var(--gold)}
+       padding:13px 20px;border:1px solid transparent;border-radius:var(--sg-r-btn);font-family:var(--sg-sans);
+       font-size:14px;font-weight:600;cursor:pointer;
+       transition:box-shadow var(--sg-t),border-color var(--sg-t),background var(--sg-t)}
+  .btn-primary{background:var(--sg-navy);color:#fff;box-shadow:var(--sg-shadow-btn)}
+  .btn-primary:hover:not(:disabled){background:#0c4262}
+  .btn-primary:disabled{background:var(--sg-muted);cursor:not-allowed;box-shadow:none}
+  .btn-secondary{background:#fff;color:var(--sg-body);border:1px solid var(--sg-border-strong)}
+  .btn-secondary:hover{border-color:var(--sg-blue);color:var(--sg-ink)}
 
   /* ── Messages & spinner ── */
-  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:16px;display:none}
-  .msg.ok{background:var(--success-bg);color:var(--success);border:1px solid rgba(39,174,96,0.2);display:block}
-  .msg.err{background:var(--error-bg);color:var(--error);border:1px solid rgba(192,57,43,0.2);display:block}
+  .msg{padding:11px 14px;border-radius:var(--sg-r-input);font-size:13px;margin-top:16px;display:none}
+  .msg.ok{background:var(--sg-green-bg);color:var(--sg-green);border:1px solid var(--sg-green-bg);display:block}
+  .msg.err{background:var(--sg-red-bg);color:var(--sg-red);border:1px solid var(--sg-red-border);display:block}
   .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;
         border-radius:50%;animation:spin 0.7s linear infinite;display:none}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -103,12 +90,15 @@
   .btn.loading .label{opacity:0.7}
 
   /* ── Loading skeleton ── */
-  .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
+  .loading-state{text-align:center;padding:80px 24px;color:var(--sg-muted)}
 
-  footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+  footer{text-align:center;padding:24px;font-size:12px;color:var(--sg-muted)}
+  footer a{color:var(--sg-blue);text-decoration:none}
+
+  @media (max-width:860px){h1{font-size:30px}.btn{min-height:44px}}
 </style>
 </head>
-<body>
+<body class="sg-redesign">
 
 <header class="hdr">
   <div class="hdr-inner">
@@ -240,7 +230,7 @@
 
         <div class="field" style="margin-top:20px">
           <label for="testimony">Your faith story <span class="opt">— just 2–3 sentences</span></label>
-          <div style="font-size:13px;color:var(--muted);margin-bottom:6px;line-height:1.5">We'd love to know your story — how you came to follow Jesus and why you want to serve here. Just a few sentences in your own words; this isn't a test.</div>
+          <div style="font-size:13px;color:var(--sg-muted);margin-bottom:6px;line-height:1.5">We'd love to know your story — how you came to follow Jesus and why you want to serve here. Just a few sentences in your own words; this isn't a test.</div>
           <textarea id="testimony" class="fi" placeholder="e.g., I grew up in church, but my faith became my own in my twenties. Serving kids is how I want to give back."></textarea>
         </div>
 
@@ -267,7 +257,7 @@
 
 </main>
 
-<footer>Safeguard Hub · Bethany Chapel · <a href="privacy.html" style="color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">Privacy</a></footer>
+<footer>Safeguard Hub · Bethany Chapel · <a href="privacy.html">Privacy</a></footer>
 
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
