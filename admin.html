@@ -282,7 +282,8 @@
     const now = Date.now();
     const expired = pc.expiresOn && new Date(pc.expiresOn).getTime() < now;
     if (u.status === "active" && (!pc.clearedAt || expired)) {
-      out.push({ cls:"red", label:"⚠ Police check lapsed" });
+      if (pc.followUpAt) out.push({ cls:"amber", label:"Police check lapsed · following up" });
+      else out.push({ cls:"red", label:"⚠ Police check lapsed" });
     } else if (pc.expiresOn) {
       const days = (new Date(pc.expiresOn).getTime() - now) / 86400000;
       if (days >= 0 && days <= 60) out.push({ cls:"amber", label:"Police check expiring soon" });

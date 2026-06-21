@@ -87,7 +87,23 @@
   .banner-tag{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:#fff;background:var(--red-bright);padding:2px 8px;border-radius:5px;margin-bottom:5px}
   .banner-title{font-size:16px;font-weight:800;color:#B0271C;line-height:1.3}
   .banner-sub{font-size:13px;color:#9A3328;margin-top:3px;line-height:1.4}
-  .banner-go{color:var(--red-bright);font-weight:800;font-size:14px;flex-shrink:0;white-space:nowrap}
+  .banner-go{color:var(--red-bright);font-weight:800;font-size:14px;flex-shrink:0;white-space:nowrap;text-decoration:none}
+  .banner-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
+  .banner-btn{background:var(--white);border:1.5px solid var(--red-bright);color:var(--red-bright);font-family:var(--sans);font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:all var(--transition)}
+  .banner-btn:hover:not(:disabled){background:var(--red-bright);color:#fff}
+  .banner-btn:disabled{opacity:0.6;cursor:default}
+
+  /* Waiting on volunteers — you've reached out; it's on them now */
+  .wait-list{background:var(--white);border:1.5px solid var(--border);border-radius:12px;overflow:hidden}
+  .wait-item{display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--border)}
+  .wait-item:last-child{border-bottom:none}
+  .wait-dot{width:10px;height:10px;border-radius:50%;background:var(--warn);flex-shrink:0}
+  .wait-body{flex:1;font-size:14px;color:var(--navy);font-weight:700;line-height:1.35}
+  .wait-sub{font-size:12.5px;color:var(--muted);font-weight:400;margin-top:2px}
+  .wait-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .wait-actions a{color:var(--teal);font-weight:700;font-size:13px;text-decoration:none;white-space:nowrap}
+  .wait-actions button{background:none;border:1px solid var(--border);color:var(--muted);font-family:var(--sans);font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:7px;cursor:pointer;white-space:nowrap}
+  .wait-actions button:hover:not(:disabled){border-color:var(--warn);color:var(--warn)}
 
   .need-list{background:var(--white);border:1.5px solid var(--border);border-radius:12px;overflow:hidden}
   .need{display:flex;align-items:center;gap:14px;padding:13px 18px;text-decoration:none;border-bottom:1px solid var(--border);transition:background var(--transition)}
@@ -186,6 +202,8 @@
     <div class="needs-head"><span class="sec-label">Needs you now</span><span class="meta" id="needsMeta"></span></div>
     <div id="needsNow"></div>
 
+    <div id="waitingArea"></div>
+
     <div class="sec-label">Your rhythm</div>
     <div id="rhythm"></div>
   </div>
@@ -197,7 +215,7 @@
 <script type="module">
   import { onUserChange } from "./sg-auth.js";
   import { getOrCreateProfile, isReadyForActivation, formatDate } from "./sg-profile.js";
-  import { listUsers, summarizeUsers, screeningState } from "./sg-admin.js";
+  import { listUsers, summarizeUsers, screeningState, setPoliceFollowUp } from "./sg-admin.js";
   import { listSubmissions, updateSubmission } from "./sg-submissions.js";
   import { RHYTHM_TASKS, CADENCE_LABELS, loadRhythm, markRhythmDone, rhythmStatus } from "./sg-rhythm.js";
   import { mountUserChip } from "./sg-user-chip.js";
@@ -214,6 +232,7 @@
   function noun(n, one, many){ return n === 1 ? one : many; }
 
   let CURRENT_USER_IS_LEAD = false;
+  let LOADED_USERS = [], LOADED_SUBS = [];
 
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=admin-dashboard.html"); return; }
@@ -238,12 +257,17 @@
 
   function render(users, subs, rhythmMem, me) {
     CURRENT_USER_IS_LEAD = me && me.safeguard_lead === true;
-    const n = computeNeeds(users, subs);
+    LOADED_USERS = users; LOADED_SUBS = subs;
     renderWhen();
     renderLauncher();
     renderPriority(subs, me);
-    renderNeeds(n);
+    renderComplianceSections();
     renderRhythm(rhythmMem);
+  }
+  function renderComplianceSections() {
+    const n = computeNeeds(LOADED_USERS, LOADED_SUBS);
+    renderNeeds(n);
+    renderWaiting(n);
   }
 
   function renderWhen() {
@@ -365,13 +389,20 @@
 
   // ── Needs you now: the action list (clears as conditions resolve) ──
   function renderNeeds(n) {
-    const banners = [];
-    if (n.lapsed.length > 0) banners.push({
-      tag:"Safeguarding",
-      title: plural(n.lapsed.length,"serving volunteer","serving volunteers")+" with a lapsed police check",
-      sub:"Active and serving without a current check. Resolve this before anything else.",
-      href: n.lapsed.length === 1 ? ("admin-user.html?uid=" + n.lapsed[0].id) : "admin.html"
-    });
+    // Lapsed checks you haven't followed up on yet → loud red, one per person.
+    const lapsedNeed = n.lapsed.filter(u => !(u.policeCheck && u.policeCheck.followUpAt));
+    const bannerHtml = lapsedNeed.map(u => {
+      const name = [u.firstName, u.lastName].filter(Boolean).join(" ").trim() || "A serving volunteer";
+      return '<div class="banner" data-uid="'+esc(u.id)+'">'
+        + '<span class="banner-ico">&#9888;</span>'
+        + '<span class="banner-body"><span class="banner-tag">Safeguarding</span>'
+        + '<div class="banner-title">'+esc(name)+' — lapsed police check</div>'
+        + '<div class="banner-sub">Active and serving without a current check.</div></span>'
+        + '<span class="banner-actions">'
+        + '<a class="banner-go" href="admin-user.html?uid='+esc(u.id)+'">Open &rsaquo;</a>'
+        + '<button class="banner-btn" type="button" data-followup="'+esc(u.id)+'">I’ve reached out</button>'
+        + '</span></div>';
+    }).join("");
 
     const list = [
       { c:n.waitInterview, t:noun(n.waitInterview,"application","applications")+" waiting for an interview", href:"admin-screening.html", tone:"amber" },
@@ -385,7 +416,7 @@
       { c:n.childRegs,     t:noun(n.childRegs,"child registration","child registrations")+" to review", href:"admin-submissions.html", tone:"normal" },
     ].filter(it => it.c > 0);
 
-    const total = banners.length + list.length;
+    const total = lapsedNeed.length + list.length;
     const metaEl = document.getElementById("needsMeta");
     const el = document.getElementById("needsNow");
 
@@ -397,15 +428,7 @@
     }
     metaEl.textContent = total + (total===1?" item":" items") + " · ordered by urgency";
 
-    let html = banners.map(b =>
-      '<a class="banner" href="'+b.href+'">'
-      + '<span class="banner-ico">&#9888;</span>'
-      + '<span class="banner-body"><span class="banner-tag">'+esc(b.tag)+'</span>'
-      + '<div class="banner-title">'+esc(b.title)+'</div>'
-      + '<div class="banner-sub">'+esc(b.sub)+'</div></span>'
-      + '<span class="banner-go">Review now &rsaquo;</span></a>'
-    ).join("");
-
+    let html = bannerHtml;
     if (list.length) {
       list.sort((a,b)=> (a.tone==="amber"?0:1)-(b.tone==="amber"?0:1));
       html += '<div class="need-list">' + list.map(it =>
@@ -417,6 +440,60 @@
       ).join("") + '</div>';
     }
     el.innerHTML = html;
+
+    el.querySelectorAll(".banner-btn[data-followup]").forEach(btn => {
+      btn.addEventListener("click", async (ev) => {
+        ev.preventDefault();
+        const uid = btn.getAttribute("data-followup");
+        btn.disabled = true; btn.textContent = "Saving…";
+        try {
+          await setPoliceFollowUp(uid, true);
+          const u = LOADED_USERS.find(x => x.id === uid);
+          if (u) u.policeCheck = Object.assign({}, u.policeCheck, { followUpAt: new Date().toISOString() });
+          renderComplianceSections();
+        } catch (e2) {
+          btn.disabled = false; btn.textContent = "I’ve reached out";
+          alert("Couldn't update: " + (e2.message || "try again"));
+        }
+      });
+    });
+  }
+
+  // ── Waiting on volunteers — you've reached out; it's on them now ──
+  function renderWaiting(n) {
+    const waiting = n.lapsed.filter(u => u.policeCheck && u.policeCheck.followUpAt);
+    const el = document.getElementById("waitingArea");
+    if (!waiting.length) { el.innerHTML = ""; return; }
+    let html = '<div class="sec-label" style="color:var(--warn)">Waiting on volunteers</div><div class="wait-list">';
+    html += waiting.map(u => {
+      const name = [u.firstName, u.lastName].filter(Boolean).join(" ").trim() || "A volunteer";
+      const since = u.policeCheck.followUpAt ? formatDate(u.policeCheck.followUpAt) : "";
+      return '<div class="wait-item">'
+        + '<span class="wait-dot"></span>'
+        + '<span class="wait-body"><b>'+esc(name)+'</b> — police check still lapsed'
+        + '<div class="wait-sub">You reached out '+esc(since)+'. Waiting on them to renew.</div></span>'
+        + '<span class="wait-actions">'
+        + '<a href="admin-user.html?uid='+esc(u.id)+'">Open &rsaquo;</a>'
+        + '<button type="button" data-unfollowup="'+esc(u.id)+'">Back to urgent</button>'
+        + '</span></div>';
+    }).join("");
+    html += '</div>';
+    el.innerHTML = html;
+    el.querySelectorAll("button[data-unfollowup]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const uid = btn.getAttribute("data-unfollowup");
+        btn.disabled = true; btn.textContent = "…";
+        try {
+          await setPoliceFollowUp(uid, false);
+          const u = LOADED_USERS.find(x => x.id === uid);
+          if (u && u.policeCheck) delete u.policeCheck.followUpAt;
+          renderComplianceSections();
+        } catch (e2) {
+          btn.disabled = false; btn.textContent = "Back to urgent";
+          alert("Couldn't update: " + (e2.message || "try again"));
+        }
+      });
+    });
   }
   function pillLabel(href){ return href.indexOf("screening")>=0?"Screening":href.indexOf("submissions")>=0?"Submissions":"People"; }
   function pillClass(href){ return href.indexOf("screening")>=0?"screening":href.indexOf("submissions")>=0?"submissions":"people"; }

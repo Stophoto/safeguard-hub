@@ -295,6 +295,23 @@ export async function unclearPoliceCheck(uid) {
   }, { merge: true });
 }
 
+// ── Note that you've followed up on a lapsed police check ───
+// Stamps policeCheck.followUpAt so the dashboard can move this volunteer out
+// of the urgent red banner into a calmer "waiting on them" list. on=false
+// clears it (back to urgent). Becomes irrelevant once the check is cleared.
+export async function setPoliceFollowUp(uid, on = true) {
+  const snap = await getDoc(doc(db, "users", uid));
+  const existing = (snap.exists() && snap.data().policeCheck) || {};
+  const next = { ...existing };
+  if (on) next.followUpAt = new Date().toISOString();
+  else delete next.followUpAt;
+  await setDoc(doc(db, "users", uid), {
+    policeCheck: next,
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
+  }, { merge: true });
+}
+
 // ── Mark a reference as received ────────────────────────────
 export async function markReferenceReceived(uid, refIndex, receivedOn) {
   const date = receivedOn || new Date().toISOString().slice(0, 10);
