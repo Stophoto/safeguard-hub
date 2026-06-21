@@ -602,6 +602,13 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // ─── Admin rhythm (coordinator's recurring-task memory) ──
+    // One doc (/adminRhythm/current) holds "last done" stamps for the
+    // recurring coordinator tasks shown on the Admin Dashboard.
+    match /adminRhythm/{docId} {
+      allow read, write: if isCoordinator();
+    }
+
     // ─── Everything else ─────────────────────────────────────
     // Deny by default. Future collections (incidents, submissions,
     // training records) will get their own match blocks when we

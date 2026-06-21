@@ -116,10 +116,10 @@
   // a dropdown of these once we know the signed-in user is a coordinator
   // (see setAdminAccess + the auth block below).
   var ADMIN_LINKS = [
+    { label: 'Dashboard',   href: 'admin-dashboard.html' },
     { label: 'People',      href: 'admin.html' },
     { label: 'Screening',   href: 'admin-screening.html' },
     { label: 'Submissions', href: 'admin-submissions.html' },
-    { label: 'Tasks',       href: 'admin-tasks.html' },
     { label: 'Room Kit',    href: 'admin-room-kit.html' }
   ];
 
@@ -573,7 +573,7 @@
     adminItem.style.display = '';
     adminItem.removeAttribute('data-sg-hidden');
     var current = (location.pathname.split('/').pop() || '').toLowerCase();
-    var inner = '<button class="sg-nav-link" type="button">Admin '+chev+'</button>';
+    var inner = '<a class="sg-nav-link" href="admin-dashboard.html">Admin '+chev+'</a>';
     inner += '<div class="sg-nav-dropdown"><div class="sg-dd-group">Administration</div>';
     ADMIN_LINKS.forEach(function (l) {
       var active = l.href.toLowerCase() === current ? ' sg-dd-active' : '';
