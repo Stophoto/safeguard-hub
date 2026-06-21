@@ -5,48 +5,58 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Activate your account — Safeguard Hub</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link rel="stylesheet" href="sg-redesign.css">
 <style>
-  :root{
-    --navy:#1B3A4B;--navy-deep:#0F2530;--teal:#2E6B7F;--gold:#B09055;
-    --cream:#FAF8F3;--sand:#F2EFE8;--body:#3D3835;--muted:#9A958F;
-    --border:#E4E0DA;--white:#FFF;--error:#C0392B;--error-bg:#FFF0EE;
-    --serif:'DM Serif Display',Georgia,serif;
-    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:var(--sans);color:var(--body);background:var(--cream);
-       min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-  .card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;
-        padding:36px;max-width:440px;width:100%;box-shadow:0 4px 24px rgba(0,0,0,.05)}
-  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.22em;color:var(--gold);
-           text-transform:uppercase;margin-bottom:8px}
-  h1{font-family:var(--serif);font-size:28px;color:var(--navy);font-weight:400;margin-bottom:6px}
-  .lede{font-size:14px;color:var(--muted);margin-bottom:20px}
-  label{display:block;font-size:11px;font-weight:700;color:var(--navy);
-        letter-spacing:.04em;text-transform:uppercase;margin:14px 0 6px}
-  .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
-      font-family:var(--sans);font-size:16px}
-  .fi:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 4px rgba(46,107,127,.1)}
-  .fi[readonly]{background:var(--sand);color:var(--muted)}
+  /* ── Standalone activation page: white card centered on the cool canvas ── */
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{background:var(--sg-card);border:1px solid var(--sg-border);border-radius:var(--sg-r-card);
+        padding:40px 36px;max-width:440px;width:100%;box-shadow:var(--sg-shadow-hero)}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+  .brand img{height:32px;width:auto;display:block}
+  .brand-divider{width:1px;height:28px;background:var(--sg-border)}
+  .brand-text{display:flex;flex-direction:column;line-height:1.1;font-family:var(--sg-head);
+              font-weight:800;font-size:12px;letter-spacing:0.18em}
+  .brand-text small{font-size:12px;color:var(--sg-ink);text-transform:uppercase;font-weight:800}
+  .brand-name{color:var(--sg-blue);text-transform:uppercase}
+  .eyebrow{font-family:var(--sg-sans);font-weight:700;font-size:12px;letter-spacing:.15em;
+           color:var(--sg-blue);text-transform:uppercase;margin-bottom:8px}
+  h1{font-family:var(--sg-head);font-weight:800;font-size:28px;color:var(--sg-ink);
+     line-height:1.1;letter-spacing:-0.02em;margin-bottom:6px}
+  .lede{font-size:15px;color:var(--sg-body);margin-bottom:20px}
+  label{display:block;font-family:var(--sg-sans);font-weight:700;font-size:11.5px;color:var(--sg-body);
+        letter-spacing:.08em;text-transform:uppercase;margin:16px 0 7px}
+  .fi{width:100%;padding:13px 15px;border:1px solid var(--sg-border-strong);border-radius:var(--sg-r-input);
+      font-family:var(--sg-sans);font-size:15px;color:var(--sg-ink);background:var(--sg-field-bg);
+      transition:border-color var(--sg-t),box-shadow var(--sg-t),background var(--sg-t)}
+  .fi:focus{border-color:var(--sg-blue);background:#fff;outline:none;box-shadow:var(--sg-focus-ring)}
+  .fi[readonly]{background:var(--sg-canvas);color:var(--sg-muted)}
   .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
-       padding:12px 18px;border:none;border-radius:8px;font-weight:700;font-size:14px;
-       cursor:pointer;margin-top:16px;font-family:var(--sans)}
-  .btn-primary{background:var(--navy);color:#fff}
-  .btn-primary:hover:not(:disabled){background:var(--teal)}
-  .btn-primary:disabled{background:var(--muted);cursor:not-allowed}
-  .btn-sso{background:#fff;color:var(--body);border:1.5px solid var(--border);margin-top:10px}
-  .btn-sso:hover:not(:disabled){background:var(--sand)}
+       padding:13px 20px;border:1px solid transparent;border-radius:var(--sg-r-btn);font-weight:600;font-size:14px;
+       cursor:pointer;margin-top:16px;font-family:var(--sg-sans);
+       transition:box-shadow var(--sg-t),border-color var(--sg-t),background var(--sg-t)}
+  .btn-primary{background:var(--sg-navy);color:#fff;box-shadow:var(--sg-shadow-btn)}
+  .btn-primary:hover:not(:disabled){background:#0c4262}
+  .btn-primary:disabled{background:var(--sg-muted);cursor:not-allowed;box-shadow:none}
+  .btn-sso{background:#fff;color:var(--sg-body);border:1px solid var(--sg-border-strong);margin-top:10px}
+  .btn-sso:hover:not(:disabled){border-color:var(--sg-blue);color:var(--sg-ink)}
   .btn-sso:disabled{opacity:.5;cursor:not-allowed}
-  .sep{display:flex;align-items:center;gap:10px;margin:22px 0;color:var(--muted);font-size:12px}
-  .sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--border)}
-  .msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:14px;display:none}
-  .msg.err{background:var(--error-bg);color:var(--error);display:block}
-  .loading{text-align:center;color:var(--muted);padding:40px 0}
+  .sep{display:flex;align-items:center;gap:10px;margin:22px 0;color:var(--sg-muted);
+       font-family:var(--sg-sans);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase}
+  .sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--sg-rule)}
+  .msg{padding:11px 14px;border-radius:var(--sg-r-input);font-size:13px;margin-top:14px;display:none}
+  .msg.err{background:var(--sg-red-bg);color:var(--sg-red);border:1px solid var(--sg-red-border);display:block}
+  .loading{text-align:center;color:var(--sg-muted);padding:40px 0}
+  @media (max-width:460px){.card{padding:32px 24px}.btn{min-height:44px}}
 </style>
 </head>
-<body>
+<body class="sg-redesign">
   <div class="card">
+    <div class="brand">
+      <img src="bethany-logo.png" alt="Bethany Chapel">
+      <span class="brand-divider" aria-hidden="true"></span>
+      <div class="brand-text"><small>Safeguard</small><span class="brand-name">Hub</span></div>
+    </div>
     <div id="loading" class="loading">Checking your invitation…</div>
 
     <div id="form" style="display:none">
