@@ -38,84 +38,102 @@
 
   .page{flex:1;padding:36px 24px 80px}
   .wrap{max-width:1000px;margin:0 auto}
-  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
-  h1{font-family:var(--serif);font-size:34px;color:var(--navy);font-weight:400;line-height:1.12;margin-bottom:8px}
-  .lede{font-size:15px;color:var(--body);opacity:0.82;margin-bottom:28px;max-width:680px;line-height:1.6}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--teal);text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:36px;color:var(--navy);font-weight:700;line-height:1.08;margin-bottom:8px;letter-spacing:-0.01em}
+  .lede{font-size:15px;color:var(--body);opacity:0.82;margin-bottom:8px;max-width:620px;line-height:1.6}
 
-  .sec-label{font-size:12px;font-weight:700;letter-spacing:0.1em;color:var(--gold);
-             text-transform:uppercase;margin:34px 0 14px}
+  .sec-label{font-size:11px;font-weight:800;letter-spacing:0.12em;color:var(--teal);text-transform:uppercase;margin:32px 0 14px}
 
-  /* At-a-glance stats (compact) */
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+  /* Intro row with date */
+  .intro{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+  .intro .when{text-align:right;font-size:12.5px;color:var(--muted);line-height:1.55;flex-shrink:0}
+  .intro .when b{display:block;color:var(--navy);font-weight:700;font-size:13px;margin-bottom:1px}
+
+  /* Section launcher (top) — quick jump to any area */
+  .launch{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 14px}
+  @media (max-width:760px){.launch{grid-template-columns:1fr 1fr}}
+  .tile{position:relative;display:flex;align-items:center;gap:12px;background:var(--white);
+        border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;transition:all var(--transition)}
+  .tile:hover{border-color:var(--navy);box-shadow:0 4px 14px rgba(0,0,0,0.07);transform:translateY(-1px)}
+  .tile-ico{width:38px;height:38px;border-radius:9px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .tile-ico svg{width:20px;height:20px}
+  .tile-txt{display:flex;flex-direction:column;min-width:0}
+  .tile-txt b{font-size:14.5px;color:var(--navy);font-weight:700;line-height:1.25}
+  .tile-txt i{font-style:normal;font-size:11.5px;color:var(--muted);font-weight:500}
+  .tile.alert{border-color:var(--red-bright);background:#FDECEA}
+  .tile.alert .tile-ico{background:var(--red-bright)}
+  .tile-badge{position:absolute;top:-8px;right:-8px;min-width:22px;height:22px;padding:0 6px;border-radius:11px;
+              background:var(--red-bright);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;
+              box-shadow:0 2px 6px rgba(229,57,53,0.5)}
+
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px}
   @media (max-width:680px){.stats{grid-template-columns:1fr 1fr}}
-  .stat{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px}
-  .stat b{font-family:var(--serif);font-size:23px;color:var(--navy);font-weight:400;line-height:1;display:block;margin-bottom:3px}
-  .stat span{font-size:10px;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;font-weight:600}
-  .stat.ok b{color:var(--success)} .stat.attn b{color:var(--warn);font-size:17px} .stat.attn.red b{color:var(--red-bright)}
-  .stat .stat-sub{font-size:12.5px;color:var(--success);font-weight:700;font-family:var(--sans);display:block;margin-bottom:3px}
+  .stat{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:16px 18px}
+  .stat b{font-family:var(--serif);font-size:30px;color:var(--navy);font-weight:700;line-height:1;display:block;margin-bottom:6px}
+  .stat span{font-size:10.5px;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;font-weight:700;line-height:1.3;display:block}
+  .stat.red{background:#FDECEA;border-color:#F3C7C2}
+  .stat.red b{color:var(--red-bright)} .stat.red span{color:#B0271C}
+  .stat.ok b{color:var(--success);font-size:18px}
 
-  /* Needs you now — the headline. Bold, distinct, clickable. */
-  .needs{display:flex;flex-direction:column;gap:10px;margin-bottom:6px}
-  .need{display:flex;align-items:center;gap:16px;background:var(--white);border:1.5px solid var(--border);
-        border-left:6px solid var(--muted);border-radius:12px;padding:17px 20px;text-decoration:none;
-        color:var(--body);transition:all var(--transition)}
-  .need:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(0,0,0,0.09)}
-  .need.red{border-color:var(--red-bright);border-left-color:var(--red-bright);background:#FDECEA}
-  .need.amber{border-left-color:var(--warn);background:var(--warn-bg)}
-  .need.green{border-left-color:var(--success);background:var(--success-bg)}
-  .need-count{font-family:var(--serif);font-size:33px;color:var(--navy);min-width:46px;text-align:center;line-height:1}
-  .need.red .need-count{color:var(--red-bright)} .need.amber .need-count{color:var(--warn)}
-  .need-text{flex:1;font-size:15.5px;font-weight:700;color:var(--navy);line-height:1.35}
-  .need.red .need-text{color:#B0271C}
-  .need-go{color:var(--teal);font-size:22px;font-weight:700;flex-shrink:0}
-  .need.red .need-go{color:var(--red-bright)}
-  .all-clear{background:var(--success-bg);border:1.5px solid rgba(39,174,96,0.3);border-radius:12px;
-             padding:24px 26px;display:flex;align-items:center;gap:14px}
-  .all-clear .ac-ico{width:40px;height:40px;border-radius:50%;background:var(--success);color:#fff;
-             display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px}
-  .all-clear .ac-text{font-size:15px;font-weight:600;color:var(--navy)}
+  /* Needs you now */
+  .needs-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:32px 0 14px}
+  .needs-head .sec-label{margin:0}
+  .needs-head .meta{font-size:12px;color:var(--muted)}
+  .banner{display:flex;align-items:center;gap:16px;background:#FDECEA;border:1.5px solid var(--red-bright);
+          border-left:6px solid var(--red-bright);border-radius:12px;padding:16px 20px;text-decoration:none;margin-bottom:10px;transition:all var(--transition)}
+  .banner:hover{box-shadow:0 6px 20px rgba(229,57,53,0.20);transform:translateY(-1px)}
+  .banner-ico{width:44px;height:44px;border-radius:11px;background:var(--red-bright);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px;font-weight:800}
+  .banner-body{flex:1;min-width:0}
+  .banner-tag{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:#fff;background:var(--red-bright);padding:2px 8px;border-radius:5px;margin-bottom:5px}
+  .banner-title{font-size:16px;font-weight:800;color:#B0271C;line-height:1.3}
+  .banner-sub{font-size:13px;color:#9A3328;margin-top:3px;line-height:1.4}
+  .banner-go{color:var(--red-bright);font-weight:800;font-size:14px;flex-shrink:0;white-space:nowrap}
 
-  /* Rhythm — collapsed into one tidy box to keep the dashboard light */
-  .rhythm-box{background:var(--white);border:1.5px solid var(--border);border-radius:12px;margin-bottom:22px;overflow:hidden}
-  .rhythm-summary{list-style:none;cursor:pointer;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px;font-weight:700;color:var(--navy)}
-  .rhythm-summary::-webkit-details-marker{display:none}
-  .rhythm-summary::after{content:"\25BE";color:var(--muted);transition:transform 0.2s;font-size:12px}
-  .rhythm-box[open] .rhythm-summary::after{transform:rotate(180deg)}
-  .rhythm-sum-meta{font-size:12px;font-weight:600;color:var(--muted);text-align:right;margin-left:auto;margin-right:10px}
-  .rhythm-sum-meta .od{color:var(--error);font-weight:700}
-  .rhythm-inner{padding:2px 18px 12px;border-top:1px solid var(--border)}
-  .rhythm-group{margin-bottom:4px}
-  .rhythm-cad{font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;margin:10px 0 2px}
-  .rhythm-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--sand);flex-wrap:wrap}
+  .need-list{background:var(--white);border:1.5px solid var(--border);border-radius:12px;overflow:hidden}
+  .need{display:flex;align-items:center;gap:14px;padding:13px 18px;text-decoration:none;border-bottom:1px solid var(--border);transition:background var(--transition)}
+  .need:last-child{border-bottom:none}
+  .need:hover{background:#F6F9FB}
+  .need-chip{min-width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;background:#E8EEF2;color:var(--navy)}
+  .need.amber .need-chip{background:#FBE8CF;color:#9A6A12}
+  .need-text{flex:1;font-size:14.5px;color:var(--navy);font-weight:600;line-height:1.35}
+  .need-pill{font-size:9.5px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:4px 9px;border-radius:20px;background:#EEF2F5;color:var(--muted);flex-shrink:0}
+  .need-pill.screening{background:#FBE9CB;color:#9A6A12}
+  .need-pill.people{background:#DCEBF6;color:#1E6A95}
+  .need-pill.submissions{background:#FBE3C8;color:#9A5A12}
+  .need-arrow{color:var(--muted);font-size:18px;flex-shrink:0}
+
+  .all-clear{background:var(--success-bg);border:1.5px solid rgba(39,174,96,0.3);border-radius:12px;padding:22px 24px;display:flex;align-items:center;gap:14px}
+  .all-clear .ac-ico{width:38px;height:38px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px}
+  .all-clear .ac-text{font-size:15px;font-weight:700;color:var(--navy)}
+
+  /* Your rhythm (expanded) */
+  .rhythm{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:4px 22px 16px}
+  .rhythm-cad{font-size:10px;font-weight:800;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin:16px 0 2px}
+  .rhythm-row{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
   .rhythm-row:last-child{border-bottom:none}
-  .rhythm-main{flex:1;min-width:200px}
-  .rhythm-label{font-size:14px;font-weight:600;color:var(--navy);line-height:1.35}
-  .rhythm-label a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.25)}
-  .rhythm-meta{font-size:12px;color:var(--muted);margin-top:3px}
-  .rhythm-meta .ok{color:var(--success);font-weight:600}
-  .rhythm-badge{font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;
-                padding:4px 9px;border-radius:5px;flex-shrink:0}
-  .rhythm-badge.ok{background:var(--success-bg);color:var(--success)}
-  .rhythm-badge.due-soon{background:var(--warn-bg);color:var(--warn)}
-  .rhythm-badge.overdue{background:var(--error-bg);color:var(--error)}
-  .rhythm-done{background:var(--white);border:1.5px solid var(--border);color:var(--teal);
-               font-family:var(--sans);font-size:12px;font-weight:700;padding:7px 13px;border-radius:7px;
-               cursor:pointer;flex-shrink:0;transition:all var(--transition)}
-  .rhythm-done:hover:not(:disabled){border-color:var(--teal);background:var(--sand)}
+  .rdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:#C8CFD4}
+  .rdot.ok{background:var(--success)} .rdot.due-soon{background:var(--warn)} .rdot.overdue{background:var(--red-bright)}
+  .rhythm-label{flex:1;min-width:200px;font-size:14.5px;font-weight:700;color:var(--navy);line-height:1.35}
+  .rhythm-label .paren{font-weight:400;color:var(--muted)}
+  .rhythm-label a{color:inherit;text-decoration:none}
+  .rhythm-label a:hover{text-decoration:underline}
+  .rhythm-when{font-size:12.5px;font-weight:700;white-space:nowrap;text-align:right}
+  .rhythm-when.ok{color:var(--success)} .rhythm-when.due-soon{color:var(--warn)} .rhythm-when.overdue{color:var(--red-bright)} .rhythm-when.never{color:var(--muted)}
+  .rhythm-done{background:var(--white);border:1.5px solid var(--border);color:var(--navy);font-family:var(--sans);font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;flex-shrink:0;transition:all var(--transition)}
+  .rhythm-done:hover:not(:disabled){border-color:var(--navy);background:var(--sand)}
+  .rhythm-done.urgent{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .rhythm-done.urgent:hover:not(:disabled){background:var(--navy-deep)}
   .rhythm-done:disabled{opacity:0.6;cursor:default}
 
-  /* Section cards (compact) */
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
-  @media (max-width:560px){.cards{grid-template-columns:1fr}}
-  .card-link{background:var(--white);border:1.5px solid var(--border);border-radius:11px;padding:14px 16px;
-             text-decoration:none;color:var(--body);transition:all var(--transition);display:block}
-  .card-link:hover{border-color:var(--gold-warm);box-shadow:0 3px 12px rgba(0,0,0,0.05)}
-  .card-link h3{font-family:var(--serif);font-size:17px;color:var(--navy);font-weight:400;margin-bottom:3px}
-  .card-link p{font-size:12.5px;color:var(--body);opacity:0.8;line-height:1.45}
-  .lead-card{background:var(--white);border:1.5px solid rgba(176,144,85,0.4);border-left:4px solid var(--gold);
-             border-radius:12px;padding:16px 20px;margin-top:6px;display:flex;align-items:center;gap:14px;text-decoration:none}
-  .lead-card .lc-count{font-family:var(--serif);font-size:24px;color:var(--navy)}
-  .lead-card .lc-text{font-size:14px;font-weight:600;color:var(--navy)}
+  /* Safeguard-Lead-only abuse reports */
+  .lead-card{background:var(--white);border:1.5px solid var(--border);border-left:5px solid var(--gold);border-radius:12px;
+             padding:16px 20px;margin-top:6px;display:flex;align-items:center;gap:14px;text-decoration:none;transition:all var(--transition)}
+  .lead-card:hover{box-shadow:0 4px 14px rgba(0,0,0,0.06)}
+  .lead-card.has{border-color:var(--red-bright);border-left-color:var(--red-bright);background:#FDECEA}
+  .lead-card .lc-count{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--navy)}
+  .lead-card.has .lc-count{color:var(--red-bright)}
+  .lead-card .lc-text{font-size:14px;font-weight:700;color:var(--navy)}
 
   .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
   footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
@@ -154,20 +172,24 @@
   </div>
 
   <div class="wrap" id="view" style="display:none">
-    <div class="eyebrow">Coordinator</div>
-    <h1>Admin home &middot; your command center</h1>
-    <p class="lede">Everything that needs your attention to keep Bethany Chapel's ministry safe and running is gathered here. The five sections below hold the full detail.</p>
+    <div class="intro">
+      <div>
+        <div class="eyebrow">Admin home &middot; Coordinator</div>
+        <h1>Your command center</h1>
+        <p class="lede">Here's what I noticed and what you're due for &mdash; everything that keeps Bethany Chapel's ministry safe and running, in one place.</p>
+      </div>
+      <div class="when" id="whenLine"></div>
+    </div>
 
-    <div class="sec-label" style="margin-top:4px">Needs you now</div>
-    <div id="needsNow"></div>
+    <div class="launch" id="launcher"></div>
 
-    <div class="sec-label">At a glance</div>
     <div class="stats" id="healthRow"></div>
 
-    <div id="rhythm"></div>
+    <div class="needs-head"><span class="sec-label">Needs you now</span><span class="meta" id="needsMeta"></span></div>
+    <div id="needsNow"></div>
 
-    <div class="sec-label">Jump to a section</div>
-    <div class="cards" id="sectionCards"></div>
+    <div class="sec-label">Your rhythm</div>
+    <div id="rhythm"></div>
 
     <div id="leadArea"></div>
   </div>
@@ -192,6 +214,8 @@
 
   function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c])); }
   function daysUntil(d){ if(!d) return null; var t=new Date(d).getTime(); if(isNaN(t)) return null; return (t - Date.now())/86400000; }
+  function plural(n, one, many){ return n + " " + (n === 1 ? one : many); }
+  function noun(n, one, many){ return n === 1 ? one : many; }
 
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=admin-dashboard.html"); return; }
@@ -215,14 +239,22 @@
   });
 
   function render(users, subs, rhythmMem, me) {
-    renderHealth(users);
-    renderNeeds(users, subs);
+    const n = computeNeeds(users, subs);
+    renderWhen();
+    renderLauncher(n);
+    renderHealth(users, n);
+    renderNeeds(n);
     renderRhythm(rhythmMem);
-    renderCards();
     renderLead(me);
   }
 
-  // ── Health row ──────────────────────────────────────────
+  function renderWhen() {
+    const d = new Date();
+    const date = d.toLocaleDateString("en-US", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
+    document.getElementById("whenLine").innerHTML = '<b>'+esc(date)+'</b>Last synced just now';
+  }
+
+  // ── Compute everything that needs the coordinator ───────────
   function computeNeeds(users, subs) {
     const now = new Date();
     let waitInterview=0, waitApproval=0, waitAssign=0, readyActivate=0, refsOut=0, policePending=0, expiring=0;
@@ -252,144 +284,185 @@
     };
   }
 
-  function renderHealth(users) {
-    const s = summarizeUsers(users);
-    const n = computeNeeds(users, []); // submissions not needed for the compliance tile here
-    const attn = n.lapsed.length + n.expiring;
-    const el = document.getElementById("healthRow");
+  // ── Section launcher (top) ──────────────────────────────────
+  const LAUNCH_ICONS = {
+    people: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.1"/><path d="M3.6 20 C3.6 16.4 6 14.4 9 14.4 C12 14.4 14.4 16.4 14.4 20"/><path d="M16 5.3 A3 3 0 0 1 16 10.7"/><path d="M17.2 14.6 C19.4 15.1 21 16.8 21 20"/></svg>',
+    screening: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5 H20 L14 12.2 V19 L10 21 V12.2 Z"/></svg>',
+    submissions: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.8 6.2 L12 12 L20.2 6.2"/></svg>',
+    roomkit: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9 V4 H17 V9"/><rect x="4" y="9" width="16" height="7" rx="1.5"/><path d="M7 14 H17 V20 H7 Z"/></svg>'
+  };
+  function renderLauncher(n) {
     const tiles = [
-      { b: s.active, span: "Active" },
-      { b: s.inProcess, span: "Onboarding" },
-      { b: s.leaders, span: "Leaders & Coordinators" },
+      { ico:"people",      b:"People",      s:"The directory", href:"admin.html" },
+      { ico:"screening",   b:"Screening",   s:"The funnel",    href:"admin-screening.html" },
+      { ico:"submissions", b:"Submissions", s:"The inbox",     href:"admin-submissions.html", badge:n.d1 },
+      { ico:"roomkit",     b:"Room Kit",    s:"The print shop",href:"admin-room-kit.html" },
     ];
-    let html = tiles.map(t => '<div class="stat"><b>'+t.b+'</b><span>'+t.span+'</span></div>').join("");
-    if (attn === 0) {
-      html += '<div class="stat ok"><span class="stat-sub">&#10003; All checks clear</span><span>Compliance</span></div>';
-    } else {
-      const cls = n.lapsed.length > 0 ? "stat attn red" : "stat attn";
-      html += '<div class="'+cls+'"><b>'+attn+'</b><span>Need attention</span></div>';
-    }
-    el.innerHTML = html;
+    document.getElementById("launcher").innerHTML = tiles.map(t => {
+      const alert = t.badge > 0;
+      return '<a class="tile'+(alert?" alert":"")+'" href="'+t.href+'">'
+        + '<span class="tile-ico">'+LAUNCH_ICONS[t.ico]+'</span>'
+        + '<span class="tile-txt"><b>'+t.b+'</b><i>'+t.s+'</i></span>'
+        + (alert ? '<span class="tile-badge" title="open incident reports">'+t.badge+'</span>' : '')
+        + '</a>';
+    }).join("");
   }
 
-  // ── Needs you now ───────────────────────────────────────
-  function renderNeeds(users, subs) {
-    const n = computeNeeds(users, subs);
-    const items = [
-      { c: n.lapsed.length, t: plural(n.lapsed.length, "serving volunteer", "serving volunteers") + " with a lapsed or missing police check", href: "admin.html", tone: "red" },
-      { c: n.waitInterview, t: plural(n.waitInterview, "application", "applications") + " waiting for an interview", href: "admin-screening.html", tone: "amber" },
-      { c: n.waitApproval, t: plural(n.waitApproval, "person", "people") + " waiting on an approval decision", href: "admin-screening.html", tone: "amber" },
-      { c: n.waitAssign, t: plural(n.waitAssign, "person", "people") + " approved, waiting for a ministry assignment", href: "admin-screening.html", tone: "amber" },
-      { c: n.readyActivate, t: plural(n.readyActivate, "person", "people") + " ready to activate", href: "admin.html", tone: "green" },
-      { c: n.refsOut, t: plural(n.refsOut, "person has", "people have") + " a reference still outstanding", href: "admin.html", tone: "normal" },
-      { c: n.policePending, t: plural(n.policePending, "police check", "police checks") + " submitted, awaiting your clearance", href: "admin.html", tone: "normal" },
-      { c: n.expiring, t: plural(n.expiring, "police check", "police checks") + " expiring within 60 days", href: "admin.html", tone: "amber" },
-      { c: n.d1, t: plural(n.d1, "incident report", "incident reports") + " to review", href: "admin-submissions.html", tone: "amber" },
-      { c: n.d2, t: plural(n.d2, "new application", "new applications") + " to review", href: "admin-submissions.html", tone: "normal" },
-      { c: n.d3, t: plural(n.d3, "child registration", "child registrations") + " to review", href: "admin-submissions.html", tone: "normal" },
+  // ── At-a-glance health ──────────────────────────────────────
+  function renderHealth(users, n) {
+    const s = summarizeUsers(users);
+    const attn = n.lapsed.length + n.expiring;
+    const tiles = [
+      '<div class="stat"><b>'+s.active+'</b><span>Active</span></div>',
+      '<div class="stat"><b>'+s.inProcess+'</b><span>Onboarding</span></div>',
+      '<div class="stat"><b>'+s.leaders+'</b><span>Leaders &amp; Coordinators</span></div>',
+      attn > 0
+        ? '<div class="stat red"><b>'+attn+'</b><span>Compliance &middot; needs attention</span></div>'
+        : '<div class="stat ok"><b>&#10003;</b><span>Compliance &middot; all clear</span></div>',
+    ];
+    document.getElementById("healthRow").innerHTML = tiles.join("");
+  }
+
+  // ── Needs you now: loud red banners + compact list ──────────
+  function renderNeeds(n) {
+    const banners = [];
+    if (n.lapsed.length > 0) banners.push({
+      tag:"Safeguarding",
+      title: plural(n.lapsed.length,"serving volunteer","serving volunteers")+" with a lapsed police check",
+      sub:"Active and serving without a current check. Resolve this before anything else.",
+      href:"admin.html"
+    });
+    if (n.d1 > 0) banners.push({
+      tag:"Incident",
+      title: plural(n.d1,"incident report","incident reports")+" waiting for review",
+      sub:"A child-safety incident was filed in the Hub. Open it and act now.",
+      href:"admin-submissions.html"
+    });
+
+    const list = [
+      { c:n.waitInterview, t:noun(n.waitInterview,"application","applications")+" waiting for an interview", href:"admin-screening.html", tone:"amber" },
+      { c:n.waitApproval,  t:"waiting on an approval decision", href:"admin-screening.html", tone:"amber" },
+      { c:n.waitAssign,    t:"approved, waiting for a ministry assignment", href:"admin-screening.html", tone:"amber" },
+      { c:n.policePending, t:noun(n.policePending,"police check","police checks")+" submitted, awaiting your clearance", href:"admin.html", tone:"normal" },
+      { c:n.refsOut,       t:noun(n.refsOut,"reference","references")+" still outstanding", href:"admin.html", tone:"normal" },
+      { c:n.expiring,      t:noun(n.expiring,"police check","police checks")+" expiring within 60 days", href:"admin.html", tone:"amber" },
+      { c:n.readyActivate, t:noun(n.readyActivate,"person","people")+" ready to activate", href:"admin.html", tone:"normal" },
+      { c:n.d2,            t:noun(n.d2,"new application","new applications")+" to review", href:"admin-submissions.html", tone:"normal" },
+      { c:n.d3,            t:noun(n.d3,"child registration","child registrations")+" to review", href:"admin-submissions.html", tone:"normal" },
     ].filter(it => it.c > 0);
 
+    const total = banners.length + list.length;
+    const metaEl = document.getElementById("needsMeta");
     const el = document.getElementById("needsNow");
-    if (items.length === 0) {
+
+    if (total === 0) {
+      metaEl.textContent = "";
       el.innerHTML = '<div class="all-clear"><div class="ac-ico">&#10003;</div>'
         + '<div class="ac-text">You’re all caught up — nothing needs you right now.</div></div>';
       return;
     }
-    // Order: red, amber, then the rest
-    const rank = { red:0, amber:1, green:2, normal:3 };
-    items.sort((a,b)=> rank[a.tone]-rank[b.tone]);
-    el.innerHTML = '<div class="needs">' + items.map(it =>
-      '<a class="need '+(it.tone==="normal"?"":it.tone)+'" href="'+it.href+'">'
-      + '<span class="need-count">'+it.c+'</span>'
-      + '<span class="need-text">'+esc(it.t)+'</span>'
-      + '<span class="need-go">&rsaquo;</span></a>'
-    ).join("") + '</div>';
-  }
-  function plural(n, one, many){ return n + " " + (n === 1 ? one : many); }
+    metaEl.textContent = total + (total===1?" item":" items") + " · ordered by urgency";
 
-  // ── Your rhythm ─────────────────────────────────────────
+    let html = banners.map(b =>
+      '<a class="banner" href="'+b.href+'">'
+      + '<span class="banner-ico">&#9888;</span>'
+      + '<span class="banner-body"><span class="banner-tag">'+esc(b.tag)+'</span>'
+      + '<div class="banner-title">'+esc(b.title)+'</div>'
+      + '<div class="banner-sub">'+esc(b.sub)+'</div></span>'
+      + '<span class="banner-go">Review now &rsaquo;</span></a>'
+    ).join("");
+
+    if (list.length) {
+      list.sort((a,b)=> (a.tone==="amber"?0:1)-(b.tone==="amber"?0:1));
+      html += '<div class="need-list">' + list.map(it =>
+        '<a class="need '+(it.tone==="amber"?"amber":"")+'" href="'+it.href+'">'
+        + '<span class="need-chip">'+it.c+'</span>'
+        + '<span class="need-text">'+esc(it.t)+'</span>'
+        + '<span class="need-pill '+pillClass(it.href)+'">'+pillLabel(it.href)+'</span>'
+        + '<span class="need-arrow">&rsaquo;</span></a>'
+      ).join("") + '</div>';
+    }
+    el.innerHTML = html;
+  }
+  function pillLabel(href){ return href.indexOf("screening")>=0?"Screening":href.indexOf("submissions")>=0?"Submissions":"People"; }
+  function pillClass(href){ return href.indexOf("screening")>=0?"screening":href.indexOf("submissions")>=0?"submissions":"people"; }
+
+  // ── Your rhythm ─────────────────────────────────────────────
   function renderRhythm(mem) {
     const el = document.getElementById("rhythm");
     const order = ["weekly","monthly","quarterly","yearly"];
-    let overdue = 0, dueSoon = 0;
-    RHYTHM_TASKS.forEach(t => {
-      const st = rhythmStatus(t, mem[t.key]);
-      if (st.dueState === "overdue") overdue++;
-      else if (st.dueState === "due-soon") dueSoon++;
-    });
     let inner = "";
     order.forEach(cad => {
       const tasks = RHYTHM_TASKS.filter(t => t.cadence === cad);
       if (!tasks.length) return;
-      inner += '<div class="rhythm-group"><div class="rhythm-cad">'+CADENCE_LABELS[cad]+'</div>';
+      inner += '<div class="rhythm-cad">'+CADENCE_LABELS[cad]+'</div>';
       tasks.forEach(t => { inner += rhythmRow(t, mem[t.key]); });
-      inner += '</div>';
     });
-    const parts = [];
-    if (overdue) parts.push('<span class="od">'+overdue+' due now</span>');
-    if (dueSoon) parts.push(dueSoon+' due soon');
-    const sumMeta = parts.length ? parts.join(" &middot; ") : "all on track";
-    el.innerHTML = '<details class="rhythm-box"'+(overdue ? " open" : "")+'>'
-      + '<summary class="rhythm-summary"><span>Your rhythm</span>'
-      + '<span class="rhythm-sum-meta">'+sumMeta+'</span></summary>'
-      + '<div class="rhythm-inner">'+inner+'</div></details>';
-    el.querySelectorAll(".rhythm-done").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        const key = btn.getAttribute("data-key");
-        btn.disabled = true; btn.textContent = "Saving…";
-        try {
-          const entry = await markRhythmDone(key);
-          const task = RHYTHM_TASKS.find(t => t.key === key);
-          const row = btn.closest(".rhythm-row");
-          row.outerHTML = rhythmRow(task, entry);
-          // re-wire the replaced row's button
-          el.querySelectorAll('.rhythm-done[data-key="'+key+'"]').forEach(b => {
-            b.addEventListener("click", () => location.reload());
-          });
-        } catch (e) {
-          btn.disabled = false; btn.textContent = "Mark done";
-          alert("Couldn't save: " + (e.message || "try again"));
-        }
-      });
+    el.innerHTML = '<div class="rhythm">'+inner+'</div>';
+    el.querySelectorAll(".rhythm-done").forEach(wireRhythmBtn);
+  }
+  function wireRhythmBtn(btn) {
+    btn.addEventListener("click", async () => {
+      const key = btn.getAttribute("data-key");
+      btn.disabled = true; btn.textContent = "Saving…";
+      try {
+        const entry = await markRhythmDone(key);
+        const task = RHYTHM_TASKS.find(t => t.key === key);
+        const row = btn.closest(".rhythm-row");
+        const tmp = document.createElement("div");
+        tmp.innerHTML = rhythmRow(task, entry);
+        const newRow = tmp.firstElementChild;
+        row.replaceWith(newRow);
+        wireRhythmBtn(newRow.querySelector(".rhythm-done"));
+      } catch (e) {
+        btn.disabled = false; btn.textContent = "Mark done";
+        alert("Couldn't save: " + (e.message || "try again"));
+      }
     });
   }
   function rhythmRow(task, entry) {
     const st = rhythmStatus(task, entry);
-    const last = st.lastDoneAt
-      ? '<span class="ok">Last done ' + formatDate(st.lastDoneAt) + ' &#10003;</span>'
-      : 'Not done yet';
-    const badgeText = st.dueState === "overdue" ? (st.lastDoneAt ? "Overdue" : "Due now")
-      : st.dueState === "due-soon" ? "Due soon" : "On track";
+    let dotCls, whenCls, whenTxt, urgent = false;
+    if (!st.lastDoneAt) {
+      dotCls = "never"; whenCls = "never"; whenTxt = "never done";
+    } else if (st.dueState === "overdue") {
+      const over = Math.max(1, Math.floor((Date.now() - new Date(st.lastDoneAt).getTime())/86400000) - task.intervalDays);
+      dotCls = "overdue"; whenCls = "overdue"; whenTxt = "overdue · "+over+" day"+(over===1?"":"s"); urgent = true;
+    } else if (st.dueState === "due-soon") {
+      dotCls = "due-soon"; whenCls = "due-soon"; whenTxt = "due soon · "+relAgo(st.lastDoneAt);
+    } else {
+      dotCls = "ok"; whenCls = "ok"; whenTxt = "last: "+relAgo(st.lastDoneAt);
+    }
+    let label = esc(task.label), paren = "";
+    const m = task.label.match(/^(.*?)\s*\((.*)\)\s*$/);
+    if (m) { label = esc(m[1]); paren = ' <span class="paren">('+esc(m[2])+')</span>'; }
     return '<div class="rhythm-row">'
-      + '<div class="rhythm-main"><div class="rhythm-label"><a href="'+task.href+'">'+esc(task.label)+'</a></div>'
-      + '<div class="rhythm-meta">'+last+'</div></div>'
-      + '<span class="rhythm-badge '+st.dueState+'">'+badgeText+'</span>'
-      + '<button class="rhythm-done" type="button" data-key="'+task.key+'">Mark done</button>'
+      + '<span class="rdot '+dotCls+'"></span>'
+      + '<span class="rhythm-label"><a href="'+task.href+'">'+label+'</a>'+paren+'</span>'
+      + '<span class="rhythm-when '+whenCls+'">'+whenTxt+'</span>'
+      + '<button class="rhythm-done'+(urgent?" urgent":"")+'" type="button" data-key="'+task.key+'">Mark done</button>'
       + '</div>';
   }
-
-  // ── Section cards ───────────────────────────────────────
-  function renderCards() {
-    const cards = [
-      { h: "People — the directory", href: "admin.html", p: "Everyone who's signed up: role, status, and compliance. Invite volunteers, promote leaders, activate the ready, export the roster." },
-      { h: "Screening — the funnel", href: "admin-screening.html", p: "Who's waiting on an interview, a decision, or a ministry assignment — and a one-click way to move them forward." },
-      { h: "Submissions — the inbox", href: "admin-submissions.html", p: "Every form filed in the Hub: applications, incident reports, references, child registrations. Review and close them." },
-      { h: "Room Kit — the print shop", href: "admin-room-kit.html", p: "Posters and cards for each classroom — ratios, escort rules, sign-in/out, emergency steps. Print before the ministry year." },
-    ];
-    document.getElementById("sectionCards").innerHTML = cards.map(c =>
-      '<a class="card-link" href="'+c.href+'"><h3>'+esc(c.h)+'</h3><p>'+esc(c.p)+'</p></a>'
-    ).join("");
+  function relAgo(iso){
+    const days = Math.floor((Date.now() - new Date(iso).getTime())/86400000);
+    if (days <= 0) return "today";
+    if (days === 1) return "yesterday";
+    if (days < 14) return days+" days ago";
+    if (days < 60) return Math.round(days/7)+" weeks ago";
+    if (days < 365) return Math.round(days/30)+" months ago";
+    const y = Math.round(days/365); return y+" year"+(y===1?"":"s")+" ago";
   }
 
-  // ── Safeguard-Lead-only abuse reports ───────────────────
+  // ── Safeguard-Lead-only abuse reports ───────────────────────
   async function renderLead(me) {
     if (!me || me.safeguard_lead !== true) return;
     const el = document.getElementById("leadArea");
     try {
       const mod = await import("./sg-abuse-reports.js");
       const count = await mod.countAbuseReports();
+      const has = count > 0;
       el.innerHTML = '<div class="sec-label">Safeguard Lead</div>'
-        + '<a class="lead-card" href="admin-abuse-report.html">'
+        + '<a class="lead-card'+(has?" has":"")+'" href="admin-abuse-report.html">'
         + '<span class="lc-count">'+count+'</span>'
         + '<span class="lc-text">'+plural(count, "abuse report", "abuse reports")+' on file &mdash; Lead-only</span></a>';
     } catch (_) {}

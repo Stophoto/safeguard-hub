@@ -81,6 +81,7 @@
     'SG-SOP-006':  { title: 'Emergency & Injury Protocols',     href: 'SG-SOP-006.html' },
     'SG-SOP-006-cards': { title: 'Emergency & Injury Poster (printable)', href: 'SG-SOP-006-cards.html' },
     'SG-SOP-007':  { title: 'Transportation & Off-Site Safety', href: 'SG-SOP-007.html' },
+    '__training-home': { title: 'Training home & progress', href: 'training.html' },
     'SG-T-001':    { title: 'Why We Protect & How It Works',    href: 'SG-T-001.html' },
     'SG-T-002':    { title: 'Supervision: Two-Adult Rule & Ratios', href: 'SG-T-002.html' },
     'SG-T-003':    { title: 'Recognizing Abuse & Reporting It', href: 'SG-T-003.html' },
@@ -104,7 +105,8 @@
     { label: 'SOPs', groups: [
       { label: 'Standard Operating Procedures', items: ['SG-SOP-001','SG-SOP-002','SG-SOP-003','SG-SOP-004','SG-SOP-005','SG-SOP-006','SG-SOP-007'] }
     ]},
-    { label: 'Training', groups: [
+    { label: 'Training', href: 'training.html', groups: [
+      { label: 'Overview', items: ['__training-home'] },
       { label: 'Volunteer Track', items: ['SG-T-001','SG-T-002','SG-T-003','SG-T-004'] },
       { label: 'Leader Track', items: ['SG-T-101','SG-T-102','SG-T-103'] },
       { label: 'Reference', items: ['SG-T-REF-001'] }
@@ -358,14 +360,20 @@
       return;
     }
     html += '<div class="sg-nav-item">';
-    html += '<button class="sg-nav-link" type="button">'+item.label+' '+chev+'</button>';
+    if (item.href) {
+      html += '<a class="sg-nav-link" href="'+item.href+'">'+item.label+' '+chev+'</a>';
+    } else {
+      html += '<button class="sg-nav-link" type="button">'+item.label+' '+chev+'</button>';
+    }
     html += '<div class="sg-nav-dropdown">';
     item.groups.forEach(function (g) {
       html += '<div class="sg-dd-group">'+g.label+'</div>';
       g.items.forEach(function (code) {
         var d = DOCS[code];
         if (!d) return;
-        if (d.href) {
+        if (code.indexOf('__') === 0) {
+          html += '<a class="sg-dd-item" href="'+d.href+'" style="font-weight:600"><span>'+d.title+' →</span></a>';
+        } else if (d.href) {
           html += '<a class="sg-dd-item" href="'+d.href+'"><span class="sg-dd-code">'+code+'</span><span>'+d.title+'</span></a>';
         } else {
           html += '<span class="sg-dd-item disabled"><span class="sg-dd-code">'+code+'</span><span>'+d.title+'</span></span>';
@@ -421,7 +429,9 @@
         g.items.forEach(function (code) {
           var d = DOCS[code];
           if (!d) return;
-          if (d.href) {
+          if (code.indexOf('__') === 0) {
+            mh += '<a class="sg-mn-sub" href="'+d.href+'" style="font-weight:600"><span>'+d.title+' →</span></a>';
+          } else if (d.href) {
             mh += '<a class="sg-mn-sub" href="'+d.href+'"><span class="sg-mn-code">'+code+'</span><span>'+d.title+'</span></a>';
           } else {
             mh += '<span class="sg-mn-sub" style="opacity:.5"><span class="sg-mn-code">'+code+'</span><span>'+d.title+'</span></span>';

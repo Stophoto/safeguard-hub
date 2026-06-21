@@ -294,16 +294,16 @@ body.sg-ready #sg-auth-overlay { display: none; }
 
   // ── Document Registry (SG-DOCMAP-001 v2.0) ──
   var layers = [
-    { id:"governance", label:"Governance", count:1, color:"var(--navy)", docs:[
+    { id:"governance", label:"Governance", count:1, color:"#0E4D70", desc:"The constitution — why and how we safeguard", docs:[
       { code:"SG-G-001", title:"Safeguard Governance Policy", note:"Includes Training & Renewal", href:"SG-G-001.html" }
     ]},
-    { id:"policies", label:"Core Policies", count:4, color:"var(--teal)", docs:[
+    { id:"policies", label:"Policies", count:4, color:"#159BD4", desc:"The rules everyone serving must follow", docs:[
       { code:"SG-POL-001", title:"Volunteer Screening & Approval", href:"SG-POL-001.html" },
       { code:"SG-POL-002", title:"Supervision Standards", href:"SG-POL-002.html" },
       { code:"SG-POL-003", title:"Bathroom & Diapering Protocols", href:"SG-POL-003.html" },
       { code:"SG-POL-004", title:"Reporting & Response", href:"SG-POL-004.html" }
     ]},
-    { id:"forms", label:"Forms", count:11, color:"#7C6B99", docs:[
+    { id:"forms", label:"Forms", count:11, color:"#4F63B0", desc:"Fillable documents to complete and submit", docs:[
       { code:"SG-FRM-001", title:"Ministry Application", href:"SG-FRM-001.html" },
       { code:"SG-FRM-002", title:"Reference Check", href:"SG-FRM-002.html" },
       { code:"SG-FRM-003", title:"Police Check Consent Form", href:"SG-FRM-003.html" },
@@ -316,7 +316,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       { code:"SG-FRM-011", title:"Transportation Log & Trip Plan", href:"SG-FRM-011.html" },
       { code:"SG-FRM-012", title:"Training Completion Record", fill:"frm012" }
     ]},
-    { id:"sops", label:"SOPs & Checklists", count:7, color:"var(--gold)", docs:[
+    { id:"sops", label:"SOPs & Checklists", count:7, color:"#B07D2A", desc:"Step-by-step procedures for the room", docs:[
       { code:"SG-SOP-001", title:"Screening & Onboarding Checklist", href:"SG-SOP-001.html" },
       { code:"SG-SOP-002", title:"Washroom Escort Protocol", href:"SG-SOP-002.html" },
       { code:"SG-SOP-003", title:"Ratio / Room Capacity Card", href:"SG-SOP-003.html" },
@@ -325,7 +325,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       { code:"SG-SOP-006", title:"Emergency & Injury Protocols", href:"SG-SOP-006.html" },
       { code:"SG-SOP-007", title:"Transportation & Off-Site Safety", href:"SG-SOP-007.html" }
     ]},
-    { id:"training", label:"Training", count:8, color:"var(--success)", subs:[
+    { id:"training", label:"Training", count:8, color:"#2E9E6A", desc:"Modules every volunteer completes", subs:[
       { title:"Volunteer Track", docs:[
         { code:"SG-T-001", title:"Why We Protect & How It Works", href:"SG-T-001.html" },
         { code:"SG-T-002", title:"Supervision: Two-Adult Rule, Ratios & High-Risk Settings", href:"SG-T-002.html" },
@@ -1051,11 +1051,25 @@ body.sg-ready #sg-auth-overlay { display: none; }
   // ════════════════════════════════════════════════
   //  MAIN HUB
   // ════════════════════════════════════════════════
+  // Per-layer type icon (white glyph on the layer's colour square) — matches the redesign document map.
+  function LayerIcon(id){
+    var box={width:22,height:22,viewBox:"0 0 24 24",fill:"none",stroke:"#fff",strokeWidth:1.8,strokeLinecap:"round",strokeLinejoin:"round"};
+    var sets={
+      governance:[h("path",{key:1,d:"M3 10.5 L12 3.5 L21 10.5"}),h("path",{key:2,d:"M5.5 9.2 V20 H18.5 V9.2"}),h("path",{key:3,d:"M10 20 V14 H14 V20"})],
+      policies:[h("path",{key:1,d:"M12 3 L19.5 6 V11 C19.5 15.8 16.3 19.2 12 20.6 C7.7 19.2 4.5 15.8 4.5 11 V6 Z"}),h("path",{key:2,d:"M9 11.6 L11.2 13.8 L15.4 9.3"})],
+      forms:[h("path",{key:1,d:"M6.5 5 H17.5 V20 H6.5 Z"}),h("path",{key:2,d:"M10 5 V3.4 H14 V5"}),h("path",{key:3,d:"M9.5 10 H14.5"}),h("path",{key:4,d:"M9.5 13.5 H14.5"}),h("path",{key:5,d:"M9.5 17 H12.5"})],
+      sops:[h("path",{key:1,d:"M4.5 7 L6 8.5 L8.5 6"}),h("path",{key:2,d:"M11 7.3 H19.5"}),h("path",{key:3,d:"M4.5 12 L6 13.5 L8.5 11"}),h("path",{key:4,d:"M11 12 H19.5"}),h("path",{key:5,d:"M4.5 17 L6 18.5 L8.5 16"}),h("path",{key:6,d:"M11 16.7 H19.5"})],
+      training:[h("path",{key:1,d:"M12 4 L22 9 L12 14 L2 9 Z"}),h("path",{key:2,d:"M6 11 V15.5 C6 15.5 8.6 18 12 18 C15.4 18 18 15.5 18 15.5 V11"}),h("path",{key:3,d:"M22 9 V13"})]
+    };
+    return h("svg",box,sets[id]||sets.governance);
+  }
+
   function SafeguardHub() {
     var s1=useState("dashboard"); var view=s1[0]; var setView=s1[1];
     var s2=useState(new Set(["governance"])); var expanded=s2[0]; var setExpanded=s2[1];
     var s3=useState("documents"); var tab=s3[0]; var setTab=s3[1];
     var s4=useState("weekly"); var cadence=s4[0]; var setCadence=s4[1];
+    var s5=useState(""); var query=s5[0]; var setQuery=s5[1];
 
     // Firebase auth is the only gate for the Hub. The legacy shared-team
     // password has been retired; submissions are persisted to Firestore.
@@ -1096,9 +1110,9 @@ body.sg-ready #sg-auth-overlay { display: none; }
       // Welcome Hero (simplified — nav is injected by sg-nav.js)
       h("div",{style:{background:"var(--cream)",position:"relative"}},
         h("div",{className:"sg-hub-header-inner",style:{maxWidth:920,margin:"0 auto",padding:"56px 36px 40px",position:"relative"}},
-          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.22em",color:"var(--gold)",textTransform:"uppercase",marginBottom:14}},"Welcome"),
-          h("h1",{style:{fontFamily:"var(--serif)",fontSize:44,fontWeight:400,color:"var(--navy)",lineHeight:1.1,margin:"0 0 18px",maxWidth:720,letterSpacing:"-0.01em"}},"The Safeguard Hub is how we protect the people we serve."),
-          h("p",{style:{fontFamily:"var(--sans)",fontSize:16,color:"var(--body)",lineHeight:1.6,maxWidth:640,margin:0,opacity:0.78}},"Every policy, form, and training module for caring for children, youth, and vulnerable adults at Bethany Chapel \u2014 in one place."),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.22em",color:"var(--teal)",textTransform:"uppercase",marginBottom:14}},"The Safeguard Hub"),
+          h("h1",{style:{fontFamily:"var(--serif)",fontSize:46,fontWeight:800,color:"var(--navy)",lineHeight:1.05,margin:"0 0 18px",maxWidth:720,letterSpacing:"-0.02em"}},"Every document, in one map."),
+          h("p",{style:{fontFamily:"var(--sans)",fontSize:16,color:"var(--body)",lineHeight:1.6,maxWidth:660,margin:0,opacity:0.85}},"The whole safeguarding framework \u2014 policies, forms, checklists, and training \u2014 organized by layer. Search for what you need, or browse by type."),
           connected ? h("div",{style:{display:"inline-flex",alignItems:"center",gap:8,marginTop:22,padding:"6px 12px",background:"rgba(39,174,96,0.08)",borderRadius:20}},
             h("div",{style:{width:6,height:6,borderRadius:"50%",background:"var(--success)"}}),
             h("span",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--success)",fontWeight:600,letterSpacing:"0.02em"}},"Connected to records")) : null)),
@@ -1110,30 +1124,45 @@ body.sg-ready #sg-auth-overlay { display: none; }
 
         // Document Map
         h("div",{className:"animate-in"},
-          h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:8}},
-            h("p",{style:{fontFamily:"var(--sans)",fontSize:14,color:"var(--muted)"}},"Every document in the framework, organized by layer."),
-            h("div",{style:{display:"flex",gap:6}},
-              h("button",{className:"btn btn-ghost btn-sm",onClick:function(){setExpanded(new Set(layers.map(function(l){return l.id;})));}},"Expand All"),
-              h("button",{className:"btn btn-ghost btn-sm",onClick:function(){setExpanded(new Set());}},"Collapse"))),
-          layers.map(function(layer){
-            var open=expanded.has(layer.id);
-            var allDocs=layer.subs?layer.subs.reduce(function(a,s){return a.concat(s.docs);},[]):layer.docs;
-            return h("div",{key:layer.id,className:"card",style:{marginBottom:10,overflow:"hidden",borderColor:open?layer.color+"40":"var(--border)"}},
-              h("button",{onClick:function(){toggle(layer.id);},style:{width:"100%",display:"flex",alignItems:"center",gap:16,padding:"22px 28px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}},
-                h("div",{style:{width:4,height:36,borderRadius:2,background:layer.color,flexShrink:0,opacity:open?1:0.3,transition:"opacity 0.2s"}}),
-                h("div",{style:{flex:1}},
-                  h("div",{style:{display:"flex",alignItems:"baseline",gap:12}},
-                    h("span",{style:{fontFamily:"var(--serif)",fontSize:20,color:"var(--navy)"}},layer.label),
-                    h("span",{style:{fontFamily:"var(--sans)",fontSize:12,color:"var(--muted)",fontWeight:500}},allDocs.length+" doc"+(allDocs.length===1?"":"s")))),
-                h("div",{style:{fontFamily:"var(--sans)",fontSize:18,color:"var(--muted)",transform:open?"rotate(180deg)":"rotate(0)",transition:"transform 0.25s",flexShrink:0}},"\u25BE")),
-              open?h("div",{className:"animate-in",style:{padding:"0 28px 22px 52px"}},
-                layer.subs ? layer.subs.map(function(sub,si){
-                  return h("div",{key:si,style:{marginBottom:si<layer.subs.length-1?22:0}},
-                    h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:"var(--gold)",textTransform:"uppercase",marginBottom:10,paddingBottom:6,borderBottom:"1px solid var(--border)"}},sub.title,h("span",{style:{fontWeight:400,marginLeft:8,color:"var(--muted)"}},"\u2014 "+sub.docs.length)),
-                    sub.docs.map(function(doc,di){ return h(DocRow,{key:di,doc:doc,color:layer.color,onForm:goForm}); }));
-                }) : allDocs.map(function(doc,di){ return h(DocRow,{key:di,doc:doc,color:layer.color,onForm:goForm}); })
-              ):null);
-          })
+          h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18,flexWrap:"wrap",gap:12}},
+            h("div",{style:{position:"relative",flex:"1 1 280px",maxWidth:440}},
+              h("span",{style:{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",pointerEvents:"none",color:"var(--muted)",fontSize:15}},"\uD83D\uDD0D"),
+              h("input",{className:"fi",type:"search",value:query,onChange:function(e){setQuery(e.target.value);},placeholder:"Search by code or name \u2014 e.g. police check",style:{paddingLeft:40,height:46,fontSize:15}})),
+            h("div",{style:{display:"flex",gap:6,flexShrink:0}},
+              h("button",{className:"btn btn-ghost btn-sm",onClick:function(){setQuery("");setExpanded(new Set(layers.map(function(l){return l.id;})));}},"Expand all"),
+              h("button",{className:"btn btn-ghost btn-sm",onClick:function(){setQuery("");setExpanded(new Set());}},"Collapse all"))),
+          (function(){
+            var qq=query.trim().toLowerCase();
+            function docMatch(d){ return !qq || (d.code&&d.code.toLowerCase().indexOf(qq)>=0) || (d.title&&d.title.toLowerCase().indexOf(qq)>=0); }
+            var anyShown=false;
+            var rows=layers.map(function(layer){
+              var allDocs=layer.subs?layer.subs.reduce(function(a,s){return a.concat(s.docs);},[]):layer.docs;
+              var shownDocs=allDocs.filter(docMatch);
+              if(qq && shownDocs.length===0) return null;
+              anyShown=true;
+              var open=qq?true:expanded.has(layer.id);
+              return h("div",{key:layer.id,className:"card",style:{marginBottom:10,overflow:"hidden",borderColor:open?layer.color+"55":"var(--border)"}},
+                h("button",{onClick:function(){if(!qq)toggle(layer.id);},style:{width:"100%",display:"flex",alignItems:"center",gap:16,padding:"20px 26px",background:"none",border:"none",cursor:qq?"default":"pointer",textAlign:"left"}},
+                  h("div",{style:{width:42,height:42,borderRadius:11,background:layer.color,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 3px 9px "+layer.color+"3A"}},LayerIcon(layer.id)),
+                  h("div",{style:{flex:1,minWidth:0}},
+                    h("div",{style:{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}},
+                      h("span",{style:{fontFamily:"var(--serif)",fontWeight:700,fontSize:20,color:"var(--navy)"}},layer.label),
+                      h("span",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.05em",color:layer.color,background:layer.color+"1A",padding:"3px 9px",borderRadius:20,textTransform:"uppercase"}},shownDocs.length+" doc"+(shownDocs.length===1?"":"s"))),
+                    layer.desc?h("div",{style:{fontFamily:"var(--sans)",fontSize:13,color:"var(--muted)",marginTop:3}},layer.desc):null),
+                  qq?null:h("div",{style:{fontFamily:"var(--sans)",fontSize:18,color:"var(--muted)",transform:open?"rotate(180deg)":"rotate(0)",transition:"transform 0.25s",flexShrink:0}},"\u25BE")),
+                open?h("div",{className:"animate-in",style:{padding:"0 26px 20px 84px"}},
+                  layer.subs ? layer.subs.map(function(sub,si){
+                    var sd=sub.docs.filter(docMatch);
+                    if(sd.length===0) return null;
+                    return h("div",{key:si,style:{marginBottom:18}},
+                      h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:layer.color,textTransform:"uppercase",marginBottom:10,paddingBottom:6,borderBottom:"1px solid var(--border)"}},sub.title,h("span",{style:{fontWeight:400,marginLeft:8,color:"var(--muted)"}},"\u2014 "+sd.length)),
+                      sd.map(function(doc,di){ return h(DocRow,{key:di,doc:doc,color:layer.color,onForm:goForm}); }));
+                  }) : shownDocs.map(function(doc,di){ return h(DocRow,{key:di,doc:doc,color:layer.color,onForm:goForm}); })
+                ):null);
+            });
+            if(qq && !anyShown) return h("div",{style:{textAlign:"center",padding:"44px 20px",fontFamily:"var(--sans)",color:"var(--muted)",fontSize:15}},"No documents match \u201C"+query.trim()+"\u201D.");
+            return rows;
+          })()
         ),
 
         // Footer

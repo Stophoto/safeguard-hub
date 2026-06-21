@@ -78,3 +78,9 @@ h1, .sg-h1 { letter-spacing: -0.02em; }
 /* ── 4. Light component nudges (safe, global) ───────────────── */
 a { color: var(--teal); }
 ::selection { background: rgba(21,155,212,0.18); }
+
+/* Clean canvas everywhere. Kills the legacy warm "desk" colour
+   (#E7E1D0) hardcoded on the printable card pages, and keeps every
+   page on the cool grey canvas with white card/sheet surfaces. */
+body { background: var(--cream); }
+.sheet { background: #FFFFFF; }
