@@ -13,7 +13,7 @@
     --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
     --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
     --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
-    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
+    --error:#C0392B; --error-bg:#FFF0EE; --red-bright:#E53935; --success:#27AE60; --success-bg:#EEFBF3;
     --warn:#B07A1E; --warn-bg:#FFF5E6;
     --serif:'DM Serif Display',Georgia,serif;
     --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
@@ -45,39 +45,49 @@
   .sec-label{font-size:12px;font-weight:700;letter-spacing:0.1em;color:var(--gold);
              text-transform:uppercase;margin:34px 0 14px}
 
-  /* Health row */
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:6px}
-  @media (max-width:760px){.stats{grid-template-columns:1fr 1fr}}
-  .stat{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:18px 20px}
-  .stat b{font-family:var(--serif);font-size:30px;color:var(--navy);font-weight:400;line-height:1;display:block;margin-bottom:5px}
-  .stat span{font-size:11px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;font-weight:600}
-  .stat.ok b{color:var(--success)} .stat.attn b{color:var(--warn);font-size:19px} .stat.attn.red b{color:var(--error)}
-  .stat .stat-sub{font-size:13px;color:var(--body);font-weight:600;font-family:var(--sans);display:block;margin-bottom:5px}
+  /* At-a-glance stats (compact) */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+  @media (max-width:680px){.stats{grid-template-columns:1fr 1fr}}
+  .stat{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px}
+  .stat b{font-family:var(--serif);font-size:23px;color:var(--navy);font-weight:400;line-height:1;display:block;margin-bottom:3px}
+  .stat span{font-size:10px;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;font-weight:600}
+  .stat.ok b{color:var(--success)} .stat.attn b{color:var(--warn);font-size:17px} .stat.attn.red b{color:var(--red-bright)}
+  .stat .stat-sub{font-size:12.5px;color:var(--success);font-weight:700;font-family:var(--sans);display:block;margin-bottom:3px}
 
-  /* Needs you now */
-  .needs{display:flex;flex-direction:column;gap:8px}
-  .need{display:flex;align-items:center;gap:14px;background:var(--white);border:1.5px solid var(--border);
-        border-left:4px solid var(--muted);border-radius:10px;padding:14px 18px;text-decoration:none;
+  /* Needs you now — the headline. Bold, distinct, clickable. */
+  .needs{display:flex;flex-direction:column;gap:10px;margin-bottom:6px}
+  .need{display:flex;align-items:center;gap:16px;background:var(--white);border:1.5px solid var(--border);
+        border-left:6px solid var(--muted);border-radius:12px;padding:17px 20px;text-decoration:none;
         color:var(--body);transition:all var(--transition)}
-  .need:hover{border-color:var(--gold-warm);box-shadow:0 2px 12px rgba(0,0,0,0.05)}
-  .need.red{border-left-color:var(--error);background:var(--error-bg)}
+  .need:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(0,0,0,0.09)}
+  .need.red{border-color:var(--red-bright);border-left-color:var(--red-bright);background:#FDECEA}
   .need.amber{border-left-color:var(--warn);background:var(--warn-bg)}
-  .need.green{border-left-color:var(--success)}
-  .need-count{font-family:var(--serif);font-size:26px;color:var(--navy);min-width:42px;text-align:center;line-height:1}
-  .need.red .need-count{color:var(--error)} .need.amber .need-count{color:var(--warn)}
-  .need-text{flex:1;font-size:14.5px;font-weight:600;color:var(--navy);line-height:1.4}
-  .need-go{color:var(--teal);font-size:18px;flex-shrink:0}
+  .need.green{border-left-color:var(--success);background:var(--success-bg)}
+  .need-count{font-family:var(--serif);font-size:33px;color:var(--navy);min-width:46px;text-align:center;line-height:1}
+  .need.red .need-count{color:var(--red-bright)} .need.amber .need-count{color:var(--warn)}
+  .need-text{flex:1;font-size:15.5px;font-weight:700;color:var(--navy);line-height:1.35}
+  .need.red .need-text{color:#B0271C}
+  .need-go{color:var(--teal);font-size:22px;font-weight:700;flex-shrink:0}
+  .need.red .need-go{color:var(--red-bright)}
   .all-clear{background:var(--success-bg);border:1.5px solid rgba(39,174,96,0.3);border-radius:12px;
              padding:24px 26px;display:flex;align-items:center;gap:14px}
   .all-clear .ac-ico{width:40px;height:40px;border-radius:50%;background:var(--success);color:#fff;
              display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px}
   .all-clear .ac-text{font-size:15px;font-weight:600;color:var(--navy)}
 
-  /* Rhythm */
-  .rhythm-group{margin-bottom:18px}
-  .rhythm-cad{font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
-  .rhythm-row{display:flex;align-items:center;gap:14px;background:var(--white);border:1.5px solid var(--border);
-              border-radius:10px;padding:12px 16px;margin-bottom:8px;flex-wrap:wrap}
+  /* Rhythm — collapsed into one tidy box to keep the dashboard light */
+  .rhythm-box{background:var(--white);border:1.5px solid var(--border);border-radius:12px;margin-bottom:22px;overflow:hidden}
+  .rhythm-summary{list-style:none;cursor:pointer;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px;font-weight:700;color:var(--navy)}
+  .rhythm-summary::-webkit-details-marker{display:none}
+  .rhythm-summary::after{content:"\25BE";color:var(--muted);transition:transform 0.2s;font-size:12px}
+  .rhythm-box[open] .rhythm-summary::after{transform:rotate(180deg)}
+  .rhythm-sum-meta{font-size:12px;font-weight:600;color:var(--muted);text-align:right;margin-left:auto;margin-right:10px}
+  .rhythm-sum-meta .od{color:var(--error);font-weight:700}
+  .rhythm-inner{padding:2px 18px 12px;border-top:1px solid var(--border)}
+  .rhythm-group{margin-bottom:4px}
+  .rhythm-cad{font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;margin:10px 0 2px}
+  .rhythm-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--sand);flex-wrap:wrap}
+  .rhythm-row:last-child{border-bottom:none}
   .rhythm-main{flex:1;min-width:200px}
   .rhythm-label{font-size:14px;font-weight:600;color:var(--navy);line-height:1.35}
   .rhythm-label a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.25)}
@@ -94,15 +104,14 @@
   .rhythm-done:hover:not(:disabled){border-color:var(--teal);background:var(--sand)}
   .rhythm-done:disabled{opacity:0.6;cursor:default}
 
-  /* Section cards */
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media (max-width:640px){.cards{grid-template-columns:1fr}}
-  .card-link{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;
+  /* Section cards (compact) */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+  @media (max-width:560px){.cards{grid-template-columns:1fr}}
+  .card-link{background:var(--white);border:1.5px solid var(--border);border-radius:11px;padding:14px 16px;
              text-decoration:none;color:var(--body);transition:all var(--transition);display:block}
-  .card-link:hover{border-color:var(--gold-warm);box-shadow:0 4px 18px rgba(0,0,0,0.06);transform:translateY(-1px)}
-  .card-link h3{font-family:var(--serif);font-size:19px;color:var(--navy);font-weight:400;margin-bottom:5px}
-  .card-link p{font-size:13.5px;color:var(--body);opacity:0.85;line-height:1.5}
-  .card-link .go{color:var(--teal);font-weight:700;font-size:13px;margin-top:10px;display:inline-block}
+  .card-link:hover{border-color:var(--gold-warm);box-shadow:0 3px 12px rgba(0,0,0,0.05)}
+  .card-link h3{font-family:var(--serif);font-size:17px;color:var(--navy);font-weight:400;margin-bottom:3px}
+  .card-link p{font-size:12.5px;color:var(--body);opacity:0.8;line-height:1.45}
   .lead-card{background:var(--white);border:1.5px solid rgba(176,144,85,0.4);border-left:4px solid var(--gold);
              border-radius:12px;padding:16px 20px;margin-top:6px;display:flex;align-items:center;gap:14px;text-decoration:none}
   .lead-card .lc-count{font-family:var(--serif);font-size:24px;color:var(--navy)}
@@ -149,15 +158,15 @@
     <h1>Admin home &middot; your command center</h1>
     <p class="lede">Everything that needs your attention to keep Bethany Chapel's ministry safe and running is gathered here. The five sections below hold the full detail.</p>
 
-    <div class="stats" id="healthRow"></div>
-
-    <div class="sec-label">Needs you now</div>
+    <div class="sec-label" style="margin-top:4px">Needs you now</div>
     <div id="needsNow"></div>
 
-    <div class="sec-label">Your rhythm</div>
+    <div class="sec-label">At a glance</div>
+    <div class="stats" id="healthRow"></div>
+
     <div id="rhythm"></div>
 
-    <div class="sec-label">The sections</div>
+    <div class="sec-label">Jump to a section</div>
     <div class="cards" id="sectionCards"></div>
 
     <div id="leadArea"></div>
@@ -302,15 +311,28 @@
   function renderRhythm(mem) {
     const el = document.getElementById("rhythm");
     const order = ["weekly","monthly","quarterly","yearly"];
-    let html = "";
+    let overdue = 0, dueSoon = 0;
+    RHYTHM_TASKS.forEach(t => {
+      const st = rhythmStatus(t, mem[t.key]);
+      if (st.dueState === "overdue") overdue++;
+      else if (st.dueState === "due-soon") dueSoon++;
+    });
+    let inner = "";
     order.forEach(cad => {
       const tasks = RHYTHM_TASKS.filter(t => t.cadence === cad);
       if (!tasks.length) return;
-      html += '<div class="rhythm-group"><div class="rhythm-cad">'+CADENCE_LABELS[cad]+'</div>';
-      tasks.forEach(t => { html += rhythmRow(t, mem[t.key]); });
-      html += '</div>';
+      inner += '<div class="rhythm-group"><div class="rhythm-cad">'+CADENCE_LABELS[cad]+'</div>';
+      tasks.forEach(t => { inner += rhythmRow(t, mem[t.key]); });
+      inner += '</div>';
     });
-    el.innerHTML = html;
+    const parts = [];
+    if (overdue) parts.push('<span class="od">'+overdue+' due now</span>');
+    if (dueSoon) parts.push(dueSoon+' due soon');
+    const sumMeta = parts.length ? parts.join(" &middot; ") : "all on track";
+    el.innerHTML = '<details class="rhythm-box"'+(overdue ? " open" : "")+'>'
+      + '<summary class="rhythm-summary"><span>Your rhythm</span>'
+      + '<span class="rhythm-sum-meta">'+sumMeta+'</span></summary>'
+      + '<div class="rhythm-inner">'+inner+'</div></details>';
     el.querySelectorAll(".rhythm-done").forEach(btn => {
       btn.addEventListener("click", async () => {
         const key = btn.getAttribute("data-key");
@@ -355,7 +377,7 @@
       { h: "Room Kit — the print shop", href: "admin-room-kit.html", p: "Posters and cards for each classroom — ratios, escort rules, sign-in/out, emergency steps. Print before the ministry year." },
     ];
     document.getElementById("sectionCards").innerHTML = cards.map(c =>
-      '<a class="card-link" href="'+c.href+'"><h3>'+esc(c.h)+'</h3><p>'+esc(c.p)+'</p><span class="go">Open &rarr;</span></a>'
+      '<a class="card-link" href="'+c.href+'"><h3>'+esc(c.h)+'</h3><p>'+esc(c.p)+'</p></a>'
     ).join("");
   }
 
