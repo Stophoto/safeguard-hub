@@ -471,7 +471,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
     var clickable = doc.fill || doc.href;
     return h("div", {
       className: "sg-doc-row",
-      onClick: clickable ? function(){ if(doc.fill) props.onForm(doc.fill); else if(doc.href) window.open(doc.href,"_blank"); } : undefined,
+      onClick: clickable ? function(){ if(doc.fill) props.onForm(doc.fill); else if(doc.href) window.location.href = doc.href; } : undefined,
       style: {
         display:"flex", alignItems:"center", gap:16, padding:"12px 16px",
         borderRadius:8, cursor:clickable?"pointer":"default",
