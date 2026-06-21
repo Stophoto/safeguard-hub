@@ -61,9 +61,13 @@ a cool light-gray canvas, flat white cards, Archivo headings + IBM Plex Sans bod
   behavior working; the redesign is for screen.
 - Accessibility: labels tied to inputs, alt text, focus states.
 
-## Output
-- Commit on your current branch/worktree with a clear message. End the commit body with:
-  `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`
-- **Do NOT push.** The orchestrator merges your branch.
+## Output — IMPORTANT: do NOT run git
+You are working in a **shared working tree** alongside other agents editing
+different files. Running git would corrupt their in-progress work.
+- **Do NOT run any git command that writes:** no `git add`, `commit`, `push`,
+  `checkout`, `reset`, `restore`, `stash`, `rm`, `mv`, or branch ops. Read-only
+  inspection (`git status`, `git diff` on your own files) is fine.
+- Just **edit your assigned files in place** and leave them modified. The
+  orchestrator stages, commits, and pushes each lane centrally.
 - Final reply: the list of files you changed, anything you could not complete,
   and any gaps you found in `sg-redesign.css`.
