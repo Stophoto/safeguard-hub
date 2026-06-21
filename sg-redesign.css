@@ -194,6 +194,25 @@ body.sg-redesign {
 .sg-btn--secondary { background: #fff; color: var(--sg-body); border-color: var(--sg-border-strong); }
 .sg-btn--secondary:hover { border-color: var(--sg-blue); color: var(--sg-ink); }
 
+/* Legacy class aliases — so pages still using .btn / .btn-primary / .btn-secondary
+   (e.g. Print/Save buttons) pick up the kit styling without a local definition.
+   Single-class specificity on purpose: this sheet loads BEFORE each page's own
+   <style>, so a page that defines its own .btn rules wins by source order; pages
+   with no local definition (the SOP reading pages) fall back to these. */
+.btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; font-family: var(--sg-sans); font-weight: 600; font-size: 14px; line-height: 1;
+  padding: 12px 20px; border-radius: var(--sg-r-btn); border: 1px solid var(--sg-border-strong);
+  background: #fff; color: var(--sg-body); cursor: pointer; text-decoration: none;
+  transition: box-shadow var(--sg-t), border-color var(--sg-t), background var(--sg-t); }
+.btn-primary { background: var(--sg-navy); color: #fff; border-color: transparent; box-shadow: var(--sg-shadow-btn); }
+.btn-primary:hover { background: #0c4262; }
+.btn-secondary { background: #fff; color: var(--sg-body); border-color: var(--sg-border-strong); }
+.btn-secondary:hover { border-color: var(--sg-blue); color: var(--sg-ink); }
+
+/* Auto-width doctag for inline/eyebrow use (the base .sg-doctag is fixed 104px
+   for the Hub's aligned code column). Flagged by several rollout lanes. */
+.sg-doctag--inline { width: auto; padding-left: 10px; padding-right: 10px; }
+
 /* Inputs */
 .sg-label { display: block; font-family: var(--sg-sans); font-weight: 700; font-size: 11.5px;
   letter-spacing: .08em; text-transform: uppercase; color: var(--sg-body); margin-bottom: 7px; }
