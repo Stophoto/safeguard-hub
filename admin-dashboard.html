@@ -41,43 +41,42 @@
   .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--teal);text-transform:uppercase;margin-bottom:10px}
   h1{font-family:var(--serif);font-size:36px;color:var(--navy);font-weight:700;line-height:1.08;margin-bottom:8px;letter-spacing:-0.01em}
   .lede{font-size:15px;color:var(--body);opacity:0.82;margin-bottom:8px;max-width:620px;line-height:1.6}
+  .sec-label{font-size:11px;font-weight:800;letter-spacing:0.12em;color:var(--teal);text-transform:uppercase;margin:30px 0 12px}
 
-  .sec-label{font-size:11px;font-weight:800;letter-spacing:0.12em;color:var(--teal);text-transform:uppercase;margin:32px 0 14px}
-
-  /* Intro row with date */
   .intro{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
   .intro .when{text-align:right;font-size:12.5px;color:var(--muted);line-height:1.55;flex-shrink:0}
   .intro .when b{display:block;color:var(--navy);font-weight:700;font-size:13px;margin-bottom:1px}
 
-  /* Section launcher (top) — quick jump to any area */
-  .launch{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 14px}
+  /* Section launcher — pure navigation. No counts, no badges. */
+  .launch{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
   @media (max-width:760px){.launch{grid-template-columns:1fr 1fr}}
-  .tile{position:relative;display:flex;align-items:center;gap:12px;background:var(--white);
-        border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;transition:all var(--transition)}
+  .tile{display:flex;align-items:center;gap:12px;background:var(--white);border:1.5px solid var(--border);
+        border-radius:12px;padding:14px 16px;text-decoration:none;transition:all var(--transition)}
   .tile:hover{border-color:var(--navy);box-shadow:0 4px 14px rgba(0,0,0,0.07);transform:translateY(-1px)}
-  .tile-ico{width:38px;height:38px;border-radius:9px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-  .tile-ico svg{width:20px;height:20px}
+  .tile-ico{width:36px;height:36px;border-radius:9px;background:#EDF1F4;color:var(--navy);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .tile-ico svg{width:19px;height:19px}
   .tile-txt{display:flex;flex-direction:column;min-width:0}
   .tile-txt b{font-size:14.5px;color:var(--navy);font-weight:700;line-height:1.25}
   .tile-txt i{font-style:normal;font-size:11.5px;color:var(--muted);font-weight:500}
-  .tile.alert{border-color:var(--red-bright);background:#FDECEA}
-  .tile.alert .tile-ico{background:var(--red-bright)}
-  .tile-badge{position:absolute;top:-8px;right:-8px;min-width:22px;height:22px;padding:0 6px;border-radius:11px;
-              background:var(--red-bright);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;
-              box-shadow:0 2px 6px rgba(229,57,53,0.5)}
 
-  /* Stats */
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px}
-  @media (max-width:680px){.stats{grid-template-columns:1fr 1fr}}
-  .stat{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:16px 18px}
-  .stat b{font-family:var(--serif);font-size:30px;color:var(--navy);font-weight:700;line-height:1;display:block;margin-bottom:6px}
-  .stat span{font-size:10.5px;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;font-weight:700;line-height:1.3;display:block}
-  .stat.red{background:#FDECEA;border-color:#F3C7C2}
-  .stat.red b{color:var(--red-bright)} .stat.red span{color:#B0271C}
-  .stat.ok b{color:var(--success);font-size:18px}
+  /* Priority — incident + abuse reports. Loud, together, only shown when present. */
+  .pri-item{display:flex;align-items:center;gap:14px;background:#FDECEA;border:1.5px solid var(--red-bright);
+            border-left:6px solid var(--red-bright);border-radius:12px;padding:15px 18px;margin-bottom:10px}
+  .pri-ico{width:42px;height:42px;border-radius:11px;background:var(--red-bright);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;font-weight:800}
+  .pri-body{flex:1;min-width:0}
+  .pri-tag{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:#fff;background:var(--red-bright);padding:2px 8px;border-radius:5px;margin-bottom:4px}
+  .pri-title{font-size:15.5px;font-weight:800;color:#B0271C;line-height:1.3}
+  .pri-sub{font-size:12.5px;color:#9A3328;margin-top:2px}
+  .pri-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+  .pri-link{color:var(--red-bright);font-weight:800;font-size:13px;text-decoration:none;white-space:nowrap}
+  .pri-link:hover{text-decoration:underline}
+  .pri-btn{background:var(--white);border:1.5px solid var(--red-bright);color:var(--red-bright);font-family:var(--sans);
+           font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:all var(--transition)}
+  .pri-btn:hover:not(:disabled){background:var(--red-bright);color:#fff}
+  .pri-btn:disabled{opacity:0.55;cursor:default}
 
   /* Needs you now */
-  .needs-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:32px 0 14px}
+  .needs-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:30px 0 12px}
   .needs-head .sec-label{margin:0}
   .needs-head .meta{font-size:12px;color:var(--muted)}
   .banner{display:flex;align-items:center;gap:16px;background:#FDECEA;border:1.5px solid var(--red-bright);
@@ -107,9 +106,17 @@
   .all-clear .ac-ico{width:38px;height:38px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px}
   .all-clear .ac-text{font-size:15px;font-weight:700;color:var(--navy)}
 
-  /* Your rhythm (expanded) */
-  .rhythm{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:4px 22px 16px}
-  .rhythm-cad{font-size:10px;font-weight:800;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin:16px 0 2px}
+  /* Your rhythm — collapsible */
+  .rhythm-box{background:var(--white);border:1.5px solid var(--border);border-radius:12px;overflow:hidden}
+  .rhythm-summary{list-style:none;cursor:pointer;padding:15px 20px;display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--navy)}
+  .rhythm-summary::-webkit-details-marker{display:none}
+  .rhythm-summary::after{content:"\25BE";margin-left:auto;color:var(--muted);font-size:13px;transition:transform 0.2s}
+  .rhythm-box[open] .rhythm-summary::after{transform:rotate(180deg)}
+  .rhythm-summary .sum-flag{font-size:12.5px;font-weight:700}
+  .rhythm-summary .sum-flag.od{color:var(--red-bright)}
+  .rhythm-summary .sum-flag.ok{color:var(--muted)}
+  .rhythm-inner{padding:2px 20px 14px;border-top:1px solid var(--border)}
+  .rhythm-cad{font-size:10px;font-weight:800;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin:14px 0 2px}
   .rhythm-row{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
   .rhythm-row:last-child{border-bottom:none}
   .rdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:#C8CFD4}
@@ -125,15 +132,6 @@
   .rhythm-done.urgent{background:var(--navy);color:#fff;border-color:var(--navy)}
   .rhythm-done.urgent:hover:not(:disabled){background:var(--navy-deep)}
   .rhythm-done:disabled{opacity:0.6;cursor:default}
-
-  /* Safeguard-Lead-only abuse reports */
-  .lead-card{background:var(--white);border:1.5px solid var(--border);border-left:5px solid var(--gold);border-radius:12px;
-             padding:16px 20px;margin-top:6px;display:flex;align-items:center;gap:14px;text-decoration:none;transition:all var(--transition)}
-  .lead-card:hover{box-shadow:0 4px 14px rgba(0,0,0,0.06)}
-  .lead-card.has{border-color:var(--red-bright);border-left-color:var(--red-bright);background:#FDECEA}
-  .lead-card .lc-count{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--navy)}
-  .lead-card.has .lc-count{color:var(--red-bright)}
-  .lead-card .lc-text{font-size:14px;font-weight:700;color:var(--navy)}
 
   .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
   footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
@@ -176,22 +174,20 @@
       <div>
         <div class="eyebrow">Admin home &middot; Coordinator</div>
         <h1>Your command center</h1>
-        <p class="lede">Here's what I noticed and what you're due for &mdash; everything that keeps Bethany Chapel's ministry safe and running, in one place.</p>
+        <p class="lede">Jump to any area below. Anything that needs you shows up underneath &mdash; and clears itself once it's handled.</p>
       </div>
       <div class="when" id="whenLine"></div>
     </div>
 
     <div class="launch" id="launcher"></div>
 
-    <div class="stats" id="healthRow"></div>
+    <div id="priorityArea"></div>
 
     <div class="needs-head"><span class="sec-label">Needs you now</span><span class="meta" id="needsMeta"></span></div>
     <div id="needsNow"></div>
 
     <div class="sec-label">Your rhythm</div>
     <div id="rhythm"></div>
-
-    <div id="leadArea"></div>
   </div>
 
 </main>
@@ -202,7 +198,7 @@
   import { onUserChange } from "./sg-auth.js";
   import { getOrCreateProfile, isReadyForActivation, formatDate } from "./sg-profile.js";
   import { listUsers, summarizeUsers, screeningState } from "./sg-admin.js";
-  import { listSubmissions } from "./sg-submissions.js";
+  import { listSubmissions, updateSubmission } from "./sg-submissions.js";
   import { RHYTHM_TASKS, CADENCE_LABELS, loadRhythm, markRhythmDone, rhythmStatus } from "./sg-rhythm.js";
   import { mountUserChip } from "./sg-user-chip.js";
 
@@ -216,6 +212,8 @@
   function daysUntil(d){ if(!d) return null; var t=new Date(d).getTime(); if(isNaN(t)) return null; return (t - Date.now())/86400000; }
   function plural(n, one, many){ return n + " " + (n === 1 ? one : many); }
   function noun(n, one, many){ return n === 1 ? one : many; }
+
+  let CURRENT_USER_IS_LEAD = false;
 
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=admin-dashboard.html"); return; }
@@ -239,13 +237,13 @@
   });
 
   function render(users, subs, rhythmMem, me) {
+    CURRENT_USER_IS_LEAD = me && me.safeguard_lead === true;
     const n = computeNeeds(users, subs);
     renderWhen();
-    renderLauncher(n);
-    renderHealth(users, n);
+    renderLauncher();
+    renderPriority(subs, me);
     renderNeeds(n);
     renderRhythm(rhythmMem);
-    renderLead(me);
   }
 
   function renderWhen() {
@@ -254,7 +252,7 @@
     document.getElementById("whenLine").innerHTML = '<b>'+esc(date)+'</b>Last synced just now';
   }
 
-  // ── Compute everything that needs the coordinator ───────────
+  // ── Compute the actionable needs ────────────────────────────
   function computeNeeds(users, subs) {
     const now = new Date();
     let waitInterview=0, waitApproval=0, waitAssign=0, readyActivate=0, refsOut=0, policePending=0, expiring=0;
@@ -277,53 +275,95 @@
       const du = daysUntil(exp);
       if (du !== null && du >= 0 && du <= 60) expiring++;
     });
-    const openByCode = code => subs.filter(s => s.formCode === code && s.status === "open").length;
     return {
       lapsed, waitInterview, waitApproval, waitAssign, readyActivate, refsOut, policePending, expiring,
-      d1: openByCode("SG-FRM-006"), d2: openByCode("SG-FRM-001"), d3: openByCode("SG-FRM-005"),
+      newApplications: subs.filter(s => s.formCode === "SG-FRM-001" && s.status === "open").length,
+      childRegs:       subs.filter(s => s.formCode === "SG-FRM-005" && s.status === "open").length,
     };
   }
 
-  // ── Section launcher (top) ──────────────────────────────────
+  // ── Section launcher (pure navigation, no counts) ───────────
   const LAUNCH_ICONS = {
-    people: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.1"/><path d="M3.6 20 C3.6 16.4 6 14.4 9 14.4 C12 14.4 14.4 16.4 14.4 20"/><path d="M16 5.3 A3 3 0 0 1 16 10.7"/><path d="M17.2 14.6 C19.4 15.1 21 16.8 21 20"/></svg>',
-    screening: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5 H20 L14 12.2 V19 L10 21 V12.2 Z"/></svg>',
-    submissions: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.8 6.2 L12 12 L20.2 6.2"/></svg>',
-    roomkit: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9 V4 H17 V9"/><rect x="4" y="9" width="16" height="7" rx="1.5"/><path d="M7 14 H17 V20 H7 Z"/></svg>'
+    people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.1"/><path d="M3.6 20 C3.6 16.4 6 14.4 9 14.4 C12 14.4 14.4 16.4 14.4 20"/><path d="M16 5.3 A3 3 0 0 1 16 10.7"/><path d="M17.2 14.6 C19.4 15.1 21 16.8 21 20"/></svg>',
+    screening: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5 H20 L14 12.2 V19 L10 21 V12.2 Z"/></svg>',
+    submissions: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.8 6.2 L12 12 L20.2 6.2"/></svg>',
+    roomkit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9 V4 H17 V9"/><rect x="4" y="9" width="16" height="7" rx="1.5"/><path d="M7 14 H17 V20 H7 Z"/></svg>'
   };
-  function renderLauncher(n) {
+  function renderLauncher() {
     const tiles = [
       { ico:"people",      b:"People",      s:"The directory", href:"admin.html" },
       { ico:"screening",   b:"Screening",   s:"The funnel",    href:"admin-screening.html" },
-      { ico:"submissions", b:"Submissions", s:"The inbox",     href:"admin-submissions.html", badge:n.d1 },
+      { ico:"submissions", b:"Submissions", s:"The inbox",     href:"admin-submissions.html" },
       { ico:"roomkit",     b:"Room Kit",    s:"The print shop",href:"admin-room-kit.html" },
     ];
-    document.getElementById("launcher").innerHTML = tiles.map(t => {
-      const alert = t.badge > 0;
-      return '<a class="tile'+(alert?" alert":"")+'" href="'+t.href+'">'
-        + '<span class="tile-ico">'+LAUNCH_ICONS[t.ico]+'</span>'
-        + '<span class="tile-txt"><b>'+t.b+'</b><i>'+t.s+'</i></span>'
-        + (alert ? '<span class="tile-badge" title="open incident reports">'+t.badge+'</span>' : '')
-        + '</a>';
-    }).join("");
+    document.getElementById("launcher").innerHTML = tiles.map(t =>
+      '<a class="tile" href="'+t.href+'">'
+      + '<span class="tile-ico">'+LAUNCH_ICONS[t.ico]+'</span>'
+      + '<span class="tile-txt"><b>'+t.b+'</b><i>'+t.s+'</i></span></a>'
+    ).join("");
   }
 
-  // ── At-a-glance health ──────────────────────────────────────
-  function renderHealth(users, n) {
-    const s = summarizeUsers(users);
-    const attn = n.lapsed.length + n.expiring;
-    const tiles = [
-      '<div class="stat"><b>'+s.active+'</b><span>Active</span></div>',
-      '<div class="stat"><b>'+s.inProcess+'</b><span>Onboarding</span></div>',
-      '<div class="stat"><b>'+s.leaders+'</b><span>Leaders &amp; Coordinators</span></div>',
-      attn > 0
-        ? '<div class="stat red"><b>'+attn+'</b><span>Compliance &middot; needs attention</span></div>'
-        : '<div class="stat ok"><b>&#10003;</b><span>Compliance &middot; all clear</span></div>',
-    ];
-    document.getElementById("healthRow").innerHTML = tiles.join("");
+  // ── Priority: incident + abuse reports ──────────────────────
+  // The two things you never want, but that come first when they happen.
+  // Shown ONLY when present; cleared by reviewing the report.
+  async function renderPriority(subs, me) {
+    const el = document.getElementById("priorityArea");
+    const incidents = subs.filter(s => s.formCode === "SG-FRM-006" && s.status === "open");
+
+    let abuseCount = 0;
+    if (me && me.safeguard_lead === true) {
+      try { const mod = await import("./sg-abuse-reports.js"); abuseCount = await mod.countAbuseReports(); }
+      catch (_) {}
+    }
+
+    if (incidents.length === 0 && abuseCount === 0) { el.innerHTML = ""; return; }
+
+    let html = '<div class="sec-label" style="color:var(--red-bright)">Priority &middot; safety reports</div>';
+
+    if (abuseCount > 0) {
+      html += '<div class="pri-item">'
+        + '<span class="pri-ico">&#9888;</span>'
+        + '<span class="pri-body"><span class="pri-tag">Suspected abuse</span>'
+        + '<div class="pri-title">'+plural(abuseCount,"suspected abuse report","suspected abuse reports")+' to review</div>'
+        + '<div class="pri-sub">Lead-only. Open it, act, and follow the reporting flowchart.</div></span>'
+        + '<span class="pri-actions"><a class="pri-link" href="admin-abuse-report.html">Open &rsaquo;</a></span></div>';
+    }
+
+    incidents.forEach(s => {
+      const when = s.submittedAt ? formatDate(s.submittedAt) : "recently";
+      const who  = s.submittedByEmail ? " by " + esc(s.submittedByEmail) : "";
+      html += '<div class="pri-item" data-id="'+esc(s.id)+'">'
+        + '<span class="pri-ico">&#9888;</span>'
+        + '<span class="pri-body"><span class="pri-tag">Incident report</span>'
+        + '<div class="pri-title">Incident / accident report to review</div>'
+        + '<div class="pri-sub">Filed '+esc(when)+who+'.</div></span>'
+        + '<span class="pri-actions">'
+        + '<a class="pri-link" href="admin-submissions.html">Open &rsaquo;</a>'
+        + '<button class="pri-btn" type="button" data-mark="'+esc(s.id)+'">Mark reviewed</button>'
+        + '</span></div>';
+    });
+
+    el.innerHTML = html;
+
+    el.querySelectorAll(".pri-btn[data-mark]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = btn.getAttribute("data-mark");
+        btn.disabled = true; btn.textContent = "Saving…";
+        try {
+          await updateSubmission(id, { status: "reviewed" });
+          const row = el.querySelector('.pri-item[data-id="'+id+'"]');
+          if (row) row.remove();
+          // If nothing priority remains, drop the whole section.
+          if (!el.querySelector(".pri-item")) el.innerHTML = "";
+        } catch (e) {
+          btn.disabled = false; btn.textContent = "Mark reviewed";
+          alert("Couldn't update: " + (e.message || "try again"));
+        }
+      });
+    });
   }
 
-  // ── Needs you now: loud red banners + compact list ──────────
+  // ── Needs you now: the action list (clears as conditions resolve) ──
   function renderNeeds(n) {
     const banners = [];
     if (n.lapsed.length > 0) banners.push({
@@ -331,12 +371,6 @@
       title: plural(n.lapsed.length,"serving volunteer","serving volunteers")+" with a lapsed police check",
       sub:"Active and serving without a current check. Resolve this before anything else.",
       href:"admin.html"
-    });
-    if (n.d1 > 0) banners.push({
-      tag:"Incident",
-      title: plural(n.d1,"incident report","incident reports")+" waiting for review",
-      sub:"A child-safety incident was filed in the Hub. Open it and act now.",
-      href:"admin-submissions.html"
     });
 
     const list = [
@@ -347,8 +381,8 @@
       { c:n.refsOut,       t:noun(n.refsOut,"reference","references")+" still outstanding", href:"admin.html", tone:"normal" },
       { c:n.expiring,      t:noun(n.expiring,"police check","police checks")+" expiring within 60 days", href:"admin.html", tone:"amber" },
       { c:n.readyActivate, t:noun(n.readyActivate,"person","people")+" ready to activate", href:"admin.html", tone:"normal" },
-      { c:n.d2,            t:noun(n.d2,"new application","new applications")+" to review", href:"admin-submissions.html", tone:"normal" },
-      { c:n.d3,            t:noun(n.d3,"child registration","child registrations")+" to review", href:"admin-submissions.html", tone:"normal" },
+      { c:n.newApplications, t:noun(n.newApplications,"new application","new applications")+" to review", href:"admin-submissions.html", tone:"normal" },
+      { c:n.childRegs,     t:noun(n.childRegs,"child registration","child registrations")+" to review", href:"admin-submissions.html", tone:"normal" },
     ].filter(it => it.c > 0);
 
     const total = banners.length + list.length;
@@ -387,18 +421,27 @@
   function pillLabel(href){ return href.indexOf("screening")>=0?"Screening":href.indexOf("submissions")>=0?"Submissions":"People"; }
   function pillClass(href){ return href.indexOf("screening")>=0?"screening":href.indexOf("submissions")>=0?"submissions":"people"; }
 
-  // ── Your rhythm ─────────────────────────────────────────────
+  // ── Your rhythm (collapsible) ───────────────────────────────
   function renderRhythm(mem) {
     const el = document.getElementById("rhythm");
     const order = ["weekly","monthly","quarterly","yearly"];
-    let inner = "";
+    let overdue = 0, inner = "";
     order.forEach(cad => {
       const tasks = RHYTHM_TASKS.filter(t => t.cadence === cad);
       if (!tasks.length) return;
       inner += '<div class="rhythm-cad">'+CADENCE_LABELS[cad]+'</div>';
-      tasks.forEach(t => { inner += rhythmRow(t, mem[t.key]); });
+      tasks.forEach(t => {
+        const st = rhythmStatus(t, mem[t.key]);
+        if (st.dueState === "overdue" && st.lastDoneAt) overdue++;
+        inner += rhythmRow(t, mem[t.key]);
+      });
     });
-    el.innerHTML = '<div class="rhythm">'+inner+'</div>';
+    const flag = overdue > 0
+      ? '<span class="sum-flag od">'+overdue+' overdue</span>'
+      : '<span class="sum-flag ok">all on track</span>';
+    el.innerHTML = '<details class="rhythm-box"'+(overdue>0?" open":"")+'>'
+      + '<summary class="rhythm-summary"><span>Your rhythm</span>'+flag+'</summary>'
+      + '<div class="rhythm-inner">'+inner+'</div></details>';
     el.querySelectorAll(".rhythm-done").forEach(wireRhythmBtn);
   }
   function wireRhythmBtn(btn) {
@@ -451,21 +494,6 @@
     if (days < 60) return Math.round(days/7)+" weeks ago";
     if (days < 365) return Math.round(days/30)+" months ago";
     const y = Math.round(days/365); return y+" year"+(y===1?"":"s")+" ago";
-  }
-
-  // ── Safeguard-Lead-only abuse reports ───────────────────────
-  async function renderLead(me) {
-    if (!me || me.safeguard_lead !== true) return;
-    const el = document.getElementById("leadArea");
-    try {
-      const mod = await import("./sg-abuse-reports.js");
-      const count = await mod.countAbuseReports();
-      const has = count > 0;
-      el.innerHTML = '<div class="sec-label">Safeguard Lead</div>'
-        + '<a class="lead-card'+(has?" has":"")+'" href="admin-abuse-report.html">'
-        + '<span class="lc-count">'+count+'</span>'
-        + '<span class="lc-text">'+plural(count, "abuse report", "abuse reports")+' on file &mdash; Lead-only</span></a>';
-    } catch (_) {}
   }
 </script>
 
