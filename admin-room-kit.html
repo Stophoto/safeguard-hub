@@ -7,64 +7,59 @@
 <meta name="referrer" content="same-origin">
 <title>Classroom Kit — Admin · Safeguard Hub</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" integrity="sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link rel="stylesheet" href="sg-redesign.css">
 <style>
   :root {
-    --navy:#1B3A4B; --navy-deep:#0F2530; --teal:#2E6B7F; --gold:#B09055;
-    --gold-warm:#C4A46A; --cream:#FAF8F3; --sand:#F2EFE8; --body:#3D3835;
-    --muted:#9A958F; --border:#E4E0DA; --white:#FFFFFF;
-    --error:#C0392B; --error-bg:#FFF0EE; --success:#27AE60; --success-bg:#EEFBF3;
-    --warn:#B07A1E; --warn-bg:#FFF5E6;
-    --serif:'DM Serif Display',Georgia,serif;
-    --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-    --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+    --navy:#0E4D70; --navy-deep:#0c4262; --teal:#159BD4; --gold:#159BD4;
+    --gold-warm:#159BD4; --cream:#EEF2F5; --sand:#F7F9FB; --body:#56646E;
+    --muted:#8A97A0; --border:#E4E9ED; --white:#FFFFFF;
+    --error:#BC4035; --error-bg:#FDF3F2; --success:#2E9E6A; --success-bg:#E5F4EC;
+    --warn:#B07D2A; --warn-bg:#FFF8EC;
+    --serif:'Archivo',-apple-system,BlinkMacSystemFont,sans-serif;
+    --sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --transition:0.15s cubic-bezier(0.4,0,0.2,1);
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--sans);color:var(--body);background:var(--cream);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
 
-  .hdr{background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);border-bottom:2px solid rgba(176,144,85,0.25);padding:14px 28px}
-  .hdr-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px}
-  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
-  .brand-text{display:flex;flex-direction:column;line-height:1.05}
-  .brand-text small{font-size:9px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
-  .brand-name{font-family:var(--serif);font-size:19px;color:var(--white);margin-top:2px}
-  .nav-link{color:rgba(255,255,255,0.72);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:6px;transition:all var(--transition)}
-  .nav-link:hover{color:var(--white);background:rgba(255,255,255,0.06)}
-  .nav-link.active{color:var(--white);background:rgba(255,255,255,0.1)}
-
-  .page{flex:1;padding:36px 24px 80px}
+  .page{flex:1;padding:26px 24px 80px}
   .wrap{max-width:920px;margin:0 auto}
-  .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
-  h1{font-family:var(--serif);font-size:32px;color:var(--navy);font-weight:400;line-height:1.15;margin-bottom:8px}
-  .lede{font-size:15px;color:var(--muted);margin-bottom:28px;line-height:1.65;max-width:720px}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:14px}
+  .crumb a{color:var(--teal);font-weight:500;text-decoration:none}
+  .crumb .cur{color:#16242E;font-weight:600}
+  .eyebrow{font-size:11.5px;font-weight:700;letter-spacing:0.16em;color:var(--teal);text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:38px;color:#16242E;font-weight:800;line-height:1.04;letter-spacing:-0.02em;margin-bottom:8px}
+  .lede{font-size:15px;color:var(--body);margin:10px 0 28px;line-height:1.5;max-width:720px}
 
-  /* Status banner */
-  .year-banner{background:linear-gradient(135deg,rgba(176,144,85,0.08),rgba(46,107,127,0.05));border-left:4px solid var(--gold);padding:16px 22px;margin-bottom:28px;border-radius:0 10px 10px 0;font-size:14px;line-height:1.6;color:var(--body)}
-  .year-banner strong{color:var(--navy);font-weight:700}
+  /* Status banner (amber pending treatment — the one warm-amber use) */
+  .year-banner{display:flex;gap:14px;align-items:flex-start;background:#FFF8EC;border:1px solid #F2E3C4;
+       padding:18px 20px;margin-bottom:28px;border-radius:14px;font-size:14px;line-height:1.55;color:var(--muted)}
+  .year-banner strong{color:#16242E;font-weight:700}
 
   /* Printable cards grid */
-  .printables{display:grid;gap:18px;grid-template-columns:1fr}
+  .printables{display:grid;gap:14px;grid-template-columns:1fr}
   @media(min-width:720px){.printables{grid-template-columns:1fr 1fr}}
-  .kit-section{font-size:11px;font-weight:700;letter-spacing:0.18em;color:var(--gold);text-transform:uppercase;margin:30px 0 12px;grid-column:1/-1}
+  .kit-section{font-size:12px;font-weight:700;letter-spacing:0.15em;color:var(--navy);text-transform:uppercase;margin:30px 0 12px;grid-column:1/-1}
 
-  .printable{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:22px 24px;box-shadow:0 4px 24px rgba(0,0,0,0.04);display:flex;flex-direction:column;transition:all var(--transition)}
-  .printable:hover{border-color:var(--gold-warm);box-shadow:0 6px 28px rgba(0,0,0,0.06)}
+  .printable{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;display:flex;flex-direction:column;transition:box-shadow var(--transition),border-color var(--transition)}
+  .printable:hover{border-color:var(--teal);box-shadow:0 8px 22px rgba(14,77,112,.10)}
   .printable.pending{opacity:0.6;background:var(--sand)}
-  .printable.pending:hover{border-color:var(--border);box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+  .printable.pending:hover{border-color:var(--border);box-shadow:none}
 
-  .printable-code{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--teal);text-transform:uppercase;margin-bottom:6px}
-  .printable-title{font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:400;line-height:1.25;margin-bottom:8px}
+  .printable-code{display:inline-flex;align-self:flex-start;font-family:var(--serif);font-size:11.5px;font-weight:700;letter-spacing:0.01em;color:#B07D2A;background:#F7EEDD;padding:4px 9px;border-radius:7px;margin-bottom:10px}
+  .printable-title{font-family:var(--serif);font-size:19px;color:#16242E;font-weight:700;line-height:1.25;margin-bottom:8px}
   .printable-desc{font-size:13.5px;color:var(--body);line-height:1.55;margin-bottom:14px;flex:1}
   .printable-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
-  .meta-chip{font-size:10.5px;font-weight:600;letter-spacing:0.04em;color:var(--muted);background:var(--sand);padding:4px 9px;border-radius:4px}
-  .meta-chip.accent{color:var(--teal);background:rgba(46,107,127,0.08)}
+  .meta-chip{font-size:10.5px;font-weight:600;letter-spacing:0.04em;color:var(--muted);background:#EEF2F4;padding:4px 10px;border-radius:999px}
+  .meta-chip.accent{color:var(--navy);background:#E3F0F7}
 
   .printable-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 16px;border-radius:7px;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all var(--transition);text-decoration:none;border:none}
-  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 2px 8px rgba(27,58,75,0.18)}
-  .btn-primary:hover{background:var(--teal);transform:translateY(-1px)}
-  .btn-secondary{background:var(--white);color:var(--teal);border:1.5px solid var(--border)}
-  .btn-secondary:hover{border-color:var(--teal);color:var(--navy)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;border-radius:9px;font-family:var(--sans);font-size:13.5px;font-weight:600;cursor:pointer;transition:all var(--transition);text-decoration:none;border:none}
+  .btn-primary{background:var(--navy);color:var(--white);box-shadow:0 6px 16px rgba(14,77,112,.18)}
+  .btn-primary:hover{background:var(--navy-deep)}
+  .btn-secondary{background:var(--white);color:var(--body);border:1px solid #D9E0E5}
+  .btn-secondary:hover{border-color:var(--teal);color:#16242E}
   .printable .arrow{font-size:14px;line-height:1}
 
   .pending-label{font-size:11px;font-weight:600;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase}
@@ -72,9 +67,10 @@
   .loading-state{text-align:center;padding:80px 24px;color:var(--muted)}
 
   footer{text-align:center;padding:24px;font-size:12px;color:var(--muted)}
+  @media (max-width:860px){.page{padding-left:18px;padding-right:18px}h1{font-size:28px}.btn{min-height:44px}}
 </style>
 </head>
-<body>
+<body class="sg-redesign">
 
 <header class="hdr">
   <div class="hdr-inner">
@@ -107,7 +103,8 @@
   </div>
 
   <div class="wrap" id="view" style="display:none">
-    <div class="eyebrow">Coordinator &middot; Print prep</div>
+    <div class="crumb"><a href="index.html">Hub</a><span>&rsaquo;</span><a href="admin.html">Admin</a><span>&rsaquo;</span><span class="cur">Room Kit</span></div>
+    <div class="eyebrow">Admin &middot; Room Kit</div>
     <h1>Classroom Kit</h1>
     <p class="lede">Every printable in one place &mdash; room posters, quick-reference cards, and procedure summaries designed to be printed, laminated, and mounted in each ministry space. Use this at the start of each ministry year, or whenever a room needs a fresh set.</p>
 
