@@ -525,8 +525,14 @@ service cloud.firestore {
                     || validSafeguardAccessUpdate(uid)
                     || validTemporaryAbuseAccessUpdate();
 
-      // Delete: never from the app.
-      allow delete: if false;
+      // Delete: coordinators may remove ONLY a duplicate / mistaken
+      // account — one with NO safeguarding history (not active, no cleared
+      // police check, no signed covenant). Real volunteers can never be
+      // deleted; pause them instead.
+      allow delete: if isCoordinator()
+                    && resource.data.get('status', '') != 'active'
+                    && resource.data.get('policeCheck', {}).get('clearedAt', null) == null
+                    && resource.data.get('covenant', {}).get('signed', false) != true;
     }
 
     // ─── Invites collection ──────────────────────────────────
@@ -567,7 +573,11 @@ service cloud.firestore {
 
       allow update: if validSubmissionUpdate();
 
-      allow delete: if false;
+      // Delete: coordinators may clean up ordinary submissions when removing
+      // a duplicate account — never incident (SG-FRM-006) or abuse reports.
+      allow delete: if isCoordinator()
+                    && resource.data.get('formCode', '') != 'SG-FRM-006'
+                    && resource.data.get('formCode', '') != 'SG-FRM-007';
     }
 
     // ─── Abuse reports collection ───────────────────────────

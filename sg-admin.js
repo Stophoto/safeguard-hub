@@ -11,6 +11,7 @@
 import {
   collection,
   query,
+  where,
   orderBy,
   getDocs,
   doc,
@@ -18,6 +19,7 @@ import {
   updateDoc,
   setDoc,
   addDoc,
+  deleteDoc,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -101,6 +103,42 @@ export async function setUserStatus(uid, status) {
     updatedAt: serverTimestamp(),
     updatedBy: auth.currentUser ? auth.currentUser.uid : null,
   });
+}
+
+// ── Remove a duplicate / mistaken account (coordinator) ─────
+// Hard-deletes a profile that has NO safeguarding history — not active,
+// no cleared police check, no signed covenant. Real volunteers can't be
+// removed here (pause them instead); the Firestore rules enforce the same
+// check server-side. Incident reports (SG-FRM-006) and abuse reports are
+// never deleted. The Firebase Auth login is separate — remove it in the
+// Firebase Console.
+export function isRemovableProfile(u) {
+  if (!u) return true;
+  if (u.status === "active") return false;
+  if (u.policeCheck && u.policeCheck.clearedAt) return false;
+  if (u.covenant && u.covenant.signed === true) return false;
+  return true;
+}
+
+export async function removeUser(uid) {
+  const snap = await getDoc(doc(db, "users", uid));
+  if (!snap.exists()) return { ok: true, deletedSubs: 0 };
+  if (!isRemovableProfile(snap.data())) {
+    throw new Error("This account has safeguarding history (active, a cleared police check, or a signed covenant). Pause it instead of removing it.");
+  }
+  // Clean up this person's ordinary submissions — never incident reports.
+  let deletedSubs = 0;
+  try {
+    const sq = query(collection(db, "submissions"), where("submittedBy", "==", uid));
+    const subs = await getDocs(sq);
+    for (const d of subs.docs) {
+      if (d.data().formCode === "SG-FRM-006") continue;
+      await deleteDoc(d.ref);
+      deletedSubs++;
+    }
+  } catch (_) { /* best-effort; the profile delete is the important part */ }
+  await deleteDoc(doc(db, "users", uid));
+  return { ok: true, deletedSubs };
 }
 
 // ── Create an invite record ─────────────────────────────────
