@@ -8,32 +8,35 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
 <script src="vendor/react.production.min.js"></script>
 <script src="vendor/react-dom.production.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" integrity="sha384-OrDai7FVovo0Oy2LGx2+cgUuBlW1mselxN+LN2wvDIyvsMon6y+d7I5jJy+Gw/nZ" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link rel="stylesheet" href="sg-redesign.css">
 <style>
 :root {
-  --navy: #1B3A4B;
-  --navy-deep: #0F2530;
-  --teal: #2E6B7F;
-  --teal-light: #3A8DA5;
-  --gold: #B09055;
-  --gold-warm: #C4A46A;
-  --cream: #FAF8F3;
-  --sand: #F2EFE8;
-  --body: #3D3835;
-  --muted: #9A958F;
-  --border: #E4E0DA;
+  /* Legacy variable names repointed to the new design tokens so any
+     inline React styles still referencing var(--navy) etc. stay on-palette. */
+  --navy: #0E4D70;
+  --navy-deep: #0c4262;
+  --teal: #159BD4;
+  --teal-light: #159BD4;
+  --gold: #B07D2A;
+  --gold-warm: #159BD4;
+  --cream: #EEF2F5;
+  --sand: #F7F9FB;
+  --body: #56646E;
+  --muted: #8A97A0;
+  --border: #E4E9ED;
   --white: #FFFFFF;
-  --error: #C0392B;
-  --error-bg: #FFF0EE;
-  --success: #27AE60;
-  --success-bg: #EEFBF3;
-  --radius: 12px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
-  --serif: 'DM Serif Display', Georgia, serif;
-  --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --error: #BC4035;
+  --error-bg: #FDF3F2;
+  --success: #2E9E6A;
+  --success-bg: #E5F4EC;
+  --radius: 16px;
+  --shadow-sm: 0 1px 3px rgba(14,77,112,0.04);
+  --shadow-md: 0 8px 22px rgba(14,77,112,0.10);
+  --shadow-lg: 0 10px 30px rgba(14,77,112,0.08);
+  --serif: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+  --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --transition: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--sans); color: var(--body); background: var(--cream); -webkit-font-smoothing: antialiased; font-size: 15px; line-height: 1.55; }
@@ -154,7 +157,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
 }
 </style>
 </head>
-<body>
+<body class="sg-redesign">
 
 <!-- ═══ PHASE 4 · FIREBASE AUTH GATE ═══ -->
 <!-- Hides the rest of the page until Firebase auth is resolved.
@@ -303,7 +306,7 @@ body.sg-ready #sg-auth-overlay { display: none; }
       { code:"SG-POL-003", title:"Bathroom & Diapering Protocols", href:"SG-POL-003.html" },
       { code:"SG-POL-004", title:"Reporting & Response", href:"SG-POL-004.html" }
     ]},
-    { id:"forms", label:"Forms", count:11, color:"#7C6B99", docs:[
+    { id:"forms", label:"Forms", count:11, color:"#4F63B0", docs:[
       { code:"SG-FRM-001", title:"Ministry Application", href:"SG-FRM-001.html" },
       { code:"SG-FRM-002", title:"Reference Check", href:"SG-FRM-002.html" },
       { code:"SG-FRM-003", title:"Police Check Consent Form", href:"SG-FRM-003.html" },
@@ -458,26 +461,37 @@ body.sg-ready #sg-auth-overlay { display: none; }
       h("div",{style:{height:2,background:"linear-gradient(to right, var(--gold-warm), transparent)",marginTop:10,borderRadius:1}}));
   }
 
+  // ── Document-type system (Hub map): each type color → tag tint + tag text + action verb ──
+  // Mirrors sg-redesign.css .sg-doctag--* + the README type table.
+  var TYPE_STYLE = {
+    "#0E4D70": { tint:"#E3F0F7", tagText:"#0E4D70", verb:"Read" },  // Governance (navy)
+    "#159BD4": { tint:"#E1F0F8", tagText:"#117FB0", verb:"Read" },  // Core Policies (blue)
+    "#4F63B0": { tint:"#ECEEF8", tagText:"#4F63B0", verb:"Open" },  // Forms (indigo)
+    "#B07D2A": { tint:"#F7EEDD", tagText:"#B07D2A", verb:"Open" },  // SOPs (amber)
+    "#2E9E6A": { tint:"#E5F4EC", tagText:"#2E9E6A", verb:"Start" }  // Training (green)
+  };
+
   // ── Reusable doc row component ──
   function DocRow(props) {
     var doc = props.doc;
     var color = props.color;
+    var ts = TYPE_STYLE[color] || { tint:"#E3F0F7", tagText:color, verb:"View" };
     var clickable = doc.fill || doc.href;
     return h("div", {
       className: "sg-doc-row",
       onClick: clickable ? function(){ if(doc.fill) props.onForm(doc.fill); else if(doc.href) window.open(doc.href,"_blank"); } : undefined,
       style: {
-        display:"flex", alignItems:"center", gap:16, padding:"12px 16px",
-        borderRadius:8, cursor:clickable?"pointer":"default",
-        transition:"all 0.15s", marginBottom:4,
-        background:"var(--white)", border:"1px solid var(--border)"
+        display:"flex", alignItems:"center", gap:14, padding:"12px 14px",
+        borderRadius:10, cursor:clickable?"pointer":"default",
+        transition:"all 0.15s", marginBottom:8,
+        background:"var(--white)", border:"1px solid #E8EDF1"
       },
-      onMouseEnter: function(e){ e.currentTarget.style.borderColor=color; e.currentTarget.style.background="var(--sand)"; },
-      onMouseLeave: function(e){ e.currentTarget.style.borderColor="var(--border)"; e.currentTarget.style.background="var(--white)"; }
+      onMouseEnter: function(e){ e.currentTarget.style.borderColor=color; e.currentTarget.style.background="#FAFCFD"; e.currentTarget.style.boxShadow="var(--shadow-md)"; },
+      onMouseLeave: function(e){ e.currentTarget.style.borderColor="#E8EDF1"; e.currentTarget.style.background="var(--white)"; e.currentTarget.style.boxShadow="none"; }
     },
-      h("span", { className:"sg-doc-code", style:{ fontFamily:"var(--sans)", fontSize:12, fontWeight:700, color:color, minWidth:110, letterSpacing:"0.02em", flexShrink:0 } }, doc.code),
-      h("span", { style:{ fontFamily:"var(--sans)", fontSize:15, color:"var(--body)", flex:1, fontWeight:400, lineHeight:1.35 } }, doc.title),
-      clickable ? h("span", { className:"sg-doc-badge", style:{ fontFamily:"var(--sans)", fontSize:10, fontWeight:700, color:"var(--teal)", background:"rgba(46,107,127,0.08)", padding:"3px 10px", borderRadius:4, textTransform:"uppercase", letterSpacing:"0.05em", flexShrink:0 } }, doc.fill?"Open":"View") : null
+      h("span", { className:"sg-doc-code", style:{ fontFamily:"var(--serif)", fontSize:12, fontWeight:700, color:ts.tagText, background:ts.tint, width:104, textAlign:"center", padding:"5px 0", borderRadius:7, letterSpacing:"0.01em", flexShrink:0 } }, doc.code),
+      h("span", { style:{ fontFamily:"var(--sans)", fontSize:15, color:"var(--sg-ink)", flex:1, fontWeight:600, lineHeight:1.35 } }, doc.title),
+      clickable ? h("span", { className:"sg-doc-badge", style:{ fontFamily:"var(--sans)", fontSize:13, fontWeight:600, color:ts.tagText, display:"inline-flex", alignItems:"center", gap:5, flexShrink:0 } }, ts.verb, " →") : null
     );
   }
 
@@ -1096,9 +1110,9 @@ body.sg-ready #sg-auth-overlay { display: none; }
       // Welcome Hero (simplified — nav is injected by sg-nav.js)
       h("div",{style:{background:"var(--cream)",position:"relative"}},
         h("div",{className:"sg-hub-header-inner",style:{maxWidth:920,margin:"0 auto",padding:"56px 36px 40px",position:"relative"}},
-          h("div",{style:{fontFamily:"var(--sans)",fontSize:11,fontWeight:700,letterSpacing:"0.22em",color:"var(--gold)",textTransform:"uppercase",marginBottom:14}},"Welcome"),
-          h("h1",{style:{fontFamily:"var(--serif)",fontSize:44,fontWeight:400,color:"var(--navy)",lineHeight:1.1,margin:"0 0 18px",maxWidth:720,letterSpacing:"-0.01em"}},"The Safeguard Hub is how we protect the people we serve."),
-          h("p",{style:{fontFamily:"var(--sans)",fontSize:16,color:"var(--body)",lineHeight:1.6,maxWidth:640,margin:0,opacity:0.78}},"Every policy, form, and training module for caring for children, youth, and vulnerable adults at Bethany Chapel \u2014 in one place."),
+          h("div",{style:{fontFamily:"var(--sans)",fontSize:12,fontWeight:700,letterSpacing:"0.16em",color:"var(--sg-blue)",textTransform:"uppercase",marginBottom:14}},"The Safeguard Hub"),
+          h("h1",{style:{fontFamily:"var(--serif)",fontSize:54,fontWeight:800,color:"var(--sg-ink)",lineHeight:1.02,margin:"0 0 18px",maxWidth:760,letterSpacing:"-0.02em"}},"Every document, in one map."),
+          h("p",{style:{fontFamily:"var(--sans)",fontSize:17,color:"var(--sg-body)",lineHeight:1.55,maxWidth:640,margin:0}},"Every policy, form, and training module for caring for children, youth, and vulnerable adults at Bethany Chapel \u2014 in one place."),
           connected ? h("div",{style:{display:"inline-flex",alignItems:"center",gap:8,marginTop:22,padding:"6px 12px",background:"rgba(39,174,96,0.08)",borderRadius:20}},
             h("div",{style:{width:6,height:6,borderRadius:"50%",background:"var(--success)"}}),
             h("span",{style:{fontFamily:"var(--sans)",fontSize:11,color:"var(--success)",fontWeight:600,letterSpacing:"0.02em"}},"Connected to records")) : null)),
@@ -1118,13 +1132,13 @@ body.sg-ready #sg-auth-overlay { display: none; }
           layers.map(function(layer){
             var open=expanded.has(layer.id);
             var allDocs=layer.subs?layer.subs.reduce(function(a,s){return a.concat(s.docs);},[]):layer.docs;
-            return h("div",{key:layer.id,className:"card",style:{marginBottom:10,overflow:"hidden",borderColor:open?layer.color+"40":"var(--border)"}},
-              h("button",{onClick:function(){toggle(layer.id);},style:{width:"100%",display:"flex",alignItems:"center",gap:16,padding:"22px 28px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}},
-                h("div",{style:{width:4,height:36,borderRadius:2,background:layer.color,flexShrink:0,opacity:open?1:0.3,transition:"opacity 0.2s"}}),
-                h("div",{style:{flex:1}},
-                  h("div",{style:{display:"flex",alignItems:"baseline",gap:12}},
-                    h("span",{style:{fontFamily:"var(--serif)",fontSize:20,color:"var(--navy)"}},layer.label),
-                    h("span",{style:{fontFamily:"var(--sans)",fontSize:12,color:"var(--muted)",fontWeight:500}},allDocs.length+" doc"+(allDocs.length===1?"":"s")))),
+            var ts=TYPE_STYLE[layer.color]||{tint:"#E3F0F7",tagText:layer.color};
+            return h("div",{key:layer.id,className:"card",style:{marginBottom:10,overflow:"hidden",padding:0,borderColor:open?layer.color+"40":"var(--border)",borderLeft:"4px solid "+layer.color}},
+              h("button",{onClick:function(){toggle(layer.id);},style:{width:"100%",display:"flex",alignItems:"center",gap:16,padding:"20px 26px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}},
+                h("span",{style:{width:42,height:42,borderRadius:11,flexShrink:0,background:ts.tint,color:ts.tagText,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"var(--serif)",fontWeight:800,fontSize:16}},layer.label.charAt(0)),
+                h("div",{style:{flex:1,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}},
+                  h("span",{style:{fontFamily:"var(--serif)",fontWeight:700,fontSize:20,color:"var(--sg-ink)"}},layer.label),
+                  h("span",{style:{fontFamily:"var(--serif)",fontWeight:700,fontSize:11,letterSpacing:"0.06em",color:ts.tagText,background:ts.tint,padding:"4px 10px",borderRadius:999,textTransform:"uppercase"}},allDocs.length+" doc"+(allDocs.length===1?"":"s"))),
                 h("div",{style:{fontFamily:"var(--sans)",fontSize:18,color:"var(--muted)",transform:open?"rotate(180deg)":"rotate(0)",transition:"transform 0.25s",flexShrink:0}},"\u25BE")),
               open?h("div",{className:"animate-in",style:{padding:"0 28px 22px 52px"}},
                 layer.subs ? layer.subs.map(function(sub,si){
