@@ -164,7 +164,6 @@
 
   onUserChange(async (user) => {
     if (!user) { location.replace("sign-in.html?next=SG-FRM-003-cover-letter.html"); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     try {
       const profile = await getOrCreateProfile();
       fillLetter(profile);

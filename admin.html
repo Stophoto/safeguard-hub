@@ -213,7 +213,6 @@
   // ── Gate: signed in, verified, role=coordinator ─────────
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=admin.html"); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     currentUid = user.uid;
 
     try {

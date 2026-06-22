@@ -236,7 +236,6 @@
 
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=admin-dashboard.html"); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     let me;
     try { me = await getOrCreateProfile(); }
     catch (e) { loadingState.textContent = "Couldn't load. " + (e.message || ""); return; }

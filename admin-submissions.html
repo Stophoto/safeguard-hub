@@ -188,7 +188,6 @@
 
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=admin-submissions.html"); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     try {
       const profile = await getOrCreateProfile();
       if (profile.role !== "coordinator") {

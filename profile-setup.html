@@ -305,7 +305,6 @@
   // ── Gate: need a verified, signed-in user ──
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=profile-setup.html"); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
 
     // Load existing profile (or create a stub) and prefill the form.
     try {

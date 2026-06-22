@@ -491,7 +491,6 @@
   // ── Gate: coordinator + valid uid ───────────────────────
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=" + encodeURIComponent("admin-user.html?uid=" + (TARGET_UID||""))); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     if (!TARGET_UID) { location.replace("admin.html"); return; }
 
     try {

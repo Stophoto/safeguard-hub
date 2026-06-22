@@ -31,11 +31,10 @@ if (typeof window !== "undefined") {
 }
 
 // ── Sign-up ─────────────────────────────────────────────────
-// Creates an account, then immediately sends a verification email.
-// After this, the user is *signed in* but their email is not verified.
+// Creates an account and signs the user in. Email verification is not
+// required right now — to revisit properly later, alongside MFA for leaders.
 export async function signUp(email, password) {
   const cred = await createUserWithEmailAndPassword(auth, email, password);
-  await sendEmailVerification(cred.user);
   return cred.user;
 }
 

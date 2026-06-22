@@ -250,7 +250,6 @@
 
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=admin-room-kit.html"); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     try {
       const me = await getOrCreateProfile();
       if (me.role !== "coordinator") {

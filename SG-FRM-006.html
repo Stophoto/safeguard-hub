@@ -321,7 +321,6 @@
   // ── Auth gate ─────────────────────────────────────────────
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=" + encodeURIComponent(HERE)); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     try {
       profile = await getOrCreateProfile();
     } catch (_) { profile = null; }

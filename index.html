@@ -229,10 +229,6 @@ body.sg-ready #sg-auth-overlay { display: none; }
       location.replace("sign-in.html?next=index.html");
       return;
     }
-    if (!user.emailVerified) {
-      location.replace("verify-email.html");
-      return;
-    }
     localStorage.removeItem("sg_hub_pw");
 
     // Load profile into the cache so autofill on forms can pick it up

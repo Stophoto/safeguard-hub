@@ -298,7 +298,6 @@
 
   onUserChange(async (user) => {
     if (!user) { location.replace("sign-in.html?next=police-check.html"); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     try {
       currentProfile = await getOrCreateProfile();
       render();

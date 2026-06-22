@@ -192,7 +192,6 @@
   // ── Gate: must be a coordinator ─────────────────────────
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=invite.html"); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     try {
       const profile = await getOrCreateProfile();
       if (profile.role !== "coordinator") {

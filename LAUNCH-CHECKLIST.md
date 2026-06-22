@@ -58,6 +58,10 @@ Safeguard Lead, and Lead Admin.
 - [ ] Enable MFA in Firebase. This requires upgrading to the **Blaze**
       (pay-as-you-go) plan — at this scale the cost is effectively nil.
 - [ ] Enrol MFA on the Coordinator, Safeguard Lead, and Lead Admin accounts.
+- [ ] **Re-enable email verification properly.** It's currently **OFF** — Firebase's
+      default verification emails were landing in spam and blocking sign-ups. When
+      revisited, set up reliable delivery (a custom sender/domain) so it never
+      blocks onboarding, and pair it with the MFA rollout above.
 
 > The security rules already assume this: a user **cannot** be granted
 > Safeguard Lead unless MFA is enabled on their account.

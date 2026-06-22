@@ -180,7 +180,6 @@
 
   onUserChange(async user => {
     if (!user) return;
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     if (NEXT) { location.replace(NEXT); return; }
     try {
       const profile = await getOrCreateProfile();

@@ -206,7 +206,6 @@
 
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=" + encodeURIComponent("admin-submission.html?id=" + (SID||""))); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     if (!SID) { location.replace("admin-submissions.html"); return; }
 
     try {

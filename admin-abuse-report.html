@@ -161,7 +161,6 @@
 
   onUserChange(async user => {
     if (!user) { location.replace("sign-in.html?next=" + encodeURIComponent(location.pathname.split("/").pop() + location.search)); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     currentUser = user;
     try {
       const profile = await getOrCreateProfile();

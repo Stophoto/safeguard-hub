@@ -249,7 +249,6 @@
 
   onUserChange(async (user) => {
     if (!user) { location.replace("sign-in.html?next=training.html"); return; }
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     try {
       currentProfile = await getOrCreateProfile();
       render();

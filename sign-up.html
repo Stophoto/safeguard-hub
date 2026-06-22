@@ -161,11 +161,9 @@
     email.value = invitedEmail;
   }
 
-  // If someone signed in lands here, bounce them forward.
-  // Verified users → hub. Unverified users → verify-email page.
+  // If someone already signed in lands here, bounce them forward.
   onUserChange(async user => {
     if (!user) return;
-    if (!user.emailVerified) { location.replace("verify-email.html"); return; }
     // Verified (including Google / Microsoft) → route by profile: new users
     // land in the onboarding wizard, returning users on their dashboard.
     try {
@@ -202,9 +200,9 @@
     submit.disabled = true;
     try {
       await signUp(e1, p1);
-      // signUp sends the verification email automatically.
-      // Hand off to verify-email.html which polls for verification.
-      location.replace("verify-email.html");
+      // Account created + signed in — go straight into setup.
+      const profile = await getOrCreateProfile();
+      location.replace(routeAfterLogin(profile));
     } catch (err) {
       showError(friendlyError(err));
       submit.classList.remove("loading");

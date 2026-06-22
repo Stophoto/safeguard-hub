@@ -45,10 +45,6 @@ export function requireAuth() {
       location.replace("sign-in.html?next=" + encodeURIComponent(currentPageHref()));
       return;
     }
-    if (!user.emailVerified) {
-      location.replace("verify-email.html");
-      return;
-    }
     reveal();
   });
 }
