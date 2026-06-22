@@ -344,7 +344,6 @@ service cloud.firestore {
 
     function validSubmissionCreate() {
       return request.auth != null
-        && request.auth.token.email_verified == true
         && hasProfile()
         && request.resource.data.keys().hasOnly([
           'formCode',
@@ -418,7 +417,6 @@ service cloud.firestore {
 
     function validAbuseReportCreate() {
       return request.auth != null
-        && request.auth.token.email_verified == true
         && hasProfile()
         && request.resource.data.keys().hasOnly([
           'schemaVersion',

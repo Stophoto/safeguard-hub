@@ -148,8 +148,8 @@ function buildSteps(wiz) {
     {
       id: "references", eyebrow: "Section 6", title: "Two references",
       render: () => renderReferences(wiz),
-      read:   () => readFields(wiz, ["r1Name","r1Phone","r1Email","r1Rel","r1Years","r2Name","r2Phone","r2Email","r2Rel","r2Years"]),
-      validate: validateReferences,
+      read:   () => Object.assign(readFields(wiz, ["r1Name","r1Phone","r1Email","r1Rel","r1Years","r2Name","r2Phone","r2Email","r2Rel","r2Years"]), { referencesLater: chk(wiz, "referencesLater") }),
+      validate: (m) => m.referencesLater ? [] : validateReferences(m),
     },
     {
       id: "youth-detail", eyebrow: "Section 8", title: "Junior volunteer details", youthOnly: true,
@@ -580,6 +580,7 @@ function readScreening(wiz) {
 function renderReferences(wiz) {
   const m = wiz.model;
   return '<p class="wz-lede">Provide two references (not relatives). At least one must be from outside your current church.</p>' +
+    '<label style="display:flex;gap:10px;align-items:flex-start;background:#F2EFE8;border:1px solid #E4E0DA;border-radius:8px;padding:12px 14px;margin-bottom:16px;cursor:pointer;font-size:13.5px;line-height:1.45"><input type="checkbox" id="wz_referencesLater" style="margin-top:2px"' + (m.referencesLater ? " checked" : "") + '><span><b>Not sure who to list yet?</b> Check this to skip for now — you can add your references later from your dashboard.</span></label>' +
     '<div class="sub-title">Reference #1</div>' +
     field("r1Name", "Name", m.r1Name) +
     '<div class="row">' + field("r1Phone", "Phone", m.r1Phone, { type: "tel", optional: true }) + field("r1Email", "Email", m.r1Email, { type: "email" }) + '</div>' +
@@ -910,7 +911,7 @@ async function submit(wiz) {
     }));
 
     // 2. References (adult section 6 → the canonical references shape).
-    await saveReferences([
+    await saveReferences(wiz.model.referencesLater ? [] : [
       { name: wiz.model.r1Name, email: wiz.model.r1Email, relationship: wiz.model.r1Rel },
       { name: wiz.model.r2Name, email: wiz.model.r2Email, relationship: wiz.model.r2Rel },
     ]);
