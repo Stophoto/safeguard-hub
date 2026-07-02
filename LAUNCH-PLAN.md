@@ -92,10 +92,10 @@ Depends on Decisions A & B above.
 - [ ] **You:** review the plain-language summary of the rule changes and approve before deploy.
 
 ### Phase 2 — Week 2: Trust & correctness fixes
-- [ ] **Fix the "Undo" buttons that silently do nothing** (Finding B-6). Today, undoing a
-      police-check clearance, interview, approval, or ministry assignment shows a success
-      message but leaves the data in place. Safeguarding-critical: a clearance recorded in
-      error can't currently be taken back from the screen.
+- [x] **Fix the "Undo" buttons that silently do nothing** (Finding B-6). _Done on this
+      branch — client-only fix, no rules change._ Undoing a police-check clearance,
+      interview, approval, ministry assignment (and training) now truly removes the data
+      instead of showing a false success message.
 - [ ] **Fix "Save & finish later" losing most of the application** (Finding B-7). Either
       actually save the in-progress answers, or change the button/message so it doesn't
       promise something it can't do.

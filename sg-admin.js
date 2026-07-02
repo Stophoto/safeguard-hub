@@ -20,6 +20,7 @@ import {
   setDoc,
   addDoc,
   deleteDoc,
+  deleteField,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -282,17 +283,17 @@ export async function markPoliceCheckCleared(uid, clearedOn, expiresOn) {
 }
 
 // ── Clear a police check clearance (if entered in error) ────
+// Uses deleteField() on the specific keys: a merge write can add/overwrite
+// but never REMOVE a map key, so deleting from a copy + merging would leave
+// the old clearance in place. Sibling keys (submittedAt, followUpAt) survive.
 export async function unclearPoliceCheck(uid) {
-  const snap = await getDoc(doc(db, "users", uid));
-  const existing = (snap.exists() && snap.data().policeCheck) || {};
-  delete existing.clearedAt;
-  delete existing.expiresOn;
-  await setDoc(doc(db, "users", uid), {
-    policeCheck: existing,
+  await updateDoc(doc(db, "users", uid), {
+    "policeCheck.clearedAt": deleteField(),
+    "policeCheck.expiresOn": deleteField(),
     renewalDueOn: null,
     updatedAt: serverTimestamp(),
     updatedBy: auth.currentUser ? auth.currentUser.uid : null,
-  }, { merge: true });
+  });
 }
 
 // ── Note that you've followed up on a lapsed police check ───
@@ -300,16 +301,11 @@ export async function unclearPoliceCheck(uid) {
 // of the urgent red banner into a calmer "waiting on them" list. on=false
 // clears it (back to urgent). Becomes irrelevant once the check is cleared.
 export async function setPoliceFollowUp(uid, on = true) {
-  const snap = await getDoc(doc(db, "users", uid));
-  const existing = (snap.exists() && snap.data().policeCheck) || {};
-  const next = { ...existing };
-  if (on) next.followUpAt = new Date().toISOString();
-  else delete next.followUpAt;
-  await setDoc(doc(db, "users", uid), {
-    policeCheck: next,
+  await updateDoc(doc(db, "users", uid), {
+    "policeCheck.followUpAt": on ? new Date().toISOString() : deleteField(),
     updatedAt: serverTimestamp(),
     updatedBy: auth.currentUser ? auth.currentUser.uid : null,
-  }, { merge: true });
+  });
 }
 
 // ── Mark a reference as received ────────────────────────────
@@ -379,14 +375,11 @@ export async function setScreeningInterview(uid, { interviewer, date, notes }) {
   }, { merge: true });
 }
 export async function clearScreeningInterview(uid) {
-  const snap = await getDoc(doc(db, "users", uid));
-  const existing = (snap.exists() && snap.data().screening) || {};
-  delete existing.interview;
-  await setDoc(doc(db, "users", uid), {
-    screening: existing,
+  await updateDoc(doc(db, "users", uid), {
+    "screening.interview": deleteField(),
     updatedAt: serverTimestamp(),
     updatedBy: auth.currentUser ? auth.currentUser.uid : null,
-  }, { merge: true });
+  });
 }
 
 // ── Record approval decision ───────────────────────────────
@@ -414,14 +407,11 @@ export async function setScreeningApproval(uid, { decision, approvedBy, date, no
   }, { merge: true });
 }
 export async function clearScreeningApproval(uid) {
-  const snap = await getDoc(doc(db, "users", uid));
-  const existing = (snap.exists() && snap.data().screening) || {};
-  delete existing.approval;
-  await setDoc(doc(db, "users", uid), {
-    screening: existing,
+  await updateDoc(doc(db, "users", uid), {
+    "screening.approval": deleteField(),
     updatedAt: serverTimestamp(),
     updatedBy: auth.currentUser ? auth.currentUser.uid : null,
-  }, { merge: true });
+  });
 }
 
 // ── Record ministry assignment ─────────────────────────────
@@ -443,14 +433,11 @@ export async function setMinistryAssignment(uid, { ministry, date, notes }) {
   }, { merge: true });
 }
 export async function clearMinistryAssignment(uid) {
-  const snap = await getDoc(doc(db, "users", uid));
-  const existing = (snap.exists() && snap.data().screening) || {};
-  delete existing.ministryAssigned;
-  await setDoc(doc(db, "users", uid), {
-    screening: existing,
+  await updateDoc(doc(db, "users", uid), {
+    "screening.ministryAssigned": deleteField(),
     updatedAt: serverTimestamp(),
     updatedBy: auth.currentUser ? auth.currentUser.uid : null,
-  }, { merge: true });
+  });
 }
 
 // ── Compute screening state label for a profile ────────────

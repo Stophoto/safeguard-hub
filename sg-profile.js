@@ -12,6 +12,8 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
+  deleteField,
   serverTimestamp,
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -265,13 +267,15 @@ export async function markTrainingComplete(moduleId) {
 }
 
 // ── Undo a training completion (e.g., marked by accident) ────
+// deleteField() on the specific module key — a merge write can't remove a
+// map key, so the old completion would otherwise linger.
 export async function unmarkTrainingComplete(moduleId) {
   const user = auth.currentUser;
   if (!user) throw new Error("Not signed in.");
-  const snap = await getDoc(doc(db, "users", user.uid));
-  const existing = (snap.exists() && snap.data().training) || {};
-  delete existing[moduleId];
-  await saveProfile({ training: existing });
+  await updateDoc(doc(db, "users", user.uid), {
+    ["training." + moduleId]: deleteField(),
+    updatedAt: serverTimestamp(),
+  });
 }
 
 // ── Compute onboarding progress from a profile ───────────────
