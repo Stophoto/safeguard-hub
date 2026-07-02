@@ -27,6 +27,7 @@ import {
   validatePreferences, validateScreening, validateReferences,
   validateDeclarations, validateYouthDetail, validateYouthDeclarations,
 } from "./sg-application.js";
+import { friendlyLoadError } from "./sg-auth.js";
 
 const esc = (s) => String(s == null ? "" : s)
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -829,7 +830,7 @@ function saveLater(wiz) {
   commitCurrent(wiz);
   persist(wiz, false)
     .then(() => wiz.onMessage("Saved. You can finish any time — we'll pick up right here.", "ok"))
-    .catch(err => wiz.onMessage("Couldn't save. " + (err && err.message ? err.message : "Please try again."), "err"));
+    .catch(err => wiz.onMessage(friendlyLoadError(err), "err"));
 }
 
 // ── Persistence ─────────────────────────────────────────────
@@ -929,7 +930,7 @@ async function submit(wiz) {
     return true;
   } catch (err) {
     wiz.onNavState({ submitting: false });
-    wiz.onMessage("Couldn't submit. " + (err && err.message ? err.message : "Please try again."), "err");
+    wiz.onMessage(friendlyLoadError(err), "err");
     return false;
   }
 }

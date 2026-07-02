@@ -88,6 +88,7 @@
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import { auth } from "./sg-firebase.js";
   import { saveProfile, routeAfterLogin, loadProfile } from "./sg-profile.js";
+  import { friendlyLoadError } from "./sg-auth.js";
 
   const $ = id => document.getElementById(id);
   const params = new URLSearchParams(location.search);
@@ -135,7 +136,7 @@
       await finishActivation();
     } catch (err) {
       $("setPw").disabled = false;
-      showErr("Couldn't activate. " + (err.message || "Try again."));
+      showErr(friendlyLoadError(err));
     }
   });
 
@@ -144,7 +145,7 @@
     try {
       await signInWithPopup(auth, new GoogleAuthProvider());
       await finishActivation();
-    } catch (err) { showErr("Google sign-in failed. " + (err.message || "")); }
+    } catch (err) { showErr(friendlyLoadError(err)); }
   });
 
   // ── Door 3: Microsoft SSO (enabled once Entra registration exists) ──
@@ -153,7 +154,7 @@
       const provider = new OAuthProvider("microsoft.com");
       await signInWithPopup(auth, provider);
       await finishActivation();
-    } catch (err) { showErr("Microsoft sign-in failed. " + (err.message || "")); }
+    } catch (err) { showErr(friendlyLoadError(err)); }
   });
 </script>
 </body>

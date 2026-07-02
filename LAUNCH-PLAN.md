@@ -134,14 +134,19 @@ project without your explicit say-so — I prepare and test the changes; **you**
       been marked "received" (Finding B-2), and tighten a few other data checks.
 - [ ] Add a confirmation step before a coordinator changes someone's role or status
       (today one stray tap can demote a coordinator — Finding U-7).
-- [ ] Never show raw, scary error text to volunteers; always offer a "try again"
-      (Finding U-3).
+- [x] Never show raw, scary error text to volunteers; always offer a "try again"
+      (Finding U-3). _Done across all volunteer pages + forms; a friendly-message
+      helper now replaces raw Firebase errors, with a "Try again" button on load
+      failures. (Coordinator-only admin pages are a small remaining sweep.)_
 
 ### Phase 3 — Week 3: Polish, clarity & speed
 - [ ] Remove internal document codes ("SG-FRM-002", etc.) from anything a volunteer or
       coordinator reads on screen; use plain names (Finding U-1).
 - [ ] Fix the covenant that appears to start at "Section 2" (looks like text is missing — Finding U-4).
-- [ ] Fix contradictory wording on sign-up and the reference-request email (Finding U-5).
+- [x] Fix contradictory wording on sign-up and the reference-request email (Finding U-5).
+      _Done: sign-up button now says "Create account →" (no false "verification email");
+      the references page now matches what the email actually does. Also removed the
+      stranded "Step X of 4" labels (U-6)._
 - [ ] Make pages feel fast: show a proper "loading" instead of a blank screen, and stop
       loading two different font sets on every page (Findings U-8, U-12).
 - [ ] Make the admin roster and lists work smoothly at 200+ people (Finding U-13).

@@ -49,7 +49,7 @@ Ground rules for every work package:
 | WP-1 | Phase 1 rules lockdown + tests | **DONE** (90/90 tests pass) |
 | WP-2 | B-6 undo no-ops | **DONE** |
 | WP-3 | Phase 2 correctness bugs | todo |
-| WP-4 | Phase 2 rule-adjacent copy/flow fixes | todo |
+| WP-4 | Phase 2 rule-adjacent copy/flow fixes | 4.1/4.2/4.4/4.5 **DONE**; 4.3 todo |
 | WP-5 | Phase 3 UI quick wins | todo |
 | WP-6 | Phase 3 performance | todo |
 | WP-7 | Phase 3 admin scale | todo |
@@ -210,6 +210,16 @@ while deleting nothing).
 - Acceptance: `grep -n "err.message" *.html sg-*.js` shows no user-facing raw
   passthrough on volunteer pages (admin pages may keep detail AFTER a friendly
   sentence).
+- **DONE (2026-07-02):** added `friendlyLoadError()` to `sg-auth.js`; routed all
+  volunteer-facing pages through it with a "Try again" button on load failures —
+  `activate.html`, `sg-wizard.js`, `police-check/covenant/references/training/
+  dashboard/profile-setup.html`, `SG-FRM-001/003-cover-letter/006/007.html`, and the
+  coordinator `admin.html`/`admin-dashboard.html`.
+  **Remaining sweep (low priority, coordinator/legacy only):** `invite.html:204`,
+  `admin-abuse-report.html`, `admin-room-kit.html`, `admin-screening.html`,
+  `admin-submission(s).html`, `admin-user.html` (coordinator pages — plan permits
+  detail there), and `index.html`'s legacy `getErrorMessage` in the inert
+  Google-Sheets `SheetsService` block.
 
 ## WP-5 — Phase 3 UI quick wins (todo)
 

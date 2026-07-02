@@ -298,7 +298,7 @@
   //   • Submit: writes to Firestore via createSubmission (tabName "Incidents")
   //   • Autosave intentionally disabled — sensitive report content is
   //     never written to this device's storage.
-  import { onUserChange } from "./sg-auth.js";
+  import { onUserChange, friendlyLoadError } from "./sg-auth.js";
   import { getOrCreateProfile } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
   import { createSubmission, FORM_SCHEMAS } from "./sg-submissions.js";
@@ -375,7 +375,7 @@
     } catch (err) {
       submitBtn.disabled = false;
       submitBtn.textContent = "Submit to Safeguard Coordinator";
-      showMsg("Couldn't submit. " + (err && err.message ? err.message : "Please try again."), "err");
+      showMsg(friendlyLoadError(err), "err");
     }
   });
 

@@ -213,7 +213,7 @@
 <footer>Safeguard Hub &middot; Bethany Chapel</footer>
 
 <script type="module">
-  import { onUserChange } from "./sg-auth.js";
+  import { onUserChange, friendlyLoadError } from "./sg-auth.js";
   import { getOrCreateProfile, isReadyForActivation, formatDate } from "./sg-profile.js";
   import { listUsers, summarizeUsers, screeningState, setPoliceFollowUp } from "./sg-admin.js";
   import { listSubmissions, updateSubmission } from "./sg-submissions.js";
@@ -238,7 +238,7 @@
     if (!user) { location.replace("sign-in.html?next=admin-dashboard.html"); return; }
     let me;
     try { me = await getOrCreateProfile(); }
-    catch (e) { loadingState.textContent = "Couldn't load. " + (e.message || ""); return; }
+    catch (e) { loadingState.textContent = friendlyLoadError(e); return; }
     if (me.role !== "coordinator") {
       loadingState.style.display = "none";
       accessDenied.style.display = "block";
@@ -250,7 +250,11 @@
       loadingState.style.display = "none";
       view.style.display = "block";
     } catch (e) {
-      loadingState.textContent = "Couldn't load admin data. " + (e.message || "");
+      loadingState.textContent = friendlyLoadError(e) + " ";
+      const retryBtn = document.createElement("button");
+      retryBtn.type = "button"; retryBtn.className = "btn btn-primary"; retryBtn.textContent = "Try again";
+      retryBtn.addEventListener("click", () => location.reload());
+      loadingState.appendChild(retryBtn);
     }
   });
 
@@ -380,7 +384,7 @@
           if (!el.querySelector(".pri-item")) el.innerHTML = "";
         } catch (e) {
           btn.disabled = false; btn.textContent = "Mark reviewed";
-          alert("Couldn't update: " + (e.message || "try again"));
+          alert(friendlyLoadError(e));
         }
       });
     });
@@ -452,7 +456,7 @@
           renderComplianceSections();
         } catch (e2) {
           btn.disabled = false; btn.textContent = "I’ve reached out";
-          alert("Couldn't update: " + (e2.message || "try again"));
+          alert(friendlyLoadError(e2));
         }
       });
     });
@@ -489,7 +493,7 @@
           renderComplianceSections();
         } catch (e2) {
           btn.disabled = false; btn.textContent = "Back to urgent";
-          alert("Couldn't update: " + (e2.message || "try again"));
+          alert(friendlyLoadError(e2));
         }
       });
     });
@@ -535,7 +539,7 @@
         wireRhythmBtn(newRow.querySelector(".rhythm-done"));
       } catch (e) {
         btn.disabled = false; btn.textContent = "Mark done";
-        alert("Couldn't save: " + (e.message || "try again"));
+        alert(friendlyLoadError(e));
       }
     });
   }

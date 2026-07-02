@@ -119,3 +119,24 @@ export function friendlyError(err) {
       return (err && err.message) || "Something went wrong. Please try again.";
   }
 }
+
+// ── Friendly message for data load/save failures ────────────
+// Never shows raw "Firebase: Error (…)" text to a volunteer. Covers the
+// Firestore cases (permission/network) and falls back to a calm generic
+// line. Use this anywhere we read/write Firestore, not just sign-in.
+export function friendlyLoadError(err) {
+  const code = (err && err.code) || "";
+  const raw = (err && err.message) || "";
+  if (code === "permission-denied" || /insufficient permissions/i.test(raw)) {
+    return "We couldn't complete that — your access may have changed. Try signing out and back in, and contact the Safeguard Coordinator if it keeps happening.";
+  }
+  if (code === "unavailable" || code === "deadline-exceeded"
+      || code === "auth/network-request-failed" || /network|offline/i.test(raw)) {
+    return "We're having trouble connecting. Check your internet connection and try again.";
+  }
+  // Reuse the auth-code map when this is an auth error, but never let the
+  // raw Firebase message through.
+  const mapped = friendlyError(err);
+  if (mapped && mapped !== raw && !/^Firebase:/i.test(mapped)) return mapped;
+  return "Something went wrong. Please try again, and contact the Safeguard Coordinator if it continues.";
+}

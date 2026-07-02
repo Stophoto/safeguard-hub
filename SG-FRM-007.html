@@ -250,7 +250,7 @@
   //   • Submit: writes to Firestore /abuseReports via createAbuseReport
   //   • Autosave intentionally disabled — highly sensitive content is
   //     never written to this device's storage.
-  import { onUserChange } from "./sg-auth.js";
+  import { onUserChange, friendlyLoadError } from "./sg-auth.js";
   import { getOrCreateProfile } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
   import { createAbuseReport } from "./sg-abuse-reports.js";
@@ -334,7 +334,7 @@
     } catch (err) {
       submitBtn.disabled = false;
       submitBtn.textContent = "Submit to Safeguard Lead";
-      showMsg("Couldn't submit. " + (err && err.message ? err.message : "Please try again."), "err");
+      showMsg(friendlyLoadError(err), "err");
     }
   });
 
