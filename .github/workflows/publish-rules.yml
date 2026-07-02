@@ -1,0 +1,78 @@
+# Publish security rules — automatically.
+# ─────────────────────────────────────────────────────────────
+# What this does, in plain language:
+#   Whenever the security rules (firestore.rules) change on the live
+#   branch (main), this robot:
+#     1. Runs all 90 security-rules tests. A single failure STOPS the
+#        publish — broken rules can never reach the live site.
+#     2. Publishes the rules to Firebase, exactly like pasting them
+#        into the Firebase console and clicking Publish.
+#   It can also be run by hand from the Actions tab ("Run workflow").
+#
+# One-time setup (the only manual step, ever):
+#   Add a repository secret named FIREBASE_SERVICE_ACCOUNT containing
+#   the service-account key JSON. Full click-by-click instructions:
+#   docs/AUTO-PUBLISH-SETUP.md
+# ─────────────────────────────────────────────────────────────
+
+name: Publish security rules
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "firestore.rules"
+      - "firebase.json"
+  workflow_dispatch: {}
+
+concurrency:
+  group: publish-rules
+  cancel-in-progress: false
+
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Set up Java (needed by the Firebase rules-test emulator)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Check the one-time setup key exists
+        env:
+          HAS_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
+        run: |
+          if [ "$HAS_KEY" != "true" ]; then
+            echo "::error::One-time setup not finished: the FIREBASE_SERVICE_ACCOUNT secret is missing. See docs/AUTO-PUBLISH-SETUP.md for the 2-minute setup."
+            exit 1
+          fi
+
+      - name: Install test tools
+        run: npm ci
+
+      - name: Run the 90 security-rules tests (publish is blocked if any fail)
+        run: npm run test:rules
+
+      - name: Unlock Firebase with the setup key
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-key.json"
+
+      - name: Publish the rules to Firebase
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-key.json
+        run: npx firebase-tools deploy --only firestore:rules --project safeguard-hub-71292 --non-interactive --force
+
+      - name: Clean up the key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firebase-key.json"
