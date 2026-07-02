@@ -92,6 +92,13 @@ Depends on Decisions A & B above.
 - [ ] **You:** review the plain-language summary of the rule changes and approve before deploy.
 
 ### Phase 2 — Week 2: Trust & correctness fixes
+- [ ] **Fix the "Undo" buttons that silently do nothing** (Finding B-6). Today, undoing a
+      police-check clearance, interview, approval, or ministry assignment shows a success
+      message but leaves the data in place. Safeguarding-critical: a clearance recorded in
+      error can't currently be taken back from the screen.
+- [ ] **Fix "Save & finish later" losing most of the application** (Finding B-7). Either
+      actually save the in-progress answers, or change the button/message so it doesn't
+      promise something it can't do.
 - [ ] Fix the bug where marking a volunteer's police check as "following up" can lock
       that volunteer out of editing their own profile (Finding B-1).
 - [ ] Re-enable email verification with reliable delivery, and require it before someone
@@ -204,6 +211,26 @@ Severity: **Critical** = fix before launch and it touches sensitive access ·
   then thrown away (everyone sees generic text); "Last synced just now" is hardcoded;
   wizard section labels are out of order (7 after 8); references counter shows "0/2" after
   a successful save. _Fix in Phase 3._
+- **B-6 (High) — Coordinator "Undo/Remove" buttons silently do nothing.** Undoing a
+  police-check clearance, interview, approval, or ministry assignment shows a green
+  "removed" message but leaves the data in the database (a technical quirk: the "merge"
+  save can add or change data but never delete it). So a clearance entered by mistake
+  keeps showing as "Cleared." _Fix in Phase 2._
+- **B-7 (High) — "Save & finish later" loses most of the application.** The auto-save only
+  stores the basic profile (name, contact, serving prefs); the Safety Screening answers,
+  References, Ministry-Experience, and Declarations live only in the browser and come back
+  blank in a new session — with no warning, despite the "we'll pick up right here" promise.
+  _Fix in Phase 2._
+- **B-8 (Medium) — The invited-user activation page sets a status the rules reject.**
+  `activate.html` tries to flip a user to "activated" (which isn't even a real status), a
+  change the rules forbid, so it errors out. Dormant today (the live invite flow doesn't
+  use it) but it fires the moment the emailed-invite/Cloud-Function path is switched on.
+  Related to S-8. _Fix in Phase 2/3._
+- **B-9 (Low) — Assorted:** the volunteer dashboard shows an **expired** police check as
+  "Done"; a leftover "verify your email" page still waits forever for a verification that's
+  never sent; account cleanup aborts if it hits a legacy abuse-report row; and the public
+  "Have a question?" form still points at a placeholder email address, so those messages
+  currently go nowhere (also a Phase 4 config item). _Fix in Phase 3/4._
 
 ### User-experience findings (grouped as the review delivered them)
 **Quick wins (copy/CSS/config):**
