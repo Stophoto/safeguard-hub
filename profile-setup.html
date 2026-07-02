@@ -132,7 +132,7 @@
 
   <!-- Form (hidden until profile loaded) -->
   <div class="wrap" id="formWrap" style="display:none">
-    <div class="eyebrow">Step 3 of 4 · About you</div>
+    <div class="eyebrow">About you</div>
     <h1>Tell us about yourself</h1>
     <div class="lede">This goes into your Bethany Chapel record. You only enter it once — every form uses this data.</div>
 
@@ -270,7 +270,7 @@
 <footer>Safeguard Hub · Bethany Chapel · <a href="privacy.html" style="color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(46,107,127,0.3)">Privacy</a></footer>
 
 <script type="module">
-  import { onUserChange } from "./sg-auth.js";
+  import { onUserChange, friendlyLoadError } from "./sg-auth.js";
   import { getOrCreateProfile, saveProfile } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
 
@@ -315,7 +315,11 @@
       loadingState.style.display = "none";
       formWrap.style.display = "block";
     } catch (err) {
-      loadingState.textContent = "Couldn't load your profile. " + (err.message || "");
+      loadingState.textContent = friendlyLoadError(err) + " ";
+      const retryBtn = document.createElement("button");
+      retryBtn.type = "button"; retryBtn.className = "btn btn-primary"; retryBtn.textContent = "Try again";
+      retryBtn.addEventListener("click", () => location.reload());
+      loadingState.appendChild(retryBtn);
     }
   });
 
@@ -420,7 +424,7 @@
       await saveProfile({ ...data, profileComplete: true });
       location.replace("dashboard.html");
     } catch (err) {
-      showMsg("Couldn't save your profile. " + (err.message || "Please try again."), "err");
+      showMsg(friendlyLoadError(err), "err");
       submit.classList.remove("loading");
       submit.disabled = false;
     }
@@ -436,7 +440,7 @@
       await saveProfile({ ...readForm(), profileComplete: false });
       showMsg("Saved. You can finish any time — we'll pick up right here.", "ok");
     } catch (err) {
-      showMsg("Couldn't save. " + (err.message || "Please try again."), "err");
+      showMsg(friendlyLoadError(err), "err");
     }
     saveLater.disabled = false;
   });

@@ -118,6 +118,12 @@ before(async () => {
       submittedBy: "reporter-uid", submittedByEmail: "reporter@example.org",
       recordId: "P-2", rowData: ["y"], status: "open", notes: "",
     });
+    // A dedicated target for the coordinator duplicate-cleanup delete test.
+    await setDoc(doc(adb, "submissions/deletable-1"), {
+      formCode: "SG-FRM-001", tabName: "People",
+      submittedBy: "reporter-uid", submittedByEmail: "reporter@example.org",
+      recordId: "P-3", rowData: ["z"], status: "open", notes: "",
+    });
 
     // ── abuseReports (post-migration location) ──
     for (const id of ["report-1", "report-2"]) {
@@ -193,8 +199,14 @@ describe("submissions — read/list access by role", () => {
     await assertFails(listAll(db.leadAdmin, "submissions"));
   });
 
-  it("no one can delete a submission from the app", async () => {
-    await assertFails(deleteDoc(doc(db.coordinator, "submissions/own-1")));
+  it("volunteer cannot delete even their own submission", async () => {
+    await assertFails(deleteDoc(doc(db.volunteer, "submissions/own-1")));
+  });
+  it("coordinator CAN delete an ordinary submission (duplicate-account cleanup)", async () => {
+    await assertSucceeds(deleteDoc(doc(db.coordinator, "submissions/deletable-1")));
+  });
+  it("KEY: coordinator CANNOT delete an abuse-report submission (SG-FRM-007)", async () => {
+    await assertFails(deleteDoc(doc(db.coordinator, "submissions/legacy-abuse-1")));
   });
 });
 
@@ -285,8 +297,15 @@ describe("submissions — create boundaries (sanity)", () => {
       setDoc(doc(db.volunteer, "submissions/create-imp"), validSubmission("reporter-uid", "reporter@example.org")),
     );
   });
-  it("unverified-email user cannot create a submission", async () => {
-    await assertFails(
+  // Email verification was deliberately dropped from the create rules in
+  // 2026-06 (Firebase's verification emails were landing in spam and
+  // blocking sign-ups). Until it is re-enabled with reliable delivery
+  // (see LAUNCH-PLAN.md Phase 2), an unverified account with a profile
+  // CAN create submissions. This test documents that decision so the
+  // suite stays honest; flip it back to assertFails when verification
+  // is restored.
+  it("DOCUMENTED GAP: unverified-email user can currently create a submission", async () => {
+    await assertSucceeds(
       setDoc(doc(db.volunteerUnverified, "submissions/create-unverified"), validSubmission("volunteer", "vol@example.org")),
     );
   });

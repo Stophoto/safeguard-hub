@@ -209,6 +209,7 @@
   const msg          = document.getElementById("msg");
 
   let currentUid = null;   // so we don't allow the Coordinator to demote themselves
+  let meIsLeadAdmin = false; // only Safeguard Lead Admins (owner tier) may change roles
 
   // ── Gate: signed in, verified, role=coordinator ─────────
   onUserChange(async user => {
@@ -217,6 +218,7 @@
 
     try {
       const profile = await getOrCreateProfile();
+      meIsLeadAdmin = !!profile.safeguard_lead_admin;
 
       if (profile.role !== "coordinator") {
         deniedRole.textContent = profile.role || "volunteer";
@@ -322,8 +324,11 @@
       return '<option value="' + s + '"' + sel + '>' + cap(s.replace("-"," ")) + '</option>';
     }).join("");
 
-    // Don't let a Coordinator demote themselves — disable role picker for own row
-    const roleDisabled = isMe ? " disabled title=\"You can't change your own role\"" : "";
+    // Role changes are reserved for the Safeguard Lead Admin (owner tier),
+    // and nobody can change their own role — the server rules enforce both.
+    const roleDisabled = isMe
+      ? " disabled title=\"You can't change your own role\""
+      : (meIsLeadAdmin ? "" : " disabled title=\"Only the Safeguard Lead Admin can change roles\"");
 
     const emailLabel = u.email || u.preferredName || "";
     const flags = userFlags(u);
@@ -349,6 +354,15 @@
     const uid = sel.dataset.uid;
     const role = sel.value;
     clearMsg();
+    // Confirm before any role change — a stray tap shouldn't promote or
+    // demote anyone. Coordinator promotions get an extra warning.
+    const warn = role === "coordinator"
+      ? "\n\nA Coordinator can see every volunteer's personal information."
+      : "";
+    if (!confirm('Change this person\'s role to "' + role + '"?' + warn)) {
+      await loadAndRender();
+      return;
+    }
     sel.disabled = true;
     try {
       await setUserRole(uid, role);
@@ -364,6 +378,14 @@
     const uid = sel.dataset.uid;
     const status = sel.value;
     clearMsg();
+    // Taking someone out of active service deserves a deliberate click.
+    const prev = ([...sel.options].find(o => o.defaultSelected) || {}).value;
+    if (prev === "active" && status !== "active") {
+      if (!confirm('This volunteer is currently active. Change their status to "' + status.replace("-", " ") + '"?')) {
+        await loadAndRender();
+        return;
+      }
+    }
     sel.disabled = true;
     try {
       await setUserStatus(uid, status);

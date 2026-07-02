@@ -439,7 +439,7 @@
   //     updates core profile fields if the applicant edited them, and
   //     creates a submissions record for the coordinator.
   //   • Autosave to localStorage stays on — this form is long, not sensitive.
-  import { onUserChange } from "./sg-auth.js";
+  import { onUserChange, friendlyLoadError } from "./sg-auth.js";
   import { getOrCreateProfile, saveProfile } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
   import { createSubmission } from "./sg-submissions.js";
@@ -606,7 +606,7 @@
     } catch (err) {
       submitBtn.disabled = false;
       submitBtn.textContent = "Submit Application";
-      showMsg("Couldn't submit. " + (err && err.message ? err.message : "Please try again."), "err");
+      showMsg(friendlyLoadError(err), "err");
     }
   });
 

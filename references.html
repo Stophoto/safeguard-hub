@@ -142,7 +142,7 @@
     <div class="info-card" id="howCard">
       <h2>How this works</h2>
       <p>1. You enter the name, email, and relationship for each of your two references below and save.</p>
-      <p>2. We'll offer to send a pre-written email to each one asking for a short written reference (Coordinator copies you).</p>
+      <p>2. We'll offer to send each one a short heads-up email. The Safeguard Coordinator then contacts them directly for the actual reference — so your referees don't need to reply to that first email.</p>
       <p>3. When the Coordinator receives each reference, they mark it received here — and your dashboard updates automatically.</p>
     </div>
 
@@ -188,7 +188,7 @@
 <footer>Safeguard Hub · Bethany Chapel</footer>
 
 <script type="module">
-  import { onUserChange } from "./sg-auth.js";
+  import { onUserChange, friendlyLoadError } from "./sg-auth.js";
   import { getOrCreateProfile, saveReferences, formatDate } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
 
@@ -215,7 +215,11 @@
       loadingState.style.display = "none";
       view.style.display = "block";
     } catch (err) {
-      loadingState.textContent = "Couldn't load. " + (err.message || "");
+      loadingState.textContent = friendlyLoadError(err) + " ";
+      const retryBtn = document.createElement("button");
+      retryBtn.type = "button"; retryBtn.className = "btn btn-primary"; retryBtn.textContent = "Try again";
+      retryBtn.addEventListener("click", () => location.reload());
+      loadingState.appendChild(retryBtn);
     }
   });
 
@@ -300,7 +304,7 @@
       render();
       showMsg("Saved.", "ok");
     } catch (err) {
-      showMsg("Couldn't save. " + (err.message || "Please try again."), "err");
+      showMsg(friendlyLoadError(err), "err");
     }
     saveBtn.disabled = false;
   });

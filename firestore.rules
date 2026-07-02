@@ -8,9 +8,13 @@
 // Key decisions:
 //  • Regular users can read and write ONLY their own profile.
 //  • Regular users cannot change their own `role` or `status`.
-//  • Coordinators can read ALL user profiles and change role/status
-//    on anyone. They're identified by `role == 'coordinator'` on
-//    their own user document.
+//  • Coordinators can read ALL user profiles and manage status/
+//    compliance on OTHER people — never their own, and they can
+//    NOT change anyone's role. They're identified by
+//    `role == 'coordinator'` on their own user document.
+//  • Role changes (who is a Coordinator) are reserved for Safeguard
+//    Lead Admins — the owner tier (Chris + Christin) — and never on
+//    your own account.
 //  • The first Coordinator is bootstrapped manually by editing the
 //    role field in the Firebase console on their user document.
 //  • Coordinators can create/read invite records. Volunteers can't
@@ -102,9 +106,13 @@ service cloud.firestore {
     }
 
     function validUserSelfUpdate(uid) {
+      // Compute the changed-keys set ONCE and reuse it in every sub-check
+      // below. Recomputing diff() in each helper is what pushed a denied
+      // self-write toward Firestore's per-evaluation expression limit.
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
       return request.auth != null
         && request.auth.uid == uid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        && changed.hasOnly([
           'email',
           'firstName',
           'lastName',
@@ -138,20 +146,26 @@ service cloud.firestore {
         && unchanged('activatedAt')
         && unchanged('activatedBy')
         && unchanged('updatedBy')
-        && validSelfApplication()
-        && validSelfCovenant()
-        && validSelfCovenantHistory()
-        && validSelfPoliceCheck()
-        && validSelfReferences()
+        && validSelfApplication(changed)
+        && validSelfCovenant(changed)
+        && validSelfCovenantHistory(changed)
+        && validSelfPoliceCheck(changed)
+        && validSelfReferences(changed)
         && (!request.resource.data.keys().hasAny(['email']) || request.resource.data.email == request.auth.token.email)
         && (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt == request.time);
     }
 
-    function validCoordinatorUserUpdate() {
+    function validCoordinatorUserUpdate(uid) {
       return isCoordinator()
+        // Coordinators edit OTHER people's records only. Their own profile
+        // must go through the volunteer self-update path, which pins all
+        // compliance fields — so nobody can clear their own police check,
+        // approve themselves, or activate themselves.
+        && request.auth.uid != uid
+        // Role changes are NOT here: promoting/demoting anyone is reserved
+        // for Safeguard Lead Admins (see validRoleChangeUpdate below).
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
           'email',
-          'role',
           'status',
           'firstName',
           'lastName',
@@ -178,11 +192,37 @@ service cloud.firestore {
           'activatedBy',
           'updatedAt',
           'updatedBy'
-        ]);
+        ])
+        // If status is being changed, it must be one of the known values.
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status'])
+          || request.resource.data.status in ['in-process', 'active', 'paused', 'inactive', 'invited']
+        );
+    }
+
+    // Role changes (who is a Coordinator, Leader, Volunteer) are reserved for
+    // Safeguard Lead Admins — i.e. the owner tier (Chris + Christin). An
+    // ordinary Coordinator can no longer promote anyone, and nobody can
+    // change their OWN role.
+    function validRoleChangeUpdate(uid) {
+      return isSafeguardLeadAdmin()
+        && request.auth.uid != uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'role',
+          'updatedAt',
+          'updatedBy'
+        ])
+        && request.resource.data.role in ['volunteer', 'leader', 'coordinator']
+        && (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt == request.time)
+        && (!request.resource.data.keys().hasAny(['updatedBy']) || request.resource.data.updatedBy == request.auth.uid);
     }
 
     function validSafeguardAccessUpdate(uid) {
-      return (isSafeguardLeadAdmin() || isBootstrapSafeguardLeadAdmin(uid))
+      // Self-exclusion: an admin cannot tick their own access boxes — a
+      // second person must grant them. (The bootstrap branch below is the
+      // documented one-time exception and should be deleted once both
+      // Lead Admins are set up.)
+      return ((isSafeguardLeadAdmin() && request.auth.uid != uid) || isBootstrapSafeguardLeadAdmin(uid))
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
           'safeguard_lead',
           'safeguard_lead_admin',
@@ -197,13 +237,22 @@ service cloud.firestore {
           request.resource.data.get('safeguard_lead', false) == false
           || request.resource.data.get('mfaEnrolled', false) == true
         )
+        // Same 2FA requirement for the Lead ADMIN flag — the most powerful
+        // role must never be easier to grant than the one below it.
+        && (
+          request.resource.data.get('safeguard_lead_admin', false) == false
+          || request.resource.data.get('mfaEnrolled', false) == true
+        )
         && (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt == request.time)
         && (!request.resource.data.keys().hasAny(['updatedBy']) || request.resource.data.updatedBy == request.auth.uid);
     }
 
-    function validTemporaryAbuseAccessUpdate() {
+    function validTemporaryAbuseAccessUpdate(uid) {
       let access = request.resource.data.get('temporaryAbuseAccess', null);
+      // Self-exclusion: temporary report access must be granted BY one
+      // admin TO someone else — an admin can't quietly grant themselves.
       return isSafeguardLeadAdmin()
+        && request.auth.uid != uid
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
           'temporaryAbuseAccess',
           'updatedAt',
@@ -233,9 +282,9 @@ service cloud.firestore {
         && request.resource.data.updatedBy == request.auth.uid;
     }
 
-    function validSelfApplication() {
+    function validSelfApplication(changed) {
       let app = request.resource.data.get('application', {});
-      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['application'])
+      return !changed.hasAny(['application'])
         || (
           app is map
           && app.keys().hasOnly(['submittedAt', 'recordId', 'isYouth'])
@@ -250,9 +299,9 @@ service cloud.firestore {
         );
     }
 
-    function validSelfCovenant() {
+    function validSelfCovenant(changed) {
       let cov = request.resource.data.get('covenant', {});
-      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['covenant'])
+      return !changed.hasAny(['covenant'])
         || (
           cov is map
           && cov.keys().hasOnly(['signed', 'signedAt', 'signatureName', 'expiresAt'])
@@ -278,58 +327,102 @@ service cloud.firestore {
         && archive.get('expiresAt', null) == resource.data.get('covenant', {}).get('expiresAt', null);
     }
 
-    function validSelfCovenantHistory() {
+    function validSelfCovenantHistory(changed) {
       let history = request.resource.data.get('covenantHistory', []);
       let oldHistory = resource.data.get('covenantHistory', []);
-      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['covenantHistory'])
+      return !changed.hasAny(['covenantHistory'])
         || (
           history is list
           && oldHistory is list
           && oldHistory.size() < 50
           && history.size() == oldHistory.size() + 1
           && history.hasAll(oldHistory)
-          && request.resource.data.diff(resource.data).affectedKeys().hasAny(['covenant'])
+          && changed.hasAny(['covenant'])
           && resource.data.get('covenant', {}).get('signed', false) == true
           && validCovenantArchive(history[history.size() - 1])
         );
     }
 
-    function validSelfPoliceCheck() {
+    function validSelfPoliceCheck(changed) {
       let pc = request.resource.data.get('policeCheck', {});
-      return pc is map
-        && pc.keys().hasOnly(['submittedAt', 'clearedAt', 'expiresOn'])
-        && request.resource.data.get('policeCheck', {}).get('clearedAt', null)
-          == resource.data.get('policeCheck', {}).get('clearedAt', null)
-        && request.resource.data.get('policeCheck', {}).get('expiresOn', null)
-          == resource.data.get('policeCheck', {}).get('expiresOn', null);
+      // Only validate when the volunteer is actually touching policeCheck —
+      // otherwise an unrelated self-edit (phone, covenant, …) would be
+      // rejected just because a coordinator-written key (followUpAt) exists.
+      return !changed.hasAny(['policeCheck'])
+        || (
+          pc is map
+          && pc.keys().hasOnly(['submittedAt', 'clearedAt', 'expiresOn', 'followUpAt'])
+          && (
+            pc.get('submittedAt', null) == null
+            || (pc.submittedAt is string && pc.submittedAt.size() > 0 && pc.submittedAt.size() <= 40)
+          )
+          // Coordinator-owned fields are pinned: the volunteer can never
+          // set or clear their own clearance, expiry, or follow-up flag.
+          && pc.get('clearedAt', null) == resource.data.get('policeCheck', {}).get('clearedAt', null)
+          && pc.get('expiresOn', null) == resource.data.get('policeCheck', {}).get('expiresOn', null)
+          && pc.get('followUpAt', null) == resource.data.get('policeCheck', {}).get('followUpAt', null)
+        );
     }
 
-    function validSelfReferences() {
-      let refs = request.resource.data.get('references', {'items': []}).get('items', []);
+    // One reference entry: known keys only, sane sizes.
+    function validRefItem(item) {
+      return item is map
+        && item.keys().hasOnly(['name', 'email', 'relationship', 'receivedAt'])
+        && item.get('name', '') is string
+        && item.get('name', '').size() <= 150
+        && item.get('email', '') is string
+        && item.get('email', '').size() <= 200
+        && item.get('relationship', '') is string
+        && item.get('relationship', '').size() <= 150;
+    }
+
+    // Once a coordinator has marked reference i as received, the volunteer
+    // can no longer change WHO vouched (name/email/relationship), un-receive
+    // it, or remove it. Before that, they may edit freely.
+    function refPreservedIfReceived(newRefs, oldRefs, i) {
+      return oldRefs.size() <= i
+        || oldRefs[i].get('receivedAt', null) == null
+        || (
+          newRefs.size() > i
+          && newRefs[i].get('name', '') == oldRefs[i].get('name', '')
+          && newRefs[i].get('email', '') == oldRefs[i].get('email', '')
+          && newRefs[i].get('relationship', '') == oldRefs[i].get('relationship', '')
+          && newRefs[i].get('receivedAt', null) == oldRefs[i].get('receivedAt', null)
+        );
+    }
+
+    function validSelfReferences(changed) {
+      let refsMap = request.resource.data.get('references', {'items': []});
+      let refs = refsMap.get('items', []);
       let oldRefs = resource.data.get('references', {'items': []}).get('items', []);
-      return refs is list
-        && refs.size() <= 2
-        && (
-          refs.size() < 1
-          || (
-            refs[0] is map
-            && refs[0].keys().hasOnly(['name', 'email', 'relationship', 'receivedAt'])
-            && (
-              refs[0].get('receivedAt', null) == null
-              || (oldRefs.size() > 0 && refs[0].get('receivedAt', null) == oldRefs[0].get('receivedAt', null))
+      return !changed.hasAny(['references'])
+        || (
+          refsMap is map
+          && refsMap.keys().hasOnly(['items'])
+          && refs is list
+          && refs.size() <= 2
+          && (
+            refs.size() < 1
+            || (
+              validRefItem(refs[0])
+              && (
+                refs[0].get('receivedAt', null) == null
+                || (oldRefs.size() > 0 && refs[0].get('receivedAt', null) == oldRefs[0].get('receivedAt', null))
+              )
             )
           )
-        )
-        && (
-          refs.size() < 2
-          || (
-            refs[1] is map
-            && refs[1].keys().hasOnly(['name', 'email', 'relationship', 'receivedAt'])
-            && (
-              refs[1].get('receivedAt', null) == null
-              || (oldRefs.size() > 1 && refs[1].get('receivedAt', null) == oldRefs[1].get('receivedAt', null))
+          && (
+            refs.size() < 2
+            || (
+              validRefItem(refs[1])
+              && (
+                refs[1].get('receivedAt', null) == null
+                || (oldRefs.size() > 1 && refs[1].get('receivedAt', null) == oldRefs[1].get('receivedAt', null))
+              )
             )
           )
+          && refPreservedIfReceived(refs, oldRefs, 0)
+          && refPreservedIfReceived(refs, oldRefs, 1)
         );
     }
 
@@ -516,12 +609,25 @@ service cloud.firestore {
 
       // Update:
       //   • As yourself, you can change only volunteer-owned fields.
-      //   • Coordinators can manage ordinary profile/compliance fields.
-      //   • Safeguard Lead Admins can manage safeguard_lead flags.
-      allow update: if validUserSelfUpdate(uid)
-                    || validCoordinatorUserUpdate()
-                    || validSafeguardAccessUpdate(uid)
-                    || validTemporaryAbuseAccessUpdate();
+      //   • Coordinators can manage ordinary profile/compliance fields
+      //     on OTHER people (never their own compliance).
+      //   • Only Safeguard Lead Admins (the owner tier) can change roles.
+      //   • Safeguard Lead Admins can manage safeguard_lead flags — on
+      //     others, never themselves.
+      // Split by WHOSE record this is. A write is either editing your own
+      // profile or someone else's — never both — so we only evaluate the
+      // relevant group. This keeps any single evaluation well under
+      // Firestore's expression-complexity limit (the heavy self-update
+      // validator is never run on a coordinator's write, and vice-versa).
+      // Editing your OWN record: ordinary self-service, OR the one-time
+      // bootstrap self-grant (validSafeguardAccessUpdate's bootstrap branch).
+      allow update: if (request.auth != null && request.auth.uid == uid)
+                    ? ( validUserSelfUpdate(uid)
+                        || validSafeguardAccessUpdate(uid) )
+                    : ( validCoordinatorUserUpdate(uid)
+                        || validRoleChangeUpdate(uid)
+                        || validSafeguardAccessUpdate(uid)
+                        || validTemporaryAbuseAccessUpdate(uid) );
 
       // Delete: coordinators may remove ONLY a duplicate / mistaken
       // account — one with NO safeguarding history (not active, no cleared

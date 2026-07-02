@@ -150,7 +150,9 @@
     </div>
 
     <div id="selfNote" class="self-note" style="display:none">
-      You're editing your own profile. To change your own role or status, use Firestore console directly — the dropdowns below are locked as a safety net.
+      You're viewing your own record. For safety, your own role, status, compliance and
+      screening entries must be recorded by another Coordinator or the Safeguard Lead Admin —
+      those controls are locked here. You can still edit your personal details below.
     </div>
 
     <!-- ── Activation banner (shown when user is ready) ── -->
@@ -453,7 +455,7 @@
   import { onUserChange } from "./sg-auth.js";
   import { getOrCreateProfile, formatDate, isReadyForActivation, covenantStatus } from "./sg-profile.js";
   import {
-    loadUser, updateUserProfile, setSafeguardAccess,
+    loadUser, updateUserProfile, setUserRole, setSafeguardAccess,
     markPoliceCheckCleared, unclearPoliceCheck,
     markReferenceReceived, unmarkReferenceReceived,
     activateUser,
@@ -486,6 +488,7 @@
   const TARGET_UID = params.get("uid");
 
   let isSelf = false;
+  let isLeadAdmin = false; // only the owner tier may change roles / access flags
   let CURRENT_TARGET = null;
 
   // ── Gate: coordinator + valid uid ───────────────────────
@@ -496,6 +499,7 @@
     try {
       const me = await getOrCreateProfile();
       if (me.role !== "coordinator") { location.replace("dashboard.html"); return; }
+      isLeadAdmin = !!me.safeguard_lead_admin;
       isSelf = (user.uid === TARGET_UID);
 
       const target = await loadUser(TARGET_UID);
@@ -548,10 +552,32 @@
     document.getElementById("safeguardLead").checked = !!u.safeguard_lead;
     document.getElementById("safeguardLeadAdmin").checked = !!u.safeguard_lead_admin;
     renderSafeguardAccessSummary(u);
+    // Role changes are owner-tier only (Safeguard Lead Admin), never on
+    // your own account — the server rules enforce both; the UI mirrors it.
+    if (!isLeadAdmin || isSelf) {
+      const roleSel = document.getElementById("role");
+      roleSel.disabled = true;
+      roleSel.title = isSelf ? "You can't change your own role" : "Only the Safeguard Lead Admin can change roles";
+    }
     if (isSelf) {
-      document.getElementById("role").disabled = true;
       document.getElementById("status").disabled = true;
       selfNote.style.display = "block";
+      // Compliance, screening, activation, and access flags on your OWN
+      // account must be recorded by someone else — the rules reject them.
+      ["pcSaveBtn","pcUndoBtn","iSaveBtn","iClearBtn","aSaveBtn","aClearBtn",
+       "mSaveBtn","mClearBtn","activateBtn","saveSafeguardAccessBtn",
+       "mfaEnrolled","safeguardLead","safeguardLeadAdmin"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = true;
+      });
+    }
+    if (!isLeadAdmin) {
+      // Safeguard access flags are owner-tier only; lock the panel for
+      // ordinary coordinators so they don't hit a permissions error.
+      ["saveSafeguardAccessBtn","mfaEnrolled","safeguardLead","safeguardLeadAdmin"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = true;
+      });
     }
 
     setv("firstName",     u.firstName);
@@ -752,6 +778,8 @@
       refsListEl.querySelectorAll("[data-refundo]").forEach(btn => {
         btn.addEventListener("click", () => onUnmarkRef(parseInt(btn.dataset.refundo, 10)));
       });
+      // Your own references must be marked received by someone else.
+      if (isSelf) refsListEl.querySelectorAll("button").forEach(b => { b.disabled = true; });
     }
 
     // Training
@@ -987,10 +1015,25 @@
     e.preventDefault();
     clearMsg();
     const updates = readForm();
-    if (isSelf) { delete updates.role; delete updates.status; }
+    // Role is owner-tier only and must be its own write; never part of
+    // the profile save. updateUserProfile also strips it as a backstop.
+    const newRole = updates.role;
+    delete updates.role;
+    if (isSelf) { delete updates.status; }
+    const roleChanged = !isSelf && isLeadAdmin
+      && CURRENT_TARGET && newRole && newRole !== (CURRENT_TARGET.role || "volunteer");
     saveBtn.disabled = true;
     try {
       await updateUserProfile(TARGET_UID, updates);
+      if (roleChanged) {
+        if (!confirm("Also change this person's role to \"" + newRole + "\"?"
+              + (newRole === "coordinator" ? "\n\nA Coordinator can see every volunteer's personal information." : ""))) {
+          setv("role", CURRENT_TARGET.role || "volunteer");
+        } else {
+          await setUserRole(TARGET_UID, newRole);
+          CURRENT_TARGET.role = newRole;
+        }
+      }
       showMsg("Saved.", "ok");
       setTimeout(() => { clearMsg(); }, 3000);
     } catch (err) {

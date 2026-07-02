@@ -266,7 +266,7 @@
 <footer>Safeguard Hub · Bethany Chapel</footer>
 
 <script type="module">
-  import { onUserChange } from "./sg-auth.js";
+  import { onUserChange, friendlyLoadError } from "./sg-auth.js";
   import { getOrCreateProfile, submitPoliceCheck, formatDate } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
 
@@ -304,7 +304,11 @@
       loadingState.style.display = "none";
       view.style.display = "block";
     } catch (err) {
-      loadingState.textContent = "Couldn't load. " + (err.message || "");
+      loadingState.textContent = friendlyLoadError(err) + " ";
+      const retryBtn = document.createElement("button");
+      retryBtn.type = "button"; retryBtn.className = "btn btn-primary"; retryBtn.textContent = "Try again";
+      retryBtn.addEventListener("click", () => location.reload());
+      loadingState.appendChild(retryBtn);
     }
   });
 
@@ -384,7 +388,7 @@
       render();
       showMsg("Saved. Your dashboard now shows this as pending.", "ok");
     } catch (err) {
-      showMsg("Couldn't save. " + (err.message || "Please try again."), "err");
+      showMsg(friendlyLoadError(err), "err");
     }
     submitBtn.disabled = false;
   });

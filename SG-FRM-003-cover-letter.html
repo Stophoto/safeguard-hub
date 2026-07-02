@@ -138,7 +138,7 @@
 <footer>Safeguard Hub · Bethany Chapel</footer>
 
 <script type="module">
-  import { onUserChange } from "./sg-auth.js";
+  import { onUserChange, friendlyLoadError } from "./sg-auth.js";
   import { getOrCreateProfile, formatDate } from "./sg-profile.js";
   import { mountUserChip } from "./sg-user-chip.js";
 
@@ -170,7 +170,7 @@
       loadingState.style.display = "none";
       view.style.display = "block";
     } catch (err) {
-      loadingState.textContent = "Couldn't load your details. " + (err.message || "");
+      loadingState.textContent = friendlyLoadError(err);
     }
   });
 
