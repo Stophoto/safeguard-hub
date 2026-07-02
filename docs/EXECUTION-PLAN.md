@@ -17,12 +17,21 @@ Ground rules for every work package:
 3. After ANY change to `firestore.rules` or `tests/*.test.mjs`, run
    `npm run test:rules` (needs Java + `npm install` once) — all tests must pass.
    After ANY change to a `sg-*.js` file, run `node --check <file>`.
-4. ⚠️ `firestore.rules` `validUserSelfUpdate` and its `validSelf*` helpers are close
-   to Firestore's **1000-expression evaluation cap** (one deny-path test already
-   evaluates to the cap and denies by exhaustion — fail-closed, acceptable). Do NOT
-   add expressions to the self-update chain without removing some; re-run tests and
-   watch for `maximum of 1000 expressions` on *success* paths (that would break
-   legitimate saves).
+4. ⚠️ `firestore.rules` `validUserSelfUpdate` is the heaviest rule. Two best-practice
+   reductions are already applied (2026-07-02): the `allow update` is **split by
+   ownership** (a write to your own doc never evaluates the coordinator/role/temp
+   validators, and vice-versa), and the expensive `diff().affectedKeys()` is
+   **computed once** and threaded into the `validSelf*` helpers. All 90 tests pass and
+   every *legitimate* write stays well under the cap (allowed writes short-circuit).
+   A few *denied* self-writes still evaluate to the cap and deny by exhaustion —
+   **fail-closed and harmless** (the write was going to be denied anyway). That last
+   residue disappears once the temporary bootstrap backdoor is removed (WP-9 step 5):
+   the self-branch then becomes just `validUserSelfUpdate` with no extra `|| ` term.
+   Rules going forward: do NOT add expressions to the self-update chain without
+   removing some; the `unchanged('role'/'status'/'safeguard_*')` checks are kept as
+   deliberate defense-in-depth (redundant with `hasOnly`, but a safety net) — leave
+   them. If validation needs grow, move it server-side (Cloud Functions, the planned
+   Phase B), don't grow the rule.
 5. Do not restyle pages (a separate visual redesign lives in PR #11, undecided).
    Keep diffs functional and minimal; match each file's existing code style.
 6. Every user-visible string you write must be plain language — no codes, no
