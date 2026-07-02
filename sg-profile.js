@@ -234,6 +234,11 @@ export async function submitPoliceCheck(submittedOn) {
   if (Object.prototype.hasOwnProperty.call(existing, "expiresOn")) {
     policeCheck.expiresOn = existing.expiresOn;
   }
+  // Coordinator-written follow-up flag must be preserved too — the rules
+  // pin it, so dropping it here would make this save fail.
+  if (Object.prototype.hasOwnProperty.call(existing, "followUpAt")) {
+    policeCheck.followUpAt = existing.followUpAt;
+  }
 
   await saveProfile({ policeCheck });
 }

@@ -36,6 +36,9 @@ export async function listUsers() {
 
 // ── Change a user's role ────────────────────────────────────
 // role: "volunteer" | "leader" | "coordinator"
+// Rules restrict role changes to Safeguard Lead Admins (the owner tier),
+// and never on your own account. This must be its own write — the rules
+// only accept role together with updatedAt/updatedBy, nothing else.
 export async function setUserRole(uid, role) {
   if (!["volunteer", "leader", "coordinator"].includes(role)) {
     throw new Error("Invalid role: " + role);
@@ -172,14 +175,16 @@ export async function loadUser(uid) {
 
 // ── Update any user's profile fields (coordinator) ──────────
 // Merges with existing — untouched fields stay as they were.
-// `updates` can include role and status; rules allow those
-// only if the caller is a Coordinator.
+// `role` is never sent from here: role changes are owner-tier only and
+// must go through setUserRole() as their own write. When editing your
+// OWN profile this uses the volunteer self-update rule path, which does
+// not accept `updatedBy` — so we omit it for self-edits.
 export async function updateUserProfile(uid, updates) {
-  await setDoc(doc(db, "users", uid), {
-    ...updates,
-    updatedAt: serverTimestamp(),
-    updatedBy: auth.currentUser ? auth.currentUser.uid : null,
-  }, { merge: true });
+  const { role: _ignoredRole, ...rest } = updates || {};
+  const isSelf = !!(auth.currentUser && auth.currentUser.uid === uid);
+  const patch = { ...rest, updatedAt: serverTimestamp() };
+  if (!isSelf) patch.updatedBy = auth.currentUser ? auth.currentUser.uid : null;
+  await setDoc(doc(db, "users", uid), patch, { merge: true });
 }
 
 // ── Build a CSV string from a users list ────────────────────

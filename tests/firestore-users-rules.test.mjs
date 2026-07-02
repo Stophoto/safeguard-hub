@@ -44,6 +44,8 @@ let testEnv;
 const db = {};
 const VERIFIED = (email) => ({ email, email_verified: true });
 const future = () => Timestamp.fromMillis(Date.now() + 3600_000);
+// Coordinator-written follow-up stamp on refVolunteer's police check (B-1).
+const FOLLOW_UP = "2026-06-01T00:00:00.000Z";
 
 before(async () => {
   testEnv = await initializeTestEnvironment({
@@ -79,6 +81,19 @@ before(async () => {
     await setDoc(doc(adb, "users/grantTargetB"), baseVolunteer("grantB@example.org"));
     await setDoc(doc(adb, "users/coordTarget"), baseVolunteer("coordtarget@example.org"));
     await setDoc(doc(adb, "users/tempTarget"), baseVolunteer("temptarget@example.org"));
+    await setDoc(doc(adb, "users/roleTarget"), baseVolunteer("roletarget@example.org"));
+
+    // A volunteer with coordinator-written compliance state, to prove
+    // self-service still works around pinned fields (B-1) and that
+    // received references are locked (B-2).
+    await setDoc(doc(adb, "users/refVolunteer"), {
+      ...baseVolunteer("refvol@example.org"),
+      policeCheck: { submittedAt: "2026-01-15", followUpAt: FOLLOW_UP },
+      references: { items: [
+        { name: "Jane Reference", email: "jane@example.org", relationship: "Friend", receivedAt: "2026-02-01" },
+        { name: "Bob Reference", email: "bob@example.org", relationship: "Pastor", receivedAt: null },
+      ] },
+    });
 
     // Coordinator-only collections
     await setDoc(doc(adb, "invites/existing"), {
@@ -100,6 +115,7 @@ before(async () => {
   db.coordinator = testEnv.authenticatedContext("coordinator", VERIFIED("coord@example.org")).firestore();
   db.lead = testEnv.authenticatedContext("lead", VERIFIED("lead@example.org")).firestore();
   db.leadAdmin = testEnv.authenticatedContext("leadAdmin", VERIFIED("leadadmin@example.org")).firestore();
+  db.refVolunteer = testEnv.authenticatedContext("refVolunteer", VERIFIED("refvol@example.org")).firestore();
 });
 
 after(async () => {
@@ -286,5 +302,214 @@ describe("leadNotifications — Lead Admin creates, Leads read", () => {
   });
   it("no one can delete a notification from the app", async () => {
     await assertFails(deleteDoc(doc(db.leadAdmin, "leadNotifications/note-1")));
+  });
+});
+
+// ───────────────────────────────────────────────────────────────────────
+// Role changes are owner-tier only: coordinators can no longer promote
+// anyone, and nobody — not even a Lead Admin — can change their own role.
+describe("users — role changes are Lead Admin (owner tier) only", () => {
+  it("KEY: coordinator CANNOT promote anyone to coordinator", async () => {
+    await assertFails(
+      updateDoc(doc(db.coordinator, "users/roleTarget"), {
+        role: "coordinator", updatedAt: serverTimestamp(), updatedBy: "coordinator",
+      }),
+    );
+  });
+  it("KEY: coordinator CANNOT change a role at all (even to leader)", async () => {
+    await assertFails(
+      updateDoc(doc(db.coordinator, "users/roleTarget"), {
+        role: "leader", updatedAt: serverTimestamp(), updatedBy: "coordinator",
+      }),
+    );
+  });
+  it("KEY: Lead Admin CANNOT change their OWN role", async () => {
+    await assertFails(
+      updateDoc(doc(db.leadAdmin, "users/leadAdmin"), {
+        role: "coordinator", updatedAt: serverTimestamp(), updatedBy: "leadAdmin",
+      }),
+    );
+  });
+  it("Lead Admin cannot smuggle other fields into a role change", async () => {
+    await assertFails(
+      updateDoc(doc(db.leadAdmin, "users/roleTarget"), {
+        role: "leader", status: "active",
+        updatedAt: serverTimestamp(), updatedBy: "leadAdmin",
+      }),
+    );
+  });
+  it("role must be a known value", async () => {
+    await assertFails(
+      updateDoc(doc(db.leadAdmin, "users/roleTarget"), {
+        role: "superuser", updatedAt: serverTimestamp(), updatedBy: "leadAdmin",
+      }),
+    );
+  });
+  it("Lead Admin CAN change another user's role", async () => {
+    await assertSucceeds(
+      updateDoc(doc(db.leadAdmin, "users/roleTarget"), {
+        role: "coordinator", updatedAt: serverTimestamp(), updatedBy: "leadAdmin",
+      }),
+    );
+  });
+});
+
+// ───────────────────────────────────────────────────────────────────────
+// A coordinator manages OTHER people. Their own compliance must be
+// recorded by someone else — no self-clearing, self-approval, or
+// self-activation.
+describe("users — coordinator cannot manage their OWN record", () => {
+  it("KEY: coordinator CANNOT set their own police clearance", async () => {
+    await assertFails(
+      updateDoc(doc(db.coordinator, "users/coordinator"), {
+        policeCheck: { clearedAt: "2026-01-01", expiresOn: "2029-01-01" },
+        updatedAt: serverTimestamp(), updatedBy: "coordinator",
+      }),
+    );
+  });
+  it("KEY: coordinator CANNOT change their own status", async () => {
+    await assertFails(
+      updateDoc(doc(db.coordinator, "users/coordinator"), { status: "paused" }),
+    );
+  });
+  it("KEY: coordinator CANNOT approve their own screening", async () => {
+    await assertFails(
+      updateDoc(doc(db.coordinator, "users/coordinator"), {
+        screening: { approval: { decision: "approved", approvedBy: "me", date: "2026-01-01" } },
+        updatedAt: serverTimestamp(), updatedBy: "coordinator",
+      }),
+    );
+  });
+  it("coordinator CAN still edit their own name (volunteer self path)", async () => {
+    await assertSucceeds(
+      updateDoc(doc(db.coordinator, "users/coordinator"), {
+        firstName: "Casey", updatedAt: serverTimestamp(),
+      }),
+    );
+  });
+  it("coordinator status writes must use a known value", async () => {
+    await assertFails(
+      updateDoc(doc(db.coordinator, "users/coordTarget"), { status: "bogus-status" }),
+    );
+  });
+});
+
+// ───────────────────────────────────────────────────────────────────────
+// Safeguard access flags: a second person must grant them, and the top
+// (Lead Admin) flag requires the 2FA marker just like the lead flag.
+describe("users — safeguard access: no self-grants, MFA on the admin flag", () => {
+  it("KEY: Lead Admin CANNOT grant safeguard flags to THEMSELVES", async () => {
+    await assertFails(
+      updateDoc(doc(db.leadAdmin, "users/leadAdmin"), {
+        safeguard_lead: true, mfaEnrolled: true,
+        updatedAt: serverTimestamp(), updatedBy: "leadAdmin",
+      }),
+    );
+  });
+  it("KEY: Lead Admin CANNOT grant safeguard_lead_admin without MFA", async () => {
+    await assertFails(
+      updateDoc(doc(db.leadAdmin, "users/grantTargetB"), {
+        safeguard_lead_admin: true, mfaEnrolled: false,
+        updatedAt: serverTimestamp(), updatedBy: "leadAdmin",
+      }),
+    );
+  });
+  it("Lead Admin CAN grant safeguard_lead_admin with MFA", async () => {
+    await assertSucceeds(
+      updateDoc(doc(db.leadAdmin, "users/grantTargetB"), {
+        safeguard_lead_admin: true, mfaEnrolled: true,
+        updatedAt: serverTimestamp(), updatedBy: "leadAdmin",
+      }),
+    );
+  });
+  it("KEY: Lead Admin CANNOT grant temporary abuse access to THEMSELVES", async () => {
+    await assertFails(
+      updateDoc(doc(db.leadAdmin, "users/leadAdmin"), {
+        temporaryAbuseAccess: {
+          grantedBy: "leadAdmin", grantedByEmail: "leadadmin@example.org",
+          grantedAt: serverTimestamp(), expiresAt: future(),
+          reason: "self grant attempt", reportId: "report-1",
+        },
+        updatedAt: serverTimestamp(), updatedBy: "leadAdmin",
+      }),
+    );
+  });
+});
+
+// ───────────────────────────────────────────────────────────────────────
+// B-1 regression: a coordinator-written followUpAt stamp on the police
+// check must never lock the volunteer out of ordinary self-service.
+describe("users — self-service works around coordinator-written policeCheck fields (B-1)", () => {
+  it("volunteer with a followUpAt flag CAN still edit unrelated fields", async () => {
+    await assertSucceeds(
+      updateDoc(doc(db.refVolunteer, "users/refVolunteer"), {
+        firstName: "Still Works", updatedAt: serverTimestamp(),
+      }),
+    );
+  });
+  it("volunteer CAN update their police submittedAt (pinned fields preserved)", async () => {
+    await assertSucceeds(
+      updateDoc(doc(db.refVolunteer, "users/refVolunteer"), {
+        policeCheck: { submittedAt: "2026-07-01", followUpAt: FOLLOW_UP },
+        updatedAt: serverTimestamp(),
+      }),
+    );
+  });
+  it("KEY: volunteer CANNOT clear the coordinator's followUpAt flag", async () => {
+    await assertFails(
+      updateDoc(doc(db.refVolunteer, "users/refVolunteer"), {
+        policeCheck: { submittedAt: "2026-07-01" },
+        updatedAt: serverTimestamp(),
+      }),
+    );
+  });
+  it("KEY: volunteer CANNOT set their own clearedAt", async () => {
+    await assertFails(
+      updateDoc(doc(db.refVolunteer, "users/refVolunteer"), {
+        policeCheck: { submittedAt: "2026-07-01", followUpAt: FOLLOW_UP, clearedAt: "2026-07-01" },
+        updatedAt: serverTimestamp(),
+      }),
+    );
+  });
+});
+
+// ───────────────────────────────────────────────────────────────────────
+// B-2 regression: once a reference is marked received, the volunteer can
+// no longer change WHO vouched, remove it, or smuggle extra data.
+describe("users — received references are locked (B-2)", () => {
+  const jane = { name: "Jane Reference", email: "jane@example.org", relationship: "Friend", receivedAt: "2026-02-01" };
+  const bob  = { name: "Bob Reference",  email: "bob@example.org",  relationship: "Pastor", receivedAt: null };
+
+  it("KEY: volunteer CANNOT rewrite who vouched after receipt", async () => {
+    await assertFails(
+      updateDoc(doc(db.refVolunteer, "users/refVolunteer"), {
+        references: { items: [ { ...jane, name: "Impostor", email: "impostor@example.org" }, bob ] },
+        updatedAt: serverTimestamp(),
+      }),
+    );
+  });
+  it("KEY: volunteer CANNOT remove a received reference", async () => {
+    await assertFails(
+      updateDoc(doc(db.refVolunteer, "users/refVolunteer"), {
+        references: { items: [ bob ] },
+        updatedAt: serverTimestamp(),
+      }),
+    );
+  });
+  it("KEY: volunteer CANNOT hide extra data inside references", async () => {
+    await assertFails(
+      updateDoc(doc(db.refVolunteer, "users/refVolunteer"), {
+        references: { items: [ jane, bob ], smuggled: "extra" },
+        updatedAt: serverTimestamp(),
+      }),
+    );
+  });
+  it("volunteer CAN edit a not-yet-received reference", async () => {
+    await assertSucceeds(
+      updateDoc(doc(db.refVolunteer, "users/refVolunteer"), {
+        references: { items: [ jane, { name: "New Bob", email: "newbob@example.org", relationship: "Mentor", receivedAt: null } ] },
+        updatedAt: serverTimestamp(),
+      }),
+    );
   });
 });

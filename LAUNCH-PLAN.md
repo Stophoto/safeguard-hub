@@ -2,6 +2,10 @@
 
 _Prepared 2026-07-02. Plain-language companion to `SECURITY_REVIEW.md` (the technical backlog) and `LAUNCH-CHECKLIST.md` (the go-live steps)._
 
+> **For the builder:** the detailed, file-by-file execution spec lives in
+> `docs/EXECUTION-PLAN.md` — self-contained work packages (WP-1…WP-10) a developer or
+> a coding model can follow step by step. This document is the owner-facing overview.
+
 This document turns "review the site, lock down the sensitive stuff, and polish the
 UI before launch" into an ordered plan you can actually work through. It is written
 for a non-coder. Nothing here has been deployed or changed on the live site — it is a
@@ -28,6 +32,22 @@ an emergency (everything in the system today is test data), but all should be cl
 the next 30 days.
 
 ---
+
+## Decisions — ANSWERED (2026-07-02)
+
+- **A — Who reads suspected-abuse reports:** **Chris + Christin only** (both are
+  _Safeguard Lead_). Others (Sr. Pastor Paul, Pastor Jay, elders) can be added later as
+  _Safeguard Lead_ — read-only access to reports, with **no** ability to change settings or
+  promote anyone. Granting that access stays with the _Lead Admin_ tier (Chris + Christin).
+- **B — Who can promote people:** **Christin (and Chris) only.** Christin is the MAIN
+  approver. No ordinary Coordinator can promote anyone anymore; role changes are reserved
+  for the _Lead Admin_ (owner) tier, and nobody can change their own role.
+
+> These are now enforced in the security rules (Phase 1, below) and proven by the test
+> suite. The role model already fits your intent exactly:
+> **Volunteer** → **Coordinator** (runs admin, sees roster, cannot see reports) →
+> **Safeguard Lead** (reads abuse reports, touches no settings — for Paul/Jay/elders) →
+> **Lead Admin** (grants access & promotes — Chris + Christin only).
 
 ## The one thing only you can decide (before I change permissions)
 
@@ -77,19 +97,25 @@ Each phase ends with something concrete. Nothing is deployed to the live Firebas
 project without your explicit say-so — I prepare and test the changes; **you** click
 "publish" on the rules and enable the paid features. That's a deliberate safety valve.
 
-### Phase 1 — Week 1: Lock down sensitive access _(the heart of your request)_
-Depends on Decisions A & B above.
+### Phase 1 — Week 1: Lock down sensitive access _(the heart of your request)_ — DONE on branch (not yet deployed)
 
-- [ ] Stop any Coordinator from promoting people to Coordinator/Safeguard Lead (per Decision B).
-- [ ] Close the "self-promotion" gaps: an admin can't quietly grant themselves the top
-      role, and a Coordinator can't mark **their own** police check / approval as done.
-- [ ] Make the "two-factor required" rule actually mean real two-factor — and apply it
-      to the most powerful role too (today it's missing there).
-- [ ] Remove the temporary "owner backdoor" left in the rules for first-time setup,
-      once Christin's access is set the normal way.
-- [ ] Update the automated permission tests to match, and get them passing again
-      (they currently disagree with the live rules — see Finding S-7).
-- [ ] **You:** review the plain-language summary of the rule changes and approve before deploy.
+- [x] Stop any Coordinator from promoting people to Coordinator/Safeguard Lead — role
+      changes are now Lead-Admin-only (`validRoleChangeUpdate`).
+- [x] Close the "self-promotion" gaps: an admin can't grant **themselves** safeguard access
+      or temporary report access (self-exclusion), and a Coordinator can no longer edit
+      **their own** status / police check / approval (they use the pinned volunteer path).
+- [x] Add the missing two-factor gate to the most powerful role (`safeguard_lead_admin`
+      now requires the 2FA marker, same as `safeguard_lead`). _Real_ two-factor login is
+      switched on in Phase 4 (needs Blaze).
+- [x] Also fixed here (rules-level bugs that belong with this pass): B-1 (the follow-up
+      lockout) and B-2 (reference identity swap), plus a status-value check.
+- [x] Update the automated permission tests — now **90 tests, all passing** (was 65), run
+      against the real emulator with `npm run test:rules`.
+- [ ] **You:** review the plain-language summary below and approve, then deploy the rules
+      (one command — see "How to deploy" at the end).
+- [ ] **After Christin is granted Lead Admin the normal way,** remove the temporary
+      bootstrap backdoor (`isBootstrapSafeguardLeadAdmin`) — a 3-line deletion, left in
+      place for now so first-time setup still works.
 
 ### Phase 2 — Week 2: Trust & correctness fixes
 - [x] **Fix the "Undo" buttons that silently do nothing** (Finding B-6). _Done on this
